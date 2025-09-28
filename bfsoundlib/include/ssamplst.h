@@ -30,18 +30,18 @@ extern "C" {
 #pragma pack(1)
 
 struct BfSoundBankHead {
-  long TabPos;
-  long DatPos;
-  long TabSize;
-  long DatSize;
+  s32 TabPos;
+  s32 DatPos;
+  s32 TabSize;
+  s32 DatSize;
 };
 
 struct BfSfxInfo { // sizeof=32
   char FileName[12];
-  long sffld_12;
+  s32 sffld_12;
   short sffld_16;
   ubyte *DataBeg;
-  long sffld_22;
+  s32 sffld_22;
   ubyte *DataEnd;
   short sffld_30;
 };

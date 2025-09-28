@@ -215,7 +215,7 @@ const char *vehicle_type_name(ushort vtype)
     return "VEHICLE";
 }
 
-void snprint_vehicle_state(char *buf, ulong buflen, struct Thing *p_thing)
+void snprint_vehicle_state(char *buf, u32 buflen, struct Thing *p_thing)
 {
     char *s;
     //ubyte nparams;
@@ -1406,9 +1406,9 @@ void process_vehicle(struct Thing *p_vehicle)
     }
 }
 
-void preprogress_trains_turns(ulong nturns)
+void preprogress_trains_turns(u32 nturns)
 {
-    ulong turns;
+    u32 turns;
 
     for (turns = nturns; turns > 0; turns--)
     {

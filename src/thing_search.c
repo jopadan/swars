@@ -39,7 +39,7 @@ ThingIdx find_thing_on_mapwho_tile_within_circle_with_bfilter(short tile_x, shor
   short ttype, short subtype, ThingBoolFilter filter, ThingFilterParams *params)
 {
     ThingIdx thing;
-    ulong k;
+    u32 k;
 
     k = 0;
     thing = get_mapwho_thing_index(tile_x, tile_z);
@@ -96,7 +96,7 @@ ThingIdx find_thing_on_mapwho_tile_within_circle_with_mfilter(s32 *p_min_fval, s
 {
     s32 min_fval, fval;
     ThingIdx min_thing, thing;
-    ulong k;
+    u32 k;
 
     k = 0;
     min_fval = INT32_MAX;
@@ -160,7 +160,7 @@ ThingIdx find_thing_on_mapwho_tile_within_circle_with_mfilter(s32 *p_min_fval, s
  *
  * @return Gives thing index, or 0 if not found.
  */
-static ThingIdx find_thing_type_on_spiral_near_tile_with_bfilter(short X, short Z, ushort R, long spiral_len,
+static ThingIdx find_thing_type_on_spiral_near_tile_with_bfilter(short X, short Z, ushort R, s32 spiral_len,
   short ttype, short subtype, ThingBoolFilter filter, ThingFilterParams *params)
 {
     short tile_x, tile_z;
@@ -172,7 +172,7 @@ static ThingIdx find_thing_type_on_spiral_near_tile_with_bfilter(short X, short 
     {
         struct MapOffset *sstep;
         ThingIdx thing;
-        long sX, sZ;
+        s32 sX, sZ;
 
         sstep = &spiral_step[around];
         sX = tile_x + sstep->h;
@@ -210,7 +210,7 @@ s32 mfilter_nearest(ThingIdx thing, short X, short Z, ThingFilterParams *params)
  *
  * @return Gives thing index, or 0 if not found.
  */
-static ThingIdx find_thing_type_on_spiral_near_tile_with_mfilter(short X, short Z, ushort R, long spiral_len,
+static ThingIdx find_thing_type_on_spiral_near_tile_with_mfilter(short X, short Z, ushort R, s32 spiral_len,
   short ttype, short subtype, ThingMinFilter filter, ThingFilterParams *params)
 {
     s32 min_fval;
@@ -227,7 +227,7 @@ static ThingIdx find_thing_type_on_spiral_near_tile_with_mfilter(short X, short 
         struct MapOffset *sstep;
         s32 fval;
         ThingIdx thing;
-        long sX, sZ;
+        s32 sX, sZ;
 
         sstep = &spiral_step[around];
         sX = tile_x + sstep->h;
@@ -250,7 +250,7 @@ static ThingIdx find_thing_type_on_same_type_list_within_circle_with_bfilter(sho
   short ttype, short subtype, ThingBoolFilter filter, ThingFilterParams *params)
 {
     ThingIdx thing;
-    ulong k;
+    u32 k;
 
     k = 0;
     thing = get_thing_same_type_head(ttype, subtype);
@@ -321,7 +321,7 @@ static ThingIdx find_thing_type_on_same_type_list_within_circle_with_mfilter(sho
 {
     s32 min_fval, fval;
     ThingIdx min_thing, thing;
-    ulong k;
+    u32 k;
 
     k = 0;
     min_fval = INT32_MAX;
@@ -390,7 +390,7 @@ static short find_thing_type_on_same_type_list(short ttype, short subtype,
   ThingBoolFilter filter, ThingFilterParams *params)
 {
     ThingIdx thing;
-    ulong k;
+    u32 k;
 
     k = 0;
     thing = get_thing_same_type_head(ttype, subtype);

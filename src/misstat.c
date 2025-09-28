@@ -53,7 +53,7 @@ void clear_mission_status(ushort brief)
 
 void clear_open_mission_status(void)
 {
-    ulong id;
+    u32 id;
 
     if (in_network_game)
     {

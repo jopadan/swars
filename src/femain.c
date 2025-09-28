@@ -110,14 +110,14 @@ ubyte ac_main_do_map_editor(ubyte click);
 ubyte ac_alert_OK(ubyte click);
 ubyte ac_do_sysmnu_button(ubyte click);
 
-long time_difference(struct SynTime *tm1, struct SynTime *tm2)
+s32 time_difference(struct SynTime *tm1, struct SynTime *tm2)
 {
 #if 0
     asm volatile ("call ASM_time_difference\n"
         : : "a" (tm1), "d" (tm2));
     return;
 #endif
-    return 60 * (tm1->Hour - (long)tm2->Hour) + tm1->Minute - (long)tm2->Minute;
+    return 60 * (tm1->Hour - (s32)tm2->Hour) + tm1->Minute - (s32)tm2->Minute;
 }
 
 /** Increment timestamp stored in given syntime by one day.
@@ -1624,7 +1624,7 @@ void show_mission_loading_screen(void)
     reload_background();
     play_sample_using_heap(0, 118, 127, 64, 100, 0, 3);
 
-    ulong finished = 0; // Amount of frames after the drawing animation finished
+    u32 finished = 0; // Amount of frames after the drawing animation finished
     do
     {
         memcpy(lbDisplay.WScreen, back_buffer, lbDisplay.GraphicsScreenWidth * lbDisplay.GraphicsScreenHeight);
@@ -1667,7 +1667,7 @@ TbResult load_mapout(ubyte **pp_buf, const char *dir)
 {
     char locstr[52];
     ubyte *p_buf;
-    long len;
+    s32 len;
     int i;
     TbResult ret;
 

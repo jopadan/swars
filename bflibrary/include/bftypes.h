@@ -163,7 +163,7 @@ typedef short TbScreenCoord;
  */
 typedef unsigned char TbPixel;
 
-typedef s32 s32 TbClockMSec;
+typedef s64 TbClockMSec;
 typedef time_t TbTimeSec;
 
 #ifdef __cplusplus

@@ -35,26 +35,26 @@ extern "C" {
 struct WarFlag { // sizeof=40
  /** Bitfields of groups whose members are attacked  on sight.
   */
-  ulong KillOnSight;
+  u32 KillOnSight;
  /** Bitfields of groups whose members are attacked if wielding visible weapons.
   */
-  ulong KillIfWeaponOut;
+  u32 KillIfWeaponOut;
  /** Bitfields of groups whose members are attacked if have any weapons, even concealed.
   */
-  ulong KillIfArmed;
+  u32 KillIfArmed;
  /** Bitfields of groups whose members are not attacked.
   */
-  ulong Truce;
+  u32 Truce;
   ubyte Guardians[8];
-  long ugfld_24;
-  long ugfld_28;
-  long ugfld_32;
-  long ugfld_36;
+  s32 ugfld_24;
+  s32 ugfld_28;
+  s32 ugfld_32;
+  s32 ugfld_36;
 };
 
 struct GroupAction {
-  ulong FiredOn;
-  ulong Hit;
+  u32 FiredOn;
+  u32 Hit;
   short Dead;
   short Alive;
   short Persuaded;

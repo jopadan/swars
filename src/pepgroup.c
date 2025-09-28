@@ -28,7 +28,7 @@ short find_unused_group_id(TbBool largest)
 {
     ThingIdx thing;
     short group;
-    ulong used_groups;
+    u32 used_groups;
     struct Thing *p_thing;
 
     used_groups = 0;

@@ -28,9 +28,9 @@ extern "C" {
 /******************************************************************************/
 
 /** Game turn number, used for in-game time computations. */
-typedef ulong GameTurn;
+typedef u32 GameTurn;
 /** Signed game turn, for storing game turns difference. */
-typedef long SGameTurn;
+typedef s32 SGameTurn;
 
 /** Type which stores index/offset of a Thing/SimpleThing.
  *

@@ -265,7 +265,7 @@ static inline int trig_ll_md01(struct TrigLocalPrep *tlp, struct TrigLocalRend *
             return 0;
         }
         if (eX != 0) {
-            s32 s32 dS, wS;
+            s64 dS, wS;
             dS = opt_a->S - opt_c->S;
             wS = (ratio_var_34 * dS) >> 16;
             tlr->var_60 = (opt_b->S + wS - opt_a->S) / (eX + 1);
@@ -393,7 +393,7 @@ static inline int trig_ll_md02(struct TrigLocalPrep *tlp, struct TrigLocalRend *
             return 0;
         }
         if (eX != 0) {
-            s32 s32 dS, wS;
+            s64 dS, wS;
             dS = opt_a->U - opt_c->U;
             wS = (ratio_var_34 * dS) >> 16;
             tlr->var_48 = (opt_b->U + wS - opt_a->U) / (eX + 1);
@@ -533,7 +533,7 @@ static inline int trig_ll_md05(struct TrigLocalPrep *tlp, struct TrigLocalRend *
         }
         if (eX != 0)
         {
-            s32 s32 dS, wS;
+            s64 dS, wS;
             dS = opt_a->U - opt_c->U;
             wS = (ratio_var_34 * dS) >> 16;
             tlr->var_48 = (opt_b->U + wS - opt_a->U) / (eX + 1);
@@ -864,7 +864,7 @@ static inline int trig_rl_md01(struct TrigLocalPrep *tlp, struct TrigLocalRend *
             return 0;
         }
         if (eX != 0) {
-            s32 s32 dS, wS;
+            s64 dS, wS;
             dS = opt_b->S - opt_a->S;
             wS = (ratio_var_34 * dS) >> 16;
             tlr->var_60 = (opt_a->S + wS - opt_c->S) / (eX + 1);
@@ -994,7 +994,7 @@ static inline int trig_rl_md02(struct TrigLocalPrep *tlp, struct TrigLocalRend *
             return 0;
         }
         if (eX != 0) {
-            s32 s32 dS, wS;
+            s64 dS, wS;
 
             dS = opt_b->U - opt_a->U;
             wS = (ratio_var_34 * dS) >> 16;
@@ -1135,7 +1135,7 @@ static inline int trig_rl_md05(struct TrigLocalPrep *tlp, struct TrigLocalRend *
         }
         tlr->var_60 = wXb;
         if (eX != 0) {
-            s32 s32 dS, wS;
+            s64 dS, wS;
 
             dS = opt_b->U - opt_a->U;
             wS = (ratio_var_34 * dS) >> 16;

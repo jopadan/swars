@@ -149,21 +149,21 @@ char session_name[20] = "SWARA";
 
 char user_name[50] = "TEMP";
 
-long dword_153194 = 0x100;
+s32 dword_153194 = 0x100;
 
 ushort word_1531E0 = 1;
 
 ushort next_mission = 1;
 
-extern ulong stored_l3d_next_object[1];
-extern ulong stored_l3d_next_object_face[1];
-extern ulong stored_l3d_next_object_face4[1];
-extern ulong stored_l3d_next_object_point[1];
-extern ulong stored_l3d_next_normal[1];
-extern ulong stored_l3d_next_face_texture[1];
-extern ulong stored_l3d_next_floor_texture[1];
-extern ulong stored_l3d_next_local_mat[1];
-extern ulong stored_level3d_inuse;
+extern u32 stored_l3d_next_object[1];
+extern u32 stored_l3d_next_object_face[1];
+extern u32 stored_l3d_next_object_face4[1];
+extern u32 stored_l3d_next_object_point[1];
+extern u32 stored_l3d_next_normal[1];
+extern u32 stored_l3d_next_face_texture[1];
+extern u32 stored_l3d_next_floor_texture[1];
+extern u32 stored_l3d_next_local_mat[1];
+extern u32 stored_level3d_inuse;
 
 extern unsigned char *display_palette;
 extern unsigned short unkn2_pos_x;
@@ -176,26 +176,26 @@ extern unsigned char textwalk_data[640];
 extern short word_1C6E08;
 extern short word_1C6E0A;
 
-extern long dword_1DDECC;
+extern s32 dword_1DDECC;
 
-ulong engine_mem_alloc_size = 5900000;
+u32 engine_mem_alloc_size = 5900000;
 
 extern struct GamePanel unknstrct7_arr2[];
 
-extern long gamep_unknval_10;
-extern long gamep_unknval_11;
-extern long gamep_unknval_12;
-extern long nav_stats__ThisTurn;
-extern long gamep_unknval_14;
-extern long gamep_unknval_15;
-extern long gamep_unknval_16;
+extern s32 gamep_unknval_10;
+extern s32 gamep_unknval_11;
+extern s32 gamep_unknval_12;
+extern s32 nav_stats__ThisTurn;
+extern s32 gamep_unknval_14;
+extern s32 gamep_unknval_15;
+extern s32 gamep_unknval_16;
 
 extern ushort netgame_agent_pos_x[8][4];
 extern ushort netgame_agent_pos_z[8][4];
 
-extern long dword_155010;
-extern long dword_155014;
-extern long dword_155018;
+extern s32 dword_155010;
+extern s32 dword_155014;
+extern s32 dword_155018;
 
 ubyte simulated_mouse_click;
 ubyte clear_left_button;
@@ -212,7 +212,7 @@ extern short last_map_for_lights_func_11;
 
 extern short word_1552F8;
 
-extern long dword_176CBC;
+extern s32 dword_176CBC;
 
 extern char unknmsg_str[100];
 extern short word_1774E8[2 * 150];
@@ -224,17 +224,17 @@ extern ubyte byte_1A7B00[1000];
 extern ubyte byte_1A7EE8[8192];
 extern ubyte billboard_anim_no;
 extern ubyte byte_1AAA88;
-extern long dword_1AAB74;
-extern long dword_1AAB78;
+extern s32 dword_1AAB74;
+extern s32 dword_1AAB78;
 extern ubyte active_anim;
 extern ushort word_1AABD0;
 
-extern long mech_unkn_tile_x1;
-extern long mech_unkn_tile_y1;
-extern long mech_unkn_tile_x2;
-extern long mech_unkn_tile_y2;
-extern long mech_unkn_tile_x3;
-extern long mech_unkn_tile_y3;
+extern s32 mech_unkn_tile_x1;
+extern s32 mech_unkn_tile_y1;
+extern s32 mech_unkn_tile_x2;
+extern s32 mech_unkn_tile_y2;
+extern s32 mech_unkn_tile_x3;
+extern s32 mech_unkn_tile_y3;
 
 extern short brightness;
 
@@ -424,7 +424,7 @@ void debug_trace_setup(int place)
 
 /** Remains of some Bf debug stuff.
  */
-void debug_trace_turn_bound(ulong turn)
+void debug_trace_turn_bound(u32 turn)
 {
     LOGDBG("turn %lu", turn);
 }
@@ -717,7 +717,7 @@ void ingame_palette_reload(void)
     }
 }
 
-void sprint_fmv_filename(ushort vid_type, char *fnbuf, ulong buflen)
+void sprint_fmv_filename(ushort vid_type, char *fnbuf, u32 buflen)
 {
     const char *fname;
     PathInfo *pinfo;
@@ -2097,7 +2097,7 @@ void person_give_all_weapons(struct Thing *p_person)
     for (wtype = WEP_TYPES_COUNT-1; wtype > 0; wtype--)
     {
         struct WeaponDef *wdef;
-        ulong wepflg;
+        u32 wepflg;
 
         wdef = &weapon_defs[wtype];
 
@@ -2283,7 +2283,7 @@ void setup_host_sub6(void)
 void setup_debug_obj_trace(void)
 {
     // Code for setting memory ranges was here
-    // Removed, as we no longer have such tracking/profiling mechanism
+    // Removed, as we no s32er have such tracking/profiling mechanism
     debug_trace_place(0);
 }
 
@@ -2313,7 +2313,7 @@ void setup_host(void)
 {
     BAT_unknsub_20(0, 0, 0, 0, vec_tmap[4] + 160 * 256 + 64);
     smack_malloc_setup();
-    LOGDBG("&setup_host() = 0x%lx", (ulong)setup_host);
+    LOGDBG("&setup_host() = 0x%lx", (u32)setup_host);
     setup_initial_screen_mode();
 
     if ( keyboard_mode_direct )
@@ -2393,9 +2393,9 @@ void unkn_truce_groups(void)
         :  :  : "eax" );
 }
 
-void blind_progress_game(ulong nturns)
+void blind_progress_game(u32 nturns)
 {
-    ulong n;
+    u32 n;
 
     for (n = 0; n < nturns; n++)
     {
@@ -2886,7 +2886,7 @@ void preprogress_game_turns(void)
 
     p_missi = &mission_list[ingame.CurrentMission];
     LOGSYNC("PreProcess %d turns for mission %d, starting at %lu",
-      (int)p_missi->PreProcess, (int)ingame.CurrentMission, (ulong)gameturn);
+      (int)p_missi->PreProcess, (int)ingame.CurrentMission, (u32)gameturn);
     blind_progress_game(p_missi->PreProcess);
 }
 
@@ -2932,7 +2932,7 @@ ushort make_group_into_players(ushort group, ushort plyr, ushort max_agent, shor
     struct Thing *p_person;
     PlayerInfo *p_player;
     ushort plagent, high_tier;
-    ulong n;
+    u32 n;
 
     p_player = &players[plyr];
     p_person = NULL;
@@ -2962,7 +2962,7 @@ ushort make_group_into_players(ushort group, ushort plyr, ushort max_agent, shor
         }
         players[plyr].MyAgent[plagent] = p_person;
         p_person->Flag |= TngF_PlayerAgent;
-#if 0 // This no longer makes sense - campaign is given with mission number
+#if 0 // This no s32er makes sense - campaign is given with mission number
         if (!cmdln_param_bcg)
         {
             if (p_person->SubType == SubTT_PERS_ZEALOT)
@@ -3079,7 +3079,7 @@ void reset_mission_agents(void)
 void place_single_player(void)
 {
     PlayerInfo *p_locplayer;
-    ulong n;
+    u32 n;
     ushort nagents, pl_agents, pl_group;
 
     p_locplayer = &players[local_player_no];
@@ -3163,8 +3163,8 @@ void place_single_player(void)
 
 void randomize_playable_groups_order(void)
 {
-    static long incrementing_nubers[] = {0, 1, 2, 3, 4, 5, 6, 7,};
-    array_elements_in_random_order(level_def.PlayableGroups, incrementing_nubers, long, 8);
+    static s32 incrementing_nubers[] = {0, 1, 2, 3, 4, 5, 6, 7,};
+    array_elements_in_random_order(level_def.PlayableGroups, incrementing_nubers, s32, 8);
 }
 
 void init_game(ubyte reload)
@@ -3372,7 +3372,7 @@ short test_missions(ubyte flag)
 
 void create_tables_file_from_fade(void)
 {
-    long len;
+    s32 len;
     int i, k;
     unsigned char *curbuf;
     // Note that the input file is not normally available with the game
@@ -3604,12 +3604,12 @@ void gproc3_unknsub2(void)
     int i;
 
     int bkp_ingame_flags;
-    int long bkp_engn_anglexz;
+    int s32 bkp_engn_anglexz;
     ushort bkp_render_area_a, bkp_render_area_b;
-    long bkp_dword_152EEC;
+    s32 bkp_dword_152EEC;
     ubyte bkp_unkn_flags_01;
     ushort bkp_overall_scale;
-    long bkp_engn_xc, bkp_engn_yc, bkp_engn_zc;
+    s32 bkp_engn_xc, bkp_engn_yc, bkp_engn_zc;
 
     ingame.Flags &= ~GamF_BillboardMovies;
     if (is_key_pressed(KC_Q, KMod_DONTCARE))
@@ -3957,9 +3957,9 @@ void mission_over_update_players(void)
     cryo_update_agents_from_player(p_locplayer);
 }
 
-ulong calculate_cash_gain_from_persuaded_person(struct Thing *p_person)
+u32 calculate_cash_gain_from_persuaded_person(struct Thing *p_person)
 {
-    ulong credits;
+    u32 credits;
 
     credits = 0;
     switch (p_person->SubType)
@@ -3986,9 +3986,9 @@ ulong calculate_cash_gain_from_persuaded_person(struct Thing *p_person)
     return credits;
 }
 
-ulong mission_over_calculate_cash_gain_from_persuaded_crowd(ushort tgroup)
+u32 mission_over_calculate_cash_gain_from_persuaded_crowd(ushort tgroup)
 {
-    ulong credits;
+    u32 credits;
     struct Thing *p_person;
     ThingIdx person;
 
@@ -4037,9 +4037,9 @@ void mission_over_gain_persuaded_crowd_rewards(void)
     mission_over_gain_personnel_from_persuaded_crowd();
 }
 
-ulong mission_over_calculate_player_cash_gain_from_items(void)
+u32 mission_over_calculate_player_cash_gain_from_items(void)
 {
-    ulong credits;
+    u32 credits;
     short sthing;
     struct SimpleThing *p_sthing;
 
@@ -4078,7 +4078,7 @@ ulong mission_over_calculate_player_cash_gain_from_items(void)
 
 void update_player_cash(void)
 {
-    ulong credits;
+    u32 credits;
 
     credits = mission_over_calculate_player_cash_gain_from_items();
     ingame.Credits += credits;
@@ -4497,7 +4497,7 @@ void mission_over(void)
         set_mission_state_using_state_slot(missi, mstate);
     }
 
-    long cr_award;
+    s32 cr_award;
     short email;
 
     switch (mstate)
@@ -4550,7 +4550,7 @@ void mission_over(void)
         play_smacker(MPly_GameOver);
 }
 
-TbBool player_try_spend_money(long cost)
+TbBool player_try_spend_money(s32 cost)
 {
     if (ingame.Credits - cost < 0)
         return false;
@@ -4688,9 +4688,9 @@ void local_to_worldr(int *dx, int *dy, int *dz)
 void do_scroll_map(void)
 {
     PlayerInfo *p_locplayer;
-    long engn_xc_orig, engn_zc_orig;
+    s32 engn_xc_orig, engn_zc_orig;
     ushort ctlmode;
-    long abase, angle;
+    s32 abase, angle;
     int dx, dy, dz;
     int dampr;
 
@@ -4739,7 +4739,7 @@ void do_scroll_map(void)
     {
         if (!p_locplayer->PanelState[mouser])
         {
-            long cumm_alt;
+            s32 cumm_alt;
             int mv_border;
 
             // Define a move border, getting the mouse beyond it causes map scroll
@@ -5408,7 +5408,7 @@ void show_menu_screen_st0(void)
     sprintf(net_unkn2_text, "01234567890");
 
     {
-        long pos = 0;
+        s32 pos = 0;
         hotspot_buffer = (struct ScreenPoint *)((ubyte *)scratch_malloc_mem + pos);
         pos += hotspot_buffer_len;
 
@@ -5604,7 +5604,7 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
             }
             if ((unkn_flags_08 & 0x08) != 0)
             {
-                long credits;
+                s32 credits;
 
               credits = p_netplyr->U.Progress.Credits;
               if (credits >= 0) {
@@ -6566,7 +6566,7 @@ void show_game_screen(void)
 
     if (execute_commands)
     {
-        long tmp;
+        s32 tmp;
         gamep_unknval_16 = nav_stats__ThisTurn;
         nav_stats__ThisTurn = 0;
         gamep_unknval_12++;
@@ -6888,7 +6888,7 @@ void load_packet(void)
         for (dmuser = 0; dmuser < p_locplayer->DoubleMode + 1; dmuser++)
         {
             if (p_locplayer->DoubleMode != 0) {
-                ulong ctlmode;
+                u32 ctlmode;
                 ctlmode = p_locplayer->UserInput[dmuser].ControlMode & ~UInpCtr_AllFlagsMask;
                 if (ctlmode == UInpCtr_Mouse)
                     continue;
@@ -6960,7 +6960,7 @@ void game_process_orbital_station_explode(void)
 void game_process(void)
 {
     debug_multicolor_sprite(193);
-    LOGDBG("WSCREEN 0x%lx", (ulong)lbDisplay.WScreen);
+    LOGDBG("WSCREEN 0x%lx", (u32)lbDisplay.WScreen);
 
     while ( !exit_game )
     {

@@ -54,15 +54,15 @@ extern struct ScreenTextBox cryo_cybmod_list_box;
 extern struct ScreenTextBox controls_list_box;
 extern struct ScreenButton alert_OK_button;
 
-extern long dword_1DC5FC;
-extern long dword_1DC600;
-extern long dword_1DC624;
-extern long dword_1DC628;
+extern s32 dword_1DC5FC;
+extern s32 dword_1DC600;
+extern s32 dword_1DC624;
+extern s32 dword_1DC628;
 
-extern long purple_box_x1;
-extern long purple_box_y1;
-extern long purple_box_x2;
-extern long purple_box_y2;
+extern s32 purple_box_x1;
+extern s32 purple_box_y1;
+extern s32 purple_box_x2;
+extern s32 purple_box_y2;
 
 void draw_line_purple_list(int x1, int y1, int x2, int y2, int colour)
 {
@@ -91,7 +91,7 @@ void draw_line_purple_list(int x1, int y1, int x2, int y2, int colour)
         pditem->Type = PuDT_LINE;
 }
 
-void draw_box_purple_list(int x, int y, ulong width, ulong height, int colour)
+void draw_box_purple_list(int x, int y, u32 width, u32 height, int colour)
 {
 #if 0
     asm volatile (
@@ -141,14 +141,14 @@ void draw_sprite_purple_list(int x, int y, struct TbSprite *p_sprite)
     pditem->Type = PuDT_SPRITE;
 }
 
-void draw_trig_purple_list(long x2, long y2, long x3, long y3)
+void draw_trig_purple_list(s32 x2, s32 y2, s32 x3, s32 y3)
 {
     asm volatile (
       "call ASM_draw_trig_purple_list\n"
         : : "a" (x2), "d" (y2), "b" (x3), "c" (y3));
 }
 
-void copy_box_purple_list(long x, long y, ulong width, ulong height)
+void copy_box_purple_list(s32 x, s32 y, u32 width, u32 height)
 {
     asm volatile (
       "call ASM_copy_box_purple_list\n"
@@ -1457,7 +1457,7 @@ void draw_flic_purple_list(void (*fn)())
     pditem->Type = PuDT_FLIC;
 }
 
-void draw_noise_box_purple_list(int x, int y, ulong width, ulong height)
+void draw_noise_box_purple_list(int x, int y, u32 width, u32 height)
 {
     draw_box_purple_list(x, y, width, height, 0);
     purple_draw_list[purple_draw_index - 1].Type = PuDT_NOISEBOX;

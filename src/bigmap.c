@@ -28,7 +28,7 @@ struct MapOffset spiral_step[SPIRAL_STEPS_COUNT];
 ushort dist_tiles_to_spiral_step[MAP_TILE_WIDTH];
 ushort spiral_dist_tiles_limit = 0;
 
-void map_coords_limit(short *cor_x, short *cor_y, short *cor_z, long map_x, long map_y, long map_z)
+void map_coords_limit(short *cor_x, short *cor_y, short *cor_z, s32 map_x, s32 map_y, s32 map_z)
 {
     if (map_x < 0)
         map_x = 0;
@@ -83,7 +83,7 @@ short get_mapwho_thing_index(short tile_x, short tile_z)
 
 /** Maps fields from old MyMapElement struct to the current one.
  */
-void refresh_old_my_big_map_format(struct MyMapElement *p_mapel, struct MyMapElementOldV7 *p_oldmapel, ulong fmtver)
+void refresh_old_my_big_map_format(struct MyMapElement *p_mapel, struct MyMapElementOldV7 *p_oldmapel, u32 fmtver)
 {
     LbMemorySet(p_mapel, 0, sizeof(struct MyMapElement));
 
@@ -114,8 +114,8 @@ void refresh_old_my_big_map_format(struct MyMapElement *p_mapel, struct MyMapEle
 void init_search_spiral_steps(void)
 {
     struct MapOffset *sstep;
-    long x,y;
-    long i;
+    s32 x,y;
+    s32 i;
 
     y = 0;
     x = 0;
@@ -169,8 +169,8 @@ void init_search_spiral_steps(void)
 void init_dist_to_spiral_steps(void)
 {
     struct MapOffset *sstep;
-    long i, ssi;
-    ulong dist, distss;
+    s32 i, ssi;
+    u32 dist, distss;
 
     ssi = SPIRAL_STEPS_COUNT-1;
     for (i = MAP_TILE_WIDTH; i > 0; i--)

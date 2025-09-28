@@ -63,7 +63,7 @@ uint32_t AIL_ms_count(void);
 /** Define a filename prefix for application's Global Timbre Library
  * files.
  *
- * Under MS-DOS, prefix may be up to 8 characters long and must not end
+ * Under MS-DOS, prefix may be up to 8 characters s32 and must not end
  * in a period.
  */
 void AIL_set_GTL_filename_prefix(char const *prefix);

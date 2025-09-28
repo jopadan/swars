@@ -55,9 +55,9 @@ struct SF_DATA {
 
 struct SF_INFO {
     short no_sample_packets;  /**< Number of packets of sound sample to stream */
-    long sample_seek;         /**< Start file location of sound sample */
-    long preset_seek;         /**< Address of preset_seek location */
-    long preset_read_size;    /**< Number of bytes from preset_seek to allocate and read */
+    s32 sample_seek;         /**< Start file location of sound sample */
+    s32 preset_seek;         /**< Address of preset_seek location */
+    s32 preset_read_size;    /**< Number of bytes from preset_seek to allocate and read */
 };
 
 /******************************************************************************/
@@ -71,7 +71,7 @@ extern TbBool Awe32SoundfontLoaded;
  * @param mdidrv pointer to MSS MIDI driver
  * @return Total RAM on card or ERROR (-1)
  */
-long AWEGetTotalRAM(MDI_DRIVER *mdidrv);
+s32 AWEGetTotalRAM(MDI_DRIVER *mdidrv);
 
 /**
  * Defines the way that memory on the AWE32 will be partitioned.
@@ -82,7 +82,7 @@ long AWEGetTotalRAM(MDI_DRIVER *mdidrv);
  * @param memMap Array of partition sizes
  * @return Gives OK (0) or ERROR (-1)
  */
-int AWEDefMemMap(MDI_DRIVER *mdidrv, short part_cnt, long *memMap, uint16_t memMap_sel);
+int AWEDefMemMap(MDI_DRIVER *mdidrv, short part_cnt, s32 *memMap, uint16_t memMap_sel);
 
 /**
  * Uses header to retrieve pertinent info about a Sound Font.
@@ -108,7 +108,7 @@ int AWEStreamSample(MDI_DRIVER *mdidrv, short bank_no, uint8_t *smpl_data, uint1
 
 /**
  * Loads Sound Font preset data.
- * Buffer must not be freed until Sound Font is no longer needed.
+ * Buffer must not be freed until Sound Font is no s32er needed.
  *
  * @param mdidrv Pointer to MSS MIDI driver
  * @param bank_no Bank which will receive preset

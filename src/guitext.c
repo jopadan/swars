@@ -30,10 +30,10 @@
 char *gui_strings_data;
 char *gui_strings_data_end;
 
-void snprint_dh_time_duration(char *out, ulong outlen, long ndays, short nhours)
+void snprint_dh_time_duration(char *out, u32 outlen, s32 ndays, short nhours)
 {
-    ulong days_strid;
-    ulong hours_strid;
+    u32 days_strid;
+    u32 hours_strid;
     if (ndays == 1) {
         days_strid = 625;
     } else {

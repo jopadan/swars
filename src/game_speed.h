@@ -28,11 +28,11 @@ extern "C" {
 /******************************************************************************/
 
 /******************************************************************************/
-extern ulong curr_tick_time;
-extern ulong prev_tick_time;
+extern u32 curr_tick_time;
+extern u32 prev_tick_time;
 extern GameTurn gameturn;
 extern GameTurn prev_gameturn;
-extern ulong turns_delta;
+extern u32 turns_delta;
 extern ushort fifties_per_gameturn;
 
 /** Amount of frames per second drawn by the game, and also aount of game

@@ -184,7 +184,7 @@ void input_user_control_agent(ushort plyr, short dmuser)
 {
     PlayerInfo *p_player;
     struct Packet *p_pckt;
-    void (*loc_build_packet)(struct Packet *, ushort, ulong, long, long, long);
+    void (*loc_build_packet)(struct Packet *, ushort, u32, s32, s32, s32);
     struct Thing *p_dcthing;
     int dx, dy, dz;
     ThingIdx dcthing;

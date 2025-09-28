@@ -212,7 +212,7 @@ ubyte do_equip_offer_buy_weapon(ubyte click)
 
     if (selected_agent != 4)
     {
-        long cost;
+        s32 cost;
         TbBool added;
 
         cost = 100 * wdef->Cost;
@@ -233,7 +233,7 @@ ubyte do_equip_offer_buy_weapon(ubyte click)
     }
     else
     {
-        long cost;
+        s32 cost;
         short nagent;
         TbBool added;
 
@@ -760,7 +760,7 @@ void init_weapon_anim(ubyte weapon)
 {
     struct Animation *p_anim;
     PathInfo *pinfo;
-    ulong k;
+    u32 k;
     ubyte anislot;
 
     pinfo = &game_dirs[DirPlace_Equip];
@@ -784,7 +784,7 @@ void init_weapon_anim(ubyte weapon)
 void weapon_flic_data_to_screen(void)
 {
     struct Animation *p_anim;
-    ulong k;
+    u32 k;
     short w, h;
 
     w = equip_display_box.Width - 8;

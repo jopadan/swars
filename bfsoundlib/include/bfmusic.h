@@ -29,22 +29,22 @@ extern "C" {
 #pragma pack(1)
 
 struct MusicBankSizes {
-    ulong mbs0;
-    ulong mbs1;
-    ulong mbs2;
-    ulong mbs3;
-    ulong mbs4;
-    ulong mbs5;
-    ulong mbs6;
-    ulong mbs7;
+    u32 mbs0;
+    u32 mbs1;
+    u32 mbs2;
+    u32 mbs3;
+    u32 mbs4;
+    u32 mbs5;
+    u32 mbs6;
+    u32 mbs7;
 };
 
 struct BfMusicInfo {
   char FileName[12];
-  long mifld_12;
+  s32 mifld_12;
   short mifld_16;
   ubyte *DataBeg;
-  long mifld_22;
+  s32 mifld_22;
   ubyte *DataEnd;
   short mifld_30;
 };

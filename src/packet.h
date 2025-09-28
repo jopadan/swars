@@ -125,20 +125,20 @@ struct Packet
     short X4;
     short Y4;
     short Z4;
-    long D1Seed;
-    long D2Check;
+    s32 D1Seed;
+    s32 D2Check;
 };
 
 
 #pragma pack()
 /******************************************************************************/
 extern struct Packet packets[8];
-extern void (*my_build_packet)(struct Packet *packet, ushort type, ulong param1, long x, long y, long z);
+extern void (*my_build_packet)(struct Packet *packet, ushort type, u32 param1, s32 x, s32 y, s32 z);
 
-void build_packet(struct Packet *packet, ushort type, ulong param1, long x, long y, long z);
-void build_packet2(struct Packet *packet, ushort type, ulong param1, long x, long y, long z);
-void build_packet3(struct Packet *packet, ushort type, ulong param1, long x, long y, long z);
-void build_packet4(struct Packet *packet, ushort type, ulong param1, long x, long y, long z);
+void build_packet(struct Packet *packet, ushort type, u32 param1, s32 x, s32 y, s32 z);
+void build_packet2(struct Packet *packet, ushort type, u32 param1, s32 x, s32 y, s32 z);
+void build_packet3(struct Packet *packet, ushort type, u32 param1, s32 x, s32 y, s32 z);
+void build_packet4(struct Packet *packet, ushort type, u32 param1, s32 x, s32 y, s32 z);
 
 void PacketRecord_Close(void);
 void PacketRecord_OpenWrite(void);

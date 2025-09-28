@@ -52,9 +52,9 @@ enum PlrTargetType {
 
 //TODO would make more sense to have a struct for each agent, and then a merging struct
 struct AgentInfo {
-    ulong Weapons[CRYO_PODS_MAX_COUNT];
+    u32 Weapons[CRYO_PODS_MAX_COUNT];
     union Mod Mods[CRYO_PODS_MAX_COUNT];
-    ulong Sex;
+    u32 Sex;
     char RandomName[CRYO_PODS_MAX_COUNT];
     struct WeaponsFourPack FourPacks[CRYO_PODS_MAX_COUNT];
     ubyte NumAgents;
@@ -86,7 +86,7 @@ typedef struct {
     /** Double mode is multiple players using the same computer (controlling individual agents). */
     ubyte DoubleMode;
     ubyte PlayerNo;
-    ulong Weapons[AGENTS_SQUAD_MAX_COUNT];
+    u32 Weapons[AGENTS_SQUAD_MAX_COUNT];
     union Mod Mods[AGENTS_SQUAD_MAX_COUNT];
     /** Per-mouser agent command param value Y */
     short UserVY[MOUSER_USERS_MAX_COUNT];
@@ -127,7 +127,7 @@ TbBool player_cryo_transfer_weapon_between_agents(ushort from_cryo_no,
 TbBool player_cryo_add_cybmod(ushort cryo_no, ubyte cybmod);
 const char *get_cryo_agent_name(ushort cryo_no);
 void remove_agent(ubyte cryo_no);
-void add_agent(ulong weapons, ushort mods);
+void add_agent(u32 weapons, ushort mods);
 
 void player_agents_init_prev_weapon(PlayerIdx plyr);
 void player_agents_add_random_epidermises(PlayerInfo *p_player);

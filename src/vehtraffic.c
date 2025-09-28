@@ -355,7 +355,7 @@ void update_vehicle_elevation(struct Thing *p_vehicle, short statn)
         p_vehicle->U.UVehicle.AngleX -= 4;
 }
 
-void update_vehicle_speed_and_direction(struct Thing *p_vehicle, int tndt_x, int tndt_z, long nxdist_sq)
+void update_vehicle_speed_and_direction(struct Thing *p_vehicle, int tndt_x, int tndt_z, s32 nxdist_sq)
 {
     short angleY, angDY;
 
@@ -510,9 +510,9 @@ void VNAV_process_bezier(struct Thing *p_road)
         : : "a" (p_road));
 }
 
-void VNAV_preprocess_bezier_turns(ulong nturns)
+void VNAV_preprocess_bezier_turns(u32 nturns)
 {
-    ulong turns;
+    u32 turns;
 
     for (turns = nturns; turns > 0; turns--)
     {

@@ -127,7 +127,7 @@ static void XMI_init_sequence_state(SNDSEQUENCE *seq)
  */
 static void XMI_rewind_sequence(SNDSEQUENCE *seq)
 {
-    unsigned long int wildpos;
+    u32 int wildpos;
 
     // Initialize sequence state table
     XMI_init_sequence_state(seq);

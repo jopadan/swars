@@ -233,7 +233,7 @@ struct CommandDef command_defs[] = {
 
 ushort next_command = 1;
 
-void snprint_command(char *buf, ulong buflen, ushort cmd)
+void snprint_command(char *buf, u32 buflen, ushort cmd)
 {
     struct Command *p_cmd;
     struct CommandDef *p_cdef;

@@ -52,7 +52,7 @@
 #include "thing.h"
 #include "swlog.h"
 /******************************************************************************/
-extern long dword_1DC36C;
+extern s32 dword_1DC36C;
 
 /** Over which agent weapon the cursor is currently placed.
  *
@@ -837,7 +837,7 @@ TbBool check_scanner_input(void)
  * @param py
  * @param spr_id
  */
-void draw_new_panel_sprite_std(int px, int py, ulong spr_id)
+void draw_new_panel_sprite_std(int px, int py, u32 spr_id)
 {
     struct TbSprite *p_spr;
 
@@ -861,7 +861,7 @@ void draw_new_panel_sprite_std(int px, int py, ulong spr_id)
  * @param py
  * @param spr_id
  */
-void draw_new_panel_sprite_scaled_std(int px, int py, ulong spr_id, int dest_width, int dest_height)
+void draw_new_panel_sprite_scaled_std(int px, int py, u32 spr_id, int dest_width, int dest_height)
 {
     struct TbSprite *p_spr;
 
@@ -884,7 +884,7 @@ void draw_new_panel_sprite_scaled_std(int px, int py, ulong spr_id, int dest_wid
  * @param py
  * @param spr_id
  */
-void draw_new_panel_sprite_dark(int px, int py, ulong spr_id)
+void draw_new_panel_sprite_dark(int px, int py, u32 spr_id)
 {
     struct TbSprite *p_spr;
 
@@ -907,7 +907,7 @@ void draw_new_panel_sprite_dark(int px, int py, ulong spr_id)
  * @param py
  * @param spr_id
  */
-void draw_new_panel_sprite_scaled_dark(int px, int py, ulong spr_id, int dest_width, int dest_height)
+void draw_new_panel_sprite_scaled_dark(int px, int py, u32 spr_id, int dest_width, int dest_height)
 {
     struct TbSprite *p_spr;
 
@@ -931,7 +931,7 @@ void draw_new_panel_sprite_scaled_dark(int px, int py, ulong spr_id, int dest_wi
  * @param py
  * @param spr_id
  */
-void draw_new_panel_sprite_prealp(int px, int py, ulong spr_id)
+void draw_new_panel_sprite_prealp(int px, int py, u32 spr_id)
 {
     struct TbSprite *p_spr;
 
@@ -1099,10 +1099,10 @@ TbBool draw_panel_pickable_thing_player_targeted(PlayerInfo *p_locplayer)
  * @param current_weapon
  * @return
  */
-int count_weapons_in_flags(int *p_ncarr_below, int *p_ncarr_above, ulong weapons_carried, short current_weapon)
+int count_weapons_in_flags(int *p_ncarr_below, int *p_ncarr_above, u32 weapons_carried, short current_weapon)
 {
     int ncarried, ncarr_below, ncarr_above;
-    ulong wepflags;
+    u32 wepflags;
     ushort nweptype;
 
     ncarried = 0;
@@ -1166,7 +1166,7 @@ void draw_agent_carried_weapon(PlayerInfo *p_locplayer, ushort plagent, short sl
     if (wep_highlight)
     {
         lbDisplay.DrawFlags = 0;
-        if (slot == 1) {// The first on list longer sprite has its own highlight
+        if (slot == 1) {// The first on list s32er sprite has its own highlight
             x = cx + game_panel_shifts[PaSh_WEP_FRST_BTN_TO_DECOR].x;
             y = cy + game_panel_shifts[PaSh_WEP_FRST_BTN_TO_DECOR].y;
             spr = 92;
@@ -1284,13 +1284,13 @@ TbBool panel_mouse_over_weapon(short box_x, short box_y, short box_w, short box_
  * This function is intended to loop through weapons in the same way
  * as draw_weapons_list_prealp(), but update state instead of drawing.
  */
-TbBool update_weapons_list_prealp(PlayerInfo *p_locplayer, ushort plagent, ulong weapons_carried, short current_weapon)
+TbBool update_weapons_list_prealp(PlayerInfo *p_locplayer, ushort plagent, u32 weapons_carried, short current_weapon)
 {
     struct GamePanel *p_panel;
     ushort nshown;
     int weptype;
     int nchecked;
-    ulong wepflags;
+    u32 wepflags;
     short cx, cy;
     int ncarried;
     int ncarr_below;
@@ -1347,13 +1347,13 @@ TbBool update_weapons_list_prealp(PlayerInfo *p_locplayer, ushort plagent, ulong
     return ret;
 }
 
-void draw_weapons_list_prealp(PlayerInfo *p_locplayer, ushort plagent, ulong weapons_carried, short current_weapon)
+void draw_weapons_list_prealp(PlayerInfo *p_locplayer, ushort plagent, u32 weapons_carried, short current_weapon)
 {
     struct GamePanel *p_panel;
     ushort nshown;
     ushort weptype;
     int nchecked;
-    ulong wepflags;
+    u32 wepflags;
     short cx, cy;
     int ncarried;
     int ncarr_below;
@@ -1495,7 +1495,7 @@ TbBool update_agent_weapons_selection(PlayerIdx plyr, short nagent)
     PlayerInfo *p_player;
     struct Thing *p_agent;
     struct GamePanel *p_panel;
-    ulong wepflags;
+    u32 wepflags;
     ushort panstate;
     int cx, cy;
     short cur_ready_wep, weptype;
@@ -1579,7 +1579,7 @@ void draw_agent_weapons_selection(PlayerIdx plyr, short nagent)
     PlayerInfo *p_player;
     struct Thing *p_agent;
     struct GamePanel *p_panel;
-    ulong wepflags;
+    u32 wepflags;
     int cx, cy;
     short cur_ready_wep, weptype;
     ushort plagent;
@@ -1760,7 +1760,7 @@ void func_702c0(int a1, int a2, int a3, int a4, int a5, ubyte a6)
 
 void draw_transparent_slant_bar(short x, short y, ushort w, ushort h)
 {
-    long waftx, wafty;
+    s32 waftx, wafty;
     ushort tmx, tmy;
     struct EnginePoint point4;
     struct EnginePoint point2;

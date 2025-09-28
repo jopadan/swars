@@ -49,7 +49,7 @@ void draw_purple_screen_hotspots(ushort hsnext)
     }
     else if (joy.DigitalY[0] == 1)
     {
-        ulong hmin;
+        u32 hmin;
         short imin, i;
 
         hmin = 0x80000000;
@@ -65,7 +65,7 @@ void draw_purple_screen_hotspots(ushort hsnext)
             shift_h = hotspot_buffer[i].Y - ms_y;
             if ((shift_h > 0) && (shift_h > abs(shift_w)))
             {
-                ulong hcur;
+                u32 hcur;
                 if (shift_h <= abs(shift_w))
                     hcur = (shift_h >> 1) + abs(shift_w);
                 else
@@ -82,7 +82,7 @@ void draw_purple_screen_hotspots(ushort hsnext)
     }
     else if (joy.DigitalY[0] == -1)
     {
-        ulong hmin;
+        u32 hmin;
         short imin, i;
 
         hmin = 0x80000000;
@@ -98,7 +98,7 @@ void draw_purple_screen_hotspots(ushort hsnext)
             shift_h = ms_y - hotspot_buffer[i].Y;
             if ((shift_h > 0) && (shift_h > abs(shift_w)))
             {
-                ulong hcur;
+                u32 hcur;
                 if (shift_h <= abs(shift_w))
                     hcur = (shift_h >> 1) + abs(shift_w);
                 else
@@ -115,7 +115,7 @@ void draw_purple_screen_hotspots(ushort hsnext)
     }
     else if (joy.DigitalX[0] == 1)
     {
-        ulong hmin;
+        u32 hmin;
         short imin, i;
 
         hmin = 0x80000000;
@@ -131,7 +131,7 @@ void draw_purple_screen_hotspots(ushort hsnext)
             shift_h = hotspot_buffer[i].Y - ms_y;
             if ((shift_w > 0) && (shift_w > abs(shift_h)))
             {
-                ulong hcur;
+                u32 hcur;
                 if (abs(shift_h) <= shift_w)
                     hcur = shift_w + (abs(shift_h) >> 1);
                 else
@@ -148,7 +148,7 @@ void draw_purple_screen_hotspots(ushort hsnext)
     }
     else if (joy.DigitalX[0] == -1)
     {
-        ulong hmin;
+        u32 hmin;
         short imin, i;
 
         hmin = 0x80000000;
@@ -164,7 +164,7 @@ void draw_purple_screen_hotspots(ushort hsnext)
             shift_h = hotspot_buffer[i].Y - ms_y;
             if ((shift_w > 0) && (shift_w > abs(shift_h)))
             {
-                ulong hcur;
+                u32 hcur;
                 if (abs(shift_h) <= shift_w)
                     hcur = shift_w + (abs(shift_h) >> 1);
                 else

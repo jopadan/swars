@@ -43,8 +43,8 @@ struct IPXSession { // sizeof=45
 };
 
 struct IPXPlayer { // sizeof=28
-    ulong Res0; // offset=0
-    ulong Res4; // offset=4
+    u32 Res0; // offset=0
+    u32 Res4; // offset=4
     ushort Res8; // offset=8
     char Name[16]; // offset=10
     ushort Used; // offset=26
@@ -59,7 +59,7 @@ struct IPXSessionList { // sizeof=271
 
 struct ModemResponse { // sizeof=0x2C
     char msg[40];
-    ulong code;
+    u32 code;
 };
 
 #pragma pack()
@@ -73,8 +73,8 @@ char ModemResponseString[80];
 char ModemRequestString[80];
 extern ubyte byte_1E81E0[1027];
 
-extern ulong ipx_send_packet_count[8][8];
-extern ulong ipx_got_player_send_packet_count[8];
+extern u32 ipx_send_packet_count[8][8];
+extern u32 ipx_got_player_send_packet_count[8];
 extern struct TbIPXPlayerHeader loggon_header;
 extern ubyte player_loggon;
 
@@ -163,7 +163,7 @@ TbResult LbNetworkSetSessionHangUpFunction(void *func)
     return Lb_SUCCESS;
 }
 
-TbResult LbNetworkSetTimeoutSec(ulong tmsec)
+TbResult LbNetworkSetTimeoutSec(u32 tmsec)
 {
     NetTimeoutTicks = 100 * tmsec;
     return Lb_SUCCESS;
@@ -311,7 +311,7 @@ TbResult ipx_create_session(char *a1, const char *a2)
 {
     struct TbIPXHandler *ipxhndl;
     struct TbIPXPlayer *p_plyrdt;
-    ulong tm_start, tm_curr;
+    u32 tm_start, tm_curr;
     TbResult ret;
     int i;
 
@@ -457,7 +457,7 @@ int ipx_session_list(struct IPXSessionList *sesslist, int listlen)
 int ipx_join_session(struct IPXSessionList *p_ipxsess, char *a2)
 {
     struct TbIPXPlayerHeader ipxhead;
-    ulong tm_start, tm_curr;
+    u32 tm_start, tm_curr;
     TbResult ret;
     short i, k;
 
@@ -1021,7 +1021,7 @@ void read_write_set_flag(struct TbSerialDev *serdev, ushort port, ubyte c)
 #endif
 }
 
-void wait(ulong msec)
+void wait(u32 msec)
 {
 #if defined(DOS)||defined(GO32)
     delay(msec);
@@ -1344,7 +1344,7 @@ TbResult LbModemRingType(ushort dev_id, ubyte rtyp)
 TbResult LbNetworkServiceStart(struct NetworkServiceInfo *nsvc)
 {
     TbResult ret;
-    ulong k;
+    u32 k;
 
     ret = Lb_FAIL;
     memcpy(&NetworkServicePtr.I, nsvc, sizeof(struct NetworkServiceInfo));
@@ -1760,7 +1760,7 @@ TbResult LbNetworkHostPlayerNumber(void)
     return ret;
 }
 
-TbResult LbNetworkSetupIPXAddress(ulong addr)
+TbResult LbNetworkSetupIPXAddress(u32 addr)
 {
     if (addr == 0)
         return Lb_FAIL;

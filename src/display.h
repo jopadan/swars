@@ -44,7 +44,7 @@ extern ubyte *display_palette;
 extern ubyte *back_buffer;
 extern TbPixel fade_unaffected_colours[];
 extern TbPixel colour_lookup[];
-extern ulong unkn_changing_color_counter1;
+extern u32 unkn_changing_color_counter1;
 extern long dword_1AA270;
 
 extern TbPixel colour_mix_lookup[];

@@ -28,7 +28,7 @@
 #pragma pack(1)
 
 struct PacketFileHead {
-    ulong magic;
+    u32 magic;
     ushort campgn;
     ushort missi;
     ushort mapno;
@@ -37,14 +37,14 @@ struct PacketFileHead {
 
 #pragma pack()
 
-void (*my_build_packet)(struct Packet *packet, ushort type, ulong param1, long x, long y, long z);
+void (*my_build_packet)(struct Packet *packet, ushort type, u32 param1, s32 x, s32 y, s32 z);
 
 /******************************************************************************/
 
 extern TbFileHandle packet_rec_fh;
 ushort packet_rec_no = 0;
 
-void build_packet(struct Packet *packet, ushort type, ulong param1, long x, long y, long z)
+void build_packet(struct Packet *packet, ushort type, u32 param1, s32 x, s32 y, s32 z)
 {
     asm volatile (
       "push %5\n"
@@ -53,7 +53,7 @@ void build_packet(struct Packet *packet, ushort type, ulong param1, long x, long
         : : "a" (packet), "d" (type), "b" (param1), "c" (x), "g" (y), "g" (z));
 }
 
-void build_packet2(struct Packet *packet, ushort type, ulong param1, long x, long y, long z)
+void build_packet2(struct Packet *packet, ushort type, u32 param1, s32 x, s32 y, s32 z)
 {
     asm volatile (
       "push %5\n"
@@ -62,7 +62,7 @@ void build_packet2(struct Packet *packet, ushort type, ulong param1, long x, lon
         : : "a" (packet), "d" (type), "b" (param1), "c" (x), "g" (y), "g" (z));
 }
 
-void build_packet3(struct Packet *packet, ushort type, ulong param1, long x, long y, long z)
+void build_packet3(struct Packet *packet, ushort type, u32 param1, s32 x, s32 y, s32 z)
 {
     asm volatile (
       "push %5\n"
@@ -71,7 +71,7 @@ void build_packet3(struct Packet *packet, ushort type, ulong param1, long x, lon
         : : "a" (packet), "d" (type), "b" (param1), "c" (x), "g" (y), "g" (z));
 }
 
-void build_packet4(struct Packet *packet, ushort type, ulong param1, long x, long y, long z)
+void build_packet4(struct Packet *packet, ushort type, u32 param1, s32 x, s32 y, s32 z)
 {
     asm volatile (
       "push %5\n"

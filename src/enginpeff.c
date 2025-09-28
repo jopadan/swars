@@ -89,13 +89,13 @@ static void draw_droplet(TbPixel *o, short scanln, short w, short h, TbPixel *co
 
 void draw_falling_rain(int bckt)
 {
-    ulong icol;
+    u32 icol;
     short limit_y;
     ushort rnd, m;
-    ulong shift_y;
+    u32 shift_y;
     TbPixel *o;
     TbPixel *coltb;
-    ulong seed_bkp;
+    u32 seed_bkp;
     short x, y;
     short scanln, w, h;
 
@@ -224,7 +224,7 @@ void draw_background_stars(void)
     asm volatile ("call ASM_draw_background_stars\n"
         :  :  : "eax" );
 #endif
-    ulong seed_bkp;
+    u32 seed_bkp;
     int i, limit;
     int scr_x0, scr_y0;
     ushort m;

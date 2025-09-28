@@ -90,7 +90,7 @@ void read_cybmods_conf_file(void)
     TbFileHandle conf_fh;
     TbBool done;
     int i;
-    long k;
+    s32 k;
     int cmd_num;
     struct TbIniParser parser;
     int conf_len;
@@ -586,7 +586,7 @@ void sanitize_cybmods_fmtver11_flags(union Mod *p_umod)
  * Note that it only works for mods stored as flag-per-mod. The
  * usual way of storage within people is 3bit-per-mod-type.
  */
-ushort cybmodflags_prev_mod(ulong modflags, ushort last_mtype)
+ushort cybmodflags_prev_mod(u32 modflags, ushort last_mtype)
 {
     ushort mtype;
 
@@ -595,7 +595,7 @@ ushort cybmodflags_prev_mod(ulong modflags, ushort last_mtype)
 
     for (mtype = last_mtype - 1; mtype > 0; mtype--)
     {
-        ulong modflg = 1 << (mtype-1);
+        u32 modflg = 1 << (mtype-1);
         if ((modflags & modflg) != 0)
             return mtype;
     }

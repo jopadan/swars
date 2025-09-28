@@ -30,8 +30,8 @@ struct HeapMgrHandle {
 };
 
 struct SampleTable {
-  long field_0;
-  long field_4;
+  s32 field_0;
+  s32 field_4;
   struct HeapMgrHandle *hmhandle;
 };
 
@@ -51,8 +51,8 @@ void sfx_apply_cdvolume(void);
 void fill_ail_sample_ids(void);
 void monitor_all_samples(void);
 
-struct SampleInfo *play_sample_using_heap(ulong a1, short smptbl_id, ulong a3, ulong a4, ulong a5, char a6, ubyte type);
-void stop_sample_using_heap(long source_id, ulong sample_number);
+struct SampleInfo *play_sample_using_heap(u32 a1, short smptbl_id, u32 a3, u32 a4, u32 a5, char a6, ubyte type);
+void stop_sample_using_heap(s32 source_id, u32 sample_number);
 void play_dist_sample(struct Thing *p_thing, ushort smptbl_id, ushort vol, ushort pan, int pitch, int loop, ubyte type);
 int play_dist_speech(struct Thing *p_thing, ushort samp, ushort vol, ushort pan, int pitch, int loop, ubyte type);
 void play_dist_ssample(struct SimpleThing *p_sthing, ushort smptbl_id, ushort vol, ushort pan, int pitch, int loop, ubyte type);

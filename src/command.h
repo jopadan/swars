@@ -200,55 +200,55 @@ enum PersonCommandType
   PCmd_UNKN6C,
   PCmd_UNKN6D,
   PCmd_LOOP_COM = 0x6E,
-  /** Repeat the preceding command as long as given person/vehicle is not dead/destroyed.
+  /** Repeat the preceding command as s32 as given person/vehicle is not dead/destroyed.
    */
   PCmd_UNTIL_P_V_DEAD = 0x6F,
-  /** Repeat the preceding command as long as given group has dead members count below given
+  /** Repeat the preceding command as s32 as given group has dead members count below given
    * amount.
    */
   PCmd_UNTIL_MEM_G_DEAD = 0x70,
-  /** Repeat the preceding command as long as not all members of given group are dead.
+  /** Repeat the preceding command as s32 as not all members of given group are dead.
    */
   PCmd_UNTIL_ALL_G_DEAD = 0x71,
-  /** Repeat the preceding command as long as given person/vehicle/item is not within given
+  /** Repeat the preceding command as s32 as given person/vehicle/item is not within given
    * range around command owner.
    */
   PCmd_UNTIL_P_V_I_NEAR = 0x72,
-  /** Repeat the preceding command as long as given group has less than given amount of members
+  /** Repeat the preceding command as s32 as given group has less than given amount of members
    * within given range around command owner.
    */
   PCmd_UNTIL_MEM_G_NEAR = 0x73,
-  /** Repeat the preceding command as long as given group does not have all living members within
+  /** Repeat the preceding command as s32 as given group does not have all living members within
    * given range around command owner.
    */
   PCmd_UNTIL_ALL_G_NEAR = 0x74,
-  /** Repeat the preceding command as long as given person/vehicle/item is not within given
+  /** Repeat the preceding command as s32 as given person/vehicle/item is not within given
    * range around given map position.
    */
   PCmd_UNTIL_P_V_I_ARRIVE = 0x75,
-  /** Repeat the preceding command as long as given group has less than given amount of members
+  /** Repeat the preceding command as s32 as given group has less than given amount of members
    * within given range around given map position.
    */
   PCmd_UNTIL_MEM_G_ARRIVE = 0x76,
-  /** Repeat the preceding command as long as given group does not have all living members within
+  /** Repeat the preceding command as s32 as given group does not have all living members within
    * given range around given map position.
    */
   PCmd_UNTIL_ALL_G_ARRIVE = 0x77,
-  /** Repeat the preceding command as long as given person is not persuaded.
+  /** Repeat the preceding command as s32 as given person is not persuaded.
    */
   PCmd_UNTIL_P_PERSUADE = 0x78,
-  /** Repeat the preceding command as long as given group has less than given amount of members
+  /** Repeat the preceding command as s32 as given group has less than given amount of members
    * persuaded.
    */
   PCmd_UNTIL_MEM_G_PERSUADE = 0x79,
-  /** Repeat the preceding command as long as given group does not have all living members
+  /** Repeat the preceding command as s32 as given group does not have all living members
    * persuaded.
    */
   PCmd_UNTIL_ALL_G_PERSUADE = 0x7A,
   PCmd_UNTIL_MISSION_SUCC = 0x7B,
   PCmd_UNTIL_MISSION_FAIL = 0x7C,
   PCmd_UNTIL_MISSION_START = 0x7D,
-  /** Repeat the preceding command as long as given object is not destroyed.
+  /** Repeat the preceding command as s32 as given object is not destroyed.
    */
   PCmd_UNTIL_OBJT_DESTROY = 0x7E,
   PCmd_UNTIL_TIME = 0x7F,
@@ -326,7 +326,7 @@ enum PersonCommandFlags
 struct CommandDef {
     const char *CmdName;
     void *vefify;
-    ulong Flags;
+    u32 Flags;
 };
 
 struct Command
@@ -344,7 +344,7 @@ struct Command
   short Time;
   short MyThing; /**< Index of the Thing which has this Command assigned. Unused - could be repurposed. */
   short Parent; /**< Index of the previous Command in a chain. Unused - could be repurposed. */
-  ulong Flags;
+  u32 Flags;
   short field_1C;
   short field_1E;
 };
@@ -356,7 +356,7 @@ extern struct CommandDef command_defs[];
 extern struct Command *game_commands;
 extern ushort next_command;
 
-void snprint_command(char *buf, ulong buflen, ushort cmd);
+void snprint_command(char *buf, u32 buflen, ushort cmd);
 TbBool is_command_any_until(struct Command *p_cmd);
 
 /** Reserve a new command instance and return its index.

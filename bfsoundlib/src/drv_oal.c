@@ -547,7 +547,7 @@ queue_mdi_sequence_buffers(MDI_DRIVER *mdidrv, SNDSEQUENCE *seq)
                 ||
                 (--seq->loop_count != 0))
             {
-                unsigned long int wildpos;
+                u32 int wildpos;
 
                 seq->EVNT_ptr = (uint8_t *) seq->EVNT + 8;
 

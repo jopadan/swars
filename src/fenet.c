@@ -53,7 +53,7 @@ extern struct ScreenButton net_protocol_option_button;
 
 extern char net_unkn40_text[];
 extern char unkn_opt_number_text[];
-extern ulong dword_155750[];
+extern u32 dword_155750[];
 extern ubyte byte_155174; // = 166;
 extern ubyte byte_155175[];
 extern ubyte byte_155180; // = 109;
@@ -284,9 +284,9 @@ void show_net_benefits_sub4(struct ScreenBox *box)
     draw_sprite_purple_list(box2.X - 7, box2.Y, &fe_icons_sprites[109]);
 }
 
-ulong sub_CCE8C(sbyte change)
+u32 sub_CCE8C(sbyte change)
 {
-    ulong ret;
+    u32 ret;
     asm volatile ("call ASM_sub_CCE8C\n"
         : "=r" (ret) : "a" (change));
     return ret;

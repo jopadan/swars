@@ -51,7 +51,7 @@ int32_t FILE_size(char const *fname)
 
 void *FILE_read(const char *fname, void *dest)
 {
-    long fsize;
+    s32 fsize;
     void *rddest;
     int fh;
 

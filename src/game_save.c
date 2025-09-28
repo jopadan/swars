@@ -53,25 +53,25 @@ void save_crypto_make_hashtable(ubyte simple_salt)
         :  : "a" (simple_salt));
 }
 
-ulong save_crypto_transform1(ubyte a1)
+u32 save_crypto_transform1(ubyte a1)
 {
-    ulong ret;
+    u32 ret;
     asm volatile ("call ASM_save_crypto_transform1\n"
         : "=r" (ret) : "a" (a1));
     return ret;
 }
 
-ulong save_crypto_transform2(ubyte a1)
+u32 save_crypto_transform2(ubyte a1)
 {
-    ulong ret;
+    u32 ret;
     asm volatile ("call ASM_save_crypto_transform2\n"
         : "=r" (ret) : "a" (a1));
     return ret;
 }
 
-ulong save_crypto_transform3(ubyte a1)
+u32 save_crypto_transform3(ubyte a1)
 {
-    ulong ret;
+    u32 ret;
     asm volatile ("call ASM_save_crypto_transform3\n"
         : "=r" (ret) : "a" (a1));
     return ret;

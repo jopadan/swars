@@ -872,7 +872,7 @@ const char *thing_type_name(ubyte tngtype, ubyte subtype)
     return thing_type_names[tngtype];
 }
 
-void snprint_thing(char *buf, ulong buflen, struct Thing *p_thing)
+void snprint_thing(char *buf, u32 buflen, struct Thing *p_thing)
 {
     char *s;
     ubyte nparams;
@@ -913,7 +913,7 @@ void snprint_thing(char *buf, ulong buflen, struct Thing *p_thing)
     snprintf(s, buflen - (s-buf), " )");
 }
 
-void snprint_sthing(char *buf, ulong buflen, struct SimpleThing *p_sthing)
+void snprint_sthing(char *buf, u32 buflen, struct SimpleThing *p_sthing)
 {
     char *s;
     ubyte nparams;
@@ -1297,7 +1297,7 @@ ThingIdx new_thing_building_clone(struct Thing *p_clthing, struct M33 *p_clmat, 
 
 /** Maps fields from old Thing struct to the current one.
  */
-void refresh_old_thing_format(struct Thing *p_thing, struct ThingOldV9 *p_oldthing, ulong fmtver)
+void refresh_old_thing_format(struct Thing *p_thing, struct ThingOldV9 *p_oldthing, u32 fmtver)
 {
     ushort len;
 

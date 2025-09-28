@@ -247,7 +247,7 @@ void read_cities_conf_file(void)
     TbFileHandle conf_fh;
     TbBool done;
     int i, n;
-    long k;
+    s32 k;
     struct TbIniParser parser;
     int conf_len;
     int city_id;
@@ -430,7 +430,7 @@ void recount_city_credit_reward(ubyte city)
  */
 TbBool is_mission_active_in_city(ushort missi, ushort city)
 {
-    ulong TotalReward;
+    u32 TotalReward;
 
     // The CashReward x1000 indicates credits automatically gained after mission
     TotalReward = mission_list[missi].CashReward * 1000;

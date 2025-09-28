@@ -218,7 +218,7 @@ void read_people_conf_file(void)
     TbFileHandle conf_fh;
     TbBool done;
     int i;
-    long k;
+    s32 k;
     int cmd_num;
     struct TbIniParser parser;
     int conf_len;
@@ -455,7 +455,7 @@ TbBool person_type_only_affected_by_adv_persuader(ushort ptype)
     return (ptype == SubTT_PERS_ZEALOT);
 }
 
-void snprint_person_state(char *buf, ulong buflen, struct Thing *p_thing)
+void snprint_person_state(char *buf, u32 buflen, struct Thing *p_thing)
 {
     char *s;
     ubyte nparams;
@@ -5078,7 +5078,7 @@ void process_person(struct Thing *p_person)
         char locstr[150];
         short pstng_x, pstng_y, pstng_z;
 
-        sprintf(locstr, "%ld", (long)p_person->Y);
+        sprintf(locstr, "%d", (s32)p_person->Y);
         get_thing_position_mapcoords(&pstng_x, &pstng_y, &pstng_z, p_person->ThingOffset);
         draw_text_transformed(pstng_x, pstng_y, pstng_z, locstr);
     }

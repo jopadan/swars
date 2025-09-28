@@ -38,24 +38,24 @@
 /******************************************************************************/
 
 struct scanstr1 {
-    long u;
-    long v;
+    s32 u;
+    s32 v;
 };
 
 struct scanstr2 {
-    long du;
-    long dv;
+    s32 du;
+    s32 dv;
 };
 
 struct scanstr3 {
-    long u1;
-    long v1;
-    long u2;
-    long v2;
+    s32 u1;
+    s32 v1;
+    s32 u2;
+    s32 v2;
 };
 
 struct NearestPos {
-    ulong dist;
+    u32 dist;
     short x;
     short y;
 };
@@ -388,15 +388,15 @@ const struct TbPoint circle_line_sz5[] = {
 };
 #define circle_line_sz5_count (sizeof(circle_line_sz5)/sizeof(circle_line_sz5[0]))
 
-extern long scanner_next_key_no;
+extern s32 scanner_next_key_no;
 
-extern long SCANNER_dw064;
-extern long SCANNER_dw068;
-extern long SCANNER_dw06C;
-extern long SCANNER_dw070;
-extern long SCANNER_dw074;
-extern long SCANNER_dw07C;
-extern long SCANNER_dw080;
+extern s32 SCANNER_dw064;
+extern s32 SCANNER_dw068;
+extern s32 SCANNER_dw06C;
+extern s32 SCANNER_dw070;
+extern s32 SCANNER_dw074;
+extern s32 SCANNER_dw07C;
+extern s32 SCANNER_dw080;
 
 extern ubyte SCANNER_bt084;
 extern ubyte SCANNER_bt085;
@@ -404,11 +404,11 @@ extern ubyte SCANNER_brig;
 extern ubyte SCANNER_cont;
 
 extern struct scanstr1 SCANNER_bbpoint[255];
-extern long dword_1DBB64[];
-extern long dword_1DBB6C[512];
+extern s32 dword_1DBB64[];
+extern s32 dword_1DBB6C[512];
 extern TbPixel *SCANNER_screenptr;
-extern ulong SCANNER_keep_arcs;
-extern long scanner_blink; // = 1;
+extern u32 SCANNER_keep_arcs;
+extern s32 scanner_blink; // = 1;
 
 extern struct scanstr3 SCANNER_arcpoint[20];
 
@@ -672,7 +672,7 @@ void SCANNER_draw_new_transparent_map(void)
     int dt_x, dt_y;
     int sh_x, sh_y;
     int cu_x1, cu_y1, cu_x2, cu_y2;
-    long *p_width;
+    s32 *p_width;
     TbPixel *p_out;
     int cu_y;
 
@@ -715,7 +715,7 @@ void SCANNER_draw_new_transparent_map(void)
     }
 }
 
-void unkn_draw_transformed_point(short x, short y, long ptX, long ptY, long ptZ, ubyte colour)
+void unkn_draw_transformed_point(short x, short y, s32 ptX, s32 ptY, s32 ptZ, ubyte colour)
 {
     struct EnginePoint ep;
 
@@ -727,9 +727,9 @@ void unkn_draw_transformed_point(short x, short y, long ptX, long ptY, long ptZ,
     LbDrawLine(x, y, ep.pp.X, ep.pp.Y, colour);
 }
 
-void draw_objective_point(long x, long y, ThingIdx thing, short a4, ubyte colour)
+void draw_objective_point(s32 x, s32 y, ThingIdx thing, short a4, ubyte colour)
 {
-    long ptX, ptY, ptZ;
+    s32 ptX, ptY, ptZ;
 
     if (a4)
         return;
@@ -1352,7 +1352,7 @@ static void map_coords_to_scanner(int *sc_x, int *sc_y, int sh_x, int sh_y, int 
 {
     u32 tmp;
     int rval_xy, rval_yy, rval_yx, rval_xx, rval_div;
-    long prec_x, prec_y;
+    s32 prec_x, prec_y;
 
     tmp = (sh_x * bsh_y) & 0xFFFF0000;
     tmp |= ((sh_x * (s64)bsh_y) >> 32) & 0xFFFF;
@@ -1526,7 +1526,7 @@ void SCANNER_check_nearest(struct Thing *p_thing, struct NearestPos *p_nearest, 
         return;
 
     int dist_x, dist_y;
-    ulong dist;
+    u32 dist;
     int i;
 
     group_col = 0;
@@ -1688,7 +1688,7 @@ void SCANNER_draw_things_dots(int pos_mx, int pos_mz, int sh_x, int sh_y, int po
     struct Thing *p_thing;
     struct SimpleThing *p_sthing;
     struct NearestPos nearest;
-    long limit;
+    s32 limit;
     short thing;
 
     nearest.dist = 0x7FFFFFFF;
@@ -1726,7 +1726,7 @@ void SCANNER_draw_things_dots(int pos_mx, int pos_mz, int sh_x, int sh_y, int po
     }
     else if ((nearest.dist > range * range) && (nearest.dist != 0x7FFFFFFF))
     {
-        long angle;
+        s32 angle;
         angle = arctan(nearest.x, nearest.y);
         SCANNER_draw_orientation_arrow(pos_x1, pos_y1, range, angle);
     }

@@ -31,11 +31,11 @@
 #include "util.h"
 #include "swlog.h"
 
-extern long sound_heap_size;
+extern s32 sound_heap_size;
 extern struct SampleTable *sound_heap_memory;
 extern TbFileHandle sound_file; // = INVALID_FILE;
 extern struct HeapMgrHeader *hmhead;
-extern long samples_in_bank;
+extern s32 samples_in_bank;
 extern struct SampleTable *sample_table;
 
 void set_default_sfx_settings(void)
@@ -72,7 +72,7 @@ void sfx_apply_cdvolume(void)
     SetCDVolume(70 * (127 * startscr_cdvolume / STARTSCR_VOLUME_MAX) / 100);
 }
 
-struct SampleInfo *play_sample_using_heap(ulong a1, short smptbl_id, ulong a3, ulong a4, ulong a5, char a6, ubyte type)
+struct SampleInfo *play_sample_using_heap(u32 a1, short smptbl_id, u32 a3, u32 a4, u32 a5, char a6, ubyte type)
 {
     struct SampleInfo *ret;
     asm volatile (
@@ -84,7 +84,7 @@ struct SampleInfo *play_sample_using_heap(ulong a1, short smptbl_id, ulong a3, u
     return ret;
 }
 
-void stop_sample_using_heap(long source_id, ulong sample_number)
+void stop_sample_using_heap(s32 source_id, u32 sample_number)
 {
     asm volatile (
       "call ASM_stop_sample_using_heap\n"
@@ -172,13 +172,13 @@ int setup_heap_manager(struct SampleTable *smptable, size_t smptb_len, const cha
 {
     TbFileHandle fh;
     ubyte tpno;
-    long totlen;
-    long pos;
+    s32 totlen;
+    s32 pos;
     struct SampleTable *smptb;
     size_t tab_smptb_len;
     struct BfSoundBankHead *sbh;
     int i;
-    long smptb_len_diff;
+    s32 smptb_len_diff;
     ubyte *p_smptb_end;
     struct BfSoundBankHead sbharr[9];
     struct BfSfxInfo sfxi;
@@ -219,9 +219,9 @@ int setup_heap_manager(struct SampleTable *smptable, size_t smptb_len, const cha
     for (i = 0; i < samples_in_bank; i++)
     {
         LbFileRead(fh, &sfxi, sizeof(struct BfSfxInfo));
-        smptb->field_0 = sbh->DatPos + (long)sfxi.DataBeg;
+        smptb->field_0 = sbh->DatPos + (s32)sfxi.DataBeg;
         smptb->hmhandle = 0;
-        smptb->field_4 = (long)sfxi.DataEnd;
+        smptb->field_4 = (s32)sfxi.DataEnd;
         smptb++;
     }
     if (samples_in_bank <= 0) {
@@ -271,7 +271,7 @@ void setup_heaps(short setup_cmd, const char *lang)
 {
     char locstr[DISKPATH_SIZE];
     PathInfo *pinfo;
-    long sz;
+    s32 sz;
     unsigned int n;
 
     if ((ingame.Flags & GamF_Unkn00020000) == 0)

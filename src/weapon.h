@@ -172,23 +172,23 @@ TbBool weapon_has_targetting(ushort wtype);
  */
 ushort weapon_sprite_index(ushort wtype, TbBool enabled);
 
-TbBool weapons_has_weapon(ulong weapons, ushort wtype);
-ushort weapons_prev_weapon(ulong weapons, ushort last_wtype);
+TbBool weapons_has_weapon(u32 weapons, ushort wtype);
+ushort weapons_prev_weapon(u32 weapons, ushort last_wtype);
 
 ushort weapon_fourpack_index(ushort weapon);
-void weapons_remove_weapon(ulong *p_weapons,
+void weapons_remove_weapon(u32 *p_weapons,
   struct WeaponsFourPack *p_fourpacks, ushort wtype);
 
 /** Remove one weapon from an npc person in-game.
  * NPCs have no FourPacks, meaning removing one consumable weapon does nothing.
  * For non-consumable weapons, this removes the related weapon normally.
  */
-TbBool weapons_remove_one_from_npc(ulong *p_weapons, ushort wtype);
+TbBool weapons_remove_one_from_npc(u32 *p_weapons, ushort wtype);
 
 /** Remove one weapon from a player character, in Cryo Chamber.
  * Currently this is only for cryo chamber, as in-game fourpacks have different format.
  */
-TbBool weapons_remove_one(ulong *p_weapons,
+TbBool weapons_remove_one(u32 *p_weapons,
   struct WeaponsFourPack *p_fourpacks, ushort wtype);
 
 /** Reset previously selected weapon visible in the players panel.
@@ -200,16 +200,16 @@ void person_weapons_reset_previous(struct Thing *p_person);
  * this special function.
  * DEPRECATED: To be removed when possible.
  */
-TbBool weapons_remove_one_for_player(ulong *p_weapons,
+TbBool weapons_remove_one_for_player(u32 *p_weapons,
   ubyte p_plfourpacks[][4], ushort plagent, ushort wtype);
 
-TbBool weapons_add_one(ulong *p_weapons,
+TbBool weapons_add_one(u32 *p_weapons,
   struct WeaponsFourPack *p_fourpacks, ushort wtype);
 
-TbBool weapons_add_one_for_player(ulong *p_weapons,
+TbBool weapons_add_one_for_player(u32 *p_weapons,
   ubyte p_plfourpacks[][4], ushort plagent, ushort wtype);
 
-void sanitize_weapon_quantities(ulong *p_weapons,
+void sanitize_weapon_quantities(u32 *p_weapons,
   struct WeaponsFourPack *p_fourpacks);
 
 ubyte find_nth_weapon_held(ushort index, ubyte n);
@@ -243,7 +243,7 @@ TbBool person_can_be_persuaded_now(ThingIdx attacker, ThingIdx target,
  */
 TbBool current_weapon_has_targetting(struct Thing *p_person);
 
-ulong person_carried_weapons_pesuaded_sell_value(struct Thing *p_person);
+u32 person_carried_weapons_pesuaded_sell_value(struct Thing *p_person);
 
 TbBool person_weapons_remove_one(struct Thing *p_person, ushort wtype);
 

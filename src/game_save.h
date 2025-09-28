@@ -26,7 +26,7 @@ extern "C" {
 #endif
 /******************************************************************************/
 
-extern ulong save_mortal_salt;
+extern u32 save_mortal_salt;
 
 extern ubyte *save_game_buffer;
 extern char save_active_desc[28];
@@ -34,7 +34,7 @@ extern char login_name[16];
 
 extern short save_slot; // = -1;
 extern char save_slot_names[8][25];
-extern long save_slot_base;
+extern s32 save_slot_base;
 
 /******************************************************************************/
 

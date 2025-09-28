@@ -101,7 +101,7 @@ extern ubyte ctl_joystick_type;
 
 void init_buffered_keys(void);
 void reset_buffered_keys(void);
-ulong next_buffered_key(void);
+u32 next_buffered_key(void);
 
 void input(void);
 

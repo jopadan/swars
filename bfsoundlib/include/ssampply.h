@@ -34,15 +34,15 @@ typedef void * TbSampleHandle;
 
 //int PlaySample();
 
-struct SampleInfo *PlaySampleFromAddress(long source_id, short smp_id,
+struct SampleInfo *PlaySampleFromAddress(s32 source_id, short smp_id,
   short volume, ushort pan, short pitch, sbyte loop_count,
   ubyte a7, void *address);
 
-TbBool IsSamplePlaying(long source_id, short smp_id, TbSampleHandle handle);
+TbBool IsSamplePlaying(s32 source_id, short smp_id, TbSampleHandle handle);
 
-void SetSamplePan(long source_id, short smp_id, ushort pan);
-void SetSamplePitch(long source_id, short smp_id, short pitch);
-void SetSampleVolume(long source_id, short smp_id, short volume);
+void SetSamplePan(s32 source_id, short smp_id, ushort pan);
+void SetSamplePitch(s32 source_id, short smp_id, short pitch);
+void SetSampleVolume(s32 source_id, short smp_id, short volume);
 
 /** Releases sound sample which is playing in a loop.
  *
@@ -51,7 +51,7 @@ void SetSampleVolume(long source_id, short smp_id, short volume);
  */
 void ReleaseLoopedSample(ushort source_id, short smp_id);
 
-void StopSample(long source_id, short smp_id);
+void StopSample(s32 source_id, short smp_id);
 void StopAllSamples(void);
 
 /******************************************************************************/

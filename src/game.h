@@ -202,11 +202,11 @@ struct InGame {
     ubyte AutoResearch;
     ubyte GameOver;
     struct Scanner Scanner; // offset=0x0C
-    long Credits; // offset=0x473 (on original Scanner struct)
-    ulong fld_unkC4B;	// offset=0x477
+    s32 Credits; // offset=0x473 (on original Scanner struct)
+    u32 fld_unkC4B;	// offset=0x477
     short fld_unkC4F;
     short MissionStatus;
-    long Flags;
+    s32 Flags;
     ushort fld_unkC57;
     short fld_unkC59;
     short draw_unknprop_01;
@@ -222,7 +222,7 @@ struct InGame {
     short LowerMemoryUse;
     short fld_unkC8B;
     short fld_unkC8D[2];
-    long fld_unkC91;
+    s32 fld_unkC91;
     ushort TrackX;
     ushort TrackZ;
     short TrackThing;
@@ -248,8 +248,8 @@ struct InGame {
     ubyte InNetGame_UNSURE;
     ubyte fld_unkCBA[5];
     ushort UserFlags;
-    long CashAtStart;
-    long Expenditure;
+    s32 CashAtStart;
+    s32 Expenditure;
 };
 
 #pragma pack()
@@ -264,12 +264,12 @@ extern ubyte cmdln_colour_tables;
 extern ubyte cmdln_param_bcg;
 extern ubyte keyboard_mode_direct;
 extern ubyte unkn01_maskarr[28];
-extern long map_editor;
+extern s32 map_editor;
 
 extern struct InGame ingame;
 
 extern ubyte login_control__State;
-extern ulong login_control__Money;
+extern u32 login_control__Money;
 extern sbyte login_control__City;
 extern ubyte login_control__TechLevel;
 extern ubyte byte_181183;
@@ -281,20 +281,20 @@ extern ushort packet_rec_no;
 extern ubyte exit_game;
 extern ubyte input_char;
 
-extern ulong active_flags_general_unkn01;
+extern u32 active_flags_general_unkn01;
 
-extern long unkn01_downcount;
-extern long unkn01_pos_x;
-extern long unkn01_pos_y;
+extern s32 unkn01_downcount;
+extern s32 unkn01_pos_x;
+extern s32 unkn01_pos_y;
 
 extern ushort current_map;
 extern short current_level;
 
-extern ulong engine_mem_alloc_size;
+extern u32 engine_mem_alloc_size;
 extern void *engine_mem_alloc_ptr;
 
-extern long navi2_unkn_counter;
-extern long navi2_unkn_counter_max;
+extern s32 navi2_unkn_counter;
+extern s32 navi2_unkn_counter_max;
 
 extern ubyte anim_slots[];
 extern struct Animation animations[2];
@@ -302,7 +302,7 @@ extern struct Animation animations[2];
 extern ubyte *scratch_buf1;
 
 extern void *dword_1810D1;
-extern ulong dword_1810D5;
+extern u32 dword_1810D5;
 
 extern ushort game_level_unique_id;
 extern ubyte game_level_unkn1[40];
@@ -318,12 +318,12 @@ extern ubyte *game_user_heap;
 extern struct UnknBezEdit *bezier_pts;
 extern ushort next_bezier_pt;
 extern ubyte *spare_map_buffer;
-extern long target_old_frameno;
+extern s32 target_old_frameno;
 extern ushort word_176E38;
 
 extern ubyte byte_1C4A7C;
 extern ubyte linear_vec_pal[256];
-extern ulong nsta_size;
+extern u32 nsta_size;
 
 extern short *dword_1C529C[6];
 extern short *landmap_2B4;
@@ -344,20 +344,20 @@ extern ushort cybmod_text_index[16];
 extern ubyte background_type;
 extern ubyte old_screentype;
 extern ubyte screentype;
-extern long data_155704;
+extern s32 data_155704;
 extern ubyte data_1c498d;
 extern ubyte mouse_sprite_anim_frame;
 extern char *outro_text_s;
 extern char *outro_text_z;
-extern long data_197150;
-extern long data_1dd91c;
+extern s32 data_197150;
+extern s32 data_1dd91c;
 extern ubyte unkn_flags_01;
 extern ushort palette_brightness;
-extern long outro_credits_enabled;
-extern long outro_unkn02;
-extern long outro_unkn03;
-extern long people_groups_count;
-extern long data_1ddb68;
+extern s32 outro_credits_enabled;
+extern s32 outro_unkn02;
+extern s32 outro_unkn03;
+extern s32 people_groups_count;
+extern s32 data_1ddb68;
 extern ubyte byte_1DDC40;
 
 extern ubyte debug_hud_collision;
@@ -365,12 +365,12 @@ extern ubyte debug_hud_collision;
 extern void *dword_177750;
 extern void *unkn_mech_arr7;
 
-extern long mech_unkn_dw_1DC880;
-extern long mech_unkn_dw_1DC884;
-extern long mech_unkn_dw_1DC888;
-extern long mech_unkn_dw_1DC88C;
-extern long mech_unkn_dw_1DC890;
-extern long mech_unkn_dw_1DC894;
+extern s32 mech_unkn_dw_1DC880;
+extern s32 mech_unkn_dw_1DC884;
+extern s32 mech_unkn_dw_1DC888;
+extern s32 mech_unkn_dw_1DC88C;
+extern s32 mech_unkn_dw_1DC890;
+extern s32 mech_unkn_dw_1DC894;
 
 extern char *people_credits_desc[];
 extern char *people_credits_groups[];
@@ -386,8 +386,8 @@ extern char *weapon_text;
 #define weapon_text_len 32768
 
 extern ubyte scientists_lost;
-extern ulong new_mods_researched;
-extern ulong new_weapons_researched;
+extern u32 new_mods_researched;
+extern u32 new_weapons_researched;
 extern ubyte redraw_screen_flag;
 
 extern sbyte byte_15516C;
@@ -395,8 +395,8 @@ extern sbyte byte_15516D;
 extern ubyte byte_1C5C28[8];
 extern ubyte byte_1C6D48;
 extern ubyte unkn_flags_08;
-extern long dword_153194;
-extern ulong starting_cash_amounts[4];
+extern s32 dword_153194;
+extern u32 starting_cash_amounts[4];
 extern sbyte unkn_city_no;
 extern ubyte group_types[8];
 extern ubyte byte_1C4AA3;
@@ -418,11 +418,11 @@ extern ushort word_1811AE;
 
 extern struct LevelDef level_def;
 
-extern long dword_17710C;
-extern long dword_177110;
+extern s32 dword_17710C;
+extern s32 dword_177110;
 extern ubyte mouser;
-extern long dword_1AA5C4;
-extern long dword_1AA5C8;
+extern s32 dword_1AA5C4;
+extern s32 dword_1AA5C8;
 
 extern short next_ref;
 extern ushort next_mission;
@@ -491,7 +491,7 @@ void flic_unkn03(ubyte a1);
 void my_preprocess_text(char *text);
 ushort my_count_lines(const char *text);
 
-TbBool player_try_spend_money(long cost);
+TbBool player_try_spend_money(s32 cost);
 TbBool is_unkn_current_player(void);
 void campaign_new_game_prepare(void);
 

@@ -63,7 +63,7 @@ static inline TbResult load_sprites_with_detail(ubyte *p_dat, ubyte **pp_dat_end
   short styleno, short detail)
 {
     char locstr[DISKPATH_SIZE];
-    long len;
+    s32 len;
     TbResult ret;
 
     sprintf(locstr, "%s/%s%hd-%hd.tab", dir, name, styleno, detail);
@@ -209,7 +209,7 @@ TbResult load_sprites_wicons(ubyte **pp_buf, const char *dir)
 {
     char locstr[DISKPATH_SIZE];
     ubyte *p_buf;
-    long len;
+    s32 len;
     TbResult ret;
 
     p_buf = *pp_buf;
@@ -474,7 +474,7 @@ void reset_sprites_small2_font(void)
 TbResult load_multicolor_sprites(const char *dir)
 {
     char locstr[DISKPATH_SIZE];
-    long len;
+    s32 len;
     TbResult ret;
 
     ret = Lb_OK;
@@ -520,7 +520,7 @@ void debug_multicolor_sprite(int idx)
     spr = &m_sprites[idx];
     str = strdata;
     sprintf(str, "spr %d width %d height %d ptr 0x%lx data",
-      idx, (int)spr->SWidth, (int)spr->SHeight, (ulong)spr->Data);
+      idx, (int)spr->SWidth, (int)spr->SHeight, (u32)spr->Data);
     ptr = spr->Data;
     for (i = 0; i < 10; i++)
     {

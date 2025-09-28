@@ -468,7 +468,7 @@ void read_missions_bin_file(int num)
 {
     TbFileHandle fh;
     char locstr[52];
-    ulong fmtver;
+    u32 fmtver;
     char *p_str;
     int i;
 
@@ -478,7 +478,7 @@ void read_missions_bin_file(int num)
     fh = LbFileOpen(locstr, Lb_FILE_MODE_READ_ONLY);
     if (fh != INVALID_FILE)
     {
-        LbFileRead(fh, &fmtver, sizeof(ulong));
+        LbFileRead(fh, &fmtver, sizeof(u32));
         LbFileRead(fh, &mission_strings_len, sizeof(ushort));
         LbFileRead(fh, p_str, mission_strings_len);
         LbFileRead(fh, &next_mission, sizeof(ushort));
@@ -605,7 +605,7 @@ void save_mission_single_conf(TbFileHandle fh, struct Mission *p_missi, char *bu
     }
     if (p_missi->ResearchWeapons != 0) {
         sprintf(buf, "ResearchWeapons = 0x%lx\n",
-          (ulong)p_missi->ResearchWeapons);
+          (u32)p_missi->ResearchWeapons);
         LbFileWrite(fh, buf, strlen(buf));
     }
     if (p_missi->ExtraRewardType != 0) {
@@ -775,7 +775,7 @@ TbBool read_missions_conf_info(int num)
     TbFileHandle conf_fh;
     TbBool done;
     unsigned int i;
-    long k;
+    s32 k;
     char *conf_buf;
     struct TbIniParser parser;
     char conf_fname[80];
@@ -975,7 +975,7 @@ void read_missions_conf_file(int num)
     TbFileHandle conf_fh;
     TbBool done;
     int i, n;
-    long k;
+    s32 k;
     char *conf_buf;
     struct TbIniParser parser;
     struct Campaign *p_campgn;
@@ -1550,7 +1550,7 @@ void read_missions_conf_file(int num)
         } else
         while (!done)
         {
-            long pri;
+            s32 pri;
             struct Objective *p_objectv;
 
             // Get the key, as it holds priority
@@ -1598,7 +1598,7 @@ void read_missions_conf_file(int num)
         } else
         while (!done)
         {
-            long pri;
+            s32 pri;
             struct Objective *p_objectv;
 
             // Get the key, as it holds priority

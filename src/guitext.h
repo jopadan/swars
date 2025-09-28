@@ -78,9 +78,9 @@ enum GuiStrings {
 extern char *gui_strings[STRINGS_MAX];
 extern char *gui_strings_data;
 extern char *gui_strings_data_end;
-extern ulong text_buf_pos;
+extern u32 text_buf_pos;
 
-void snprint_dh_time_duration(char *out, ulong outlen, long ndays, short nhours);
+void snprint_dh_time_duration(char *out, u32 outlen, s32 ndays, short nhours);
 
 /** Converts any kind of text pointer to a global text pointer.
  *

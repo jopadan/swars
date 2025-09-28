@@ -86,7 +86,7 @@ enum ObjectiveDefFlags {
 struct ObjectiveDef {
     const char *CmdName;
     const char *DefText;
-    ulong Flags;
+    u32 Flags;
 };
 
 struct ObjectiveDef objectv_defs[] = {
@@ -108,7 +108,7 @@ struct ObjectiveDef objectv_defs[] = {
     {"GAME_OBJ_MEM_G_ARRIVES", "GOTO LOCATION", ObDF_ReqGroup|ObDF_ReqCoord|ObDF_ReqRadius|ObDF_ReqAmount },
     /* Require all of group members to be within radius around given coords. */
     {"GAME_OBJ_ALL_G_ARRIVES", "ALL GOTO LOCATION", ObDF_ReqGroup|ObDF_ReqCoord|ObDF_ReqRadius },
-    /* Require target person to be within the group belonging to local player. */
+    /* Require target person to be within the group bes32ing to local player. */
     {"GAME_OBJ_PERSUADE_P",	"PERSUADE",			ObDF_ReqPerson|ObDF_IsAcquire },
     /* Require at least specified amount of group members to be within the local player group. */
     {"GAME_OBJ_PERSUADE_MEM_G", "PERSUADE GANG MEM", ObDF_ReqGroup|ObDF_ReqAmount|ObDF_IsAcquire },
@@ -116,7 +116,7 @@ struct ObjectiveDef objectv_defs[] = {
     {"GAME_OBJ_PERSUADE_ALL_G", "PERSUADE ALL GANG", ObDF_ReqGroup|ObDF_IsAcquire },
     /* Require specified amount of game turns to pass. */
     {"GAME_OBJ_TIME",		"TIMER",			ObDF_ReqCount },
-    /* Require specified carried item to change owner to a person belonging to local player.
+    /* Require specified carried item to change owner to a person bes32ing to local player.
      * If the item is a weapon, it should be unique for the level. */
     {"GAME_OBJ_GET_ITEM",	"COLLECT ITEM",		ObDF_ReqItem|ObDF_IsAlly },
     /* Unreachable. Require specified item to be used? */
@@ -250,14 +250,14 @@ ushort next_mission_netscan_objective;
 ushort next_objective = 1;
 ushort next_used_objective = 1;
 
-extern ulong dword_1C8460;
-extern ulong dword_1C8464;
+extern u32 dword_1C8460;
+extern u32 dword_1C8464;
 extern short draw_objectv_x;
 extern short draw_objectv_y;
 
 char *objective_text[OBJECTIVE_TEXT_MAX];
 
-int add_used_objective(long mapno, long levelno)
+int add_used_objective(s32 mapno, s32 levelno)
 {
     struct Objective *p_objectv;
     int objectv;
@@ -662,7 +662,7 @@ TbBool thing_arrived_at_objectv(ThingIdx thing, struct Objective *p_objectv)
 /** Returns whether given item (which may be weapon) has arrived at given objective position.
  *
  * @param thing Thing index for the item to check.
- * @param weapon Weapon type, in case it was picked up and therfore is no longer at expected Thing index.
+ * @param weapon Weapon type, in case it was picked up and therfore is no s32er at expected Thing index.
  * @param p_objectv Pointer to the objective which XYZ coords and radius will be checked.
  */
 TbBool item_arrived_at_objectv(ThingIdx thing, ushort weapon, struct Objective *p_objectv)
@@ -683,7 +683,7 @@ TbBool item_arrived_at_objectv(ThingIdx thing, ushort weapon, struct Objective *
             // this objective; make sure there is only one such item on a level to avoid that
             return thing_is_within_circle(thing, p_objectv->X, p_objectv->Z, p_objectv->Radius << 6);
     }
-    // If the target is no longer a correct thing, then it is now either carried weapon or
+    // If the target is no s32er a correct thing, then it is now either carried weapon or
     // a different dropped weapon (dropping it created another thing)
     thing = find_dropped_weapon_within_circle(p_objectv->X, p_objectv->Z, p_objectv->Radius << 6, weapon);
     if (thing != 0)
@@ -1372,7 +1372,7 @@ short test_objective(ushort objectv, ushort show_obj)
     return 0;
 }
 
-void snprint_objective(char *buf, ulong buflen, struct Objective *p_objectv, ushort objectv)
+void snprint_objective(char *buf, u32 buflen, struct Objective *p_objectv, ushort objectv)
 {
     struct ObjectiveDef *p_odef;
     char *s;
@@ -1479,7 +1479,7 @@ void snprint_objective(char *buf, ulong buflen, struct Objective *p_objectv, ush
     snprintf(s, buflen - (s-buf), " )");
 }
 
-void save_objective_chain_conf(TbFileHandle fh, ushort objectv_head, char *buf, ulong buflen)
+void save_objective_chain_conf(TbFileHandle fh, ushort objectv_head, char *buf, u32 buflen)
 {
     ushort objectv;
 
@@ -1506,7 +1506,7 @@ void save_objective_chain_conf(TbFileHandle fh, ushort objectv_head, char *buf, 
     }
 }
 
-void snprint_netscan_objctv(char *buf, ulong buflen, struct NetscanObjective *p_nsobv, ushort nsobv)
+void snprint_netscan_objctv(char *buf, u32 buflen, struct NetscanObjective *p_nsobv, ushort nsobv)
 {
     char *s;
     ubyte nparams;
@@ -1564,7 +1564,7 @@ void snprint_netscan_objctv(char *buf, ulong buflen, struct NetscanObjective *p_
 }
 
 void save_netscan_objectives_conf(TbFileHandle fh, struct NetscanObjective *nsobv_arr,
-  ushort nsobv_count, char *buf, ulong buflen)
+  ushort nsobv_count, char *buf, u32 buflen)
 {
     ushort nsobv;
     ushort nfilled;
@@ -1586,7 +1586,7 @@ void save_netscan_objectives_conf(TbFileHandle fh, struct NetscanObjective *nsob
     }
 }
 
-int tokenize_script_func(char *olist[], char *obuf, const char *ibuf, long ibuflen)
+int tokenize_script_func(char *olist[], char *obuf, const char *ibuf, s32 ibuflen)
 {
     TbBool in_quotes, token_end, parse_end;
     int li;
@@ -1688,12 +1688,12 @@ int tokenize_script_func(char *olist[], char *obuf, const char *ibuf, long ibufl
     return li;
 }
 
-int parse_objective_param(struct Objective *p_objectv, ulong *fields_used, const char *buf, long buflen)
+int parse_objective_param(struct Objective *p_objectv, u32 *fields_used, const char *buf, s32 buflen)
 {
     struct ObjectiveDef *p_odef;
     char *toklist[PARAM_TOKEN_MAX];
     char tokbuf[128];
-    ulong stored_field;
+    u32 stored_field;
     int i;
 
     p_odef = &objectv_defs[p_objectv->Type];
@@ -1861,13 +1861,13 @@ int parse_objective_param(struct Objective *p_objectv, ulong *fields_used, const
     return 1;
 }
 
-int parse_next_used_objective(const char *buf, long buflen, long pri, long mapno, long levelno)
+int parse_next_used_objective(const char *buf, s32 buflen, s32 pri, s32 mapno, s32 levelno)
 {
     struct ObjectiveDef *p_odef;
     struct Objective *p_objectv;
     char *toklist[COMMAND_TOKEN_MAX];
     char tokbuf[256];
-    ulong fields_used;
+    u32 fields_used;
     int i, objectv, nret;
 
     i = tokenize_script_func(toklist, tokbuf, buf, buflen);
@@ -1913,12 +1913,12 @@ int parse_next_used_objective(const char *buf, long buflen, long pri, long mapno
     return nret;
 }
 
-int parse_netscan_obv_param(struct NetscanObjective *p_nsobv, const char *buf, long buflen)
+int parse_netscan_obv_param(struct NetscanObjective *p_nsobv, const char *buf, s32 buflen)
 {
     char *toklist[PARAM_TOKEN_MAX];
     char tokbuf[128];
     int i;
-    ulong n;
+    u32 n;
 
     LbMemorySet(toklist, 0, sizeof(toklist));
     i = tokenize_script_func(toklist, tokbuf, buf, buflen);
@@ -1990,7 +1990,7 @@ int parse_netscan_obv_param(struct NetscanObjective *p_nsobv, const char *buf, l
     return 1;
 }
 
-int parse_next_netscan_objective(const char *buf, long buflen, long nsobv)
+int parse_next_netscan_objective(const char *buf, s32 buflen, s32 nsobv)
 {
     struct NetscanObjective *p_nsobv;
     char *toklist[COMMAND_TOKEN_MAX];

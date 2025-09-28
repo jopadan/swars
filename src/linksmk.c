@@ -21,7 +21,7 @@
 #include "bfsmack.h"
 
 /******************************************************************************/
-extern ulong smack_malloc_used_tot;
+extern u32 smack_malloc_used_tot;
 
 /******************************************************************************/
 void *ASM_smack_malloc(int msize);

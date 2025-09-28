@@ -177,7 +177,7 @@ void draw_mission_stats_vals_static(struct ScreenBox *box,
     y += lnheight;
 }
 
-void snprint_concat_comma_separated_weapons_list(char *out, ushort outlen, ulong weapons)
+void snprint_concat_comma_separated_weapons_list(char *out, ushort outlen, u32 weapons)
 {
     ushort wtype;
     ushort strid;
@@ -206,7 +206,7 @@ void snprint_concat_comma_separated_weapons_list(char *out, ushort outlen, ulong
     }
 }
 
-void snprint_concat_comma_separated_cybmods_list(char *out, ushort outlen, ulong cybmods)
+void snprint_concat_comma_separated_cybmods_list(char *out, ushort outlen, u32 cybmods)
 {
     ushort mtype, mgrouptype;
     ushort gt_strid;

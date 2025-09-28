@@ -35,7 +35,7 @@
 #include "mssxmidi.h"
 #include "mssxdig.h"
 /******************************************************************************/
-static long long tmcount_start = 0;
+static s64 tmcount_start = 0;
 
 FILE *AIL_debugfile;
 uint16_t AIL_debug;
@@ -112,7 +112,7 @@ void AIL_shutdown(void)
 
 uint32_t AIL_ms_count(void)
 {
-    long long now;
+    s64 now;
     struct timeval tv;
 
     gettimeofday(&tv, NULL);
@@ -279,7 +279,7 @@ void AIL_release_timer_handle(HSNDTIMER timer)
 {
     AIL_indent++;
     if (AIL_debug && (AIL_indent == 1 || AIL_sys_debug))
-        fprintf(AIL_debugfile, "%s(%ld)\n", __func__, (long)timer);
+        fprintf(AIL_debugfile, "%s(%ld)\n", __func__, (s32)timer);
 
     AIL2OAL_API_release_timer_handle(timer);
 

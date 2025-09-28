@@ -33,10 +33,10 @@
 #pragma pack(1)
 
 struct MusicBankHead {
-  long info_offset;
-  long data_offset;
-  long info_size;
-  long data_size;
+  s32 info_offset;
+  s32 data_offset;
+  s32 info_size;
+  s32 data_size;
 };
 
 #pragma pack()
@@ -62,7 +62,7 @@ void format_music(void)
     ubyte *dt;
     struct BfMusicInfo *musinf;
     struct BfMusicInfo *musinfend;
-    ulong offs;
+    u32 offs;
 
     nsongs = NumberOfSongs;
     musinfend = BfEndMusic;
@@ -72,9 +72,9 @@ void format_music(void)
         nsongs = 0;
         for (musinf = &BfMusic[1]; musinf < musinfend; musinf++)
         {
-            offs = (ulong)musinf->DataBeg;
+            offs = (u32)musinf->DataBeg;
             musinf->DataBeg = &dt[offs];
-            offs = (ulong)musinf->DataEnd;
+            offs = (u32)musinf->DataEnd;
             musinf->DataEnd = &dt[offs];
             nsongs++;
         }
@@ -110,10 +110,10 @@ ubyte load_music_bank(TbFileHandle fh, ubyte bankId)
     BfEndMusic = (struct BfMusicInfo *)(m + mbhead[bankId].info_size);
     LbFileSeek(fh, mbhead[bankId].data_offset, Lb_FILE_SEEK_BEGINNING);
     LbFileRead(fh, dt, 8);
-    if (blong(dt+0) == RNC_SIGNATURE)
+    if (bs32(dt+0) == RNC_SIGNATURE)
     {
-        long flength;
-        flength = blong(dt+4);
+        s32 flength;
+        flength = bs32(dt+4);
         LbFileRead(fh, dt + 8, flength - 8);
         UnpackM1(dt, flength);
     }
@@ -124,10 +124,10 @@ ubyte load_music_bank(TbFileHandle fh, ubyte bankId)
     // Read songs info
     LbFileSeek(fh, mbhead[bankId].info_offset, Lb_FILE_SEEK_BEGINNING);
     LbFileRead(fh, m, 8);
-    if (blong(m+0) == RNC_SIGNATURE)
+    if (bs32(m+0) == RNC_SIGNATURE)
     {
-        long flength;
-        flength = blong(m+4);
+        s32 flength;
+        flength = bs32(m+4);
         LbFileRead(fh, m + 8, flength - 8);
         UnpackM1(m, flength);
     }
@@ -148,8 +148,8 @@ ubyte load_music_bank(TbFileHandle fh, ubyte bankId)
 int LoadMusic(ushort bankNo)
 {
     TbFileHandle fh;
-    long fsize;
-    ulong nbanks_offs;
+    s32 fsize;
+    u32 nbanks_offs;
     ushort nbanks[4];
     ubyte bankId;
 

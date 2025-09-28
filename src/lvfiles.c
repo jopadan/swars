@@ -58,15 +58,15 @@
 
 TbBool level_deep_fix = false;
 
-extern ulong stored_g3d_next_object[1];
-extern ulong stored_g3d_next_object_face[1];
-extern ulong stored_g3d_next_object_face4[1];
-extern ulong stored_g3d_next_object_point[1];
-extern ulong stored_g3d_next_normal[1];
-extern ulong stored_g3d_next_face_texture[1];
-extern ulong stored_g3d_next_floor_texture[1];
-extern ulong stored_g3d_next_local_mat[1];
-extern ulong stored_global3d_inuse[1];
+extern u32 stored_g3d_next_object[1];
+extern u32 stored_g3d_next_object_face[1];
+extern u32 stored_g3d_next_object_face4[1];
+extern u32 stored_g3d_next_object_point[1];
+extern u32 stored_g3d_next_normal[1];
+extern u32 stored_g3d_next_face_texture[1];
+extern u32 stored_g3d_next_floor_texture[1];
+extern u32 stored_g3d_next_local_mat[1];
+extern u32 stored_global3d_inuse[1];
 
 extern struct QuickLoad quick_load_pc[19];
 
@@ -147,11 +147,11 @@ void global_3d_store(int action)
     }
 }
 
-ulong load_level_pc_handle(TbFileHandle lev_fh)
+u32 load_level_pc_handle(TbFileHandle lev_fh)
 {
-    ulong fmtver;
+    u32 fmtver;
     TbBool mech_initialized;
-    long limit;
+    s32 limit;
     int i, k, n;
 
     mech_initialized = 0;
@@ -340,7 +340,7 @@ ulong load_level_pc_handle(TbFileHandle lev_fh)
       fmtver, next_command, word_1531E0, unkn3de_len);
     if (fmtver >= 4)
     {
-        ulong count;
+        u32 count;
         ThingIdx thing;
 
         count = 0;
@@ -595,7 +595,7 @@ void level_perform_deep_fix(void)
 #endif
 }
 
-void fix_level_indexes(short missi, ulong fmtver, ubyte reload, TbBool deep)
+void fix_level_indexes(short missi, u32 fmtver, ubyte reload, TbBool deep)
 {
     ushort objectv;
     ThingIdx thing;
@@ -671,7 +671,7 @@ TbResult level_misc_update_mgun(struct LevelMisc *p_lvmsc)
 
 TbResult level_misc_verify_mgun(struct LevelMisc *p_lvmsc)
 {
-    long bkp_engn_xc, bkp_engn_yc, bkp_engn_zc;
+    s32 bkp_engn_xc, bkp_engn_yc, bkp_engn_zc;
     short mgun;
 
     if ((p_lvmsc->Group < 0) || (p_lvmsc->Group >= PEOPLE_GROUPS_COUNT))
@@ -817,7 +817,7 @@ void load_level_pc(short level, short missi, ubyte reload)
     lev_fh = LbFileOpen(lev_fname, Lb_FILE_MODE_READ_ONLY);
     if (lev_fh != INVALID_FILE)
     {
-        ulong fmtver;
+        u32 fmtver;
         int i;
 
         word_1C8446 = 1;
@@ -927,7 +927,7 @@ void fix_map_outranged_properties(void)
 
 void load_map_dat_pc_handle(TbFileHandle fh)
 {
-    ulong fmtver;
+    u32 fmtver;
     ushort num_sthings, num_things;
     short i;
 
@@ -1196,14 +1196,14 @@ void load_map_dat_pc_handle(TbFileHandle fh)
       num_sthings, num_things, next_traffic_node, next_light_command, next_bezier_pt);
 }
 
-void load_mad_pc_buffer(ubyte *mad_ptr, long rdsize)
+void load_mad_pc_buffer(ubyte *mad_ptr, s32 rdsize)
 {
     short shut_h;
-    ulong fmtver;
+    u32 fmtver;
     short i;
 
     shut_h = 100;
-    fmtver = *(ulong *)mad_ptr;
+    fmtver = *(u32 *)mad_ptr;
     mad_ptr += 4;
 
     if (fmtver != 1) {
@@ -1381,7 +1381,7 @@ void prepare_map_dat_to_play(void)
 TbResult load_map_mad(ushort mapno)
 {
     char mad_fname[52];
-    long fsize;
+    s32 fsize;
 
     next_local_mat = 1;
 

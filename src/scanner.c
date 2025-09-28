@@ -47,9 +47,9 @@ struct BbpAdds {
 /******************************************************************************/
 
 extern ushort signal_count;
-extern ulong turn_last; // = 999;
-extern ulong SCANNER_keep_arcs;
-extern ulong dword_1DB1A0;
+extern u32 turn_last; // = 999;
+extern u32 SCANNER_keep_arcs;
+extern u32 dword_1DB1A0;
 extern struct BbpAdds SCANNER_bbpadds[16];
 
 ushort SCANNER_base_zoom_factor = 180;

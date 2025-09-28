@@ -33,20 +33,20 @@ extern TbBool SoundInstalled;
 extern TbBool SoundAble;
 extern TbBool SoundActive;
 extern TbBool StereoSound;
-extern ulong SampleRate;
+extern u32 SampleRate;
 
 extern struct SampleInfo sample_id[32];
 extern struct SampleInfo *end_sample_id;
 
 /******************************************************************************/
 
-static struct SampleInfo *FindSampleInfoSrcSmp(long source_id, short smp_id)
+static struct SampleInfo *FindSampleInfoSrcSmp(s32 source_id, short smp_id)
 {
     struct SampleInfo *p_smpinf;
 
     for (p_smpinf = sample_id; p_smpinf <= end_sample_id; p_smpinf++)
     {
-        if (((ulong)source_id == p_smpinf->SourceID)
+        if (((u32)source_id == p_smpinf->SourceID)
           && (smp_id == p_smpinf->SampleNumber)) {
             return p_smpinf;
         }
@@ -54,13 +54,13 @@ static struct SampleInfo *FindSampleInfoSrcSmp(long source_id, short smp_id)
     return NULL;
 }
 
-static struct SampleInfo *FindSampleInfoSrcPlaying(long source_id)
+static struct SampleInfo *FindSampleInfoSrcPlaying(s32 source_id)
 {
     struct SampleInfo *p_smpinf;
 
     for (p_smpinf = sample_id; p_smpinf <= end_sample_id; p_smpinf++)
     {
-        if (((ulong)source_id == p_smpinf->SourceID)
+        if (((u32)source_id == p_smpinf->SourceID)
           && AIL_sample_status(p_smpinf->SampleHandle) == SNDSMP_PLAYING) {
             return p_smpinf;
         }
@@ -68,13 +68,13 @@ static struct SampleInfo *FindSampleInfoSrcPlaying(long source_id)
     return NULL;
 }
 
-static struct SampleInfo *FindSampleInfoSrcSmpPlaying(long source_id, short smp_id)
+static struct SampleInfo *FindSampleInfoSrcSmpPlaying(s32 source_id, short smp_id)
 {
     struct SampleInfo *p_smpinf;
 
     for (p_smpinf = sample_id; p_smpinf <= end_sample_id; p_smpinf++)
     {
-        if (((ulong)source_id == p_smpinf->SourceID)
+        if (((u32)source_id == p_smpinf->SourceID)
           && (smp_id == p_smpinf->SampleNumber)
           && AIL_sample_status(p_smpinf->SampleHandle) == SNDSMP_PLAYING) {
             return p_smpinf;
@@ -96,13 +96,13 @@ static struct SampleInfo *FindSampleInfoAnyDone(void)
     return NULL;
 }
 
-struct SampleInfo *FindSampleInfoSrcSmpNotDone(long source_id, short smp_id)
+struct SampleInfo *FindSampleInfoSrcSmpNotDone(s32 source_id, short smp_id)
 {
     struct SampleInfo *p_smpinf;
 
     for (p_smpinf = sample_id; p_smpinf <= end_sample_id; p_smpinf++)
     {
-        if (((ulong)source_id == p_smpinf->SourceID)
+        if (((u32)source_id == p_smpinf->SourceID)
           && (smp_id == p_smpinf->SampleNumber)
           && AIL_sample_status(p_smpinf->SampleHandle) != SNDSMP_DONE) {
             return p_smpinf;
@@ -111,7 +111,7 @@ struct SampleInfo *FindSampleInfoSrcSmpNotDone(long source_id, short smp_id)
     return NULL;
 }
 
-TbBool IsSamplePlaying(long source_id, short smp_id, TbSampleHandle handle)
+TbBool IsSamplePlaying(s32 source_id, short smp_id, TbSampleHandle handle)
 {
     if (!SoundInstalled || !SoundAble || !SoundActive)
         return false;
@@ -133,7 +133,7 @@ TbBool IsSamplePlaying(long source_id, short smp_id, TbSampleHandle handle)
     }
 }
 
-struct SampleInfo *PlaySampleFromAddress(long source_id, short smp_id,
+struct SampleInfo *PlaySampleFromAddress(s32 source_id, short smp_id,
   short volume, ushort pan, short pitch, sbyte loop_count,
   ubyte a7, void *address)
 {
@@ -189,7 +189,7 @@ struct SampleInfo *PlaySampleFromAddress(long source_id, short smp_id,
 
 void ReleaseLoopedSample(ushort source_id, short smp_id)
 {
-    // TODO the source_id should be of long type
+    // TODO the source_id should be of s32 type
     struct SampleInfo *p_smpinf;
 
     if (!SoundInstalled || !SoundAble || !SoundActive)
@@ -197,14 +197,14 @@ void ReleaseLoopedSample(ushort source_id, short smp_id)
 
     for (p_smpinf = sample_id; p_smpinf <= end_sample_id; p_smpinf++)
     {
-        if ((ulong)source_id == p_smpinf->SourceID && smp_id == p_smpinf->SampleNumber) {
+        if ((u32)source_id == p_smpinf->SourceID && smp_id == p_smpinf->SampleNumber) {
             if (AIL_sample_status(p_smpinf->SampleHandle) == SNDSMP_PLAYING)
                 AIL_set_sample_loop_count(p_smpinf->SampleHandle, 1);
         }
     }
 }
 
-void SetSamplePitch(long source_id, short smp_id, short pitch)
+void SetSamplePitch(s32 source_id, short smp_id, short pitch)
 {
     struct SampleInfo *p_smpinf;
 
@@ -213,7 +213,7 @@ void SetSamplePitch(long source_id, short smp_id, short pitch)
 
     for (p_smpinf = sample_id; p_smpinf <= end_sample_id; p_smpinf++)
     {
-        if ((ulong)source_id == p_smpinf->SourceID && smp_id == p_smpinf->SampleNumber
+        if ((u32)source_id == p_smpinf->SourceID && smp_id == p_smpinf->SampleNumber
           && AIL_sample_status(p_smpinf->SampleHandle) == SNDSMP_PLAYING)
         {
             if (pitch > 0 && p_smpinf->SamplePitch != pitch) {
@@ -224,7 +224,7 @@ void SetSamplePitch(long source_id, short smp_id, short pitch)
     }
 }
 
-void SetSampleVolume(long source_id, short smp_id, short volume)
+void SetSampleVolume(s32 source_id, short smp_id, short volume)
 {
     struct SampleInfo *p_smpinf;
 
@@ -233,7 +233,7 @@ void SetSampleVolume(long source_id, short smp_id, short volume)
 
     for (p_smpinf = sample_id; p_smpinf <= end_sample_id; p_smpinf++)
     {
-        if ((ulong)source_id == p_smpinf->SourceID && smp_id == p_smpinf->SampleNumber
+        if ((u32)source_id == p_smpinf->SourceID && smp_id == p_smpinf->SampleNumber
           && AIL_sample_status(p_smpinf->SampleHandle) == SNDSMP_PLAYING)
         {
             if (volume <= 127 && volume != p_smpinf->SampleVolume)
@@ -245,7 +245,7 @@ void SetSampleVolume(long source_id, short smp_id, short volume)
     }
 }
 
-void SetSamplePan(long source_id, short smp_id, ushort pan)
+void SetSamplePan(s32 source_id, short smp_id, ushort pan)
 {
     struct SampleInfo *p_smpinf;
 
@@ -254,7 +254,7 @@ void SetSamplePan(long source_id, short smp_id, ushort pan)
 
     for (p_smpinf = sample_id; p_smpinf <= end_sample_id; p_smpinf++)
     {
-        if ((ulong)source_id == p_smpinf->SourceID && smp_id == p_smpinf->SampleNumber
+        if ((u32)source_id == p_smpinf->SourceID && smp_id == p_smpinf->SampleNumber
           && AIL_sample_status(p_smpinf->SampleHandle) == SNDSMP_PLAYING)
         {
             if (pan != p_smpinf->SamplePan)
@@ -266,7 +266,7 @@ void SetSamplePan(long source_id, short smp_id, ushort pan)
     }
 }
 
-void StopSample(long source_id, short smp_id)
+void StopSample(s32 source_id, short smp_id)
 {
     struct SampleInfo *p_smpinf;
 
@@ -275,7 +275,7 @@ void StopSample(long source_id, short smp_id)
 
     for (p_smpinf = sample_id; p_smpinf <= end_sample_id; p_smpinf++)
     {
-        if ((ulong)source_id == p_smpinf->SourceID && smp_id == p_smpinf->SampleNumber
+        if ((u32)source_id == p_smpinf->SourceID && smp_id == p_smpinf->SampleNumber
              && AIL_sample_status(p_smpinf->SampleHandle) != SNDSMP_DONE)
         {
             AIL_end_sample(p_smpinf->SampleHandle);

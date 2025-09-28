@@ -307,7 +307,7 @@ int get_memory_ptr_index(void **mgptr)
     return -1;
 }
 
-long get_memory_ptr_allocated_count(void **mgptr)
+s32 get_memory_ptr_allocated_count(void **mgptr)
 {
     int i;
     for (i = 0; mem_game[i].Name != NULL; i++)
@@ -331,7 +331,7 @@ TbBool mem_game_index_is_prim(int index)
 void adjust_memory_use(void)
 {
     int i;
-    ulong total;
+    u32 total;
 
     total = 0;
 
@@ -455,10 +455,10 @@ void init_memory(MemSystem *mem_table)
 {
     MemSystem *ment;
     int mem_table_len;
-    ulong totlen;
+    u32 totlen;
     ubyte *p;
     int i;
-    ulong k;
+    u32 k;
 
     totlen = 8192;
     mem_table_len = memory_table_entries(mem_table);
@@ -477,7 +477,7 @@ void init_memory(MemSystem *mem_table)
             else
               exit_game = 1;
 
-            if (ment->N * (ulong)ment->ESize >= dword_1810D5 || mem_game_index_is_prim(i))
+            if (ment->N * (u32)ment->ESize >= dword_1810D5 || mem_game_index_is_prim(i))
             {
                 k = ment->N * ment->ESize;
                 k = (k + 4) & ~0x3;

@@ -48,19 +48,19 @@ extern struct TbSprite *fe_icons_sprites;
 
 extern short word_155110[6];
 extern ubyte byte_15511C;// = 1;
-extern long landmap_8BC;
-extern long landmap_8C0;
-extern long landmap_8C4;
-extern long landmap_8C8;
-extern ulong dword_1C48D0;
-extern ulong dword_1C48D4;
-extern ulong dword_1C48E0[6];
-extern ulong dword_1C48F8;
-extern ulong dword_1C48FC;
-extern ulong dword_1C4908[6];
-extern ulong dword_1C4920;
-extern ulong dword_1C4924;
-extern ulong dword_1C4930[6];
+extern s32 landmap_8BC;
+extern s32 landmap_8C0;
+extern s32 landmap_8C4;
+extern s32 landmap_8C8;
+extern u32 dword_1C48D0;
+extern u32 dword_1C48D4;
+extern u32 dword_1C48E0[6];
+extern u32 dword_1C48F8;
+extern u32 dword_1C48FC;
+extern u32 dword_1C4908[6];
+extern u32 dword_1C4920;
+extern u32 dword_1C4924;
+extern u32 dword_1C4930[6];
 extern ubyte byte_1C4888;
 extern short word_1C488A[6];
 extern short word_1C4896[6];
@@ -149,7 +149,7 @@ TbBool draw_world_landmass_shape(struct ScreenBox *box)
     {
         short k;
         short *arr;
-        long tmc, tmend;
+        s32 tmc, tmend;
 
         k = word_155110[i];
         arr = dword_1C529C[i];
@@ -204,7 +204,7 @@ TbBool draw_world_landmass_projector(struct ScreenBox *box)
     {
         short k;
         short *arr;
-        long tmc, tmn, tmend, tmiter;
+        s32 tmc, tmn, tmend, tmiter;
 
         k = word_155110[i];
         arr = dword_1C529C[i];

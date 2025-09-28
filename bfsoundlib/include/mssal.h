@@ -325,7 +325,7 @@ enum SndDigSampleFormatFlags {
  *
  * Originally named `HTIMER`. This less generic name helps to remember this is sound-related.
  */
-typedef long HSNDTIMER;
+typedef s32 HSNDTIMER;
 
 /** Handle to interface provider.
  */

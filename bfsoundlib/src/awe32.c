@@ -73,9 +73,9 @@ void FreeAwe32Soundfont(void)
 void LoadAwe32Soundfont(const char *str)
 {
     char locstr[FILENAME_MAX];
-    long fsize, card_ram;
+    s32 fsize, card_ram;
     SF_INFO *info;
-    long *lmap;
+    s32 *lmap;
     int i;
 
     if (UseCurrentAwe32Soundfont) {
@@ -127,7 +127,7 @@ void LoadAwe32Soundfont(const char *str)
     }
 
     /* Define storage for each sample bank */
-    lmap = (long *)awe_buffer;
+    lmap = (s32 *)awe_buffer;
     lmap[0] = 0;      /* General MIDI bank (no RAM) */
     lmap[1] = fsize;  /* SBK file */
 

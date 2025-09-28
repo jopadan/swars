@@ -340,7 +340,7 @@ void remove_agent(ubyte cryo_no)
         : : "a" (cryo_no));
 }
 
-void add_agent(ulong weapons, ushort mods)
+void add_agent(u32 weapons, ushort mods)
 {
     asm volatile ("call ASM_add_agent\n"
         : : "a" (weapons), "d" (mods));

@@ -40,9 +40,9 @@ struct ScreenButton;
 
 void draw_text_purple_list2(int x, int y, const char *text, ushort line);
 void draw_sprite_purple_list(int x, int y, struct TbSprite *sprite);
-void draw_trig_purple_list(long x2, long y2, long x3, long y3);
-void copy_box_purple_list(long x, long y, ulong width, ulong height);
-void draw_box_purple_list(int x, int y, ulong width, ulong height, int colour);
+void draw_trig_purple_list(s32 x2, s32 y2, s32 x3, s32 y3);
+void copy_box_purple_list(s32 x, s32 y, u32 width, u32 height);
+void draw_box_purple_list(int x, int y, u32 width, u32 height, int colour);
 void draw_line_purple_list(int x1, int y1, int x2, int y2, int colour);
 void draw_triangle_purple_list(int x1, int y1, int x2, int y2, int x3, int y3, TbPixel colour);
 void draw_hotspot_purple_list(int x, int y);
@@ -52,7 +52,7 @@ TbBool flashy_draw_text(int x, int y, const char *text, ubyte speed,
   int top_line, short *textpos, int cyan_flag);
 ubyte flashy_draw_purple_text_box(struct ScreenTextBox *p_box);
 void draw_flic_purple_list(void (*fn)());
-void draw_noise_box_purple_list(int x, int y, ulong width, ulong height);
+void draw_noise_box_purple_list(int x, int y, u32 width, u32 height);
 
 short get_text_box_lines_visible(struct ScreenTextBox *p_box);
 

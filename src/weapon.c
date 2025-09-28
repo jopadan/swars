@@ -135,7 +135,7 @@ void read_weapons_conf_file(void)
     TbFileHandle conf_fh;
     TbBool done;
     int i;
-    long k;
+    s32 k;
     int cmd_num;
     char *conf_buf;
     struct TbIniParser parser;
@@ -622,15 +622,15 @@ TbBool weapon_can_be_charged(ushort wtype)
       || (wtype == WEP_BEAM) || (wtype == WEP_QDEVASTATOR);
 }
 
-TbBool weapons_has_weapon(ulong weapons, ushort wtype)
+TbBool weapons_has_weapon(u32 weapons, ushort wtype)
 {
-    ulong wepflg = 1 << (wtype-1);
+    u32 wepflg = 1 << (wtype-1);
     return (weapons & wepflg) != 0;
 }
 
 /** Returns weapon set in given flags with index below last.
  */
-ushort weapons_prev_weapon(ulong weapons, ushort last_wtype)
+ushort weapons_prev_weapon(u32 weapons, ushort last_wtype)
 {
     ushort wtype;
 
@@ -639,14 +639,14 @@ ushort weapons_prev_weapon(ulong weapons, ushort last_wtype)
 
     for (wtype = last_wtype - 1; wtype > 0; wtype--)
     {
-        ulong wepflg = 1 << (wtype-1);
+        u32 wepflg = 1 << (wtype-1);
         if ((weapons & wepflg) != 0)
             return wtype;
     }
     return 0;
 }
 
-void weapons_remove_weapon(ulong *p_weapons, struct WeaponsFourPack *p_fourpacks, ushort wtype)
+void weapons_remove_weapon(u32 *p_weapons, struct WeaponsFourPack *p_fourpacks, ushort wtype)
 {
     ushort fp;
 
@@ -657,7 +657,7 @@ void weapons_remove_weapon(ulong *p_weapons, struct WeaponsFourPack *p_fourpacks
         p_fourpacks->Amount[fp] = 0;
 }
 
-TbBool weapons_remove_one_from_npc(ulong *p_weapons, ushort wtype)
+TbBool weapons_remove_one_from_npc(u32 *p_weapons, ushort wtype)
 {
     ushort fp;
     TbBool was_last;
@@ -675,7 +675,7 @@ TbBool weapons_remove_one_from_npc(ulong *p_weapons, ushort wtype)
     return true;
 }
 
-TbBool weapons_remove_one(ulong *p_weapons, struct WeaponsFourPack *p_fourpacks, ushort wtype)
+TbBool weapons_remove_one(u32 *p_weapons, struct WeaponsFourPack *p_fourpacks, ushort wtype)
 {
     ushort fp;
     TbBool was_last;
@@ -698,7 +698,7 @@ TbBool weapons_remove_one(ulong *p_weapons, struct WeaponsFourPack *p_fourpacks,
  * Player struct contains dumb own array rather than uniform WeaponsFourPack, so it requires
  * this special function. To be removed when possible.
  */
-TbBool weapons_remove_one_for_player(ulong *p_weapons,
+TbBool weapons_remove_one_for_player(u32 *p_weapons,
   ubyte p_plfourpacks[][4], ushort plagent, ushort wtype)
 {
     ushort fp;
@@ -718,7 +718,7 @@ TbBool weapons_remove_one_for_player(ulong *p_weapons,
     return true;
 }
 
-TbBool weapons_add_one(ulong *p_weapons, struct WeaponsFourPack *p_fourpacks, ushort wtype)
+TbBool weapons_add_one(u32 *p_weapons, struct WeaponsFourPack *p_fourpacks, ushort wtype)
 {
     ushort fp;
     TbBool is_first;
@@ -752,7 +752,7 @@ TbBool weapons_add_one(ulong *p_weapons, struct WeaponsFourPack *p_fourpacks, us
  * Player struct contains dumb own array rather than uniform WeaponsFourPack, so it requires
  * this special function. To be removed when possible.
  */
-TbBool weapons_add_one_for_player(ulong *p_weapons,
+TbBool weapons_add_one_for_player(u32 *p_weapons,
   ubyte p_plfourpacks[][4], ushort plagent, ushort wtype)
 {
     ushort fp;
@@ -783,7 +783,7 @@ TbBool weapons_add_one_for_player(ulong *p_weapons,
     return true;
 }
 
-void sanitize_weapon_quantities(ulong *p_weapons, struct WeaponsFourPack *p_fourpacks)
+void sanitize_weapon_quantities(u32 *p_weapons, struct WeaponsFourPack *p_fourpacks)
 {
     ushort wtype;
     ushort n_weapons;
@@ -876,9 +876,9 @@ ubyte find_nth_weapon_held(ushort index, ubyte n)
     return ret;
 }
 
-ulong person_carried_weapons_pesuaded_sell_value(struct Thing *p_person)
+u32 person_carried_weapons_pesuaded_sell_value(struct Thing *p_person)
 {
-    ulong credits;
+    u32 credits;
     ushort weptype;
 
     credits = 0;
@@ -1149,9 +1149,9 @@ void init_flamer(struct Thing *p_owner)
         : : "a" (p_owner));
 }
 
-void init_long_range(struct Thing *p_owner)
+void init_s32_range(struct Thing *p_owner)
 {
-    asm volatile ("call ASM_init_long_range\n"
+    asm volatile ("call ASM_init_s32_range\n"
         : : "a" (p_owner));
 }
 
@@ -1415,7 +1415,7 @@ void init_fire_weapon(struct Thing *p_person)
                 }
             }
             p_person->U.UPerson.FrameId.Version[4] = 1;
-            init_long_range(p_person);
+            init_s32_range(p_person);
             p_person->U.UPerson.WeaponTurn = wdef->ReFireDelay;
             play_dist_sample(p_person, 0x21u, 0x7Fu, 0x40u, 100, 0, 3);
             break;
@@ -1956,7 +1956,7 @@ static void process_energy_recovery(struct Thing *p_person)
 
 static void process_health_recovery(struct Thing *p_person)
 {
-    ulong mask;
+    u32 mask;
 
     if ((p_person->Flag & TngF_PlayerAgent) != 0)
         mask = 1;

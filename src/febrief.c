@@ -60,9 +60,9 @@ extern ubyte brief_citymap_content;// = BriCtM_AUTO_SCANNER;
 
 /** Amount of cities available in brief of a selected mail message.
  */
-extern long mail_num_active_cities;
+extern s32 mail_num_active_cities;
 
-extern long dword_1C47E0;
+extern s32 dword_1C47E0;
 extern ubyte byte_1C47E4;
 extern short word_1C47E6;
 extern short word_1C47E8;
@@ -281,7 +281,7 @@ void show_citymap_city_selection(struct ScreenBox *box)
     short city_id;
     short text_h;
     short dy;
-    ulong bufpos;
+    u32 bufpos;
 
     text_h = font_height('A');
     dy = text_h + 4;
