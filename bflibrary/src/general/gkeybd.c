@@ -105,7 +105,7 @@ unsigned char lbIInkey;
 
 unsigned char lbIInkeyFlags;
 
-ulong lbInkey_prefixed;
+u32 lbInkey_prefixed;
 
 KeyboardEventHandler lbKEventCustomHandler = NULL;
 

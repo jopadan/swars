@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-unsigned long LbExeReferenceNumber(void);
+u32 LbExeReferenceNumber(void);
 
 #ifdef __cplusplus
 };

@@ -38,7 +38,7 @@ TbBool LbFileExists(const char *fname)
   return access(fname,F_OK) == 0;
 }
 
-long LbFilePosition(TbFileHandle handle)
+s32 LbFilePosition(TbFileHandle handle)
 {
   int result = tell(handle);
   return result;
@@ -102,7 +102,7 @@ TbBool LbFileEof(TbFileHandle handle)
   return false;
 }
 
-TbResult LbFileSeek(TbFileHandle handle, long offset, TbFileSeekMode origin)
+TbResult LbFileSeek(TbFileHandle handle, s32 offset, TbFileSeekMode origin)
 {
   // code at 0001:000a1424
   int rc;
@@ -124,7 +124,7 @@ TbResult LbFileSeek(TbFileHandle handle, long offset, TbFileSeekMode origin)
   return rc;
 }
 
-long LbFileRead(TbFileHandle handle, void *buffer, unsigned long len)
+s32 LbFileRead(TbFileHandle handle, void *buffer, u32 len)
 {
   int result;
   //'read' returns (-1) on error
@@ -132,32 +132,32 @@ long LbFileRead(TbFileHandle handle, void *buffer, unsigned long len)
   return result;
 }
 
-long LbFileWrite(TbFileHandle handle, const void *buffer, const unsigned long len)
+s32 LbFileWrite(TbFileHandle handle, const void *buffer, const u32 len)
 {
-  long result;
+  s32 result;
   result = write(handle, buffer, len);
   return result;
 }
 
 TbBool LbFileFlush(TbFileHandle handle)
 {
-  long result;
+  s32 result;
   result = fsync(handle);
   return result;
 }
 
-long LbFileLengthHandle(TbFileHandle handle)
+s32 LbFileLengthHandle(TbFileHandle handle)
 {
-  long result;
+  s32 result;
   result = filelength(handle);
   return result;
 }
 
-long LbFileLength(const char *fname)
+s32 LbFileLength(const char *fname)
 {
   TbFileHandle handle;
   handle = LbFileOpen(fname, Lb_FILE_MODE_READ_ONLY);
-  long result = handle;
+  s32 result = handle;
   if (handle != INVALID_FILE)
   {
     result = filelength(handle);
@@ -196,7 +196,7 @@ static void convert_find_info(struct TbFileFind *ffind)
   ffind->LastWriteTime.Hour = (fdata->wr_time & 0xF800u) >> 11;
 }
 
-TbResult LbFileFindFirst(const char *filespec, struct TbFileFind *ffind,unsigned int attributes)
+TbResult LbFileFindFirst(const char *filespec, struct TbFileFind *ffind,u32 attributes)
 {
     ffind->ReservedHandle = -1;
     if (dos_findfirst(filespec, attributes, &(ffind->Reserved)))

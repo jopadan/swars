@@ -288,7 +288,7 @@ TbBool test_spritedraw_generate(int sprfile_no, ubyte *pal, ubyte **pp_sprdata, 
         char loc_fname[64];
         ubyte ref_pal[PALETTE_8b_SIZE];
         ubyte colour_remap[PALETTE_8b_COLORS];
-        ulong ref_width, ref_height;
+        u32 ref_width, ref_height;
 
         sprite_screen = malloc(mdinfo->Width * (mdinfo->Height + 1) * 1);
         get_example_sprites_file_name(sprfile_no, loc_fname);
@@ -330,7 +330,7 @@ TbBool test_spritedraw_generate(int sprfile_no, ubyte *pal, ubyte **pp_sprdata, 
 
 TbBool test_spritedraw(void)
 {
-    static ulong seeds[] = {0x0, 0xD15C1234, 0xD15C0000, 0xD15C0005, 0xD15C000F, 0xD15C03DC,
+    static u32 seeds[] = {0x0, 0xD15C1234, 0xD15C0000, 0xD15C0005, 0xD15C000F, 0xD15C03DC,
       0xD15C07DF, 0xD15CE896, 0xB00710FA, 0x37733773, };
     ubyte pal[PALETTE_8b_SIZE];
     ubyte ref_pal[PALETTE_8b_SIZE];
@@ -340,7 +340,7 @@ TbBool test_spritedraw(void)
     TbPixel *ref_buffer;
     TbScreenModeInfo *mdinfo;
     TbScreenMode mode;
-    ulong picno;
+    u32 picno;
     int sprfile_no = 1;
     int tot_sprites;
 
@@ -384,9 +384,9 @@ TbBool test_spritedraw(void)
     for (picno = 1; picno < sizeof(seeds)/sizeof(seeds[0]); picno++)
     {
         char loc_fname[64];
-        ulong ref_width, ref_height;
-        long maxdiff;
-        ulong maxpos;
+        u32 ref_width, ref_height;
+        s32 maxdiff;
+        u32 maxpos;
         ubyte drwtype;
 
         switch ((picno-1) % 3)
@@ -436,9 +436,9 @@ TbBool test_spritedraw(void)
     for (picno = 1; picno < sizeof(seeds)/sizeof(seeds[0]); picno++)
     {
         char loc_fname[64];
-        ulong ref_width, ref_height;
-        long maxdiff;
-        ulong maxpos;
+        u32 ref_width, ref_height;
+        s32 maxdiff;
+        u32 maxpos;
         ubyte drwtype;
 
         switch ((picno-1) % 3)

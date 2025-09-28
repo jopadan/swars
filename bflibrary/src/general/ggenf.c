@@ -48,8 +48,8 @@ static void LbFadeTableToRGBGenerate(const ubyte *pal, ubyte r, ubyte g, ubyte b
   short intens, const TbPixel *unaffected, TbPixel *table)
 {
     TbPixel *t;
-    long i, k;
-    ulong unaffected_bits[(PALETTE_8b_COLORS+7)/8];
+    s32 i, k;
+    u32 unaffected_bits[(PALETTE_8b_COLORS+7)/8];
 
     // Convert unaffected list to bit mask
     LbMemorySet(unaffected_bits, 0, sizeof(unaffected_bits));
@@ -121,7 +121,7 @@ TbResult LbFadeTableGenerate(const ubyte *palette, const TbPixel *unaffected,
 
 TbResult LbFadeTableLoad(const ubyte *palette, const char *fname)
 {
-    long len;
+    s32 len;
 
     len = LbFileLoadAt(fname, pixmap.fade_table);
     lbDisplay.FadeTable = pixmap.fade_table;
@@ -156,7 +156,7 @@ TbResult LbColourTablesGenerate(const ubyte *palette, const TbPixel *unaffected,
 
 TbResult LbColourTablesLoad(const ubyte *palette, const char *fname)
 {
-    long len;
+    s32 len;
 
     len = LbFileLoadAt(fname, &pixmap);
     lbDisplay.FadeTable = pixmap.fade_table;

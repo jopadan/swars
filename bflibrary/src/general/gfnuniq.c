@@ -28,9 +28,9 @@
 
 static char dir_images[FILENAME_MAX] = "qdata/screenshots";
 
-unsigned int get_highest_file_no(const char *fnmask, int no_pos_in_fnmask, const char *fndir)
+u32 get_highest_file_no(const char *fnmask, int no_pos_in_fnmask, const char *fndir)
 {
-    unsigned int highest_no, curr_no;
+    u32 highest_no, curr_no;
     struct TbFileFind ffind;
     int no_pos_in_fname;
     /* This is what we could do if we didn't have fndir param
@@ -59,8 +59,8 @@ unsigned int get_highest_file_no(const char *fnmask, int no_pos_in_fnmask, const
 TbResult prepare_unique_file_name(char *out_fname, const char *dir_base,
     const char *fn_base, const char *ext)
 {
-    unsigned int i;
-    unsigned int highest_num;
+    u32 i;
+    u32 highest_num;
     sprintf(out_fname, "%s/%-5s", dir_base, fn_base);
     for (i = 1; i < FILENAME_MAX; i++)
     {

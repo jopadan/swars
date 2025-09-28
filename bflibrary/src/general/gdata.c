@@ -80,7 +80,7 @@ short LbDataLoad(struct TbLoadFiles *load_file)
             return -100;
     } else
     {
-        long slength = LbFileLengthRnc(fname);
+        s32 slength = LbFileLengthRnc(fname);
         LOGDBG("%s: filelength %ld", fname, slength);
         load_file->SLength = slength;
         if (slength <= 0)
@@ -88,7 +88,7 @@ short LbDataLoad(struct TbLoadFiles *load_file)
         *(load_file->Start) = alloc_func(slength + 512);
         if ((*(load_file->Start)) == NULL)
             return -100;
-        if (LbFileLoadAt(fname, *(load_file->Start)) != (long)load_file->SLength)
+        if (LbFileLoadAt(fname, *(load_file->Start)) != (s32)load_file->SLength)
         {
             *(load_file->Start) = 0;
             if (load_file->SEnd != NULL)

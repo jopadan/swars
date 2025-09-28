@@ -43,10 +43,10 @@ ubyte *vec_screen;
 ubyte *vec_map;
 ubyte *vec_pal;
 
-long vec_screen_width;
+s32 vec_screen_width;
 
-long vec_window_width;
-long vec_window_height;
+s32 vec_window_width;
+s32 vec_window_height;
 
 ubyte *dither_map;
 ubyte *dither_end;
@@ -57,9 +57,9 @@ TbPixel vec_colour = 112;
 ubyte vec_mode;
 
 // Static variables used only inside draw_gpoly().
-long gpoly_mode;
+s32 gpoly_mode;
 
-const long add_to_edi[] = {
+const s32 add_to_edi[] = {
   0,-15,-14,-13,-12,-11,-10, -9, -8, -7, -6, -5, -4, -3, -2, -1,
 };
 
@@ -540,7 +540,7 @@ void poly_line(struct PolyPoint *point_a, struct PolyPoint *point_b)
 }
 
 void setup_vecs(ubyte *screenbuf, ubyte *nvec_map,
-  ulong line_len, ulong width, ulong height)
+  u32 line_len, u32 width, u32 height)
 {
     if (line_len > 0)
         vec_screen_width = line_len;

@@ -583,8 +583,8 @@ void get_example_sprites_file_name(int sprfile_no, char *fname)
 TbScreenMode get_example_sprites_screen_mode(int sprfile_no)
 {
     char locstr[64];
-    ulong img_width, img_height, img_bpp;
-    ulong flags;
+    u32 img_width, img_height, img_bpp;
+    u32 flags;
 
     switch (sprfile_no)
     {

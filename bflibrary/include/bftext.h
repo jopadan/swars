@@ -45,7 +45,7 @@ extern struct TbSprite *lbFontPtr;
  * @param text The text to be probed.
  * @return Width of the text image, in pixels.
  */
-long LbTextStringWidth(const char *text);
+s32 LbTextStringWidth(const char *text);
 
 /**
  * Computes height of given text if drawn on screen.
@@ -54,7 +54,7 @@ long LbTextStringWidth(const char *text);
  * @param text The text to be probed.
  * @return Height of the text image, in pixels.
  */
-long LbTextStringHeight(const char *text);
+s32 LbTextStringHeight(const char *text);
 
 /**
  * Draws a string in the current text window.
@@ -116,7 +116,7 @@ TbBool LbTextDrawResizedVA(int posx, int posy, int units_per_px, const char *fmt
  * @param text The text from which first word will be taken.
  * @return Length of the string, or 0 of either text or font is empty.
  */
-long LbSprFontWordWidth(const struct TbSprite *font, const char *text);
+s32 LbSprFontWordWidth(const struct TbSprite *font, const char *text);
 
 /**
  * Computes width of one word in given string, starting at given pointer.
@@ -126,7 +126,7 @@ long LbSprFontWordWidth(const struct TbSprite *font, const char *text);
  * @param text The text from which first word will be taken.
  * @return Length of the string, or 0 of either text or font is empty.
  */
-long LbTextWordWidth(const char *text);
+s32 LbTextWordWidth(const char *text);
 
 /**
  * Computes length of part of a text if drawn on screen.
@@ -136,7 +136,7 @@ long LbTextWordWidth(const char *text);
  * @param part Amount of characters to be probed.
  * @return Width of the text image, in pixels.
  */
-long LbTextStringPartWidth(const char *text, long part);
+s32 LbTextStringPartWidth(const char *text, s32 part);
 
 #ifdef __cplusplus
 };

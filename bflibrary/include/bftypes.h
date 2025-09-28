@@ -124,11 +124,11 @@ extern "C" {
 /** Short disk path max length - restrictive equivalent for FILENAME_MAX.
  *
  * Should be used for relative paths within the application folder, as
- * long as the restriction was taken into account while placing files there.
+ * s32 as the restriction was taken into account while placing files there.
  */
 #define DISKPATH_SIZE    144
 
-typedef unsigned long ulong;
+typedef uint32_t ulong;
 typedef unsigned int uint;
 typedef unsigned short ushort;
 typedef unsigned char uchar;
@@ -151,7 +151,7 @@ typedef int TbResult;
 /** Small, single byte boolean. */
 typedef unsigned char TbBool;
 /** Large boolean. */
-typedef unsigned long DwBool;
+typedef u32 DwBool;
 
 typedef size_t TbMemSize;
 
@@ -163,7 +163,7 @@ typedef short TbScreenCoord;
  */
 typedef unsigned char TbPixel;
 
-typedef long long TbClockMSec;
+typedef s32 s32 TbClockMSec;
 typedef time_t TbTimeSec;
 
 #ifdef __cplusplus

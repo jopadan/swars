@@ -33,9 +33,9 @@
 
 struct iff_header { // sizeof=40
     ubyte Id[4]; // offset=0
-    ulong FileLength; // offset=4
+    u32 FileLength; // offset=4
     ubyte FileType[8]; // offset=8
-    ulong HeaderLength; // offset=16
+    u32 HeaderLength; // offset=16
     ushort Width; // offset=20
     ushort Height; // offset=22
     short XOffset; // offset=24
@@ -55,14 +55,14 @@ typedef struct iff_header iff_header;
 
 struct ChunkHeader { // sizeof=8
     ubyte Id[4]; // offset=0
-    ulong ChunkLength; // offset=4
+    u32 ChunkLength; // offset=4
 };
 
 typedef struct ChunkHeader ChunkHeader;
 
 #pragma pack()
 
-ulong swap_long_bytes(ulong v)
+u32 swap_s32_bytes(u32 v)
 {
     return ((v & 0xFF00) << 8) | ((v & 0xFF0000) >> 8) | ((v & 0xFF000000) >> 24) | ((v & 0xFF) << 24);
 }
@@ -86,7 +86,7 @@ static TbResult read_cmap(struct ChunkHeader *chead, ubyte *pal)
 
 static TbResult read_iff(struct TbIff *iff, ubyte *buf)
 {
-    ulong fourcc;
+    u32 fourcc;
     struct iff_header iffhead;
     struct ChunkHeader chead;
 
@@ -117,7 +117,7 @@ static TbResult read_iff(struct TbIff *iff, ubyte *buf)
     if (fourcc != 0x424D4844) // 'BMHD'
         return Lb_FAIL;
 
-    iffhead.FileLength = swap_long_bytes(iffhead.FileLength);
+    iffhead.FileLength = swap_s32_bytes(iffhead.FileLength);
     iff->FileSize = iffhead.FileLength;
     iffhead.Width = swap_word_bytes(iffhead.Width);
     iff->Width = iffhead.Width;
@@ -129,7 +129,7 @@ static TbResult read_iff(struct TbIff *iff, ubyte *buf)
     iff->YOffset = iffhead.YOffset;
     iff->XAspect = iffhead.XAspectRatio;
     iff->YAspect = iffhead.YAspectRatio;
-    iffhead.HeaderLength = swap_long_bytes(iffhead.HeaderLength);
+    iffhead.HeaderLength = swap_s32_bytes(iffhead.HeaderLength);
     iffhead.Transparent = swap_word_bytes(iffhead.Transparent);
     iffhead.PageWidth = swap_word_bytes(iffhead.PageWidth);
     iffhead.PageHeight = swap_word_bytes(iffhead.PageHeight);
@@ -137,7 +137,7 @@ static TbResult read_iff(struct TbIff *iff, ubyte *buf)
         return Lb_FAIL;
     do
     {
-        chead.ChunkLength = swap_long_bytes(chead.ChunkLength);
+        chead.ChunkLength = swap_s32_bytes(chead.ChunkLength);
         if (chead.ChunkLength & 1)
             chead.ChunkLength++;
         fourcc = (chead.Id[3]) + (chead.Id[2] << 8) + (chead.Id[1] << 16) + (chead.Id[0] << 24);
@@ -181,16 +181,16 @@ TbResult LbIffLoad(const char *fname, ubyte *buf, struct TbIff *iff)
 }
 
 TbResult LbIffWrite(FILE *img_fh, const TbPixel *inp_buffer,
-    ulong width, ulong height, const ubyte *pal)
+    u32 width, u32 height, const ubyte *pal)
 {
     ubyte pxcol;
     ushort img_w;
     ushort img_h;
-    ulong i, k;
+    u32 i, k;
     const ubyte *palptr;
     ubyte transClr;
-    ulong lenChunk;
-    ulong pxpos;
+    u32 lenChunk;
+    u32 pxpos;
     const TbPixel *inp;
 
     palptr = pal;
@@ -205,11 +205,11 @@ TbResult LbIffWrite(FILE *img_fh, const TbPixel *inp_buffer,
 
     img_w = width;
     img_h = height;
-    unsigned long lenCmapChunk, lenTinyChunk, lenBodyChunk;
-    unsigned int algn_w = (img_w + 3) & ~0x3;
-    unsigned int algn_h = (img_h + 3) & ~0x3;
-    unsigned int tiny_w = algn_w >> 2;
-    unsigned int tiny_h = algn_h >> 2;
+    u32 lenCmapChunk, lenTinyChunk, lenBodyChunk;
+    u32 algn_w = (img_w + 3) & ~0x3;
+    u32 algn_h = (img_h + 3) & ~0x3;
+    u32 tiny_w = algn_w >> 2;
+    u32 tiny_h = algn_h >> 2;
     lenCmapChunk = 3 * 256;
     lenTinyChunk = 4 + tiny_w * tiny_h;
     lenBodyChunk = img_h * img_w;
@@ -339,7 +339,7 @@ TbResult LbIffWrite(FILE *img_fh, const TbPixel *inp_buffer,
 }
 
 TbResult LbIffSave(const char *fname, const TbPixel *inp_buffer,
-  ulong width, ulong height, const ubyte *pal, TbBool force_fname)
+  u32 width, u32 height, const ubyte *pal, TbBool force_fname)
 {
     char full_fname[FILENAME_MAX];
     FILE *img_fh;

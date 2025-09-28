@@ -24,14 +24,14 @@
 #include "bfscreen.h"
 #include "privbflog.h"
 
-long xsteps_array[2*SPRITE_SCALING_XSTEPS];
-long ysteps_array[2*SPRITE_SCALING_YSTEPS];
+s32 xsteps_array[2*SPRITE_SCALING_XSTEPS];
+s32 ysteps_array[2*SPRITE_SCALING_YSTEPS];
 
-long alpha_xsteps_array[2*SPRITE_SCALING_XSTEPS];
-long alpha_ysteps_array[2*SPRITE_SCALING_YSTEPS];
+s32 alpha_xsteps_array[2*SPRITE_SCALING_XSTEPS];
+s32 alpha_ysteps_array[2*SPRITE_SCALING_YSTEPS];
 
-long scale_up;
-long alpha_scale_up;
+s32 scale_up;
+s32 alpha_scale_up;
 
 // TODO move these to rendering/trig data module
 TbPixel *render_ghost = NULL;
@@ -40,23 +40,23 @@ TbPixel *render_alpha = NULL;
 //render_ghost = lbSpriteReMapPtr;
 
 
-void LbSpriteSetScalingWidthClippedArray(long * xsteps_arr, long x, long swidth, long dwidth, long gwidth)
+void LbSpriteSetScalingWidthClippedArray(s32 * xsteps_arr, s32 x, s32 swidth, s32 dwidth, s32 gwidth)
 {
-    long *pwidth;
-    long pxpos;
+    s32 *pwidth;
+    s32 pxpos;
     pwidth = xsteps_arr;
-    long factor = ((dwidth << 16) | 0x7fff) / swidth;
-    long tmp = (x << 16) | 0x7fff;
+    s32 factor = ((dwidth << 16) | 0x7fff) / swidth;
+    s32 tmp = (x << 16) | 0x7fff;
     pxpos = tmp >> 16;
-    long w = swidth;
+    s32 w = swidth;
     do {
-        long pxstart, pxend;
+        s32 pxstart, pxend;
 
         tmp += factor;
         pxstart = pxpos;
         pxend = (tmp >> 16);
         // Remember unclipped difference
-        long wdiff = pxend - pxstart;
+        s32 wdiff = pxend - pxstart;
         // Now clip to graphics line bounds
         if (pxstart < 0) {
             pxstart = 0;
@@ -93,7 +93,7 @@ void LbSpriteSetScalingWidthClippedArray(long * xsteps_arr, long x, long swidth,
     }
 }
 
-void LbSpriteSetScalingWidthClipped(long x, long swidth, long dwidth, long gwidth)
+void LbSpriteSetScalingWidthClipped(s32 x, s32 swidth, s32 dwidth, s32 gwidth)
 {
     LOGDBG("starting %d -> %d at %d",(int)swidth,(int)dwidth,(int)x);
     if (swidth > SPRITE_SCALING_XSTEPS)
@@ -101,7 +101,7 @@ void LbSpriteSetScalingWidthClipped(long x, long swidth, long dwidth, long gwidt
     LbSpriteSetScalingWidthClippedArray(xsteps_array, x, swidth, dwidth, gwidth);
 }
 
-void LbSpriteSetAlphaScalingWidthClipped(long x, long swidth, long dwidth, long gwidth)
+void LbSpriteSetAlphaScalingWidthClipped(s32 x, s32 swidth, s32 dwidth, s32 gwidth)
 {
     LOGDBG("starting %d -> %d at %d",(int)swidth,(int)dwidth,(int)x);
     if (swidth > SPRITE_SCALING_XSTEPS)
@@ -109,17 +109,17 @@ void LbSpriteSetAlphaScalingWidthClipped(long x, long swidth, long dwidth, long 
     LbSpriteSetScalingWidthClippedArray(alpha_xsteps_array, x, swidth, dwidth, gwidth);
 }
 
-void LbSpriteSetScalingWidthSimpleArray(long * xsteps_arr, long x, long swidth, long dwidth)
+void LbSpriteSetScalingWidthSimpleArray(s32 * xsteps_arr, s32 x, s32 swidth, s32 dwidth)
 {
-    long *pwidth;
-    long pxpos;
+    s32 *pwidth;
+    s32 pxpos;
     pwidth = xsteps_arr;
-    long factor = ((dwidth << 16) | 0x7fff) / swidth;
-    long tmp = (x << 16) | 0x7fff;
+    s32 factor = ((dwidth << 16) | 0x7fff) / swidth;
+    s32 tmp = (x << 16) | 0x7fff;
     pxpos = tmp >> 16;
-    long w = swidth;
+    s32 w = swidth;
     do {
-        long pxstart, pxend;
+        s32 pxstart, pxend;
 
         tmp += factor;
         pxstart = pxpos;
@@ -145,7 +145,7 @@ void LbSpriteSetScalingWidthSimpleArray(long * xsteps_arr, long x, long swidth, 
     }
 }
 
-void LbSpriteSetScalingWidthSimple(long x, long swidth, long dwidth)
+void LbSpriteSetScalingWidthSimple(s32 x, s32 swidth, s32 dwidth)
 {
     LOGDBG("starting %d -> %d at %d",(int)swidth,(int)dwidth,(int)x);
     if (swidth > SPRITE_SCALING_XSTEPS)
@@ -153,7 +153,7 @@ void LbSpriteSetScalingWidthSimple(long x, long swidth, long dwidth)
     LbSpriteSetScalingWidthSimpleArray(xsteps_array, x, swidth, dwidth);
 }
 
-void LbSpriteSetAlphaScalingWidthSimple(long x, long swidth, long dwidth)
+void LbSpriteSetAlphaScalingWidthSimple(s32 x, s32 swidth, s32 dwidth)
 {
     LOGDBG("starting %d -> %d at %d",(int)swidth,(int)dwidth,(int)x);
     if (swidth > SPRITE_SCALING_XSTEPS)
@@ -161,10 +161,10 @@ void LbSpriteSetAlphaScalingWidthSimple(long x, long swidth, long dwidth)
     LbSpriteSetScalingWidthSimpleArray(alpha_xsteps_array, x, swidth, dwidth);
 }
 
-void LbSpriteClearScalingWidthArray(long * xsteps_arr, long swidth)
+void LbSpriteClearScalingWidthArray(s32 * xsteps_arr, s32 swidth)
 {
     int i;
-    long *pwidth;
+    s32 *pwidth;
     pwidth = xsteps_arr;
     for (i=0; i < swidth; i++)
     {
@@ -184,23 +184,23 @@ void LbSpriteClearAlphaScalingWidth(void)
     LbSpriteClearScalingWidthArray(alpha_xsteps_array, SPRITE_SCALING_XSTEPS);
 }
 
-void LbSpriteSetScalingHeightClippedArray(long * ysteps_arr, long y, long sheight, long dheight, long gheight)
+void LbSpriteSetScalingHeightClippedArray(s32 * ysteps_arr, s32 y, s32 sheight, s32 dheight, s32 gheight)
 {
-    long *pheight;
-    long lnpos;
+    s32 *pheight;
+    s32 lnpos;
     pheight = ysteps_arr;
-    long factor = ((dheight << 16) | 0x7fff) / sheight;
-    long tmp = (y << 16) | 0x7fff;
+    s32 factor = ((dheight << 16) | 0x7fff) / sheight;
+    s32 tmp = (y << 16) | 0x7fff;
     lnpos = tmp >> 16;
-    long h = sheight;
+    s32 h = sheight;
     do {
-        long lnstart, lnend;
+        s32 lnstart, lnend;
 
         tmp += factor;
         lnstart = lnpos;
         lnend = (tmp >> 16);
         // Remember unclipped difference
-        long hdiff = lnend - lnstart;
+        s32 hdiff = lnend - lnstart;
         // Now clip to graphics line bounds
         if (lnstart < 0) {
             lnstart = 0;
@@ -237,7 +237,7 @@ void LbSpriteSetScalingHeightClippedArray(long * ysteps_arr, long y, long sheigh
     }
 }
 
-void LbSpriteSetScalingHeightClipped(long y, long sheight, long dheight, long gheight)
+void LbSpriteSetScalingHeightClipped(s32 y, s32 sheight, s32 dheight, s32 gheight)
 {
     LOGSYNC("starting %d -> %d at %d",(int)sheight,(int)dheight,(int)y);
     if (sheight > SPRITE_SCALING_YSTEPS)
@@ -245,7 +245,7 @@ void LbSpriteSetScalingHeightClipped(long y, long sheight, long dheight, long gh
     LbSpriteSetScalingHeightClippedArray(ysteps_array, y, sheight, dheight, gheight);
 }
 
-void LbSpriteSetAlphaScalingHeightClipped(long y, long sheight, long dheight, long gheight)
+void LbSpriteSetAlphaScalingHeightClipped(s32 y, s32 sheight, s32 dheight, s32 gheight)
 {
     LOGDBG("starting %d -> %d at %d",(int)sheight,(int)dheight,(int)y);
     if (sheight > SPRITE_SCALING_YSTEPS)
@@ -253,17 +253,17 @@ void LbSpriteSetAlphaScalingHeightClipped(long y, long sheight, long dheight, lo
     LbSpriteSetScalingHeightClippedArray(alpha_ysteps_array, y, sheight, dheight, gheight);
 }
 
-void LbSpriteSetScalingHeightSimpleArray(long * ysteps_arr, long y, long sheight, long dheight)
+void LbSpriteSetScalingHeightSimpleArray(s32 * ysteps_arr, s32 y, s32 sheight, s32 dheight)
 {
-    long *pheight;
-    long lnpos;
+    s32 *pheight;
+    s32 lnpos;
     pheight = ysteps_arr;
-    long factor = ((dheight << 16) | 0x7fff) / sheight;
-    long tmp = (y << 16) | 0x7fff;
+    s32 factor = ((dheight << 16) | 0x7fff) / sheight;
+    s32 tmp = (y << 16) | 0x7fff;
     lnpos = tmp >> 16;
-    long h = sheight;
+    s32 h = sheight;
     do {
-        long lnstart, lnend;
+        s32 lnstart, lnend;
 
         tmp += factor;
         lnstart = lnpos;
@@ -289,7 +289,7 @@ void LbSpriteSetScalingHeightSimpleArray(long * ysteps_arr, long y, long sheight
     }
 }
 
-void LbSpriteSetScalingHeightSimple(long y, long sheight, long dheight)
+void LbSpriteSetScalingHeightSimple(s32 y, s32 sheight, s32 dheight)
 {
     LOGDBG("starting %d -> %d at %d",(int)sheight,(int)dheight,(int)y);
     if (sheight > SPRITE_SCALING_YSTEPS)
@@ -297,7 +297,7 @@ void LbSpriteSetScalingHeightSimple(long y, long sheight, long dheight)
     LbSpriteSetScalingHeightSimpleArray(ysteps_array, y, sheight, dheight);
 }
 
-void LbSpriteSetAlphaScalingHeightSimple(long y, long sheight, long dheight)
+void LbSpriteSetAlphaScalingHeightSimple(s32 y, s32 sheight, s32 dheight)
 {
     LOGDBG("starting %d -> %d at %d",(int)sheight,(int)dheight,(int)y);
     if (sheight > SPRITE_SCALING_YSTEPS)
@@ -305,10 +305,10 @@ void LbSpriteSetAlphaScalingHeightSimple(long y, long sheight, long dheight)
     LbSpriteSetScalingHeightSimpleArray(alpha_ysteps_array, y, sheight, dheight);
 }
 
-void LbSpriteClearScalingHeightArray(long * ysteps_arr, long sheight)
+void LbSpriteClearScalingHeightArray(s32 * ysteps_arr, s32 sheight)
 {
     int i;
-    long *pheight;
+    s32 *pheight;
     pheight = ysteps_arr;
     for (i=0; i < sheight; i++)
     {
@@ -328,11 +328,11 @@ void LbSpriteClearAlphaScalingHeight(void)
     LbSpriteClearScalingHeightArray(alpha_ysteps_array, SPRITE_SCALING_YSTEPS);
 }
 
-void LbSpriteSetScalingData(long x, long y, long swidth, long sheight,
-    long dwidth, long dheight)
+void LbSpriteSetScalingData(s32 x, s32 y, s32 swidth, s32 sheight,
+    s32 dwidth, s32 dheight)
 {
-    long gwidth = lbDisplay.GraphicsWindowWidth;
-    long gheight = lbDisplay.GraphicsWindowHeight;
+    s32 gwidth = lbDisplay.GraphicsWindowWidth;
+    s32 gheight = lbDisplay.GraphicsWindowHeight;
     scale_up = true;
     if ((dwidth <= swidth) && (dheight <= sheight))
         scale_up = false;
@@ -366,11 +366,11 @@ void LbSpriteSetScalingData(long x, long y, long swidth, long sheight,
     }
 }
 
-void SetAlphaScalingData(long x, long y, long swidth, long sheight,
-    long dwidth, long dheight)
+void SetAlphaScalingData(s32 x, s32 y, s32 swidth, s32 sheight,
+    s32 dwidth, s32 dheight)
 {
-    long gwidth = lbDisplay.GraphicsWindowWidth;
-    long gheight = lbDisplay.GraphicsWindowHeight;
+    s32 gwidth = lbDisplay.GraphicsWindowWidth;
+    s32 gheight = lbDisplay.GraphicsWindowHeight;
     alpha_scale_up = true;
     if ((dwidth <= swidth) && (dheight <= sheight))
         alpha_scale_up = false;
@@ -396,21 +396,21 @@ void SetAlphaScalingData(long x, long y, long swidth, long sheight,
     }
 }
 
-void LbPixelBlockCopyForward(TbPixel * dst, const TbPixel * src, long len)
+void LbPixelBlockCopyForward(TbPixel * dst, const TbPixel * src, s32 len)
 {
     TbPixel px;
-    ulong pxquad;
+    u32 pxquad;
     if ( !((int)dst & 3) || ((px = *src, ++src, *dst = px, ++dst, --len, len)
      && (!((int)dst & 3) || ((px = *src, ++src, *dst = px, ++dst, --len, len)
      && (!((int)dst & 3) ||  (px = *src, ++src, *dst = px, ++dst, --len, len))))) )
     {
-        long l;
+        s32 l;
         for ( l = len>>2; l > 0; l--)
         {
-            pxquad = *(ulong *)src;
-            src += sizeof(ulong);
-            *(ulong *)dst = pxquad;
-            dst += sizeof(ulong);
+            pxquad = *(u32 *)src;
+            src += sizeof(u32);
+            *(u32 *)dst = pxquad;
+            dst += sizeof(u32);
         }
         if (len & 3)
         {

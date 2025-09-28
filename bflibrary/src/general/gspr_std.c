@@ -25,7 +25,7 @@
 #include "bfscreen.h"
 #include "privbflog.h"
 
-TbResult LbSpriteDrawPrepare(TbSpriteDrawData *spd, long x, long y, const TbSprite *spr)
+TbResult LbSpriteDrawPrepare(TbSpriteDrawData *spd, s32 x, s32 y, const TbSprite *spr)
 {
     if (spr == NULL)
     {
@@ -106,7 +106,7 @@ TbResult LbSpriteDrawPrepare(TbSpriteDrawData *spd, long x, long y, const TbSpri
     spd->Wd = right - left;
     spd->sp = (char *)spr->Data;
     LOGNO("sprite coords X=%d...%d Y=%d...%d data=%08x", left, right, top, btm, spd->sp);
-    long htIndex;
+    s32 htIndex;
     if ( top )
     {
         htIndex = top;
@@ -224,7 +224,7 @@ static inline void LbDrawBufferTranspr(unsigned char **buf_out, const char *buf_
         const int buf_len, const TbBool mirror)
 {
   int i;
-  unsigned int val;
+  u32 val;
   if ( mirror )
   {
     if ((lbDisplay.DrawFlags & Lb_SPRITE_TRANSPAR4) != 0)
@@ -380,7 +380,7 @@ static inline TbResult LbSpriteDrawTranspr(const char *sp, short sprWd, short sp
     int nextRowDelta, short left, const TbBool mirror)
 {
     unsigned char *nextRow;
-    long htIndex;
+    s32 htIndex;
     nextRow = &(r[nextRowDelta]);
     htIndex = sprHt;
     // For all lines of the sprite
@@ -483,7 +483,7 @@ static inline TbResult LbSpriteDrawSolid(const char *sp,short sprWd,short sprHt,
     int nextRowDelta,short left,const TbBool mirror)
 {
     unsigned char *nextRow;
-    long htIndex;
+    s32 htIndex;
     nextRow = &(r[nextRowDelta]);
     htIndex = sprHt;
     // For all lines of the sprite
@@ -579,7 +579,7 @@ static inline TbResult LbSpriteDrawFastCpy(const char *sp,short sprWd,short sprH
     int nextRowDelta,short left,const TbBool mirror)
 {
     unsigned char *nextRow;
-    long htIndex;
+    s32 htIndex;
     nextRow = &(r[nextRowDelta]);
     htIndex = sprHt;
     // For all lines of the sprite
@@ -603,7 +603,7 @@ static inline TbResult LbSpriteDrawFastCpy(const char *sp,short sprWd,short sprH
     return Lb_SUCCESS;
 }
 
-TbResult LbSpriteDraw(long x, long y, const TbSprite *spr)
+TbResult LbSpriteDraw(s32 x, s32 y, const TbSprite *spr)
 {
     TbSpriteDrawData spd;
     TbResult ret;

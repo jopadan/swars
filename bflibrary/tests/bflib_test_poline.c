@@ -126,7 +126,7 @@ void test_polyline_draw_random_lines(const ubyte *pal, short res_h)
 
 TbBool test_polyline(void)
 {
-    static ulong seeds[] = {0x0, 0xD15C1234, 0xD15C0000, 0xD15C0005, 0xD15C000F, 0xD15C03DC,
+    static u32 seeds[] = {0x0, 0xD15C1234, 0xD15C0000, 0xD15C0005, 0xD15C000F, 0xD15C03DC,
       0xD15C07DF, 0xD15CE896, 0xB00710FA, };
     ubyte pal[PALETTE_8b_SIZE];
     ubyte ref_pal[PALETTE_8b_SIZE];
@@ -135,7 +135,7 @@ TbBool test_polyline(void)
     TbScreenMode mode = Lb_SCREEN_MODE_640_480_8;
     ubyte *texmap;
     TbPixel *ref_buffer;
-    ulong picno;
+    u32 picno;
 
     if (LbErrorLogSetup(NULL, "tst_pline.log", Lb_ERROR_LOG_NEW) != Lb_SUCCESS) {
         LOGERR("execution log setup failed");
@@ -177,9 +177,9 @@ TbBool test_polyline(void)
     for (picno = 1; picno < sizeof(seeds)/sizeof(seeds[0]); picno++)
     {
         char loc_fname[64];
-        ulong ref_width, ref_height;
-        long maxdiff;
-        ulong maxpos;
+        u32 ref_width, ref_height;
+        s32 maxdiff;
+        u32 maxpos;
 
         LbScreenClear(0);
         lbSeed = seeds[picno];

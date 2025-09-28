@@ -26,9 +26,9 @@
 #include "poly_trigp.h"
 #include "privbflog.h"
 
-const long gpoly_countdown[] = { 0,-15,-14,-13,-12,-11,-10, -9,  -8, -7, -6, -5, -4, -3, -2, -1 };
+const s32 gpoly_countdown[] = { 0,-15,-14,-13,-12,-11,-10, -9,  -8, -7, -6, -5, -4, -3, -2, -1 };
 
-const long gpoly_reptable[] = {
+const s32 gpoly_reptable[] = {
          0x0,0x7FFFFFFF,0x3FFFFFFF,0x2AAAAAAA,0x1FFFFFFF,0x19999999,0x15555555,0x12492492,
   0x0FFFFFFF,0x0E38E38E,0x0CCCCCCC,0x0BA2E8BA,0x0AAAAAAA, 0x9D89D89, 0x9249249, 0x8888888,
    0x7FFFFFF, 0x7878787, 0x71C71C7, 0x6BCA1AF, 0x6666666, 0x6186186, 0x5D1745D, 0x590B216,
@@ -63,7 +63,7 @@ const long gpoly_reptable[] = {
    0x0842108, 0x0839930, 0x083126E, 0x0828CBF, 0x0820820, 0x081848D, 0x0810204, 0x0808080,
          0x0,       0x0 };
 
-const long gpoly_divtable[][64] = {
+const s32 gpoly_divtable[][64] = {
    {-8388607,-8388607,-8388607,-8388607,-8388607,-8388607,-8388607,-8388607,
     -8388607,-8388607,-8388607,-8388607,-8388607,-8388607,-8388607,-8388607,
     -8388607,-8388607,-8388607,-8388607,-8388607,-8388607,-8388607,-8388607,
@@ -333,11 +333,11 @@ static inline ubyte __CFADDB__(sbyte x, sbyte y)
 }
 
 /**
- * whether the addition (x+y) of two long ints would use carry
+ * whether the addition (x+y) of two s32 ints would use carry
  */
-static inline ubyte __CFADDL__(long x, long y)
+static inline ubyte __CFADDL__(s32 x, s32 y)
 {
-    return (ulong)(x) > (ulong)(x+y);
+    return (u32)(x) > (u32)(x+y);
 }
 
 /**
@@ -349,11 +349,11 @@ static inline ubyte __CFSUBB__(sbyte x, sbyte y)
 }
 
 /**
- * whether the subtraction (x-y) of two long ints would use carry
+ * whether the subtraction (x-y) of two s32 ints would use carry
  */
-static inline ubyte __CFSUBL__(long x, long y)
+static inline ubyte __CFSUBL__(s32 x, s32 y)
 {
-    return (ulong)(x) < (ulong)(y);
+    return (u32)(x) < (u32)(y);
 }
 
 static int gpoly_mul_rot_1(int a1, int a2)
@@ -680,7 +680,7 @@ void gpoly_sta_md03(struct gpoly_state *st)
     {
         TbBool mone;
         int fctr_e;
-        unsigned int fctr_f;
+        u32 fctr_f;
 
         st->var_0BC = base_U << 16;
         st->var_0B8 = base_U >> 16;
@@ -710,14 +710,14 @@ void gpoly_sta_md03(struct gpoly_state *st)
 
         st->var_08C = ptA_U_prc << 16;
         st->var_088 = ((ptA_V_prc << 16) & 0xFFFFFF00) | ((ptA_U_prc >> 16) & 0xFF);
-        st->var_084 = (unsigned int)(ptA_V_prc << 8) >> 24 << 8;
+        st->var_084 = (u32)(ptA_V_prc << 8) >> 24 << 8;
     }
 
     if (st->var_134 >= 0)
     {
         TbBool mone;
         int fctr_e;
-        unsigned int fctr_f;
+        u32 fctr_f;
 
         st->var_098 = loc_incB_U << 16;
         st->var_094 = loc_incB_U >> 16;
@@ -733,7 +733,7 @@ void gpoly_sta_md03(struct gpoly_state *st)
 
         st->var_080 = ptB_U_prc << 16;
         st->var_07C = ((ptB_V_prc << 16) & 0xFFFFFF00) | ((ptB_U_prc >> 16) & 0xFF);
-        st->var_078 = (unsigned int)(ptB_V_prc << 8) >> 24 << 8;
+        st->var_078 = (u32)(ptB_V_prc << 8) >> 24 << 8;
     }
 }
 
@@ -882,7 +882,7 @@ void gpoly_sta_md05(struct gpoly_state *st)
     {
         TbBool mone;
         int fctr_e, fctr_s;
-        unsigned int fctr_f;
+        u32 fctr_f;
 
         fctr_e = base_U >> 16;
         fctr_f = ((base_U << 16) & 0xFFFF0000) | ((st->var_0A8 >> 8) & 0xFFFF);
@@ -926,7 +926,7 @@ void gpoly_sta_md05(struct gpoly_state *st)
 
         st->var_084 = ((st->var_084) & 0xFFFFFF00) | (ptA_S_prc & 0xFF);
         st->var_08C = ((ptA_U_prc << 16) & 0xFFFF0000) | ((ptA_S_prc >> 8) & 0xFFFF);
-        fctr_s = (unsigned int)(ptA_V_prc << 8) >> 24 << 8;
+        fctr_s = (u32)(ptA_V_prc << 8) >> 24 << 8;
         st->var_088 = ((ptA_V_prc << 16) & 0xFFFFFF00) | ((ptA_U_prc >> 16) & 0xFF);
         st->var_084 = ((fctr_s) & 0xFFFFFF00) | (st->var_084 & 0xFF);
     }
@@ -935,7 +935,7 @@ void gpoly_sta_md05(struct gpoly_state *st)
     {
         TbBool mone;
         int fctr_e, fctr_s;
-        unsigned int fctr_f;
+        u32 fctr_f;
 
         fctr_e = loc_incB_U >> 16;
         fctr_f = ((loc_incB_U << 16) & 0xFFFF0000) | ((st->incB_S >> 8) & 0xFFFF);
@@ -959,7 +959,7 @@ void gpoly_sta_md05(struct gpoly_state *st)
 
         st->var_078 = (st->var_078 & 0xFFFFFF00) | (ptB_S_prc & 0xFF);
         st->var_080 = ((ptB_U_prc << 16) & 0xFFFF0000) | ((ptB_S_prc >> 8) & 0xFFFF);
-        fctr_s = (unsigned int)(ptB_V_prc << 8) >> 24 << 8;
+        fctr_s = (u32)(ptB_V_prc << 8) >> 24 << 8;
         st->var_07C = ((ptB_V_prc << 16) & 0xFFFFFF00) | ((ptB_U_prc >> 16) & 0xFF);
         st->var_078 = (fctr_s & 0xFFFFFF00) | (st->var_078 & 0xFF);
     }
@@ -1063,7 +1063,7 @@ void gpoly_sta_md27(struct gpoly_state *st)
     {
         TbBool mone;
         int fctr_e;
-        unsigned int fctr_f;
+        u32 fctr_f;
 
         st->var_0BC = base_U << 16;
         st->var_0B8 = base_U >> 16;
@@ -1092,14 +1092,14 @@ void gpoly_sta_md27(struct gpoly_state *st)
 
         st->var_08C = ptA_U_prc << 16;
         st->var_088 = ((ptA_V_prc << 16) & 0xFFFFFF00) | ((ptA_U_prc >> 16) & 0xFF);
-        st->var_084 = (unsigned int)(ptA_V_prc << 8) >> 24 << 8;
+        st->var_084 = (u32)(ptA_V_prc << 8) >> 24 << 8;
     }
 
     if (st->var_134 >= 0)
     {
         TbBool mone;
         int fctr_e;
-        unsigned int fctr_f;
+        u32 fctr_f;
 
         st->var_098 = loc_incB_U << 16;
         st->var_094 = loc_incB_U >> 16;
@@ -1115,7 +1115,7 @@ void gpoly_sta_md27(struct gpoly_state *st)
 
         st->var_080 = ptB_U_prc << 16;
         st->var_07C = ((ptB_V_prc << 16) & 0xFFFFFF00) | ((ptB_U_prc >> 16) & 0xFF);
-        st->var_078 = (unsigned int)(ptB_V_prc << 8) >> 24 << 8;
+        st->var_078 = (u32)(ptB_V_prc << 8) >> 24 << 8;
     }
 }
 
@@ -1224,7 +1224,7 @@ void gpoly_sta_md28(struct gpoly_state *st)
     {
         TbBool mone;
         int fctr_e, fctr_s;
-        unsigned int fctr_f;
+        u32 fctr_f;
 
         fctr_e = base_U >> 16;
         fctr_f = ((base_U << 16) & 0xFFFF0000) | ((st->var_0A8 >> 8) & 0xFFFF);
@@ -1268,7 +1268,7 @@ void gpoly_sta_md28(struct gpoly_state *st)
 
         st->var_084 = (st->var_084 & 0xFFFFFF00) | (ptA_S_prc & 0xFF);
         st->var_08C = ((ptA_U_prc << 16) & 0xFFFF0000) | ((ptA_S_prc >> 8) & 0xFFFF);
-        fctr_s = (unsigned int)(ptA_V_prc << 8) >> 24 << 8;
+        fctr_s = (u32)(ptA_V_prc << 8) >> 24 << 8;
         st->var_088 = ((ptA_V_prc << 16) & 0xFFFFFF00) | ((ptA_U_prc >> 16) & 0xFF);
         st->var_084 = (fctr_s & 0xFFFFFF00) | (st->var_084 & 0xFF);
     }
@@ -1277,7 +1277,7 @@ void gpoly_sta_md28(struct gpoly_state *st)
     {
         TbBool mone;
         int fctr_e, fctr_s;
-        unsigned int fctr_f;
+        u32 fctr_f;
 
         fctr_e = loc_incB_U >> 16;
         fctr_f = ((loc_incB_U << 16) & 0xFFFF0000) | ((st->incB_S >> 8) & 0xFFFF);
@@ -1301,7 +1301,7 @@ void gpoly_sta_md28(struct gpoly_state *st)
 
         st->var_078 = (st->var_078 & 0xFFFFFF00) | (ptB_S_prc & 0xFF);
         st->var_080 = ((ptB_U_prc << 16) & 0xFFFF0000) | ((ptB_S_prc >> 8) & 0xFFFF);
-        fctr_s = (unsigned int)(ptB_V_prc << 8) >> 24 << 8;
+        fctr_s = (u32)(ptB_V_prc << 8) >> 24 << 8;
         st->var_07C = ((ptB_V_prc << 16) & 0xFFFFFF00) | ((st->var_080 >> 16) & 0xFF);
         st->var_078 = (fctr_s & 0xFFFFFF00) | (st->var_078 & 0xFF);
     }

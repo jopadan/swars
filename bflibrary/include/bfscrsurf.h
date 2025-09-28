@@ -41,8 +41,8 @@ typedef void * OSSurfaceHandle;
 
 struct SSurface {
     OSSurfaceHandle surf_data;
-    ulong locks_count;
-    long pitch;
+    u32 locks_count;
+    s32 pitch;
 };
 
 /******************************************************************************/
@@ -68,7 +68,7 @@ void LbScreenSurfaceInit(struct SSurface *surf);
  * Screen surfaces are a way for optimized compositing when the application screen
  * consists of several independently generated parts.
  */
-TbResult LbScreenSurfaceCreate(struct SSurface *surf, ulong w, ulong h);
+TbResult LbScreenSurfaceCreate(struct SSurface *surf, u32 w, u32 h);
 
 TbResult LbScreenSurfaceRelease(struct SSurface *surf);
 
@@ -86,15 +86,15 @@ TbResult LbScreenSurfaceRelease(struct SSurface *surf);
  *
  * @return Gives Lb_SUCCESS if blitting was performed correctly.
  */
-TbResult LbScreenSurfaceBlit(struct SSurface *surf, ulong x, ulong y,
-    struct TbRect *rect, ulong blflags);
+TbResult LbScreenSurfaceBlit(struct SSurface *surf, u32 x, u32 y,
+    struct TbRect *rect, u32 blflags);
 
 /** Locks the surface, allowing direct access to its pixel data buffer.
  */
 void *LbScreenSurfaceLock(struct SSurface *surf);
 
 /** Unlocks the surface, invalidating pixel data buffer.
- *  After this operation, the pointer acquired through locking should no longer
+ *  After this operation, the pointer acquired through locking should no s32er
  *  be accessed.
  */
 TbResult LbScreenSurfaceUnlock(struct SSurface *surf);

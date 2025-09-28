@@ -212,7 +212,7 @@ extern unsigned char lbKeyOn[256];
 
 extern unsigned char lbInkey;
 extern unsigned char lbInkeyFlags;
-extern ulong lbInkey_prefixed;
+extern u32 lbInkey_prefixed;
 
 /** Key modifier flags for lbInkey. */
 extern unsigned char lbShift;

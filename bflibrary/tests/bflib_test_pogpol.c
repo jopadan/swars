@@ -159,7 +159,7 @@ void test_gpoly_draw_random_gpolys(const ubyte *pal)
 
 TbBool test_gpoly(void)
 {
-    static ulong seeds[] = {0x0, 0xD15C1234, 0xD15C0000, 0xD15C0005, 0xD15C000F, 0xD15C03DC,
+    static us32 seeds[] = {0x0, 0xD15C1234, 0xD15C0000, 0xD15C0005, 0xD15C000F, 0xD15C03DC,
       0xD15C07DF, 0xD15CE896, 0xB00710FA, };
     static TestFrameFunc functs[] = {NULL, test_frame_swars01, };
     ubyte pal[PALETTE_8b_SIZE];
@@ -168,7 +168,7 @@ TbBool test_gpoly(void)
     ubyte *texmap_buf;
     ubyte *texmap;
     TbPixel *ref_buffer;
-    ulong picno;
+    us32 picno;
 
     if (LbErrorLogSetup(NULL, "tst_gpoly.log", Lb_ERROR_LOG_NEW) != Lb_SUCCESS) {
         LOGERR("execution log setup failed");
@@ -215,9 +215,9 @@ TbBool test_gpoly(void)
     for (picno = 1; picno < sizeof(seeds)/sizeof(seeds[0]); picno++)
     {
         char loc_fname[64];
-        ulong ref_width, ref_height;
-        long maxdiff;
-        ulong maxpos;
+        us32 ref_width, ref_height;
+        s32 maxdiff;
+        us32 maxpos;
 
         LbScreenClear(0);
         lbSeed = seeds[picno];
@@ -252,9 +252,9 @@ TbBool test_gpoly(void)
     for (picno = 1; picno < sizeof(functs)/sizeof(functs[0]); picno++)
     {
         char loc_fname[64];
-        ulong ref_width, ref_height;
-        long maxdiff;
-        ulong maxpos;
+        us32 ref_width, ref_height;
+        s32 maxdiff;
+        us32 maxpos;
 
         LbScreenClear(0);
         lbSeed = 0xD15C1234;

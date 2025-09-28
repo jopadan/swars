@@ -45,7 +45,7 @@ struct TbSprite *lbFontPtr;
  * Returns if the given char starts a wide charcode.
  * @param chr the 8-bit char to check
  */
-TbBool is_wide_charcode(ulong chr)
+TbBool is_wide_charcode(u32 chr)
 {
     return false;
 }
@@ -96,12 +96,12 @@ TbBool LbIApplyControlCharToDrawSettings(const char **c)
  * @param y
  * @param len
  */
-void put_down_simpletext_sprites(const char *sbuf, const char *ebuf, long x, long y, long len)
+void put_down_simpletext_sprites(const char *sbuf, const char *ebuf, s32 x, s32 y, s32 len)
 {
   const char *c;
   const struct TbSprite *spr;
   ubyte chr;
-  long w,h;
+  s32 w,h;
   for (c=sbuf; c < ebuf; c++)
   {
     chr = (ubyte)(*c);
@@ -135,7 +135,7 @@ void put_down_simpletext_sprites(const char *sbuf, const char *ebuf, long x, lon
     } else
     if (chr == '\t')
     {
-        w = len*(long)lbSpacesPerTab;
+        w = len*(s32)lbSpacesPerTab;
         if ((lbDisplay.DrawFlags & Lb_TEXT_UNDERLINE) != 0)
         {
             h = LbTextLineHeight();
@@ -158,12 +158,12 @@ void put_down_simpletext_sprites(const char *sbuf, const char *ebuf, long x, lon
  * @param len
  */
 void put_down_simpletext_sprites_resized(const char *sbuf, const char *ebuf,
-  long x, long y, long space_len, int units_per_px)
+  s32 x, s32 y, s32 space_len, int units_per_px)
 {
   const char *c;
   const struct TbSprite *spr;
   ubyte chr;
-  long w,h;
+  s32 w,h;
   for (c=sbuf; c < ebuf; c++)
   {
     chr = (ubyte)(*c);
@@ -198,7 +198,7 @@ void put_down_simpletext_sprites_resized(const char *sbuf, const char *ebuf,
     } else
     if (chr == '\t')
     {
-        w = space_len*(long)lbSpacesPerTab;
+        w = space_len*(s32)lbSpacesPerTab;
         if ((lbDisplay.DrawFlags & Lb_TEXT_UNDERLINE) != 0)
         {
             h = LbTextLineHeight() * units_per_px / 16;
@@ -213,7 +213,7 @@ void put_down_simpletext_sprites_resized(const char *sbuf, const char *ebuf,
 }
 
 void put_down_sprites(const char *sbuf, const char *ebuf,
-  long x, long y, long len, int units_per_px)
+  s32 x, s32 y, s32 len, int units_per_px)
 {
     if (units_per_px == 16)
     {
@@ -237,10 +237,10 @@ TbBool LbIAlignMethodSet(ushort fdflags)
     return false;
 }
 
-long LbTextStringPartWidth(const char *text, long part)
+s32 LbTextStringPartWidth(const char *text, s32 part)
 {
     const char *ebuf;
-    long chr;
+    s32 chr;
     int len;
     int max_len;
 
@@ -285,15 +285,15 @@ long LbTextStringPartWidth(const char *text, long part)
     return max_len;
 }
 
-long LbTextStringWidth(const char *text)
+s32 LbTextStringWidth(const char *text)
 {
     return LbTextStringPartWidth(text, LONG_MAX);
 }
 
 
-long LbSprFontWordWidth(const struct TbSprite *font, const char *text)
+s32 LbSprFontWordWidth(const struct TbSprite *font, const char *text)
 {
-    long len;
+    s32 len;
     const char *c;
     if ((font == NULL) || (text == NULL))
         return 0;
@@ -308,14 +308,14 @@ long LbSprFontWordWidth(const struct TbSprite *font, const char *text)
     return len;
 }
 
-long LbTextWordWidth(const char *text)
+s32 LbTextWordWidth(const char *text)
 {
     return LbSprFontWordWidth(lbFontPtr, text);
 }
 
-long LbTextStringHeight(const char *text)
+s32 LbTextStringHeight(const char *text)
 {
-    long i, h, lines;
+    s32 i, h, lines;
     lines = 1;
     if ((lbFontPtr == NULL) || (text == NULL))
         return 0;
@@ -335,15 +335,15 @@ TbBool LbTextDrawResized(int posx, int posy, int units_per_px, const char *text)
 {
     struct TbAnyWindow grwnd;
     // Counter for amount of blank characters in a line
-    long count;
-    long justifyx,justifyy;
-    long startx,starty;
+    s32 count;
+    s32 justifyx,justifyy;
+    s32 startx,starty;
     const char *sbuf;
     const char *ebuf;
     const char *prev_ebuf;
-    long chr;
-    long x, y, len;
-    long w, h;
+    s32 chr;
+    s32 x, y, len;
+    s32 w, h;
 
     if ((lbFontPtr == NULL) || (text == NULL))
         return true;

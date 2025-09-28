@@ -85,7 +85,7 @@ typedef enum TbFileSeekMode TbFileSeekMode;
 
 #define INVALID_FILE (TbFileHandle)-1
 
-typedef ulong TbFileHandle;
+typedef u32 TbFileHandle;
 
 #if defined(_finddata_t) // GCC Windows API
 typedef struct _finddata_t TbFILE_FIND;
@@ -105,13 +105,13 @@ typedef struct _finddata_t TbFILE_FIND;
 struct TbFileFind {
     char Filename[DISKPATH_SIZE];
     char AlternateFilename[14];
-    unsigned long Attributes;
-    unsigned long Length;
+    u32 Attributes;
+    u32 Length;
     TbDate CreationDate;
     TbTime CreationTime;
     TbDate LastWriteDate;
     TbTime LastWriteTime;
-    unsigned long ReservedHandle;
+    u32 ReservedHandle;
     TbFILE_FIND Reserved;
 };
 
@@ -125,7 +125,7 @@ typedef void (*FileNameTransform)(char *out_fname, const char *inp_fname);
 
 /** Callback to be used for transforming all file names before opening.
  *
- * The callback can assume the output buffer to be FILENAME_MAX long.
+ * The callback can assume the output buffer to be FILENAME_MAX s32.
  */
 extern FileNameTransform lbFileNameTransform;
 
@@ -138,7 +138,7 @@ TbBool LbFileExists(const char *fname);
 
 /** Returns current value of the file position indicator.
  */
-long LbFilePosition(TbFileHandle fhandle);
+s32 LbFilePosition(TbFileHandle fhandle);
 
 /** Opens a file in given mode.
  */
@@ -159,7 +159,7 @@ TbBool LbFileEof(TbFileHandle fhandle);
  * @param origin
  * @return Returns new file position, or -1 on error.
  */
-TbResult LbFileSeek(TbFileHandle fhandle, long offset, TbFileSeekMode origin);
+TbResult LbFileSeek(TbFileHandle fhandle, s32 offset, TbFileSeekMode origin);
 
 /**
  * Reads from previously opened disk file.
@@ -169,7 +169,7 @@ TbResult LbFileSeek(TbFileHandle fhandle, long offset, TbFileSeekMode origin);
  * @param len
  * @return Gives amount of bytes read, or -1 on error.
  */
-long LbFileRead(TbFileHandle fhandle, void *buffer, unsigned long len);
+s32 LbFileRead(TbFileHandle fhandle, void *buffer, u32 len);
 
 /**
  * Writes data at the operating system level.
@@ -179,7 +179,7 @@ long LbFileRead(TbFileHandle fhandle, void *buffer, unsigned long len);
  * @return Returns the number of bytes (does not include any extra carriage-return
  * characters transmitted) of data transmitted to the file.
  */
-long LbFileWrite(TbFileHandle fhandle, const void *buffer, const unsigned long len);
+s32 LbFileWrite(TbFileHandle fhandle, const void *buffer, const u32 len);
 
 /**
  * Flushes the file buffers, writing all data immediately.
@@ -191,14 +191,14 @@ TbBool LbFileFlush(TbFileHandle fhandle);
 
 /** Returns size of an already opened file.
  */
-long LbFileLengthHandle(TbFileHandle fhandle);
+s32 LbFileLengthHandle(TbFileHandle fhandle);
 
 /** Returns disk size of file.
  *
  * @param fname File name string
  * @return
  */
-long LbFileLength(const char *fname);
+s32 LbFileLength(const char *fname);
 
 /** Starts listing of directory entries.
  *
@@ -209,7 +209,7 @@ long LbFileLength(const char *fname);
  *  TbFileFind struct which is then used for LbFileFindNext() and LbFileFindEnd() calls.
  */
 TbResult LbFileFindFirst(const char *filespec, TbFileFind *ffind,
-  ulong attributes);
+  u32 attributes);
 
 /** Continues listing directory entries.
  *
@@ -235,7 +235,7 @@ TbResult LbFileRename(const char *fname_old, const char *fname_new);
  */
 TbResult LbFileDelete(const char *fname);
 
-long LbFileLengthRnc(const char *fname);
+s32 LbFileLengthRnc(const char *fname);
 
 /** Opens a file and reads it into given buffer, unpacking RNC if found.
  *
@@ -243,7 +243,7 @@ long LbFileLengthRnc(const char *fname);
  * @param buffer Memory buffer for storing the file content
  * @return Size written into buffer, or -1 on error.
  */
-long LbFileLoadAt(const char *fname, void *buffer);
+s32 LbFileLoadAt(const char *fname, void *buffer);
 
 /** Creates a new file and writes content of given buffer into it.
  *
@@ -252,17 +252,17 @@ long LbFileLoadAt(const char *fname, void *buffer);
  * @param len Memory buffer length to be saved
  * @return Size written to file, or -1 on error.
  */
-long LbFileSaveAt(const char *fname, const void *buffer, ulong len);
+s32 LbFileSaveAt(const char *fname, const void *buffer, u32 len);
 
-long LbFileStringSearch(TbFileHandle handle, const char *sstr, ubyte *buf,
-  ulong buflen, ushort flags);
+s32 LbFileStringSearch(TbFileHandle handle, const char *sstr, ubyte *buf,
+  u32 buflen, ushort flags);
 
 /** Creates a proper disk path from file name, directory, and current directory
  *
  * Merge given directory and filename, and optionally precedes that with CWD.
  */
 TbResult LbFileMakeFullPath(const TbBool append_cur_dir,
-  const char *directory, const char *filename, char *buf, const ulong len);
+  const char *directory, const char *filename, char *buf, const u32 len);
 
 TbResult LbFileCopy(const char *filename1, const char *filename2);
 

@@ -33,9 +33,9 @@ TbResult LbSpriteSetup(TbSprite *start, const TbSprite *end, const unsigned char
     sprt = start;
     while (sprt < end)
     {
-      if ((unsigned long)sprt->Data < (unsigned long)data)
+      if ((u32)sprt->Data < (u32)data)
       {
-        sprt->Data += (unsigned long)data;
+        sprt->Data += (u32)data;
         n++;
       }
       sprt++;
@@ -70,9 +70,9 @@ TbResult LbSpriteReset(TbSprite *start, const TbSprite *end, const unsigned char
     sprt = start;
     while (sprt < end)
     {
-      if ((unsigned long)sprt->Data >= (unsigned long)data)
+      if ((u32)sprt->Data >= (u32)data)
       {
-        sprt->Data -= (unsigned long)data;
+        sprt->Data -= (u32)data;
         n++;
       }
       sprt++;

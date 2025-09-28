@@ -77,7 +77,7 @@ TbResult LbDirectoryMake(const char *path, TbBool recursive)
         len = snprintf(buffer, sizeof(buffer), "%s", path);
     }
 
-    // First, find the longest existing path
+    // First, find the s32est existing path
     do
     {
         err = stat(buffer, &st);
@@ -113,7 +113,7 @@ TbResult LbDirectoryMake(const char *path, TbBool recursive)
           num_levels, buffer);
         return Lb_FAIL;
     }
-    // At this point, buffer contains the longest existing path.  Go forward
+    // At this point, buffer contains the s32est existing path.  Go forward
     // through the rest of the path and create the missing directories.
     p = buffer;
 
@@ -143,7 +143,7 @@ TbResult LbDirectoryMake(const char *path, TbBool recursive)
     return Lb_SUCCESS;
 }
 
-TbResult LbDirectoryCurrent(char *buf, unsigned long buflen)
+TbResult LbDirectoryCurrent(char *buf, u32 buflen)
 {
     if ( getcwd(buf,buflen) == NULL )
         return Lb_FAIL;
