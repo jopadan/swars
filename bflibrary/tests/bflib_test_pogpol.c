@@ -146,7 +146,7 @@ void test_gpoly_draw_random_gpolys(const ubyte *pal)
         else
             draw_gpoly(&point_a, &point_c, &point_b);
 
-        if (0) { // Debug code
+        if (i < 150) { // Debug code
             char loc_fname[64];
             static int cntr = 0;
             if (i == 0) cntr++;
