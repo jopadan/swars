@@ -279,7 +279,7 @@ void PlayCDAudioTrack(ushort trkno)
     CDCountdown = 5 * (len_sect / 75 / 5) + 5;
     i = GetCDFirst();
     cd_play(i, start_sect, len_sect);
-    SNDLOGSYNC("CDA play", "track %d sect %lu len %lu", (int)trkno, start_sect, len_sect);
+    SNDLOGSYNC("CDA play", "track %d sect %u len %u", (int)trkno, start_sect, len_sect);
 
     CDCount_handle = AIL_register_timer(cbCDCountdown);
     AIL_set_timer_period(CDCount_handle, 5000000);

@@ -165,13 +165,13 @@ void draw_mission_stats_vals_static(struct ScreenBox *box,
     y += sepheight;
 
     // Income
-    snprintf(locstr, sizeof(locstr), "%ld C", p_rep->Income);
+    snprintf(locstr, sizeof(locstr), "%d C", p_rep->Income);
     text = loctext_to_gtext(locstr);
     draw_text_purple_list2(x, y, text, 0);
     y += lnheight;
 
     // Expenditure
-    snprintf(locstr, sizeof(locstr), "%ld C", p_rep->Expenditure);
+    snprintf(locstr, sizeof(locstr), "%d C", p_rep->Expenditure);
     text = loctext_to_gtext(locstr);
     draw_text_purple_list2(x, y, text, 0);
     y += lnheight;

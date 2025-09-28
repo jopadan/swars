@@ -110,10 +110,10 @@ ubyte load_music_bank(TbFileHandle fh, ubyte bankId)
     BfEndMusic = (struct BfMusicInfo *)(m + mbhead[bankId].info_size);
     LbFileSeek(fh, mbhead[bankId].data_offset, Lb_FILE_SEEK_BEGINNING);
     LbFileRead(fh, dt, 8);
-    if (bs32(dt+0) == RNC_SIGNATURE)
+    if (blong(dt+0) == RNC_SIGNATURE)
     {
         s32 flength;
-        flength = bs32(dt+4);
+        flength = blong(dt+4);
         LbFileRead(fh, dt + 8, flength - 8);
         UnpackM1(dt, flength);
     }
@@ -124,10 +124,10 @@ ubyte load_music_bank(TbFileHandle fh, ubyte bankId)
     // Read songs info
     LbFileSeek(fh, mbhead[bankId].info_offset, Lb_FILE_SEEK_BEGINNING);
     LbFileRead(fh, m, 8);
-    if (bs32(m+0) == RNC_SIGNATURE)
+    if (blong(m+0) == RNC_SIGNATURE)
     {
         s32 flength;
-        flength = bs32(m+4);
+        flength = blong(m+4);
         LbFileRead(fh, m + 8, flength - 8);
         UnpackM1(m, flength);
     }

@@ -932,7 +932,7 @@ static void global_credits_box_draw(void)
     my_set_text_window(cx + 1, cy + 1, 119, global_top_bar_box.Height - 2);
 
     // Divide locstr into two parts: store credits in first, leading zeros in second
-    sprintf(locstr, "%ld", ingame.Credits);
+    sprintf(locstr, "%d", ingame.Credits);
 
     // Fill leading zeros; drawn separately as these are half transparent
     usedlen = strlen(locstr) + 1;

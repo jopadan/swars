@@ -604,7 +604,7 @@ void save_mission_single_conf(TbFileHandle fh, struct Mission *p_missi, char *bu
         LbFileWrite(fh, buf, strlen(buf));
     }
     if (p_missi->ResearchWeapons != 0) {
-        sprintf(buf, "ResearchWeapons = 0x%lx\n",
+        sprintf(buf, "ResearchWeapons = 0x%x\n",
           (u32)p_missi->ResearchWeapons);
         LbFileWrite(fh, buf, strlen(buf));
     }
@@ -806,8 +806,8 @@ TbBool read_missions_conf_info(int num)
     }
     conf_buf[conf_len] = '\0';
     LbIniParseStart(&parser, conf_buf, conf_len);
-#define CONFWRNLOG(format,args...) LOGWARN("%s(line %lu): " format, conf_fname, parser.line_num, ## args)
-#define CONFDBGLOG(format,args...) LOGDBG("%s(line %lu): " format, conf_fname, parser.line_num, ## args)
+#define CONFWRNLOG(format,args...) LOGWARN("%s(line %u): " format, conf_fname, parser.line_num, ## args)
+#define CONFDBGLOG(format,args...) LOGDBG("%s(line %u): " format, conf_fname, parser.line_num, ## args)
     p_campgn = &campaigns[num];
     LbMemorySet(p_campgn, 0, sizeof(struct Campaign));
 

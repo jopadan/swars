@@ -32,7 +32,7 @@ struct TbSprite;
 
 #pragma pack()
 
-extern long dword_1DC36C;
+extern s32 dword_1DC36C;
 extern ubyte SCANNER_pal_bright[];
 extern ubyte SCANNER_bright_limit[];
 
@@ -48,15 +48,15 @@ void SCANNER_init_bright_limit_table(void);
  * Instead of standard transparency, it converts input and background to
  * grayscale and recolors using given color map.
  */
-TbResult ApSpriteDrawLowTransGreyRemap(long x, long y,
+TbResult ApSpriteDrawLowTransGreyRemap(s32 x, s32 y,
   const struct TbSprite *spr, const ubyte *transmap);
 
 /** Scaled sprite drawing routine with modified transparency support.
  * Instead of standard transparency, it converts input and background to
  * grayscale and recolors using given color map.
  */
-TbResult ApSpriteDrawScaledLowTransGreyRemap(long xpos, long ypos,
-  const struct TbSprite *sprite, long dest_width, long dest_height,
+TbResult ApSpriteDrawScaledLowTransGreyRemap(s32 xpos, s32 ypos,
+  const struct TbSprite *sprite, s32 dest_width, s32 dest_height,
   const ubyte *transmap);
 
 #ifdef __cplusplus

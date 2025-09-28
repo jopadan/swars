@@ -99,7 +99,7 @@ void get_saved_game_fname(char *fname, ushort slot);
 
 void adjust_memory_use(void);
 void init_memory(MemSystem *mem_table);
-long get_memory_ptr_allocated_count(void **mgptr);
+s32 get_memory_ptr_allocated_count(void **mgptr);
 
 /******************************************************************************/
 #ifdef __cplusplus

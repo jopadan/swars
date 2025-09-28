@@ -20,6 +20,7 @@
 #define GUITEXT_H
 
 #include "bftypes.h"
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {

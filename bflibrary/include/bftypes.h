@@ -26,6 +26,7 @@ extern "C" {
 
 #include <stddef.h>
 #include <time.h>
+#include <string.h>
 
 #include "bfconfig.h"
 

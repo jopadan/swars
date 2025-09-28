@@ -216,7 +216,7 @@ struct TngUObject
     short TargetDZ;
     ushort BuildStartVect; /**< Index of the first ColVectList for toggling passability which are associated to this object. */
     ushort BuildNumbVect; /**< Amount of ColVectList items for toggling passability which are associated to this object. */
-    ushort ZZ_unused_but_pads_to_s32_ObjectNo;
+    ushort ZZ_unused_but_pads_to_long_ObjectNo;
     ushort ComHead;
     short ComCur;
     short Mood; /**< Thing offs=0x6C */

@@ -191,7 +191,7 @@ static inline TbResult LbSpriteDrawTrRemap(const char *sp,short sprWd,short sprH
         unsigned char *r,const unsigned char *cmap,int nextRowDelta,short left,const TbBool mirror)
 {
     unsigned char *nextRow;
-    long htIndex;
+    s32 htIndex;
     nextRow = &(r[nextRowDelta]);
     htIndex = sprHt;
     // For all lines of the sprite
@@ -215,7 +215,7 @@ static inline TbResult LbSpriteDrawTrRemap(const char *sp,short sprWd,short sprH
     return Lb_SUCCESS;
 }
 
-TbResult ApSpriteDrawLowTransGreyRemap(long x, long y, const TbSprite *spr, const ubyte *transmap)
+TbResult ApSpriteDrawLowTransGreyRemap(s32 x, s32 y, const TbSprite *spr, const ubyte *transmap)
 {
     TbSpriteDrawData spd;
     TbResult ret;

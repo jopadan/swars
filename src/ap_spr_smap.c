@@ -31,13 +31,13 @@
 #include "privbflog.h"
 
 TbResult LbSpriteDrawRemapUsingScalingUpDataSolidRL(uchar *outbuf, int scanline,
-  int outheight, long *xstep, long *ystep, const TbSprite *sprite, const TbPixel *cmap);
+  int outheight, s32 *xstep, s32 *ystep, const TbSprite *sprite, const TbPixel *cmap);
 TbResult LbSpriteDrawRemapUsingScalingUpDataSolidLR(uchar *outbuf, int scanline,
-  int outheight, long *xstep, long *ystep, const TbSprite *sprite, const TbPixel *cmap);
+  int outheight, s32 *xstep, s32 *ystep, const TbSprite *sprite, const TbPixel *cmap);
 TbResult LbSpriteDrawRemapUsingScalingDownDataSolidRL(uchar *outbuf, int scanline,
-  int outheight, long *xstep, long *ystep, const TbSprite *sprite, const TbPixel *cmap);
+  int outheight, s32 *xstep, s32 *ystep, const TbSprite *sprite, const TbPixel *cmap);
 TbResult LbSpriteDrawRemapUsingScalingDownDataSolidLR(uchar *outbuf, int scanline,
-  int outheight, long *xstep, long *ystep, const TbSprite *sprite, const TbPixel *cmap);
+  int outheight, s32 *xstep, s32 *ystep, const TbSprite *sprite, const TbPixel *cmap);
 
 /**
  * Draws a scaled up sprite on given buffer, with transparency mapping and
@@ -53,12 +53,12 @@ TbResult LbSpriteDrawRemapUsingScalingDownDataSolidLR(uchar *outbuf, int scanlin
  * @return Gives 0 on success.
  */
 TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans1RL(uchar *outbuf, int scanline,
-  int outheight, long *xstep, long *ystep, const TbSprite *sprite,
+  int outheight, s32 *xstep, s32 *ystep, const TbSprite *sprite,
   const TbPixel *transmap)
 {
     int ystep_delta;
     unsigned char *sprdata;
-    long *ycurstep;
+    s32 *ycurstep;
 
     LOGDBG("drawing");
     ystep_delta = 2;
@@ -75,7 +75,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans1RL(uchar *outbuf, int sc
         {
             unsigned char *prevdata;
             int xdup, ydup;
-            long *xcurstep;
+            s32 *xcurstep;
             ydup = ycurstep[1];
             if (ycurstep[0]+ydup > outheight)
                 ydup = outheight-ycurstep[0];
@@ -88,7 +88,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans1RL(uchar *outbuf, int sc
                 out_end = outbuf;
                 while ( 1 )
                 {
-                    long pxlen;
+                    s32 pxlen;
                     pxlen = (signed char)*sprdata;
                     sprdata++;
                     if (pxlen == 0)
@@ -135,7 +135,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans1RL(uchar *outbuf, int sc
         {
             while ( 1 )
             {
-                long pxlen;
+                s32 pxlen;
                 pxlen = (signed char)*sprdata;
                 sprdata++;
                 if (pxlen == 0)
@@ -164,12 +164,12 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans1RL(uchar *outbuf, int sc
  * @return Gives 0 on success.
  */
 TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans1LR(uchar *outbuf, int scanline,
-  int outheight, long *xstep, long *ystep, const TbSprite *sprite,
+  int outheight, s32 *xstep, s32 *ystep, const TbSprite *sprite,
   const TbPixel *transmap)
 {
     int ystep_delta;
     unsigned char *sprdata;
-    long *ycurstep;
+    s32 *ycurstep;
 
     LOGDBG("drawing");
     ystep_delta = 2;
@@ -186,7 +186,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans1LR(uchar *outbuf, int sc
         {
             unsigned char *prevdata;
             int xdup, ydup;
-            long *xcurstep;
+            s32 *xcurstep;
             ydup = ycurstep[1];
             if (ycurstep[0]+ydup > outheight)
                 ydup = outheight-ycurstep[0];
@@ -199,7 +199,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans1LR(uchar *outbuf, int sc
                 out_end = outbuf;
                 while ( 1 )
                 {
-                    long pxlen;
+                    s32 pxlen;
                     pxlen = (signed char)*sprdata;
                     sprdata++;
                     if (pxlen == 0)
@@ -246,7 +246,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans1LR(uchar *outbuf, int sc
         {
             while ( 1 )
             {
-                long pxlen;
+                s32 pxlen;
                 pxlen = (signed char)*sprdata;
                 sprdata++;
                 if (pxlen == 0)
@@ -275,12 +275,12 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans1LR(uchar *outbuf, int sc
  * @return Gives 0 on success.
  */
 TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans2RL(uchar *outbuf, int scanline,
-  int outheight, long *xstep, long *ystep, const TbSprite *sprite,
+  int outheight, s32 *xstep, s32 *ystep, const TbSprite *sprite,
   const TbPixel *transmap)
 {
     int ystep_delta;
     unsigned char *sprdata;
-    long *ycurstep;
+    s32 *ycurstep;
 
     LOGDBG("drawing");
     ystep_delta = 2;
@@ -297,7 +297,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans2RL(uchar *outbuf, int sc
         {
             unsigned char *prevdata;
             int xdup, ydup;
-            long *xcurstep;
+            s32 *xcurstep;
             ydup = ycurstep[1];
             if (ycurstep[0]+ydup > outheight)
                 ydup = outheight-ycurstep[0];
@@ -310,7 +310,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans2RL(uchar *outbuf, int sc
                 out_end = outbuf;
                 while ( 1 )
                 {
-                    long pxlen;
+                    s32 pxlen;
                     pxlen = (signed char)*sprdata;
                     sprdata++;
                     if (pxlen == 0)
@@ -357,7 +357,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans2RL(uchar *outbuf, int sc
         {
             while ( 1 )
             {
-                long pxlen;
+                s32 pxlen;
                 pxlen = (signed char)*sprdata;
                 sprdata++;
                 if (pxlen == 0)
@@ -386,12 +386,12 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans2RL(uchar *outbuf, int sc
  * @return Gives 0 on success.
  */
 TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans2LR(uchar *outbuf, int scanline,
-  int outheight, long *xstep, long *ystep, const TbSprite *sprite,
+  int outheight, s32 *xstep, s32 *ystep, const TbSprite *sprite,
   const TbPixel *transmap)
 {
     int ystep_delta;
     unsigned char *sprdata;
-    long *ycurstep;
+    s32 *ycurstep;
 
     LOGDBG("drawing");
     ystep_delta = 2;
@@ -408,7 +408,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans2LR(uchar *outbuf, int sc
         {
             unsigned char *prevdata;
             int xdup, ydup;
-            long *xcurstep;
+            s32 *xcurstep;
             ydup = ycurstep[1];
             if (ycurstep[0]+ydup > outheight)
                 ydup = outheight-ycurstep[0];
@@ -421,7 +421,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans2LR(uchar *outbuf, int sc
                 out_end = outbuf;
                 while ( 1 )
                 {
-                    long pxlen;
+                    s32 pxlen;
                     pxlen = (signed char)*sprdata;
                     sprdata++;
                     if (pxlen == 0)
@@ -468,7 +468,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans2LR(uchar *outbuf, int sc
         {
             while ( 1 )
             {
-                long pxlen;
+                s32 pxlen;
                 pxlen = (signed char)*sprdata;
                 sprdata++;
                 if (pxlen == 0)
@@ -497,12 +497,12 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingUpDataTrans2LR(uchar *outbuf, int sc
  * @return Gives 0 on success.
  */
 TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans1RL(uchar *outbuf, int scanline,
-  int outheight, long *xstep, long *ystep, const TbSprite *sprite,
+  int outheight, s32 *xstep, s32 *ystep, const TbSprite *sprite,
   const TbPixel *transmap)
 {
     int ystep_delta;
     unsigned char *sprdata;
-    long *ycurstep;
+    s32 *ycurstep;
 
     LOGDBG("drawing");
     ystep_delta = 2;
@@ -517,13 +517,13 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans1RL(uchar *outbuf, int 
     {
         if (ycurstep[1] != 0)
         {
-            long *xcurstep;
+            s32 *xcurstep;
             xcurstep = xstep;
             TbPixel *out_end;
             out_end = outbuf;
             while ( 1 )
             {
-                long pxlen;
+                s32 pxlen;
                 pxlen = (signed char)*sprdata;
                 sprdata++;
                 if (pxlen == 0)
@@ -564,7 +564,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans1RL(uchar *outbuf, int 
         {
             while ( 1 )
             {
-                long pxlen;
+                s32 pxlen;
                 pxlen = (signed char)*sprdata;
                 sprdata++;
                 if (pxlen == 0)
@@ -593,12 +593,12 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans1RL(uchar *outbuf, int 
  * @return Gives 0 on success.
  */
 TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans1LR(uchar *outbuf, int scanline,
-  int outheight, long *xstep, long *ystep, const TbSprite *sprite,
+  int outheight, s32 *xstep, s32 *ystep, const TbSprite *sprite,
   const TbPixel *transmap)
 {
     int ystep_delta;
     unsigned char *sprdata;
-    long *ycurstep;
+    s32 *ycurstep;
 
     LOGDBG("drawing");
     ystep_delta = 2;
@@ -613,13 +613,13 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans1LR(uchar *outbuf, int 
     {
         if (ycurstep[1] != 0)
         {
-            long *xcurstep;
+            s32 *xcurstep;
             xcurstep = xstep;
             TbPixel *out_end;
             out_end = outbuf;
             while ( 1 )
             {
-                long pxlen;
+                s32 pxlen;
                 pxlen = (signed char)*sprdata;
                 sprdata++;
                 if (pxlen == 0)
@@ -660,7 +660,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans1LR(uchar *outbuf, int 
         {
             while ( 1 )
             {
-                long pxlen;
+                s32 pxlen;
                 pxlen = (signed char)*sprdata;
                 sprdata++;
                 if (pxlen == 0)
@@ -689,12 +689,12 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans1LR(uchar *outbuf, int 
  * @return Gives 0 on success.
  */
 TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans2RL(uchar *outbuf, int scanline,
-  int outheight, long *xstep, long *ystep, const TbSprite *sprite,
+  int outheight, s32 *xstep, s32 *ystep, const TbSprite *sprite,
   const TbPixel *transmap)
 {
     int ystep_delta;
     unsigned char *sprdata;
-    long *ycurstep;
+    s32 *ycurstep;
 
     LOGDBG("drawing");
     ystep_delta = 2;
@@ -709,13 +709,13 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans2RL(uchar *outbuf, int 
     {
         if (ycurstep[1] != 0)
         {
-            long *xcurstep;
+            s32 *xcurstep;
             xcurstep = xstep;
             TbPixel *out_end;
             out_end = outbuf;
             while ( 1 )
             {
-                long pxlen;
+                s32 pxlen;
                 pxlen = (signed char)*sprdata;
                 sprdata++;
                 if (pxlen == 0)
@@ -756,7 +756,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans2RL(uchar *outbuf, int 
         {
             while ( 1 )
             {
-                long pxlen;
+                s32 pxlen;
                 pxlen = (signed char)*sprdata;
                 sprdata++;
                 if (pxlen == 0)
@@ -785,12 +785,12 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans2RL(uchar *outbuf, int 
  * @return Gives 0 on success.
  */
 TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans2LR(uchar *outbuf, int scanline,
-  int outheight, long *xstep, long *ystep, const TbSprite *sprite,
+  int outheight, s32 *xstep, s32 *ystep, const TbSprite *sprite,
   const TbPixel *transmap)
 {
     int ystep_delta;
     unsigned char *sprdata;
-    long *ycurstep;
+    s32 *ycurstep;
 
     LOGDBG("drawing");
     ystep_delta = 2;
@@ -805,13 +805,13 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans2LR(uchar *outbuf, int 
     {
         if (ycurstep[1] != 0)
         {
-            long *xcurstep;
+            s32 *xcurstep;
             xcurstep = xstep;
             TbPixel *out_end;
             out_end = outbuf;
             while ( 1 )
             {
-                long pxlen;
+                s32 pxlen;
                 pxlen = (signed char)*sprdata;
                 sprdata++;
                 if (pxlen == 0)
@@ -852,7 +852,7 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans2LR(uchar *outbuf, int 
         {
             while ( 1 )
             {
-                long pxlen;
+                s32 pxlen;
                 pxlen = (signed char)*sprdata;
                 sprdata++;
                 if (pxlen == 0)
@@ -879,16 +879,16 @@ TbResult ApSpriteDrawLTGreyRemapUsingScalingDownDataTrans2LR(uchar *outbuf, int 
  * @return Gives 0 on success.
  * @see LbSpriteSetScalingData()
  */
-TbResult ApSpriteDrawLowTransGreyRemapUsingScalingData(long posx, long posy, const TbSprite *sprite,
+TbResult ApSpriteDrawLowTransGreyRemapUsingScalingData(s32 posx, s32 posy, const TbSprite *sprite,
   const TbPixel *transmap)
 {
-    long *xstep;
-    long *ystep;
+    s32 *xstep;
+    s32 *ystep;
     int scanline;
 
     LOGDBG("at (%ld,%ld): drawing", posx, posy);
     {
-        long sposx, sposy;
+        s32 sposx, sposy;
         sposx = posx;
         sposy = posy;
         scanline = lbDisplay.GraphicsScreenWidth;
@@ -1011,10 +1011,10 @@ TbResult ApSpriteDrawLowTransGreyRemapUsingScalingData(long posx, long posy, con
     }
 }
 
-TbResult ApSpriteDrawScaledLowTransGreyRemap(long xpos, long ypos, const TbSprite *sprite,
-    long dest_width, long dest_height, const ubyte *transmap)
+TbResult ApSpriteDrawScaledLowTransGreyRemap(s32 xpos, s32 ypos, const TbSprite *sprite,
+    s32 dest_width, s32 dest_height, const ubyte *transmap)
 {
-    LOGNO("at (%ld,%ld) size (%ld,%ld)", xpos, ypos, dest_width, dest_height);
+    LOGNO("at (%d,%d) size (%d,%d)", xpos, ypos, dest_width, dest_height);
     if ((dest_width <= 0) || (dest_height <= 0))
       return 1;
     if ((lbDisplay.DrawFlags & Lb_TEXT_UNDERLNSHADOW) != 0)

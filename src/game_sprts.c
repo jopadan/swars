@@ -519,7 +519,7 @@ void debug_multicolor_sprite(int idx)
 
     spr = &m_sprites[idx];
     str = strdata;
-    sprintf(str, "spr %d width %d height %d ptr 0x%lx data",
+    sprintf(str, "spr %d width %d height %d ptr 0x%x data",
       idx, (int)spr->SWidth, (int)spr->SHeight, (u32)spr->Data);
     ptr = spr->Data;
     for (i = 0; i < 10; i++)

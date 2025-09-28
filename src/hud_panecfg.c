@@ -471,7 +471,7 @@ TbBool read_panel_config(const char *name, ushort styleno, ushort detail)
     TbFileHandle conf_fh;
     TbBool done;
     int i, n;
-    long k, m;
+    s32 k, m;
     char *conf_buf;
     struct TbIniParser parser;
     char conf_fname[DISKPATH_SIZE];

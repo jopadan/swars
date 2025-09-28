@@ -3603,8 +3603,8 @@ void gproc3_unknsub2(void)
     short ms_x, ms_y;
     int i;
 
-    int bkp_ingame_flags;
-    int s32 bkp_engn_anglexz;
+    s32 bkp_ingame_flags;
+    s32 bkp_engn_anglexz;
     ushort bkp_render_area_a, bkp_render_area_b;
     s32 bkp_dword_152EEC;
     ubyte bkp_unkn_flags_01;

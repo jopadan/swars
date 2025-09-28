@@ -360,7 +360,7 @@ void snprint_command(char *buf, u32 buflen, ushort cmd)
 
     {
         if (nparams) { snprintf(s, buflen - (s - buf), ", "); s += strlen(s); }
-        snprintf(s, buflen - (s - buf), "Flags(0x%02lX)", p_cmd->Flags);
+        snprintf(s, buflen - (s - buf), "Flags(0x%02X)", p_cmd->Flags);
         s += strlen(s);
         nparams++;
     }
