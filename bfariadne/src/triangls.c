@@ -183,11 +183,11 @@ static TbBool triangleptr_is_border(struct TrTriangle *p_tri)
 /** Multiplies first pair of arguments, and second pair, returning which result is smaller.
  * @return Gives -1 if first pair multiplies to smaller value, 1 if it's the second; if equal, gives 0.
  */
-static sbyte path_compare_multiplications(long mul1a, long mul1b, long mul2a, long mul2b)
+static sbyte path_compare_multiplications(s32 mul1a, s32 mul1b, s32 mul2a, s32 mul2b)
 {
-    long long mul1,mul2;
-    mul1 = (long long)mul1a * (long long)mul1b;
-    mul2 = (long long)mul2a * (long long)mul2b;
+    s64 mul1,mul2;
+    mul1 = (s64)mul1a * (s64)mul1b;
+    mul2 = (s64)mul2a * (s64)mul2b;
     if (mul1 > mul2)
         return 1;
     if (mul1 < mul2)
@@ -195,13 +195,13 @@ static sbyte path_compare_multiplications(long mul1a, long mul1b, long mul2a, lo
     return 0;
 }
 
-long triangle_area1(TrTriangId tri)
+s32 triangle_area1(TrTriangId tri)
 {
     struct TrTriangle *p_tri;
     struct TrPoint *p_point1;
     struct TrPoint *p_point2;
     struct TrPoint *p_point3;
-    long long area;
+    s64 area;
 
     p_tri = &triangulation[0].Triangles[tri];
     p_point1 = &triangulation[0].Points[p_tri->point[0]];
