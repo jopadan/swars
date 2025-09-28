@@ -20,6 +20,8 @@
 #ifndef RNC_1FM_H_
 #define RNC_1FM_H_
 
+#include "bftypes.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -21,6 +21,7 @@
 #define AIL2OAL_DPMI_H_
 
 #include <stdint.h>
+#include "bftypes.h"
 
 #ifdef __cplusplus
 extern "C" {

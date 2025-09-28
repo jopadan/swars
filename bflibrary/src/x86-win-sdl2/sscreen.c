@@ -1179,19 +1179,19 @@ TbResult LbScreenSwapBox(ubyte *sourceBuf, s32 sourceX, s32 sourceY,
     return ret;
 }
 
-TbResult LbScreenSwapBoxClear(ubyte *sourceBuf, i32 sourceX, i32 sourceY,
-  i32 destX, i32 destY, u32 width, u32 height, ubyte colour)
+TbResult LbScreenSwapBoxClear(ubyte *sourceBuf, s32 sourceX, s32 sourceY,
+  s32 destX, s32 destY, u32 width, u32 height, ubyte colour)
 {
     assert(!"not implemented, as is never used");
     return Lb_FAIL;
 }
 
-static void LbI_ScreenDrawHLineDirect(i32 X1, i32 Y1, i32 X2, i32 Y2)
+static void LbI_ScreenDrawHLineDirect(s32 X1, s32 Y1, s32 X2, s32 Y2)
 {
     ubyte *ptr;
     ubyte *ptrEnd;
-    i32 xBeg, xEnd;
-    i32 width, shiftX, shiftY;
+    s32 xBeg, xEnd;
+    s32 width, shiftX, shiftY;
 
     LOGDBG("starting");
     assert(!lbDisplay.VesaIsSetUp); // video mem paging not supported with SDL

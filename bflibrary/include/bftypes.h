@@ -128,7 +128,6 @@ extern "C" {
  */
 #define DISKPATH_SIZE    144
 
-typedef uint32_t ulong;
 typedef unsigned int uint;
 typedef unsigned short ushort;
 typedef unsigned char uchar;

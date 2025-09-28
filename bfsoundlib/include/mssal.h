@@ -24,6 +24,7 @@
 
 #include <stdint.h>
 #include <strings.h>
+#include "bftypes.h"
 
 #ifdef __cplusplus
 extern "C" {
