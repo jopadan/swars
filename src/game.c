@@ -3786,10 +3786,8 @@ ubyte load_game_slot(ubyte click)
     if (save_slot == 0) {
         ingame.Flags |= GamF_MortalGame;
     }
-    unkn_city_no = -1;
+    reset_world_screen_player_state();
     selected_agent = 0;
-    word_1C6E0A = 0;
-    word_1C6E08 = 0;
     screentype = SCRT_99;
     game_system_screen = SySc_NONE;
     if (restore_savegame) {
@@ -3812,8 +3810,41 @@ ubyte save_game_slot(ubyte click)
 
 void init_variables(void)
 {
+#if 0
     asm volatile ("call ASM_init_variables\n"
         :  :  : "eax" );
+#endif
+    selected_city_id = -1;
+    reset_equip_screen_player_state();
+    reset_cryo_screen_player_state();
+    reset_world_screen_player_state();
+    reset_brief_screen_player_state();
+    reset_research_screen_player_state();
+    clear_all_scanner_signals();
+    reset_app_bar_player_state();
+    //word_1C6F48 = 0; -- set but never used - remove pending
+    global_date.Day = 2;
+    global_date.Month = 6;
+    global_date.Year = 74;
+    //word_15518A = -1; -- set but never used - remove pending
+    ingame.MissionStatus = ObvStatu_COMPLETED;
+    login_control__Money = starting_cash_amounts[0];
+    if (login_control__State == 6)
+    {
+        ingame.Credits = 50000;
+        ingame.CashAtStart = 50000;
+    }
+    else
+    {
+        ingame.Credits = login_control__Money;
+        ingame.CashAtStart = login_control__Money;
+    }
+    ingame.Expenditure = 0;
+    login_control__City = 19;
+    login_control__State = 6;
+    byte_181189 = 0;
+    unkn_flags_08 = 0x3C;
+    login_control__TechLevel = 4;
 }
 
 void init_agents(void)
@@ -3863,10 +3894,10 @@ ubyte goto_savegame(ubyte click)
     update_sys_scr_shared_header(game_system_screen);
     ingame.Flags &= ~GamF_MortalGame;
 
-    reset_mission_agents();
     load_city_data(0);
     init_weapon_text();
     load_city_txt();
+    reset_mission_agents();
     init_variables();
     srm_reset_research();
     init_agents();
@@ -4568,17 +4599,17 @@ void campaign_new_game_prepare(void)
     screentype = SCRT_99;
     game_system_screen = SySc_NONE;
 
-    reset_mission_agents();
-    load_city_data(0);
-    init_weapon_text();
-    load_city_txt();
-    init_variables();
-    srm_reset_research();
-    init_agents();
-
     load_missions(background_type);
     clear_mission_state_slots();
     load_objectives_text();
+
+    load_city_data(0);
+    init_weapon_text();
+    load_city_txt();
+    reset_mission_agents();
+    init_variables();
+    srm_reset_research();
+    init_agents();
 
     {
         open_new_mission(p_campgn->FirstTrigger);
@@ -5430,17 +5461,18 @@ void show_menu_screen_st0(void)
     ingame.Credits = 50000;
 
     global_date.Day = 2;
-    global_date.Year = 74;
     global_date.Month = 6;
+    global_date.Year = 74;
 
-    reset_mission_agents();
     debug_trace_place(17);
     init_menu_screen_colors_and_sprites();
 
     debug_trace_place(18);
     init_screen_boxes();
+
     load_city_data(0);
     load_city_txt();
+    reset_mission_agents();
 
     debug_trace_place(19);
     if (in_network_game)
@@ -5492,10 +5524,10 @@ void net_new_game_prepare(void)
     ingame.Credits = 50000;
     ingame.CashAtStart = 50000;
     login_control__TechLevel = 4;
-    unkn_city_no = -1;
+    reset_world_screen_player_state();
     login_control__City = -1;
     ingame.Expenditure = 0;
-    unkn_flags_08 = 60;
+    unkn_flags_08 = 0x3C;
     login_control__Money = starting_cash_amounts[0];
     init_agents();
     load_missions(background_type);
@@ -5825,7 +5857,7 @@ void net_unkn_func_33(void)
         // Fall through
     default:
         p_netplyr->U.Progress.SelectedCity = login_control__City;
-        if (((gameturn & 1) == 0) && (unkn_flags_08 & 8))
+        if (((gameturn & 1) == 0) && ((unkn_flags_08 & 0x08) != 0))
             p_netplyr->U.Progress.Credits = -ingame.Credits;
         else
             p_netplyr->U.Progress.Credits = login_control__Money;
@@ -6842,7 +6874,7 @@ void load_packet(void)
         did_actn = do_user_interface();
         input_mission_cheats();
         ingame.MissionStatus = test_missions(0);
-        if ((ingame.MissionStatus != 0) && !in_network_game)
+        if ((ingame.MissionStatus != ObvStatu_UNDECIDED) && !in_network_game)
         {
             draw_mission_concluded();
             input_mission_concluded();
@@ -6875,7 +6907,7 @@ void load_packet(void)
             exit_game = 1;
         } else {
             init_level_3d(1u);
-            if (ingame.MissionStatus != 1)
+            if (ingame.MissionStatus != ObvStatu_COMPLETED)
                 ingame.MissionStatus = -1;
             mission_over();
         }
