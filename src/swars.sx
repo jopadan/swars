@@ -111461,7 +111461,7 @@ GLOBAL_FUNC(ASM_show_unkn21_box)	/* 0x0930DC */
 		sub    $0x48,%esp
 		mov    %eax,0x40(%esp)
 		lea    0x20(%esp),%edi
-		mov    $data_1551e4,%esi
+		mov    $EXPORT_SYMBOL(byte_1551E4),%esi
 		movsl  %ds:(%esi),%es:(%edi)
 		movsb  %ds:(%esi),%es:(%edi)
 		testb  $0x80,0x3d(%eax)
@@ -182180,7 +182180,7 @@ GLOBAL (save_slot)	/* 0x1551D8 */
 		.ascii  "\xff\xff"
 		.ascii  "\x00\x00"
 
-data_1551e4:
+GLOBAL (byte_1551E4)	/* 0x1551E4 */
 		.ascii  "\x04\x01\x02\x00\x03\x00\x00\x00"
 		.ascii  "\x0a\x04\x07\x0d\x01\x00\x00\x00"
 GLOBAL (byte_1551F4)	/* 0x1551F4 */

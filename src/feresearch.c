@@ -51,6 +51,7 @@ extern ubyte research_on_weapons;// = true;
 extern ubyte research_unkn_var_01;
 extern ubyte research_selected_wep; // = -1;
 extern ubyte research_selected_mod; // = -1;
+extern ubyte byte_1551E4[5];
 
 ubyte ac_do_research_submit(ubyte click);
 ubyte ac_do_research_suspend(ubyte click);
@@ -132,12 +133,289 @@ ubyte do_unkn12_WEAPONS_MODS(ubyte click)
     return ret;
 }
 
-ubyte show_unkn21_box(struct ScreenTextBox *box)
+ubyte show_unkn21_box(struct ScreenTextBox *p_box)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_show_unkn21_box\n"
-        : "=r" (ret) : "a" (box));
+        : "=r" (ret) : "a" (p_box));
     return ret;
+#endif
+    char locstr[32];
+    const char *text;
+    short scr_x, scr_y;
+    short tx_width, tx_height, ln_height;
+    short i, line;
+
+    if ((p_box->Flags & 0x8000) == 0)
+    {
+        short box_w;
+        lbDisplay.DrawFlags = 0x0004;
+        draw_box_purple_list(p_box->X + 4, p_box->Y + 26, 188u, 16u, 56);
+        draw_box_purple_list(text_window_x1, text_window_y1,
+          text_window_x2 - text_window_x1 + 1, text_window_y2 - text_window_y1 + 1, 56);
+        draw_box_purple_list(p_box->X + 4, p_box->Y + 263, 200u, 18u, 243);
+        draw_box_purple_list(p_box->X + 4, p_box->Y + 297, 200u, 18u, 243);
+        lbDisplay.DrawFlags = 0x0010;
+        draw_box_purple_list(p_box->X + 5, p_box->Y + 264, 198u, 16u, 174);
+        draw_box_purple_list(p_box->X + 5, p_box->Y + 298, 198u, 16u, 174);
+        lbDisplay.DrawFlags = 0;
+        my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
+        lbFontPtr = med_font;
+
+        box_w = p_box->Width - 8;
+
+        text = gui_strings[448];
+        tx_width = my_string_width(text);
+        draw_text_purple_list2((box_w - tx_width) >> 1, 2, text, 0);
+
+        text = gui_strings[410];
+        tx_width = my_string_width(text);
+        draw_text_purple_list2((box_w - tx_width) >> 1, 247, text, 0);
+
+        text = gui_strings[411];
+        tx_width = my_string_width(text);
+        draw_text_purple_list2((box_w - tx_width) >> 1, 281, text, 0);
+
+        p_box->Flags |= 0x8000;
+        copy_box_purple_list(p_box->X + 4, p_box->Y - 3, p_box->Width - 20, 0xE6u);
+        copy_box_purple_list(p_box->X + 4, p_box->Y + 251, p_box->Width - 8, 0x64u);
+        my_set_text_window(p_box->X + 4, p_box->ScrollWindowOffset + p_box->Y + 4,
+          p_box->Width - 20, p_box->ScrollWindowHeight);
+        lbFontPtr = small_med_font;
+    }
+
+    scr_y = 3;
+    tx_height = font_height('A');
+    line = p_box->TextTopLine;
+    ln_height = tx_height + 4;
+    while (line < 32)
+    {
+        if (scr_y + tx_height >= p_box->ScrollWindowHeight)
+          break;
+
+        if (research_on_weapons)
+        {
+          if (is_research_weapon_allowed(line + 1))
+          {
+              if (mouse_down_over_box_coords(text_window_x1, text_window_y1 + scr_y - 2,
+                text_window_x2, text_window_y1 + tx_height + scr_y + 2))
+              {
+                  if (lbDisplay.LeftButton)
+                  {
+                      lbDisplay.LeftButton = 0;
+                      research_selected_wep = line;
+                      if (research.CurrentWeapon == line) {
+                          text = gui_strings[418];
+                          research_submit_button.CallBackFn = do_research_suspend;
+                      } else {
+                          research_submit_button.CallBackFn = do_research_submit;
+                          text = gui_strings[417];
+                      }
+                      research_submit_button.Text = text;
+                  }
+              }
+              if (research_selected_wep == line)
+              {
+                  lbDisplay.DrawFlags |= 0x0040;
+                  lbDisplay.DrawColour = 87;
+              }
+              else
+              {
+                  lbDisplay.DrawFlags = 0;
+              }
+              lbDisplay.DrawFlags |= 0x8000u;
+              if (background_type == 1)
+                  text = gui_strings[30 + line];
+              else
+                  text = gui_strings[0 + line];
+              draw_text_purple_list2(3, scr_y, text, 0);
+              lbDisplay.DrawFlags = 0;
+              scr_y += ln_height;
+          }
+        }
+        else if (is_research_cymod_allowed(line + 1))
+        {
+            short mtype, mlev;
+
+            if (mouse_down_over_box_coords(text_window_x1, text_window_y1 + scr_y - 2,
+              text_window_x2, text_window_y1 + tx_height + scr_y + 2))
+            {
+                if (lbDisplay.LeftButton)
+                {
+                    lbDisplay.LeftButton = 0;
+                    research_selected_mod = line;
+                    if (research.CurrentMod == line)
+                    {
+                        text = gui_strings[418];
+                        research_submit_button.CallBackFn = ac_do_research_suspend;
+                    }
+                    else
+                    {
+                        text = gui_strings[417];
+                        research_submit_button.CallBackFn = ac_do_research_submit;
+                    }
+                    research_submit_button.Text = text;
+                }
+            }
+            if (research_selected_mod == line)
+            {
+                lbDisplay.DrawFlags |= 0x0040;
+                lbDisplay.DrawColour = 87;
+            }
+            else
+            {
+                lbDisplay.DrawFlags = 0;
+            }
+
+            if (line == 15) {
+                mtype = 4;
+                mlev = line - 11;
+            } else {
+                mtype = line / 3;
+                mlev = line % 3 + 1;
+            }
+            text = gui_strings[70 + byte_1551E4[mtype]];
+            draw_text_purple_list2(3, scr_y + 1, text, 0);
+
+            lbDisplay.DrawFlags |= 0x0080;
+            if ((1 << line < 4096) || (1 << line > 0x8000)) {
+                sprintf(locstr, "%s %d", gui_strings[76], (int)mlev);
+            } else {
+                sprintf(locstr, "%s %d", gui_strings[75], (int)mlev);
+            }
+            text = loctext_to_gtext(locstr);
+            lbDisplay.DrawFlags |= 0x8000;
+            draw_text_purple_list2(-1, scr_y + 1, text, 0);
+            lbDisplay.DrawFlags = 0;
+            scr_y += tx_height + p_box->LineSpacing;
+        }
+        ++line;
+    }
+
+    lbDisplay.DrawFlags = 0;
+    my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
+    lbFontPtr = med_font;
+    if (research_on_weapons)
+    {
+        if (research.CurrentWeapon != -1)
+        {
+            if (background_type == 1)
+                text = gui_strings[30 + research.CurrentWeapon];
+            else
+                text = gui_strings[0 + research.CurrentWeapon];
+            draw_text_purple_list2(4, 25, text, 0);
+        }
+    }
+    else
+    {
+        if (research.CurrentMod != -1)
+        {
+            short mtype, mlev;
+
+            if (research.CurrentMod == 15) {
+                mtype = 4;
+                mlev = research.CurrentMod - 11;
+            } else {
+                mtype = research.CurrentMod / 3;
+                mlev = research.CurrentMod % 3 + 1;
+            }
+            text = gui_strings[70 + byte_1551E4[mtype]];
+            if ( 1 << research.CurrentMod < 4096 || 1 << research.CurrentMod > 0x8000 )
+                sprintf(locstr, "%s %s %d", text, gui_strings[76], mlev);
+            else
+                sprintf(locstr, "%s %s %d", text, gui_strings[75], mlev);
+            text = loctext_to_gtext(locstr);
+            draw_text_purple_list2(4, 25, text, 0);
+        }
+    }
+
+    if ((research_on_weapons && research.CurrentWeapon != -1)
+      || (!research_on_weapons && research.CurrentMod != -1))
+    {
+        if (research_on_weapons)
+            sprintf(locstr, "%ld", research.WeaponFunding);
+        else
+            sprintf(locstr, "%ld", research.ModFunding);
+        text = loctext_to_gtext(locstr);
+        tx_width = LbTextStringWidth(text);
+        scr_x = (100 - tx_width - 5) >> 1;
+        lbDisplay.DrawFlags |= 0x8000;
+        draw_text_purple_list2(scr_x, 263, text, 0);
+        lbDisplay.DrawFlags &= ~0x8000;
+        lbFontPtr = small_font;
+        draw_text_purple_list2(scr_x + tx_width, 268, misc_text[1], 0);
+
+        lbFontPtr = med_font;
+        tx_width = LbSprFontCharWidth(lbFontPtr, '/');
+        draw_text_purple_list2((200 - tx_width) >> 1, 263, misc_text[2], 0);
+
+        if (research_on_weapons)
+            sprintf(locstr, "%d", 100 * weapon_defs[research.CurrentWeapon + 1].Funding);
+        else
+            sprintf(locstr, "%d", 100 * mod_defs[research.CurrentMod + 1].Funding);
+        text = loctext_to_gtext(locstr);
+        tx_width = LbTextStringWidth(text);
+        scr_x = ((100 - tx_width - 5) >> 1) + 100;
+        draw_text_purple_list2(scr_x, 263, text, 0);
+        lbFontPtr = small_font;
+        draw_text_purple_list2(scr_x + tx_width, 268, misc_text[1], 0);
+
+        lbFontPtr = med_font;
+
+        if (mouse_down_over_box_coords(p_box->X + 5, p_box->Y + 262,
+          p_box->X + 203, p_box->Y + 278))
+        {
+            if (lbDisplay.LeftButton)
+            {
+                lbDisplay.LeftButton = 0;
+                if (research_on_weapons)
+                {
+                    research.WeaponFunding += 1000;
+                }
+                else
+                {
+                    research.ModFunding += 1000;
+                }
+            }
+            else if (lbDisplay.RightButton)
+            {
+                lbDisplay.RightButton = lbDisplay.LeftButton;
+                if (research_on_weapons)
+                {
+                    research.WeaponFunding -= 1000;
+                    if (research.WeaponFunding < 0)
+                      research.WeaponFunding = 0;
+                }
+                else
+                {
+                    research.ModFunding -= 1000;
+                    if (research.ModFunding < 0)
+                      research.ModFunding = 0;
+                }
+            }
+        }
+    }
+
+    {
+        sprintf(locstr, "%d", research.Scientists);
+        scr_x = (200 - LbTextStringWidth(locstr)) >> 1;
+        text = loctext_to_gtext(locstr);
+        draw_text_purple_list2(scr_x, 297, text, 0);
+        text = gui_strings[535];
+        tx_width = my_string_width(text);
+        draw_text_purple_list2((p_box->Width - 8 - tx_width) >> 1, 315, text, 0);
+    }
+
+    for (i = 0; i < 2; i++)
+    {
+        struct ScreenButton *p_btn;
+        p_btn = &research_list_buttons[i];
+        //p_btn->DrawFn(p_btn); -- incompatible calling convention
+        asm volatile ("call *%1\n"
+            :  : "a" (p_btn), "g" (p_btn->DrawFn));
+    }
+    return 0;
 }
 
 void draw_unkn20_subfunc_01(int x, int y, char *text, ubyte a4)
