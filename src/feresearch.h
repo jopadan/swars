@@ -58,6 +58,7 @@ void reset_research_screen_player_state(void);
 
 void reset_research_screen_boxes_flags(void);
 void set_flag01_research_screen_boxes(void);
+void skip_flashy_draw_research_screen_boxes(void);
 void clear_research_screen(void);
 
 /******************************************************************************/

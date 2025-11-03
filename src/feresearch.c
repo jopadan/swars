@@ -153,37 +153,33 @@ void show_research_screen(void)
     ubyte drawn;
 
     if ((game_projector_speed && ((heading_box.Flags & 0x0001) != 0)) ||
-      (lbKeyOn[KC_SPACE] && !edit_flag))
+      (is_key_pressed(KC_SPACE, KMod_DONTCARE) && !edit_flag))
     {
-        lbKeyOn[KC_SPACE] = 0;
-        heading_box.Flags |= 0x0002;
-        research_progress_button.Flags |= 0x0002;
-        research_submit_button.Flags |= 0x0002;
-        research_list_buttons[1].Flags |= 0x0002;
-        research_unkn21_box.Flags |= 0x0002;
-        research_graph_box.Flags |= 0x0002;
-        research_list_buttons[0].Flags |= 0x0002;
+        clear_key_pressed(KC_SPACE);
+        skip_flashy_draw_research_screen_boxes();
     }
+
     if (research_unkn21_box.Lines == 0)
     {
         if (research_on_weapons)
         {
-          for (i = WEP_NULL + 1; i < WEP_TYPES_COUNT; i++)
-          {
-            if (is_research_weapon_allowed(i))
-                research_unkn21_box.Lines++;
-          }
+            for (i = WEP_NULL + 1; i < WEP_TYPES_COUNT; i++)
+            {
+                if (is_research_weapon_allowed(i))
+                    research_unkn21_box.Lines++;
+            }
         }
         else
         {
-          for (i = MOD_NULL + 1; i < MOD_TYPES_COUNT; i++)
-          {
-            if (is_research_cymod_allowed(i))
-                research_unkn21_box.Lines++;
-          }
+            for (i = MOD_NULL + 1; i < MOD_TYPES_COUNT; i++)
+            {
+                if (is_research_cymod_allowed(i))
+                    research_unkn21_box.Lines++;
+            }
         }
         research_unkn21_box.Flags |= 0x0080;
     }
+
     drawn = 1;
     if (drawn) {
         //drawn = heading_box.DrawFn(&heading_box); -- incompatible calling convention
@@ -206,13 +202,13 @@ void show_research_screen(void)
             : "=r" (drawn) : "a" (&research_unkn21_box), "g" (research_unkn21_box.DrawFn));
     }
 
-    if ((ingame.UserFlags & 0x04) != 0 && is_key_pressed(KC_U, KMod_DONTCARE))
+    if ((ingame.UserFlags & UsrF_Cheats) != 0 && is_key_pressed(KC_U, KMod_DONTCARE))
     {
         clear_key_pressed(KC_U);
         research_daily_progress_for_type(0);
         research_daily_progress_for_type(1);
     }
-    if ((ingame.UserFlags & 0x04) != 0 && is_key_pressed(KC_0, KMod_DONTCARE))
+    if ((ingame.UserFlags & UsrF_Cheats) != 0 && is_key_pressed(KC_0, KMod_DONTCARE))
     {
         clear_key_pressed(KC_0);
         if (research_completed + 1 < MOD_TYPES_COUNT)
@@ -459,6 +455,17 @@ void set_flag01_research_screen_boxes(void)
     research_list_buttons[1].Flags |= GBxFlg_Unkn0001;
     research_list_buttons[0].Flags |= GBxFlg_Unkn0001;
     unkn12_WEAPONS_MODS_button.Flags |= GBxFlg_Unkn0001;
+}
+
+void skip_flashy_draw_research_screen_boxes(void)
+{
+    skip_flashy_draw_heading_screen_boxes();
+    research_progress_button.Flags |= GBxFlg_Unkn0002;
+    research_submit_button.Flags |= GBxFlg_Unkn0002;
+    research_unkn21_box.Flags |= GBxFlg_Unkn0002;
+    research_graph_box.Flags |= GBxFlg_Unkn0002;
+    research_list_buttons[0].Flags |= GBxFlg_Unkn0002;
+    research_list_buttons[1].Flags |= GBxFlg_Unkn0002;
 }
 
 void clear_research_screen(void)
