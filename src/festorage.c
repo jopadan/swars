@@ -18,13 +18,21 @@
 /******************************************************************************/
 #include "festorage.h"
 
+#include "bffont.h"
+#include "bftext.h"
+
 #include "femain.h"
 #include "feshared.h"
+#include "game_speed.h"
 #include "guiboxes.h"
 #include "guitext.h"
 #include "display.h"
+#include "game_save.h"
 #include "game_sprts.h"
 #include "game.h"
+#include "keyboard.h"
+#include "purpldrw.h"
+#include "sound.h"
 #include "swlog.h"
 /******************************************************************************/
 extern struct ScreenButton storage_LOAD_button;
@@ -35,13 +43,13 @@ extern struct ScreenTextBox storage_slots_box;
 ubyte ac_do_storage_NEW_MORTAL(ubyte click);
 ubyte ac_load_game_slot(ubyte click);
 ubyte ac_save_game_slot(ubyte click);
-ubyte ac_show_menu_storage_slots_box(struct ScreenTextBox *box);
+ubyte ac_show_menu_storage_slots_box(struct ScreenTextBox *p_box);
 
-ubyte show_menu_storage_slots_box(struct ScreenTextBox *box)
+ubyte show_menu_storage_slots_box(struct ScreenTextBox *p_box)
 {
     ubyte ret;
     asm volatile ("call ASM_show_menu_storage_slots_box\n"
-        : "=r" (ret) : "a" (box));
+        : "=r" (ret) : "a" (p_box));
     return ret;
 }
 

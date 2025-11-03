@@ -63,7 +63,7 @@ void put_down_colwavetext_sprites(const char *sbuf, const char *ebuf,
   ubyte cw_base, ubyte cw_vari, ubyte cw_shift)
 {
   const char *c;
-  const struct TbSprite *spr;
+  const struct TbSprite *p_spr;
   ubyte chr;
   long w,h;
   for (c=sbuf; c < ebuf; c++)
@@ -82,16 +82,16 @@ void put_down_colwavetext_sprites(const char *sbuf, const char *ebuf,
     chr = (ubyte)(*c);
     if (chr > 32)
     {
-      spr = LbFontCharSprite(lbFontPtr,chr);
-      if (spr != NULL)
+      p_spr = LbFontCharSprite(lbFontPtr, chr);
+      if (p_spr != NULL)
       {
         // Draw shadow
-        LbSpriteDrawOneColour(x + 1, y + 1, spr, shadcol);
+        LbSpriteDrawOneColour(x + 1, y + 1, p_spr, shadcol);
         if ((lbDisplay.DrawFlags & Lb_TEXT_ONE_COLOR) != 0)
-          LbSpriteDrawOneColour(x, y, spr, colour);
+          LbSpriteDrawOneColour(x, y, p_spr, colour);
         else
-          LbSpriteDraw(x, y, spr);
-        w = spr->SWidth;
+          LbSpriteDraw(x, y, p_spr);
+        w = p_spr->SWidth;
         if ((lbDisplay.DrawFlags & Lb_TEXT_UNDERLINE) != 0)
         {
             h = LbTextLineHeight();
@@ -143,7 +143,7 @@ void put_down_colwavetext_sprites_resized(const char *sbuf, const char *ebuf,
   ubyte cw_base, ubyte cw_vari, ubyte cw_shift)
 {
   const char *c;
-  const struct TbSprite *spr;
+  const struct TbSprite *p_spr;
   ubyte chr;
   long w,h;
   for (c=sbuf; c < ebuf; c++)
@@ -162,17 +162,17 @@ void put_down_colwavetext_sprites_resized(const char *sbuf, const char *ebuf,
     chr = (ubyte)(*c);
     if (chr > 32)
     {
-      spr = LbFontCharSprite(lbFontPtr,chr);
-      if (spr != NULL)
+      p_spr = LbFontCharSprite(lbFontPtr,chr);
+      if (p_spr != NULL)
       {
         // Draw shadow
-        LbSpriteDrawResizedOneColour(x + units_per_px/12, y + units_per_px/12, units_per_px, spr, shadcol);
+        LbSpriteDrawResizedOneColour(x + units_per_px/12, y + units_per_px/12, units_per_px, p_spr, shadcol);
         if ((lbDisplay.DrawFlags & Lb_TEXT_ONE_COLOR) != 0) {
-            LbSpriteDrawResizedOneColour(x, y, units_per_px, spr, colour);
+            LbSpriteDrawResizedOneColour(x, y, units_per_px, p_spr, colour);
         } else {
-            LbSpriteDrawResized(x, y, units_per_px, spr);
+            LbSpriteDrawResized(x, y, units_per_px, p_spr);
         }
-        w = spr->SWidth * units_per_px / 16;
+        w = p_spr->SWidth * units_per_px / 16;
         if ((lbDisplay.DrawFlags & Lb_TEXT_UNDERLINE) != 0)
         {
             h = LbTextLineHeight() * units_per_px / 16;
@@ -223,7 +223,7 @@ void put_down_cw_sprites(const char *sbuf, const char *ebuf,
 }
 
 /* draws a sprite scaled to double size; remove pending */
-void AppSpriteDrawDoubleOneColour(struct TbSprite *p_spr, int x, int y, ubyte col)
+void AppSpriteDrawDoubleOneColour(const struct TbSprite *p_spr, int x, int y, ubyte col)
 {
     int xwind_beg;
     int xwind_end;
@@ -352,11 +352,11 @@ void draw_text_linewrap1b(int base_x, int *p_pos_y, const char *text)
             sstr = str + 1;
             while (*sstr != '\0')
             {
-                struct TbSprite *p_spr;
+                const struct TbSprite *p_spr;
 
                 if (*sstr == 32)
                     break;
-                p_spr = &lbFontPtr[my_char_to_upper(*sstr) - 31];
+                p_spr =  LbFontCharSprite(lbFontPtr, my_char_to_upper(*sstr));
                 w += p_spr->SWidth;
                 sstr++;
             }
@@ -369,11 +369,11 @@ void draw_text_linewrap1b(int base_x, int *p_pos_y, const char *text)
         }
         else
         {
-            struct TbSprite *p_spr;
+            const struct TbSprite *p_spr;
             ushort fade_lv;
 
             fade_lv = 40 - (lbSinTable[128 * ((gameturn + base_shift) & 0xF)] >> 13);
-            p_spr = &lbFontPtr[my_char_to_upper(*str) - 31];
+            p_spr =  LbFontCharSprite(lbFontPtr, my_char_to_upper(*str));
             AppSpriteDrawDoubleOneColour(p_spr, pos_x + 1, pos_y + 1, colour_lookup[0]);
             AppSpriteDrawDoubleOneColour(p_spr, pos_x, pos_y, pixmap.fade_table[256 * fade_lv + col2]);
             pos_x += p_spr->SWidth + p_spr->SWidth;
@@ -411,11 +411,11 @@ void draw_text_linewrap2b(int base_x, int *p_pos_y, const char *text)
             sstr = str + 1;
             while (*sstr != '\0')
             {
-                struct TbSprite *p_spr;
+                const struct TbSprite *p_spr;
 
                 if (*sstr == 32)
                   break;
-                p_spr = &lbFontPtr[my_char_to_upper(*sstr) - 31];
+                p_spr =  LbFontCharSprite(lbFontPtr, my_char_to_upper(*sstr));
                 w += p_spr->SWidth;
                 sstr++;
             }
@@ -428,11 +428,11 @@ void draw_text_linewrap2b(int base_x, int *p_pos_y, const char *text)
         }
         else
         {
-            struct TbSprite *p_spr;
+            const struct TbSprite *p_spr;
             ushort fade_lv;
 
             fade_lv = cw_base + cw_vari/2 - (cw_vari/2 * lbSinTable[LbFPMath_PI/8 * ((gameturn + base_shift) & 0xF)] >> 16);
-            p_spr = &lbFontPtr[my_char_to_upper(*str) - 31];
+            p_spr =  LbFontCharSprite(lbFontPtr, my_char_to_upper(*str));
             LbSpriteDrawOneColour(pos_x + 1, pos_y + 1, p_spr, colour_lookup[0]);
             LbSpriteDrawOneColour(pos_x, pos_y,  p_spr, pixmap.fade_table[fade_lv * PALETTE_8b_COLORS + col2]);
             pos_x += p_spr->SWidth;

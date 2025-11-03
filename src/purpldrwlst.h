@@ -90,7 +90,7 @@ struct DILine {
 struct DISprite { // sizeof=12
 	short X;
 	short Y;
-	struct TbSprite *Sprite;
+	const struct TbSprite *Sprite;
 	ubyte Colour;
 };
 
@@ -101,8 +101,8 @@ struct DIText { // sizeof=23
 	short Height;
 	short X;
 	short Y; // offs=0x0A
-	char *Text;
-	struct TbSprite *Font;
+	const char *Text;
+	const struct TbSprite *Font;
 	ushort Line;
 	ubyte Colour; // offs=0x16
 };

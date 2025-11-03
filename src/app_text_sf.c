@@ -50,7 +50,7 @@ TbBool LbIApplyControlCharToDrawSettings(const char **c);
 TbBool LbIAlignMethodSet(ushort fdflags);
 TbBool is_wide_charcode(ulong chr);
 
-void AppSpriteDrawDoubleOneColour(struct TbSprite *p_spr, int x, int y, ubyte col);
+void AppSpriteDrawDoubleOneColour(const struct TbSprite *p_spr, int x, int y, ubyte col);
 ushort FontSpacingAlter(struct TbSprite *font, int units_per_px);
 void FontSpacingRestore(struct TbSprite *font, ushort space_bkp);
 
@@ -257,13 +257,13 @@ void draw_text_linewrap1(int base_x, int *p_pos_y, int plyr, const char *text)
         }
         else
         {
-            struct TbSprite *p_spr;
+            const struct TbSprite *p_spr;
             int fd;
             ubyte ch;
             TbPixel col1;
 
             ch = my_char_to_upper(*str);
-            p_spr = &lbFontPtr[ch - 31];
+            p_spr =  LbFontCharSprite(lbFontPtr, ch);
             fd = base_shift + 4 * player_unkn0C9[plyr];
             if (fd > 63)
                 fd = 63 - (fd - 63);
@@ -308,13 +308,13 @@ void draw_text_linewrap2(int base_x, int *p_pos_y, int plyr, const char *text)
         }
         else
         {
-            struct TbSprite *p_spr;
+            const struct TbSprite *p_spr;
             int fd;
             ubyte ch;
             TbPixel col1;
 
             ch = my_char_to_upper(*str);
-            p_spr = &lbFontPtr[ch - 31];
+            p_spr =  LbFontCharSprite(lbFontPtr, ch);
             fd = base_shift + 4 * (ubyte)player_unkn0C9[plyr];
             if (fd > 63)
                 fd = 63 - (fd - 63);

@@ -108068,7 +108068,7 @@ GLOBAL_FUNC(ASM_show_login_name)	/* 0x08D300 */
 		mov    $0x1,%ebx
 		mov    $0xf,%edx
 		mov    $login_name,%eax
-		call   user_read_value
+		call   ac_user_read_value
 		xor    %ecx,%ecx
 		mov    $login_name,%ebx
 		mov    $0x2,%edx
@@ -108708,7 +108708,7 @@ GLOBAL_FUNC(ASM_show_net_comms_box)	/* 0x08E7EC */
 		mov    $0x14,%edx
 		mov    $net_unkn1_text,%eax
 		xor    %ebx,%ebx
-		call   user_read_value
+		call   ac_user_read_value
 		test   %al,%al
 		je     jump_8eaf3
 		xor    %eax,%eax
@@ -109163,7 +109163,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    $0x3,%ebx
 		mov    $0x4,%edx
 		mov    $EXPORT_SYMBOL(net_proto_param_text),%eax
-		call   user_read_value
+		call   ac_user_read_value
 		test   %al,%al
 		je     jump_8f502
 		push   $data_1811b2
@@ -109466,7 +109466,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    $0x2,%ebx
 		mov    $0xe,%edx
 		mov    $net_unkn2_text,%eax
-		call   user_read_value
+		call   ac_user_read_value
 		test   %al,%al
 		je     jump_8f502
 		xor    %dl,%dl
@@ -113434,14 +113434,14 @@ GLOBAL_FUNC(ASM_show_menu_storage_slots_box)	/* 0x094F08 */
 		mov    EXPORT_SYMBOL(save_slot_base),%ecx
 		sar    $0x10,%eax
 		sub    %ecx,%eax
-		cmpb   $0x0,data_1c4880(%eax)
+		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4880)(%eax)
 		jne    jump_953df
 		push   $0x1
 		mov    $0x1,%bh
 		mov    $0x40,%ecx
 		push   $0x0
 		mov    $0x7b,%edx
-		mov    %bh,data_1c4880(%eax)
+		mov    %bh,EXPORT_SYMBOL(byte_1C4880)(%eax)
 		push   $0x64
 		mov    $0x7f,%ebx
 		xor    %eax,%eax
@@ -113456,7 +113456,7 @@ GLOBAL_FUNC(ASM_show_menu_storage_slots_box)	/* 0x094F08 */
 		sar    $0x10,%eax
 		sub    %ebx,%eax
 		xor    %dh,%dh
-		mov    %dh,data_1c4880(%eax)
+		mov    %dh,EXPORT_SYMBOL(byte_1C4880)(%eax)
 	jump_95401:
 		mov    0x12(%esp),%eax
 		mov    EXPORT_SYMBOL(save_slot)-2,%edx
@@ -113544,7 +113544,7 @@ GLOBAL_FUNC(ASM_show_menu_storage_slots_box)	/* 0x094F08 */
 		mov    $0x1,%ebx
 		mov    $0x17,%edx
 		add    $EXPORT_SYMBOL(save_slot_names),%eax
-		call   user_read_value
+		call   ac_user_read_value
 		test   %al,%al
 		je     jump_95522
 		xor    %ch,%ch
@@ -165824,7 +165824,7 @@ GLOBAL_FUNC(ASM_find_closest_city)	/* 0x0D01F8 */
 
 
 /*----------------------------------------------------------------*/
-user_read_value:	/* 0x0D0380 */
+GLOBAL_FUNC(ASM_user_read_value)	/* 0x0D0380 */
 /*----------------------------------------------------------------*/
 		push   %ecx
 		push   %esi
@@ -184424,7 +184424,7 @@ GLOBAL (textpos)	/* 0x1C486C */
 		.short  0x0
 data_1c486e:
 		.fill   0x12
-data_1c4880:
+GLOBAL (byte_1C4880)	/* 0x1C4880 */
 		.fill   0x8
 GLOBAL (byte_1C4888)	/* 0x1C4888 */
 		.short  0x0

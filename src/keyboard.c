@@ -402,6 +402,15 @@ void init_buffered_keys(void)
     LbKeyboardCustomHandler(KEventBufferedKeysUpdate);
 }
 
+TbBool user_read_value(char *buf, ubyte len, ubyte type)
+{
+    TbBool ret;
+    asm volatile (
+      "call ASM_user_read_value\n"
+        : "=r" (ret) : "a" (buf), "d" (len), "b" (type));
+    return ret;
+}
+
 void input(void)
 {
     uint16_t n;

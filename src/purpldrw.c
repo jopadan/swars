@@ -121,7 +121,7 @@ void draw_text_purple_list2(int x, int y, const char *text, ushort line)
         : : "a" (x), "d" (y), "b" (text), "c" (line));
 }
 
-void draw_sprite_purple_list(int x, int y, struct TbSprite *p_sprite)
+void draw_sprite_purple_list(int x, int y, const struct TbSprite *p_sprite)
 {
 #if 0
     asm volatile (

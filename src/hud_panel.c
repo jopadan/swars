@@ -20,6 +20,7 @@
 
 #include <assert.h>
 #include "bfbox.h"
+#include "bffont.h"
 #include "bfgentab.h"
 #include "bfline.h"
 #include "bfmemut.h"
@@ -194,7 +195,7 @@ int SCANNER_text_draw(const char *text, int start_x, int height)
     {
         while (*str != '\0')
         {
-            struct TbSprite *p_spr;
+            const struct TbSprite *p_spr;
             int chr_width, chr_height;
             ubyte ch;
             TbPixel col;
@@ -205,7 +206,7 @@ int SCANNER_text_draw(const char *text, int start_x, int height)
             } else {
               ch = my_char_to_upper(*str);
               col = pixmap.fade_table[56 * PALETTE_8b_COLORS + sel_c1];
-              p_spr = &lbFontPtr[ch - 31];
+              p_spr = LbFontCharSprite(lbFontPtr, ch);
               chr_width = p_spr->SWidth * height / height_base;
               chr_height = p_spr->SHeight * height / height_base;
               LbSpriteDrawScaledOneColour(x, y, p_spr, chr_width, chr_height, col);
@@ -218,7 +219,7 @@ int SCANNER_text_draw(const char *text, int start_x, int height)
     {
         while (*str != '\0')
         {
-            struct TbSprite *p_spr;
+            const struct TbSprite *p_spr;
             ubyte ch;
             TbPixel col;
 
@@ -228,7 +229,7 @@ int SCANNER_text_draw(const char *text, int start_x, int height)
             } else {
               ch = my_char_to_upper(*str);
               col = pixmap.fade_table[56 * PALETTE_8b_COLORS + sel_c1];
-              p_spr = &lbFontPtr[ch - 31];
+              p_spr = LbFontCharSprite(lbFontPtr, ch);
               LbSpriteDrawOneColour(x, y, p_spr, col);
               x += p_spr->SWidth;
             }
