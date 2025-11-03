@@ -167149,7 +167149,7 @@ GLOBAL_FUNC(ASM_show_world_city_info_box)	/* 0x0D2A84 */
 		jmp    jump_d2ac3
 	jump_d2aba:
 		inc    %esi
-		mov    %dx,data_155744(,%eax,2)
+		mov    %dx,EXPORT_SYMBOL(word_155744)(,%eax,2)
 	jump_d2ac3:
 		xor    %eax,%eax
 		mov    %si,%ax
@@ -167187,7 +167187,7 @@ GLOBAL_FUNC(ASM_show_world_city_info_box)	/* 0x0D2A84 */
 		repnz scas %es:(%edi),%al
 		not    %ecx
 		dec    %ecx
-		mov    %cx,data_155744(%edx)
+		mov    %cx,EXPORT_SYMBOL(word_155744)(%edx)
 	jump_d2b3c:
 		xor    %eax,%eax
 		mov    %si,%ax
@@ -167250,7 +167250,7 @@ GLOBAL_FUNC(ASM_show_world_city_info_box)	/* 0x0D2A84 */
 	jump_d2c0e:
 		add    %eax,%esi
 		movzwl %di,%ebp
-		mov    $data_155744,%eax
+		mov    $EXPORT_SYMBOL(word_155744),%eax
 		add    %ebp,%ebp
 		push   $0x0
 		add    %ebp,%eax
@@ -182327,7 +182327,7 @@ GLOBAL (data_155704)
 		.ascii  "\xff\xff"
 		.align  4
 
-data_155744:
+GLOBAL (word_155744)	/* 0x155744 */
 		.ascii  "\xfb\xff"
 		.ascii  "\xfb\xff"
 		.ascii  "\xfb\xff"
