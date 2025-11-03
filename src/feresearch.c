@@ -18,10 +18,13 @@
 /******************************************************************************/
 #include "feresearch.h"
 
+#include "bffont.h"
 #include "bftext.h"
 #include "bfsprite.h"
+#include "bfstrut.h"
 
 #include "femain.h"
+#include "game_data.h"
 #include "guiboxes.h"
 #include "guigraph.h"
 #include "guitext.h"
@@ -34,6 +37,7 @@
 #include "game_sprts.h"
 #include "game.h"
 #include "swlog.h"
+#include "util.h"
 /******************************************************************************/
 extern struct ScreenTextBox research_unkn21_box;
 extern struct ScreenButton research_submit_button;
@@ -138,9 +142,70 @@ ubyte show_unkn21_box(struct ScreenTextBox *box)
 
 void draw_unkn20_subfunc_01(int x, int y, char *text, ubyte a4)
 {
+#if 0
     asm volatile (
       "call ASM_draw_unkn20_subfunc_01\n"
         : : "a" (x), "d" (y), "b" (text), "c" (a4));
+#endif
+    int i;
+    short scr_x, scr_y;
+
+    if (text == NULL)
+        return;
+
+    scr_x = text_window_x1 + x;
+    scr_y = text_window_y1 + y;
+    i = 0;
+    while ( 1 )
+    {
+        short dx, dy;
+        ubyte ch;
+
+        while ( 1 )
+        {
+            short w;
+
+            ch = text[i++];
+            if (ch == '\0')
+              return;
+            if (lbFontPtr != small_med_font || language_3str[0] != 'e')
+            {
+                ch = chrtoupper(ch);
+            }
+            w = LbSprFontCharWidth(lbFontPtr, ch);
+            dx = w >> 1;
+            if (ch != ' ')
+                break;
+            scr_y += 3 * a4;
+        }
+
+        if (lbFontPtr == small_font || lbFontPtr == small2_font)
+        {
+            dy = 1;
+        }
+        else if (lbFontPtr == small_med_font)
+        {
+            if (ch >= 'a' && ch <= 'z') {
+                dy = 0;
+            } else {
+                dy = 2;
+            }
+        }
+        else if (lbFontPtr == med_font || lbFontPtr == med2_font)
+        {
+            dy = 2;
+        }
+        else if (lbFontPtr == big_font)
+        {
+            dy = 4;
+        }
+        else
+        {
+            dy = 0;
+        }
+        draw_sprite_purple_list(scr_x - dx, scr_y - dy, LbFontCharSprite(lbFontPtr, ch));
+        scr_y += a4 + font_height(ch);
+    }
 }
 
 void show_research_screen(void)

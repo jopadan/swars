@@ -119033,7 +119033,7 @@ GLOBAL_FUNC(ASM_my_char_to_upper)	/* 0x0A34C8 */
 		xor    %eax,%eax
 	jump_a34d7:
 		xor    %edx,%edx
-		mov    subst_table_lower_to_upper(%eax),%dl
+		mov    EXPORT_SYMBOL(subst_table_lower_to_upper)(%eax),%dl
 		test   %edx,%edx
 		je     jump_a3504
 		cmp    %dl,%bl
@@ -119093,7 +119093,7 @@ GLOBAL_FUNC(ASM_my_string_width)	/* 0x0A350C */
 		xor    %eax,%eax
 	jump_a3550:
 		xor    %edx,%edx
-		mov    subst_table_lower_to_upper(%eax),%dl
+		mov    EXPORT_SYMBOL(subst_table_lower_to_upper)(%eax),%dl
 		test   %edx,%edx
 		je     jump_a357e
 		cmp    %dl,%bl
@@ -119348,7 +119348,7 @@ GLOBAL_FUNC(ASM_my_count_lines)	/* 0x0A36FC */
 		xor    %edx,%edx
 	jump_a3780:
 		xor    %ebx,%ebx
-		mov    subst_table_lower_to_upper(%edx),%bl
+		mov    EXPORT_SYMBOL(subst_table_lower_to_upper)(%edx),%bl
 		test   %ebx,%ebx
 		je     jump_a37af
 		cmp    %bl,%cl
@@ -119537,7 +119537,7 @@ GLOBAL_FUNC(ASM_draw_unkn20_subfunc_01)	/* 0x0A38F0 */
 		xor    %eax,%eax
 	jump_a395d:
 		xor    %edx,%edx
-		mov    subst_table_lower_to_upper(%eax),%dl
+		mov    EXPORT_SYMBOL(subst_table_lower_to_upper)(%eax),%dl
 		test   %edx,%edx
 		je     jump_a3987
 		cmp    %dl,%bl
@@ -119703,7 +119703,7 @@ GLOBAL_FUNC(ASM_my_draw_text)	/* 0xA3A64 */
 		xor    %eax,%eax
 	jump_a3b08:
 		xor    %edx,%edx
-		mov    subst_table_lower_to_upper(%eax),%dl
+		mov    EXPORT_SYMBOL(subst_table_lower_to_upper)(%eax),%dl
 		test   %edx,%edx
 		je     jump_a3b39
 		cmp    %dl,%bl
@@ -120009,7 +120009,7 @@ GLOBAL_FUNC(ASM_my_draw_text)	/* 0xA3A64 */
 		xor    %eax,%eax
 	jump_a3e95:
 		xor    %edx,%edx
-		mov    subst_table_lower_to_upper(%eax),%dl
+		mov    EXPORT_SYMBOL(subst_table_lower_to_upper)(%eax),%dl
 		test   %edx,%edx
 		je     jump_a3cac
 		cmp    %dl,%bl
@@ -120509,7 +120509,7 @@ GLOBAL_FUNC(ASM_my_draw_text)	/* 0xA3A64 */
 		xor    %eax,%eax
 	jump_a4438:
 		xor    %edx,%edx
-		mov    subst_table_lower_to_upper(%eax),%dl
+		mov    EXPORT_SYMBOL(subst_table_lower_to_upper)(%eax),%dl
 		test   %edx,%edx
 		je     jump_a425a
 		cmp    %dl,%bl
@@ -120933,7 +120933,7 @@ GLOBAL_FUNC(ASM_my_draw_text)	/* 0xA3A64 */
 		xor    %eax,%eax
 	jump_a490a:
 		xor    %edx,%edx
-		mov    subst_table_lower_to_upper(%eax),%dl
+		mov    EXPORT_SYMBOL(subst_table_lower_to_upper)(%eax),%dl
 		test   %edx,%edx
 		je     jump_a471e
 		cmp    %dl,%bl
@@ -121326,7 +121326,7 @@ GLOBAL_FUNC(ASM_my_draw_text)	/* 0xA3A64 */
 		xor    %eax,%eax
 	jump_a4d91:
 		xor    %edx,%edx
-		mov    subst_table_lower_to_upper(%eax),%dl
+		mov    EXPORT_SYMBOL(subst_table_lower_to_upper)(%eax),%dl
 		test   %edx,%edx
 		je     jump_a4b97
 		cmp    %dl,%bl
@@ -182191,7 +182191,7 @@ data_1551fc:
 		.ascii  "\x03\x00\x00\x00\x04\x00\x00\x00"
 		.ascii  "\x05\x00\x00\x00\x06\x00\x00\x00"
 		.ascii  "\x07\x00\x00\x00"
-subst_table_lower_to_upper:	/* 0x15521C */
+GLOBAL (subst_table_lower_to_upper)	/* 0x15521C */
 		.byte	0xfc
 data_15521d:
 		.ascii  "\x9a\xf6\x99\xe4\x8e\xdf\xe1\xdc"
