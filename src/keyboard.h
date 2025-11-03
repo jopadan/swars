@@ -123,6 +123,7 @@ extern ubyte ctl_joystick_type;
 void init_buffered_keys(void);
 void reset_buffered_keys(void);
 ulong next_buffered_key(void);
+TbBool user_read_value(char *buf, ubyte len, ubyte type);
 
 void input(void);
 

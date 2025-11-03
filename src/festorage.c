@@ -39,6 +39,7 @@ extern struct ScreenButton storage_LOAD_button;
 extern struct ScreenButton storage_SAVE_button;
 extern struct ScreenButton storage_NEW_MORTAL_button;
 extern struct ScreenTextBox storage_slots_box;
+extern ubyte byte_1C4880[8];
 
 ubyte ac_do_storage_NEW_MORTAL(ubyte click);
 ubyte ac_load_game_slot(ubyte click);
@@ -47,10 +48,190 @@ ubyte ac_show_menu_storage_slots_box(struct ScreenTextBox *p_box);
 
 ubyte show_menu_storage_slots_box(struct ScreenTextBox *p_box)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_show_menu_storage_slots_box\n"
         : "=r" (ret) : "a" (p_box));
     return ret;
+#endif
+    short scr_x, scr_y;
+    short i, k;
+    char locstr[8];
+    short ln_height;
+    short entry_height;
+    short slot;
+
+    if (p_box->TextTopLine != save_slot_base)
+    {
+        save_slot_base = p_box->TextTopLine;
+        load_save_slot_names();
+    }
+    if ((p_box->Flags & 0x0080) != 0)
+    {
+        p_box->Flags &= ~0x0080;
+        storage_LOAD_button.Flags |= 0x0001;
+        storage_NEW_MORTAL_button.Flags |= 0x0001;
+        storage_SAVE_button.Flags |= 0x0001;
+    }
+    if (p_box->Timer == 255)
+    {
+        p_box->TextFadePos = 15;
+        storage_SAVE_button.Flags |= 0x0002;
+        storage_LOAD_button.Flags |= 0x0002;
+        storage_NEW_MORTAL_button.Flags |= 0x0002;
+    }
+
+    if ((p_box->Flags & 0x8000) == 0)
+    {
+        const char *text;
+
+        lbDisplay.DrawFlags = 0x0004;
+        scr_x = 3;
+
+        for (i = 0; i < 8; i++)
+        {
+            short h;
+
+            h = 26 * i;
+            draw_box_purple_list(text_window_x1 + scr_x,      text_window_y1 + 3 + h, 30, 22, 243);
+            draw_box_purple_list(text_window_x1 + scr_x + 34, text_window_y1 + 3 + h, 362, 22, 243);
+        }
+        draw_box_purple_list(text_window_x1 + scr_x,      text_window_y1 + 237, 30, 22, 243);
+        draw_box_purple_list(text_window_x1 + scr_x + 34, text_window_y1 + 237, 362, 22, 243);
+        lbDisplay.DrawFlags = 0;
+
+        my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
+        lbFontPtr = med_font;
+        text = gui_strings[408];
+        scr_x = ((p_box->Width - my_string_width(text)) >> 1) - 3;
+        draw_text_purple_list2(scr_x, 2, text, 0);
+        p_box->Flags |= 0x8000;
+        copy_box_purple_list(p_box->X + 4, p_box->Y - 3, p_box->Width - 20, p_box->Height + 6);
+    }
+
+    my_set_text_window(p_box->X + 4, p_box->Y + p_box->ScrollWindowOffset + 4,
+      p_box->Width - 20, p_box->ScrollWindowHeight + 23);
+    lbFontPtr = p_box->Font;
+
+    scr_x = 3;
+    scr_y = 3;
+    ln_height = 22;
+    slot = save_slot_base;
+    entry_height = ln_height + 4;
+    while (slot < (save_slot_base + 8) && scr_y + ln_height < p_box->ScrollWindowHeight + 23)
+    {
+        const char *text;
+        char *slot_str;
+        short tx_width;
+
+        lbDisplay.DrawFlags = 0x0004;
+        if (mouse_down_over_box_coords(text_window_x1, text_window_y1 + scr_y - 1,
+          text_window_x2, text_window_y1 + scr_y + ln_height + 1))
+        {
+            if (lbDisplay.LeftButton)
+            {
+                lbDisplay.LeftButton = 0;
+                edit_flag = 1;
+                save_slot = slot + 1;
+                reset_buffered_keys();
+            }
+        }
+
+        if (mouse_move_over_box_coords(text_window_x1, text_window_y1 + scr_y - 1,
+          text_window_x2, text_window_y1 + scr_y + ln_height + 1))
+        {
+            k = slot - save_slot_base;
+            if (!byte_1C4880[k])
+            {
+                byte_1C4880[k] = 1;
+                play_sample_using_heap(0, 123, 127, 64, 100, 0, 1u);
+            }
+            lbDisplay.DrawFlags = 0;
+        }
+        else
+        {
+            k = slot - save_slot_base;
+            byte_1C4880[k] = 0;
+        }
+
+        if (slot + 1 == save_slot)
+            lbDisplay.DrawFlags = 0;
+        sprintf(locstr, "%d", slot + 1);
+        text = loctext_to_gtext(locstr);
+        lbDisplay.DrawFlags |= 0x8000;
+        tx_width = LbTextStringWidth(text);
+        draw_text_purple_list2(scr_x + ((32 - tx_width) >> 1), scr_y + 6, text, 0);
+        lbDisplay.DrawFlags = 0x0004;
+
+        if (slot + 1 == save_slot)
+        {
+            lbDisplay.DrawFlags = 0;
+            if (edit_flag)
+            {
+                slot_str = save_slot_names[slot - save_slot_base];
+                if (user_read_value(slot_str, 23, 1))
+                    edit_flag = 0;
+            }
+        }
+        slot_str = save_slot_names[slot - save_slot_base];
+        draw_text_purple_list2(scr_x + 36, scr_y + 6, slot_str, 0);
+        if (edit_flag && (save_slot == slot + 1) && ((gameturn & 1) != 0))
+        {
+          const struct TbSprite *p_spr;
+
+          slot_str = save_slot_names[slot - save_slot_base];
+          p_spr = LbFontCharSprite(lbFontPtr, '-');
+          tx_width = my_string_width(slot_str);
+          draw_sprite_purple_list(text_window_x1 + scr_x + 36 + tx_width, text_window_y1 + scr_y + 11, p_spr);
+        }
+        scr_y += entry_height;
+        slot++;
+    }
+
+    lbDisplay.DrawFlags = 0x0004;
+    if (save_active_desc[0] != '\0')
+    {
+        short w;
+
+        scr_y += ln_height + 4;
+        lbDisplay.DrawFlags = 0x0004;
+        if (mouse_down_over_box_coords(text_window_x1, text_window_y1 + scr_y - 1,
+          text_window_x2, text_window_y1 + scr_y + ln_height + 1))
+        {
+            if (lbDisplay.LeftButton)
+            {
+                lbDisplay.LeftButton = 0;
+                save_slot = 0;
+            }
+        }
+        if (mouse_move_over_box_coords(text_window_x1, text_window_y1 + scr_y - 1,
+          text_window_x2, text_window_y1 + scr_y + ln_height + 1) || (slot + 1 == save_slot))
+        {
+            lbDisplay.DrawFlags = 0;
+        }
+        lbDisplay.DrawFlags |= 0x8000;
+
+        w = LbTextCharWidth('M');
+        draw_sprite_purple_list(((30 - w) >> 1) + text_window_x1 + scr_x,
+          text_window_y1 + scr_y + 6, LbFontCharSprite(lbFontPtr, 'M'));
+        lbDisplay.DrawFlags = 0x0004;
+        if (!save_slot)
+            lbDisplay.DrawFlags = 0;
+        draw_text_purple_list2(scr_x + 36, scr_y + 6, save_active_desc, 0);
+    }
+    lbDisplay.DrawFlags = 0;
+    //storage_LOAD_button.DrawFn(&storage_LOAD_button); -- incompatible calling convention
+    asm volatile ("call *%1\n"
+        :  : "a" (&storage_LOAD_button), "g" (storage_LOAD_button.DrawFn));
+    if (!restore_savegame) {
+        //storage_SAVE_button.DrawFn(&storage_SAVE_button); -- incompatible calling convention
+        asm volatile ("call *%1\n"
+            :  : "a" (&storage_SAVE_button), "g" (storage_SAVE_button.DrawFn));
+    }
+    //storage_NEW_MORTAL_button.DrawFn(&storage_NEW_MORTAL_button); -- incompatible calling convention
+    asm volatile ("call *%1\n"
+        :  : "a" (&storage_NEW_MORTAL_button), "g" (storage_NEW_MORTAL_button.DrawFn));
+    return 0;
 }
 
 ubyte show_storage_screen(void)
