@@ -20,10 +20,12 @@
 
 #include "bftext.h"
 #include "bfsprite.h"
+
 #include "femain.h"
 #include "guiboxes.h"
 #include "guigraph.h"
 #include "guitext.h"
+#include "keyboard.h"
 #include "cybmod.h"
 #include "purpldrw.h"
 #include "weapon.h"
@@ -40,6 +42,7 @@ extern struct ScreenTextBox research_progress_button;
 extern struct ScreenBox research_graph_box;
 extern struct ScreenButton research_list_buttons[2];
 
+extern ubyte research_completed;// = 0;
 extern ubyte research_on_weapons;// = true;
 extern ubyte research_unkn_var_01;
 extern ubyte research_selected_wep; // = -1;
@@ -142,8 +145,88 @@ void draw_unkn20_subfunc_01(int x, int y, char *text, ubyte a4)
 
 void show_research_screen(void)
 {
+#if 0
     asm volatile ("call ASM_show_research_screen\n"
         :  :  : "eax" );
+#endif
+    int i;
+    ubyte drawn;
+
+    if ((game_projector_speed && ((heading_box.Flags & 0x0001) != 0)) ||
+      (lbKeyOn[KC_SPACE] && !edit_flag))
+    {
+        lbKeyOn[KC_SPACE] = 0;
+        heading_box.Flags |= 0x0002;
+        research_progress_button.Flags |= 0x0002;
+        research_submit_button.Flags |= 0x0002;
+        research_list_buttons[1].Flags |= 0x0002;
+        research_unkn21_box.Flags |= 0x0002;
+        research_graph_box.Flags |= 0x0002;
+        research_list_buttons[0].Flags |= 0x0002;
+    }
+    if (research_unkn21_box.Lines == 0)
+    {
+        if (research_on_weapons)
+        {
+          for (i = WEP_NULL + 1; i < WEP_TYPES_COUNT; i++)
+          {
+            if (is_research_weapon_allowed(i))
+                research_unkn21_box.Lines++;
+          }
+        }
+        else
+        {
+          for (i = MOD_NULL + 1; i < MOD_TYPES_COUNT; i++)
+          {
+            if (is_research_cymod_allowed(i))
+                research_unkn21_box.Lines++;
+          }
+        }
+        research_unkn21_box.Flags |= 0x0080;
+    }
+    drawn = 1;
+    if (drawn) {
+        //drawn = heading_box.DrawFn(&heading_box); -- incompatible calling convention
+        asm volatile ("call *%2\n"
+            : "=r" (drawn) : "a" (&heading_box), "g" (heading_box.DrawFn));
+    }
+    if (drawn) {
+        //drawn = research_progress_button.DrawFn(&research_progress_button); -- incompatible calling convention
+        asm volatile ("call *%2\n"
+            : "=r" (drawn) : "a" (&research_progress_button), "g" (research_progress_button.DrawFn));
+    }
+    if (drawn) {
+        //drawn = research_graph_box.DrawFn(&research_graph_box); -- incompatible calling convention
+        asm volatile ("call *%2\n"
+            : "=r" (drawn) : "a" (&research_graph_box), "g" (research_graph_box.DrawFn));
+    }
+    if (drawn) {
+        //drawn = research_unkn21_box.DrawFn(&research_unkn21_box); -- incompatible calling convention
+        asm volatile ("call *%2\n"
+            : "=r" (drawn) : "a" (&research_unkn21_box), "g" (research_unkn21_box.DrawFn));
+    }
+
+    if ((ingame.UserFlags & 0x04) != 0 && is_key_pressed(KC_U, KMod_DONTCARE))
+    {
+        clear_key_pressed(KC_U);
+        research_daily_progress_for_type(0);
+        research_daily_progress_for_type(1);
+    }
+    if ((ingame.UserFlags & 0x04) != 0 && is_key_pressed(KC_0, KMod_DONTCARE))
+    {
+        clear_key_pressed(KC_0);
+        if (research_completed + 1 < MOD_TYPES_COUNT)
+        {
+            refresh_equip_list = 1;
+            research_cymod_allow(research_completed + 1);
+        }
+        if (research_completed + 1 < WEP_TYPES_COUNT)
+        {
+            refresh_equip_list = 1;
+            research_weapon_allow(research_completed + 1);
+            research_completed++;
+        }
+    }
 }
 
 ubyte show_research_graph(struct ScreenBox *box)

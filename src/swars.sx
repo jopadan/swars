@@ -117696,7 +117696,7 @@ GLOBAL_FUNC(ASM_show_research_screen)	/* 0x09DEB8 */
 		xor    %bl,%bl
 		mov    %bl,EXPORT_SYMBOL(lbKeyOn)+11
 		xor    %eax,%eax
-		mov    research_completed,%al
+		mov    EXPORT_SYMBOL(research_completed),%al
 		cmp    $0xf,%eax
 		jg     jump_9e05b
 		mov    %al,%cl
@@ -117709,7 +117709,7 @@ GLOBAL_FUNC(ASM_show_research_screen)	/* 0x09DEB8 */
 		mov    %esi,data_1c528c
 	jump_9e05b:
 		xor    %eax,%eax
-		mov    research_completed,%al
+		mov    EXPORT_SYMBOL(research_completed),%al
 		cmp    $0x1d,%eax
 		jg     jump_9e08f
 		movb   $0x1,refresh_equip_list
@@ -117721,7 +117721,7 @@ GLOBAL_FUNC(ASM_show_research_screen)	/* 0x09DEB8 */
 		or     %eax,%edi
 		inc    %ch
 		mov    %edi,data_1c5288
-		mov    %ch,research_completed
+		mov    %ch,EXPORT_SYMBOL(research_completed)
 	jump_9e08f:
 		pop    %edi
 		pop    %esi
