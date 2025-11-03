@@ -383,15 +383,6 @@ TbResult handle_custom_key_press(TbKeyAction action, TbKeyCode code)
     if (action != KActn_KEYDOWN)
         return false;
 
-    if (lbKeyOn[KC_RCONTROL] || lbKeyOn[KC_LCONTROL])
-    {
-        if (code == KC_Q)
-        {
-            game_quit();
-            return Lb_SUCCESS;
-        }
-    }
-
     return Lb_OK;
 }
 
