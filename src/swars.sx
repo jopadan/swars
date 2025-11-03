@@ -167978,7 +167978,7 @@ GLOBAL_FUNC(ASM_accept_mission)	/* 0x0D33B8 */
 		mov    $0x1,%dl
 		mov    %ah,change_screen
 		mov    open_brief,%ax
-		mov    %dl,map_from_mission
+		mov    %dl,EXPORT_SYMBOL(map_from_mission)
 		mov    %ax,EXPORT_SYMBOL(old_mission_brief)
 	jump_d33e1:
 		mov    $0x1,%al
@@ -168023,7 +168023,7 @@ GLOBAL_FUNC(ASM_do_unkn2_ACCEPT)	/* 0x0D3400 */
 		jmp    jump_d3451
 	jump_d3442:
 		xor    %bl,%bl
-		mov    %bl,map_from_mission
+		mov    %bl,EXPORT_SYMBOL(map_from_mission)
 		movb   $0x1,start_into_mission
 	jump_d3451:
 		mov    $0x1,%al
@@ -168040,7 +168040,7 @@ GLOBAL_FUNC(ASM_do_unkn2_ACCEPT)	/* 0x0D3400 */
 /*----------------------------------------------------------------*/
 GLOBAL_FUNC(ASM_do_unkn2_CANCEL)	/* 0x0D345C */
 /*----------------------------------------------------------------*/
-		cmpb   $0x0,map_from_mission
+		cmpb   $0x0,EXPORT_SYMBOL(map_from_mission)
 		je     jump_d346f
 		movb   $0x7,change_screen
 		xor    %al,%al

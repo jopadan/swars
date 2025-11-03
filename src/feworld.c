@@ -64,6 +64,7 @@ extern ulong dword_1C4908[6];
 extern ulong dword_1C4920;
 extern ulong dword_1C4924;
 extern ulong dword_1C4930[6];
+extern ubyte map_from_mission;
 extern ubyte byte_1C4888;
 extern short word_1C488A[6];
 extern short word_1C4896[6];
@@ -88,10 +89,23 @@ ubyte do_unkn2_CANCEL(ubyte click)
 
 ubyte do_unkn2_ACCEPT(ubyte click)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_do_unkn2_ACCEPT\n"
         : "=r" (ret) : "a" (click));
     return ret;
+#endif
+    if (unkn_city_no == -1)
+        return 0;
+
+    if ((cities[unkn_city_no].Flags & 0x11) == 0)
+    {
+        alert_box_text_fmt("%s", gui_strings[569]);
+        return 1;
+    }
+    map_from_mission = 0;
+    start_into_mission = 1;
+    return 1;
 }
 
 ubyte show_world_city_info_box(struct ScreenTextBox *p_box)
