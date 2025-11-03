@@ -159,7 +159,7 @@ ubyte show_world_city_info_box(struct ScreenTextBox *p_box)
         p_box->Timer = -2;
     }
 
-    lbDisplay.DrawFlags |= 0x0100;
+    lbDisplay.DrawFlags |= Lb_TEXT_HALIGN_CENTER;
     lbFontPtr = small_med_font;
     tx_height = font_height('A');
     my_set_text_window(p_box->X + 3, p_box->Y + 4, p_box->Width - 6, p_box->Height - 8);

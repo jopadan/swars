@@ -6639,7 +6639,7 @@ void draw_purple_rect(int x, int y, int w, int h, ubyte active)
 {
     TbPixel col1, col2;
 
-    lbDisplay.DrawFlags &= ~0x0010;
+    lbDisplay.DrawFlags &= ~Lb_SPRITE_OUTLINE;
     if (active) {
         col1 = 0x0E;
         col2 = 0x0C;

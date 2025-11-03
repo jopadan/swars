@@ -85,7 +85,7 @@ ubyte show_menu_storage_slots_box(struct ScreenTextBox *p_box)
     {
         const char *text;
 
-        lbDisplay.DrawFlags = 0x0004;
+        lbDisplay.DrawFlags = Lb_SPRITE_TRANSPAR4;
         scr_x = 3;
 
         for (i = 0; i < 8; i++)
@@ -124,7 +124,7 @@ ubyte show_menu_storage_slots_box(struct ScreenTextBox *p_box)
         char *slot_str;
         short tx_width;
 
-        lbDisplay.DrawFlags = 0x0004;
+        lbDisplay.DrawFlags = Lb_SPRITE_TRANSPAR4;
         if (mouse_down_over_box_coords(text_window_x1, text_window_y1 + scr_y - 1,
           text_window_x2, text_window_y1 + scr_y + ln_height + 1))
         {
@@ -161,7 +161,7 @@ ubyte show_menu_storage_slots_box(struct ScreenTextBox *p_box)
         lbDisplay.DrawFlags |= 0x8000;
         tx_width = LbTextStringWidth(text);
         draw_text_purple_list2(scr_x + ((32 - tx_width) >> 1), scr_y + 6, text, 0);
-        lbDisplay.DrawFlags = 0x0004;
+        lbDisplay.DrawFlags = Lb_SPRITE_TRANSPAR4;
 
         if (slot + 1 == save_slot)
         {
@@ -188,13 +188,13 @@ ubyte show_menu_storage_slots_box(struct ScreenTextBox *p_box)
         slot++;
     }
 
-    lbDisplay.DrawFlags = 0x0004;
+    lbDisplay.DrawFlags = Lb_SPRITE_TRANSPAR4;
     if (save_active_desc[0] != '\0')
     {
         short w;
 
         scr_y += ln_height + 4;
-        lbDisplay.DrawFlags = 0x0004;
+        lbDisplay.DrawFlags = Lb_SPRITE_TRANSPAR4;
         if (mouse_down_over_box_coords(text_window_x1, text_window_y1 + scr_y - 1,
           text_window_x2, text_window_y1 + scr_y + ln_height + 1))
         {
@@ -214,7 +214,7 @@ ubyte show_menu_storage_slots_box(struct ScreenTextBox *p_box)
         w = LbTextCharWidth('M');
         draw_sprite_purple_list(((30 - w) >> 1) + text_window_x1 + scr_x,
           text_window_y1 + scr_y + 6, LbFontCharSprite(lbFontPtr, 'M'));
-        lbDisplay.DrawFlags = 0x0004;
+        lbDisplay.DrawFlags = Lb_SPRITE_TRANSPAR4;
         if (!save_slot)
             lbDisplay.DrawFlags = 0;
         draw_text_purple_list2(scr_x + 36, scr_y + 6, save_active_desc, 0);
