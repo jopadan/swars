@@ -6378,7 +6378,7 @@ void show_menu_screen(void)
     if (is_purple_apps_selection_bar_visible())
           show_purple_apps_selection_bar();
 
-    if ((screentype == SCRT_DEBRIEF || screentype == SCRT_NETDEBRF) && change_screen == ChSCRT_MISSION)
+    if ((screentype == SCRT_DEBRIEF || screentype == SCRT_NETDEBRF) && change_screen == ChSCRT_MISBRIEF)
     {
         screentype = SCRT_MISSION;
         brief_load_mission_info();
@@ -6529,7 +6529,7 @@ void show_menu_screen(void)
         change_screen = 0;
         redraw_screen_flag = 1;
     }
-    if (change_screen == ChSCRT_MISSION)
+    if (change_screen == ChSCRT_MISBRIEF)
     {
         selected_city_id = -1;
         screentype = SCRT_MISSION;

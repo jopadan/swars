@@ -1400,7 +1400,7 @@ TbBool get_purple_app_unread_email_icon_inputs(void)
                         if (word_1C6F40 < 0)
                             word_1C6F40 = 0;
                         open_brief = next_brief;
-                        change_screen = ChSCRT_MISSION;
+                        change_screen = ChSCRT_MISBRIEF;
                         subtext = gui_strings[372];
                     }
                     else
@@ -1408,7 +1408,7 @@ TbBool get_purple_app_unread_email_icon_inputs(void)
                         word_1C6F3E = next_email - 4;
                         if (word_1C6F3E < 0)
                             word_1C6F3E = 0;
-                        change_screen = ChSCRT_MISSION;
+                        change_screen = ChSCRT_MISBRIEF;
                         subtext = gui_strings[373];
                         open_brief = -next_email;
                     }
@@ -1513,7 +1513,7 @@ TbBool get_purple_app_email_icon_inputs(short cx, short cy, short bri)
         }
         else if (word_1C498A == 2 * (bri + 1) + 100)
         {
-            change_screen = ChSCRT_MISSION;
+            change_screen = ChSCRT_MISBRIEF;
             set_heading_box_text(gui_strings[372]);
             open_brief = bri + 1;
             play_sample_using_heap(0, 111, 127, 64, 100, 0, 2);
@@ -1643,7 +1643,7 @@ TbBool input_purple_apps_selection_bar(void)
         {
             clear_key_pressed(KC_F6);
             if (open_brief != 0)
-                change_screen = ChSCRT_MISSION;
+                change_screen = ChSCRT_MISBRIEF;
         }
     }
 

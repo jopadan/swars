@@ -64,6 +64,7 @@ extern ulong dword_1C4908[6];
 extern ulong dword_1C4920;
 extern ulong dword_1C4924;
 extern ulong dword_1C4930[6];
+/** whether the map screen was entered from mission brief */
 extern ubyte map_from_mission;
 extern ubyte byte_1C4888;
 extern short word_1C488A[6];
@@ -81,10 +82,22 @@ ubyte ac_do_unkn2_ACCEPT(ubyte click);
 
 ubyte do_unkn2_CANCEL(ubyte click)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_do_unkn2_CANCEL\n"
         : "=r" (ret) : "a" (click));
     return ret;
+#endif
+    if (map_from_mission)
+    {
+        change_screen = ChSCRT_MISBRIEF;
+    }
+    else
+    {
+        reload_background_flag = 1;
+        screentype = SCRT_99;
+    }
+    return 0;
 }
 
 ubyte do_unkn2_ACCEPT(ubyte click)

@@ -135,7 +135,7 @@ enum ChangeScreenType {
   ChSCRT_CRYO,
   ChSCRT_EQUIP,
   ChSCRT_RESEARCH,
-  ChSCRT_MISSION,
+  ChSCRT_MISBRIEF,
 };
 
 enum OpenMissionEndStatus {
