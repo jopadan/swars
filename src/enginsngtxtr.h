@@ -60,7 +60,10 @@ struct AnimTmap { // sizeof=54
     ushort TMap[10];
     ubyte Delay[10];
     ushort Flags;
-    ubyte field_22[19];
+    ubyte field_22;
+    ubyte field_23;
+    ushort field_24;
+    ubyte field_26[15];
     ubyte field_35;
 };
 

@@ -19,6 +19,8 @@
 #include "enginsngtxtr.h"
 
 #include "bfmemut.h"
+
+#include "game_speed.h" // required for fifties_per_gameturn
 #include "swlog.h"
 /******************************************************************************/
 
@@ -361,11 +363,56 @@ void face_texture_switch_to_index(struct SingleTexture *p_fctextr, int index)
     p_fctextr->TMapY3 = beg_y + (p_fctextr->TMapY3 - prev_beg_y);
 }
 
+static void animate_texture(ushort tmap)
+{
+    struct AnimTmap *p_atmap;
+    struct SingleFloorTexture *p_sftex;
+    struct SingleFloorTexture *p_sftex_sel;
+    ushort textr_sel;
+
+    p_atmap = &game_anim_tmaps[tmap];
+    textr_sel = p_atmap->TMap[p_atmap->field_22];
+
+    p_sftex_sel = &game_textures[textr_sel];
+    p_sftex = &game_textures[p_atmap->Texture];
+    LbMemoryCopy(p_sftex, p_sftex_sel, sizeof(struct SingleFloorTexture));
+}
+
 void animate_textures(void)
 {
+#if 0
     asm volatile ("call ASM_animate_textures\n"
         :  :  : "eax" );
     return;
+#endif
+    ushort i, k;
+    short dt;
+
+    // TODO animation time should be provided as parameter, not just taken from different module
+    dt = fifties_per_gameturn;
+    if (dt > 10)
+        dt = 10;
+
+    for (i = 10; i < next_anim_tmap; i++)
+    {
+        struct AnimTmap *p_atmap;
+
+        p_atmap = &game_anim_tmaps[i];
+
+        k = p_atmap->field_22;
+        p_atmap->field_24 += dt;
+
+        if ((p_atmap->field_24 >> 4) > p_atmap->Delay[k])
+        {
+            p_atmap->field_22++;
+            p_atmap->field_24 = 0;
+
+            if (p_atmap->field_22 > p_atmap->field_23)
+                p_atmap->field_22 = 0;
+
+            animate_texture(i);
+        }
+    }
 }
 
 void refresh_old_face_texture_format(struct SingleTexture *p_fctextr,
