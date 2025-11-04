@@ -28,6 +28,7 @@
 #include "ssampply.h"
 
 #include "femain.h"
+#include "fecryo.h"
 #include "game_speed.h"
 #include "guiboxes.h"
 #include "guitext.h"
@@ -119,7 +120,7 @@ void update_equip_cost_text(void)
 
     if (selected_weapon == -1) // No weapon selected
     {
-        equip_cost_text[0] = 0;
+        equip_cost_text[0] = '\0';
         return;
     }
 
@@ -310,10 +311,104 @@ ubyte sell_equipment(ubyte click)
     return ret;
 }
 
+/** Determines if buy or sell should be available in the equip weapon offer.
+ *
+ * @return Gives 0 if button unavailable, 1 for buy, 2 for sell.
+ */
+ubyte equip_offer_can_buy_or_sell(WeaponType wtype)
+{
+    if (selected_agent < 0)
+        return 0;
+
+    if (selected_agent == 4) // All agents selected
+    {
+        short plagent;
+
+        if (is_research_weapon_completed(wtype) ||
+          (login_control__State != 6))
+            return 1;
+
+        for (plagent = 0; plagent < 4; plagent++)
+        {
+            if (!player_agent_has_weapon(local_player_no, plagent, wtype))
+              break;
+        }
+        if (plagent == 4) // all agents have that weapon
+            return 2;
+
+        return 0;
+    }
+
+    if (player_agent_has_weapon(local_player_no, selected_agent, wtype))
+        return 2;
+
+    if (is_research_weapon_completed(wtype) ||
+      (login_control__State != 6))
+        return 1;
+
+    return 0;
+}
+
+ubyte get_buy_sell_button_mode(void)
+{
+    ubyte mode;
+
+    mode = 0;
+    if (screentype == 5)
+    {
+        if (selected_weapon == -1)
+        {
+            // no weapon selected - no check
+        }
+        else
+        {
+            mode = equip_offer_can_buy_or_sell(selected_weapon + 1);
+        }
+    }
+    else
+    {
+        if (selected_mod == -1)
+        {
+            // no mod selected - no check
+        }
+        else
+        {
+            mode = cryo_offer_can_buy_or_sell(selected_mod + 1);
+        }
+    }
+    return mode;
+}
+
 void check_buy_sell_button(void)
 {
+#if 0
     asm volatile ("call ASM_check_buy_sell_button\n"
         :  :  : "eax" );
+#endif
+    ubyte mode;
+
+    mode = get_buy_sell_button_mode();
+
+    if (mode == 1)
+    {
+        equip_offer_buy_button.Text = gui_strings[436];
+        equip_offer_buy_button.CallBackFn = ac_do_equip_offer_buy;
+    }
+    else if (mode == 2)
+    {
+        equip_offer_buy_button.Text = gui_strings[407];
+        equip_offer_buy_button.CallBackFn = ac_sell_equipment;
+    }
+
+    // The functions below may check callback function to figure out mode
+    if (screentype == 5)
+    {
+        update_equip_cost_text();
+    }
+    else
+    {
+        update_cybmod_cost_text();
+    }
 }
 
 ubyte select_all_agents(ubyte click)
@@ -823,44 +918,6 @@ TbBool input_display_box_content_wep(struct ScreenTextBox *p_box)
         }
     }
     return false;
-}
-
-/** Determines if buy or sell should be available in the equip weapon offer.
- *
- * @return Gives 0 if button unavailable, 1 for buy, 2 for sell.
- */
-ubyte equip_offer_can_buy_or_sell(ubyte weapon)
-{
-    if (selected_agent < 0)
-        return 0;
-
-    if (selected_agent == 4) // All agents selected
-    {
-        short i;
-
-        if (is_research_weapon_completed(weapon) ||
-          (login_control__State != 6))
-            return 1;
-
-        for (i = 0; i < 4; i++)
-        {
-            if (!player_agent_has_weapon(local_player_no, i, weapon))
-              break;
-        }
-        if (i == 4) // all agents have that weapon
-            return 2;
-
-        return 0;
-    }
-
-    if (player_agent_has_weapon(local_player_no, selected_agent, weapon))
-        return 2;
-
-    if (is_research_weapon_completed(weapon) ||
-      (login_control__State != 6))
-        return 1;
-
-    return 0;
 }
 
 void display_box_content_state_switch(void)

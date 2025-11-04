@@ -94,6 +94,20 @@ struct ScreenRect equip_blokey_rect[] = {
     { 0,  0, 139, 295},
 };
 
+/** Determines if buy or sell should be available in the cryo mod offer.
+ *
+ * Rather simple as cyborg mods cannot be sold.
+ *
+ * @return Gives 0 if button unavailable, 1 for buy, 2 for sell (not possible).
+ */
+ubyte cryo_offer_can_buy_or_sell(ushort mtype)
+{
+    if (selected_agent < 0)
+        return 0;
+
+    return 1;
+}
+
 void update_cybmod_cost_text(void)
 {
     struct ModDef *mdef;
@@ -101,7 +115,7 @@ void update_cybmod_cost_text(void)
 
     if (selected_mod == -1) // No mod selected
     {
-        equip_cost_text[0] = 0;
+        equip_cost_text[0] = '\0';
         return;
     }
 
@@ -118,7 +132,7 @@ void update_cybmod_name_text(void)
 
     if (selected_mod == -1) // No mod selected
     {
-        cybmod_name_text[0] = 0;
+        cybmod_name_text[0] = '\0';
         return;
     }
 
