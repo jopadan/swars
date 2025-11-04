@@ -27,6 +27,7 @@
 #include "bfmouse.h"
 #include "bfutility.h"
 #include "bflib_joyst.h"
+#include "ssampply.h"
 
 #include "app_gentab.h"
 #include "app_sprite.h"
@@ -1091,7 +1092,7 @@ void draw_unread_email_icon(short x, short y, ubyte aframe)
         draw_sprite_purple_list(x, y, spr);
         break;
     case 2:
-        play_sample_using_heap(0, 112, 127, 64, 100, 0, 1);
+        play_sample_using_heap(0, 112, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
         // fall through
     case 3:
     case 4:
@@ -1235,7 +1236,7 @@ void draw_purple_app_utility_icon(short iconid)
     {
         if ((byte_1C497E & (1 << iconid)) == 0) {
             byte_1C497E |= (1 << iconid);
-            play_sample_using_heap(0, 123, 127, 64, 100, 0, 1);
+            play_sample_using_heap(0, 123, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
         }
         lbDisplay.DrawFlags = Lb_SPRITE_TRANSPAR4;
         // If clicked, draw the icon without transparency
@@ -1297,7 +1298,7 @@ TbBool get_purple_app_utility_icon_inputs(short iconid)
             else
             {
                 change_screen = iconid + 1;
-                play_sample_using_heap(0, 111, 127, 64, 100, 0, 2);
+                play_sample_using_heap(0, 111, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
             }
             word_1C498A = 0;
         }
@@ -1310,7 +1311,7 @@ TbBool get_purple_app_utility_icon_inputs(short iconid)
         else if (word_1C498A == 2 * (iconid + 1) + 1)
         {
             change_screen = iconid + 1;
-            play_sample_using_heap(0, 111, 127, 64, 100, 0, 2);
+            play_sample_using_heap(0, 111, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
 
             word_1C498A = 0;
         }
@@ -1339,7 +1340,7 @@ void draw_purple_app_unread_email_icon(void)
         if (!byte_1C4980 && !is_key_pressed(KC_RETURN, KMod_DONTCARE))
         {
             byte_1C4980 = 1;
-            play_sample_using_heap(0, 123, 127, 64, 100, 0, 1);
+            play_sample_using_heap(0, 123, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
         }
         lbDisplay.DrawFlags = Lb_SPRITE_TRANSPAR4;
         // If clicked, draw the icon without transparency
@@ -1413,11 +1414,11 @@ TbBool get_purple_app_unread_email_icon_inputs(void)
                         open_brief = -next_email;
                     }
                     set_heading_box_text(subtext);
-                    play_sample_using_heap(0, 111, 127, 64, 100, 0, 2);
+                    play_sample_using_heap(0, 111, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
                     if (new_mail)
                     {
                         play_sample_using_heap(0,
-                          119 + (LbRandomAnyShort() % 3), 127, 64, 100, 0, 3);
+                          119 + (LbRandomAnyShort() % 3), FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
                     }
                     else
                     {
@@ -1451,7 +1452,7 @@ void draw_purple_app_email_icon(short cx, short cy, short bri)
         if ((byte_1C497F & (1 << iconid)) == 0)
         {
             byte_1C497F |= (1 << iconid);
-            play_sample_using_heap(0, 123, 127, 64, 100, 0, 1u);
+            play_sample_using_heap(0, 123, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
         }
         // If clicked, draw the icon without transparency
         if (lbDisplay.MLeftButton || (joy.Buttons[0] && !net_unkn_pos_02))
@@ -1516,7 +1517,7 @@ TbBool get_purple_app_email_icon_inputs(short cx, short cy, short bri)
             change_screen = ChSCRT_MISBRIEF;
             set_heading_box_text(gui_strings[372]);
             open_brief = bri + 1;
-            play_sample_using_heap(0, 111, 127, 64, 100, 0, 2);
+            play_sample_using_heap(0, 111, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
 
             word_1C498A = 0;
         }
@@ -1672,7 +1673,7 @@ void show_mission_loading_screen(void)
 {
     LbMouseChangeSprite(0);
     reload_background();
-    play_sample_using_heap(0, 118, 127, 64, 100, 0, 3);
+    play_sample_using_heap(0, 118, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
 
     ulong finished = 0; // Amount of frames after the drawing animation finished
     do

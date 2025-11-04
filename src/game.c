@@ -924,8 +924,8 @@ void play_smacker_then_back_to_menu(ushort vid_type)
     play_smacker(vid_type);
     setup_screen_mode(screen_mode_menu);
 
-    play_sample_using_heap(0, 122, 127, 64, 100, -1, 3);
-    play_sample_using_heap(0, 122, 127, 64, 100, -1, 3);
+    play_sample_using_heap(0, 122, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
+    play_sample_using_heap(0, 122, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
 }
 
 void play_intro(void)
@@ -1892,7 +1892,7 @@ void init_outro(void)
     StopAllSamples();
     reset_heaps();
     setup_heaps(SHSC_CreditsSnd, language_3str);
-    play_sample_using_heap(0, 1, 127, 64, 100, -1, 3);
+    play_sample_using_heap(0, 1, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
 
     data_197150 = 1;
     data_1dd91c = 0;
@@ -1921,7 +1921,7 @@ void init_outro(void)
             // Randomly play seagull sample if applause is not currently playing
             if (((LbRandomAnyShort() & 0xF) == 0) && (data_155704 == -1 || !IsSamplePlaying(0, data_155704, NULL)) )
             {
-                play_sample_using_heap(0, 7 + (LbRandomAnyShort() % 5), 127, 64, 100, 0, 3u);
+                play_sample_using_heap(0, 7 + (LbRandomAnyShort() % 5), FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
             }
         }
 
@@ -2662,16 +2662,16 @@ void start_ingame_ambient_sound(void)
     case MAtmsph_Moon:
         stop_sample_using_heap(0, 8);
         stop_sample_using_heap(0, 77);
-        play_sample_using_heap(0, 78, 64, 64, 100, -1, 2);
+        play_sample_using_heap(0, 78, 64, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 2);
         break;
     case MAtmsph_Earth:
         stop_sample_using_heap(0, 78);
         if (gamep_scene_effect_type == ScEff_RAIN) {
             stop_sample_using_heap(0, 8);
-            play_sample_using_heap(0, 77, 64, 64, 100, -1, 2);
+            play_sample_using_heap(0, 77, 64, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 2);
         } else {
             stop_sample_using_heap(0, 77);
-            play_sample_using_heap(0, 8, 64, 64, 100, -1, 2);
+            play_sample_using_heap(0, 8, 64, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 2);
         }
         break;
     default:
@@ -3478,9 +3478,9 @@ int xdo_next_frame(ubyte anislot)
     if (anislot >= AniSl_EQVIEW && anislot <= AniSl_CYBORG_INOUT)
     {
         if (p_anim->FrameNumber == 0) {
-            play_sample_using_heap(0, 135, 127, 64, 100, 0, 3u);
+            play_sample_using_heap(0, 135, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
         } else if (p_anim->FrameNumber == p_anim->FLCFileHeader.NumberOfFrames >> 1) {
-            play_sample_using_heap(0, 115, 127, 64, 100, 0, 3u);
+            play_sample_using_heap(0, 115, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
         }
     }
 
@@ -4636,7 +4636,7 @@ ubyte do_storage_NEW_MORTAL(ubyte click)
     }
 
     if (new_mail)
-      play_sample_using_heap(0, 119 + (LbRandomAnyShort() % 3), 127, 64, 100, 0, 3u);
+      play_sample_using_heap(0, 119 + (LbRandomAnyShort() % 3), FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
 
     return 1;
 }
@@ -5989,7 +5989,7 @@ void show_menu_screen_st2(void)
     init_brief_screen_scanner();
 
     if (new_mail)
-        play_sample_using_heap(0, 119 + (LbRandomAnyShort() % 3), 127, 64, 100, 0, 3u);
+        play_sample_using_heap(0, 119 + (LbRandomAnyShort() % 3), FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
 
     net_system_init2();
 }
@@ -6258,7 +6258,7 @@ void menu_screen_redraw(void)
     set_flag01_world_screen_boxes();
 
     if (!game_projector_speed && screentype != SCRT_99)
-        play_sample_using_heap(0, 113, 127, 64, 100, 0, 3u);
+        play_sample_using_heap(0, 113, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
 }
 
 /** Mark beginning of user input processing code.
@@ -6331,11 +6331,11 @@ void show_menu_screen(void)
     {
     case 2:
         show_menu_screen_st2();
-        play_sample_using_heap(0, 122, 127, 64, 100, -1, 3);
+        play_sample_using_heap(0, 122, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
         break;
     case 0:
         show_menu_screen_st0();
-        play_sample_using_heap(0, 122, 127, 64, 100, -1, 3);
+        play_sample_using_heap(0, 122, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
         break;
     default:
         break;

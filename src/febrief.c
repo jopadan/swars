@@ -23,6 +23,7 @@
 #include "bfmath.h"
 #include "bfmemut.h"
 #include "bfscrcopy.h"
+#include "ssampply.h"
 
 #include "campaign.h"
 #include "femail.h"
@@ -321,7 +322,7 @@ ubyte input_citymap_city_selection(struct ScreenBox *p_box)
             {
                 lbDisplay.LeftButton = 0;
                 selected_city_id = city_id;
-                play_sample_using_heap(0, 111, 127, 64, 100, 0, 2u);
+                play_sample_using_heap(0, 111, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2u);
                 return 1;
             }
         }

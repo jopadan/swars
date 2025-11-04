@@ -319,7 +319,7 @@ void input_user_control_agent(ushort plyr, short dmuser)
                 val = 100;
             loc_build_packet(p_pckt, PAct_AGENT_SET_MOOD, dcthing, val, 0, 0);
             if (!IsSamplePlaying(0, 21, 0))
-                play_sample_using_heap(0, 21, 127, 64, 100, -1, 1);
+                play_sample_using_heap(0, 21, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 1);
             ingame.Flags |= GamF_Unkn00100000;
             return;
         }
@@ -332,7 +332,7 @@ void input_user_control_agent(ushort plyr, short dmuser)
                 val = -100;
             loc_build_packet(p_pckt, PAct_AGENT_SET_MOOD, dcthing, val, 0, 0);
             if (!IsSamplePlaying(0, 21, 0))
-                play_sample_using_heap(0, 21, 127, 64, 100, -1, 1);
+                play_sample_using_heap(0, 21, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 1);
             ingame.Flags |= GamF_Unkn00100000;
             return;
         }

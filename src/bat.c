@@ -23,6 +23,7 @@
 #include "bfkeybd.h"
 #include "bfmemut.h"
 #include "bfscreen.h"
+#include "ssampply.h"
 
 #include "display.h"
 #include "game.h"
@@ -478,7 +479,7 @@ void BAT_play(void)
         {
             BAT_state = BATSt_BallLost;
             BAT_ball_lost_timer = 80;
-            play_sample_using_heap(0, 73, 127, 64, 100, 0, 3u);
+            play_sample_using_heap(0, 73, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
         }
         BAT_input_level();
         if (BAT_bricks_remain == 0)
@@ -497,7 +498,7 @@ void BAT_play(void)
             }
             BAT_bricks_clear();
             BAT_levelno++;
-            play_sample_using_heap(0, 70, 127, 64, 100, 0, 3u);
+            play_sample_using_heap(0, 70, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
         }
         break;
 

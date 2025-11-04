@@ -639,7 +639,7 @@ TbBool pause_screen_handle(void)
         {
             SetSoundMasterVolume(127 * startscr_samplevol / STARTSCR_VOLUME_MAX);
             if (!IsSamplePlaying(0, 80, 0))
-                play_sample_using_heap(0, 80, 127, 64, 100, 0, 1u);
+                play_sample_using_heap(0, 80, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
         }
         else if (affected == &startscr_midivol)
         {

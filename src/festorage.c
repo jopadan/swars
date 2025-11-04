@@ -20,6 +20,7 @@
 
 #include "bffont.h"
 #include "bftext.h"
+#include "ssampply.h"
 
 #include "femain.h"
 #include "feshared.h"
@@ -144,7 +145,7 @@ ubyte show_menu_storage_slots_box(struct ScreenTextBox *p_box)
             if (!byte_1C4880[k])
             {
                 byte_1C4880[k] = 1;
-                play_sample_using_heap(0, 123, 127, 64, 100, 0, 1u);
+                play_sample_using_heap(0, 123, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
             }
             lbDisplay.DrawFlags = 0;
         }

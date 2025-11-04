@@ -21,6 +21,8 @@
 #include "bfkeybd.h"
 #include "bftext.h"
 #include "bfutility.h"
+#include "ssampply.h"
+
 #include "guiboxes.h"
 #include "guitext.h"
 #include "campaign.h"
@@ -74,7 +76,7 @@ ubyte do_login_2(ubyte click)
     campaign_new_game_prepare();
 
     if (new_mail)
-        play_sample_using_heap(0, 119 + (LbRandomAnyShort() % 3), 127, 64, 100, 0, 3u);
+        play_sample_using_heap(0, 119 + (LbRandomAnyShort() % 3), FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
 
     return 1;
 }

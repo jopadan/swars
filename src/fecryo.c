@@ -727,14 +727,14 @@ void init_next_blokey_flic(void)
         if (!byte_1DDC40)
         {
             byte_1DDC40 = 1;
-            play_sample_using_heap(0, 134, 127, 64, 100, 0, 3u);
+            play_sample_using_heap(0, 134, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
         }
         else if (!IsSamplePlaying(0, 134, 0))
         {
             cryo_cyborg_mods_anim_set_fname(anislot, part, stage);
             flic_unkn03(anislot);
             flic_clear_output_buffer(anislot);
-            play_sample_using_heap(0, 126, 127, 64, 100, 0, 1u);
+            play_sample_using_heap(0, 126, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
             current_frame = 0;
             new_current_drawing_mod = ModDPt_BREATH;
             byte_1DDC40 = 0;
@@ -747,7 +747,7 @@ void init_next_blokey_flic(void)
         old_flic_mods[part] = 0;
         new_current_drawing_mod = part;
         mod_draw_states[part] |= ModDSt_ModAnimOut;
-        play_sample_using_heap(0, 132, 127, 64, 100, 0, 3);
+        play_sample_using_heap(0, 132, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         cryo_blokey_box.Flags &= ~GBxFlg_RadioBtn;
         byte_1DDC40 = 0;
         break;
@@ -1106,10 +1106,10 @@ void draw_blokey_body_mods(void)
         still_playing = !done;
         current_frame++;
         if (current_frame == 26) {
-            play_sample_using_heap(0, 127, 127, 64, 100, 0, 1);
+            play_sample_using_heap(0, 127, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
         } else if (current_frame == 52) {
             current_frame = 0;
-            play_sample_using_heap(0, 126, 127, 64, 100, 0, 1);
+            play_sample_using_heap(0, 126, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
         }
     }
     if (!still_playing) {
@@ -1315,7 +1315,7 @@ ubyte show_cryo_agent_list(struct ScreenTextBox *p_box)
               if (login_control__State != 5) {
                   PlayerInfo *p_locplayer;
 
-                  play_sample_using_heap(0, 111, 127, 64, 100, 0, 2u);
+                  play_sample_using_heap(0, 111, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2u);
 
                   p_locplayer = &players[local_player_no];
                   if ((p_locplayer->MissionAgents & (1 << plagent1)) == 0) {
@@ -1328,7 +1328,7 @@ ubyte show_cryo_agent_list(struct ScreenTextBox *p_box)
                           p_locplayer->MissionAgents |= (1 << plagent1);
                   }
               } else {
-                  play_sample_using_heap(0, 129, 127, 64, 100, 0, 2u);
+                  play_sample_using_heap(0, 129, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2u);
               }
           }
       }
@@ -1343,7 +1343,7 @@ ubyte show_cryo_agent_list(struct ScreenTextBox *p_box)
               lbDisplay.LeftButton = 0;
 
               if (login_control__State != 5 && selected_agent != -1) {
-                  play_sample_using_heap(0, 111, 127, 64, 100, 0, 2u);
+                  play_sample_using_heap(0, 111, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2u);
 
                   switch_local_player_agents(plagent1, selected_agent);
                   word_15511E = plagent1;
@@ -1351,7 +1351,7 @@ ubyte show_cryo_agent_list(struct ScreenTextBox *p_box)
                   update_flic_mods(flic_mods);
                   set_mod_draw_states_flag08();
               } else {
-                  play_sample_using_heap(0, 129, 127, 64, 100, 0, 2u);
+                  play_sample_using_heap(0, 129, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2u);
               }
           }
       }
@@ -1662,7 +1662,7 @@ ubyte input_cryo_agent_panel_shape(struct ScreenShape *shape, sbyte nagent)
     if (mouse_over_agent_panel_shape(shape))
     {
         if ((shape->Flags & 0x0200) == 0) {
-            play_sample_using_heap(0, 123, 127, 64, 100, 0, 1u);
+            play_sample_using_heap(0, 123, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
             shape->Flags |= 0x0200;
         }
         if (lbDisplay.MLeftButton || (joy.Buttons[0] != 0))
@@ -1679,7 +1679,7 @@ ubyte input_cryo_agent_panel_shape(struct ScreenShape *shape, sbyte nagent)
                 {
                     if (nagent < cryo_agents.NumAgents)
                     {
-                        play_sample_using_heap(0, 111, 127, 64, 100, 0, 2u);
+                        play_sample_using_heap(0, 111, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2u);
                         selected_agent = nagent;
                         check_buy_sell_button();
                         update_flic_mods(flic_mods);
@@ -1687,7 +1687,7 @@ ubyte input_cryo_agent_panel_shape(struct ScreenShape *shape, sbyte nagent)
                     }
                     else
                     {
-                        play_sample_using_heap(0, 129, 127, 64, 100, 0, 2u);
+                        play_sample_using_heap(0, 129, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2u);
                     }
                     shape->Flags &= ~0x0400;
                 }

@@ -500,7 +500,7 @@ void draw_world_cities_names(struct ScreenBox *p_box)
             else if ((cities[city].Flags & CitF_Unkn08) == 0)
             {
                 cities[city].Flags |= CitF_Unkn08;
-                play_sample_using_heap(0, 128, 127, 64, 100, 0, 1);
+                play_sample_using_heap(0, 128, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
             }
 
             lbDisplay.DrawColour = 50;
@@ -638,7 +638,7 @@ ubyte show_world_landmap_box(struct ScreenBox *p_box)
         return 0;
     case 1:
         if (!IsSamplePlaying(0, 113, 0))
-            play_sample_using_heap(0, 110, 127, 64, 100, 0, 1);
+            play_sample_using_heap(0, 110, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
         next_state = draw_world_landmass_shape(p_box);
         next_state &= draw_world_landmass_projector(p_box);
         if (next_state)
@@ -670,7 +670,7 @@ ubyte show_world_landmap_box(struct ScreenBox *p_box)
 
             landmap_8BC = cities[unkn_city_no].X - word_1C6E08;
             landmap_8C0 = cities[unkn_city_no].Y - word_1C6E0A;
-            play_sample_using_heap(0, 110, 127, 64, 100, 0, 1u);
+            play_sample_using_heap(0, 110, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
 
             nshift = 10;
             if (abs(landmap_8BC) < nshift)
@@ -700,7 +700,7 @@ ubyte show_world_landmap_box(struct ScreenBox *p_box)
             if ((landmap_8BC == 0) && (landmap_8C0 == 0))
             {
                 word_1C48CC = 1;
-                play_sample_using_heap(0, 124, 127, 64, 100, landmap_8BC, 1);
+                play_sample_using_heap(0, 124, FULL_VOL, EQUL_PAN, NORM_PTCH, landmap_8BC, 1);
             }
         }
 

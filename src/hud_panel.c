@@ -2513,7 +2513,7 @@ TbBool check_panel_input(short panel)
                     my_build_packet(p_pckt, PAct_AGENT_SET_MOOD, p_agent->ThingOffset, i, 0, 0);
                 p_locplayer->PanelState[mouser] = PANEL_STATE_MOOD_SET_ONE + p_panel->ID;
                 if (!IsSamplePlaying(0, 21, 0))
-                    play_sample_using_heap(0, 21, 127, 64, 100, -1, 1u);
+                    play_sample_using_heap(0, 21, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 1u);
                 ingame.Flags |= GamF_Unkn00100000;
                 return 1;
             }
@@ -2562,7 +2562,7 @@ TbBool check_panel_input(short panel)
                     if (things[dcthing].U.UPerson.Energy > 100)
                     {
                         ingame.Flags |= GamF_ThermalView;
-                        play_sample_using_heap(0, 35, 127, 64, 100, 0, 1);
+                        play_sample_using_heap(0, 35, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
                         ingame_palette_reload();
                     }
                 }
@@ -2609,7 +2609,7 @@ TbBool check_panel_input(short panel)
                     my_build_packet(p_pckt, PAct_GROUP_SET_MOOD, p_agent->ThingOffset, i, 0, 0);
                 p_locplayer->PanelState[mouser] = PANEL_STATE_MOOD_SET_GRP + p_panel->ID;
                 if (!IsSamplePlaying(0, 21, 0))
-                    play_sample_using_heap(0, 21, 127, 64, 100, -1, 1u);
+                    play_sample_using_heap(0, 21, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 1u);
                 ingame.Flags |= GamF_Unkn00100000;
                 return 1;
             }

@@ -313,7 +313,7 @@ ubyte flashy_draw_purple_box(struct ScreenBox *p_box)
         if (p_box->Timer > 24)
         {
             if (!IsSamplePlaying(0, 4, 0))
-                play_sample_using_heap(0, 110, 127, 64, 100, 0, 1u);
+                play_sample_using_heap(0, 110, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
         }
     }
 
@@ -588,7 +588,7 @@ void input_purple_text_box_wth_scroll(struct ScreenTextBox *p_box, struct Screen
                 p_box->Flags |= GBxFlg_IsPushed;
                 ms_y = lbDisplay.ScreenMode == 1 ? 2 * lbDisplay.MouseY : lbDisplay.MouseY;
                 p_box->GrabPos = ms_y - p_box->ScrollBarPos;
-                play_sample_using_heap(0, 125, 127, 64, 100, 0, 1);
+                play_sample_using_heap(0, 125, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
             }
         }
 
@@ -654,7 +654,7 @@ void input_purple_text_box_wth_scroll(struct ScreenTextBox *p_box, struct Screen
                 short scroll_pos;
 
                 if (lbDisplay.LeftButton)
-                    play_sample_using_heap(0, 125, 127, 64, 100, 0, 1);
+                    play_sample_using_heap(0, 125, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
                 lbDisplay.LeftButton = 0;
                 p_box->Flags |= GBxFlg_IsRPushed;
                 ar_scroll_bar[ScrlBB_ArrowUp].Flags |= GBxFlg_IsRPushed;
@@ -672,7 +672,7 @@ void input_purple_text_box_wth_scroll(struct ScreenTextBox *p_box, struct Screen
                 short scroll_pos;
 
                 if (lbDisplay.LeftButton)
-                    play_sample_using_heap(0, 125, 127, 64, 100, 0, 1);
+                    play_sample_using_heap(0, 125, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
                 lbDisplay.LeftButton = 0;
                 p_box->Flags |= GBxFlg_IsRPushed;
                 ar_scroll_bar[ScrlBB_ArrowDn].Flags |= GBxFlg_IsRPushed;
@@ -770,7 +770,7 @@ ubyte flashy_draw_purple_text_box(struct ScreenTextBox *p_box)
         if (p_box->Timer > 24)
         {
             if (!IsSamplePlaying(0, 4, 0))
-                play_sample_using_heap(0, 110, 127, 64, 100, 0, 1u);
+                play_sample_using_heap(0, 110, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
         }
     }
 
@@ -985,7 +985,7 @@ ubyte flashy_draw_purple_info_box(struct ScreenInfoBox *p_box)
         {
             // Projector drawing sound
             if (!IsSamplePlaying(0, 4, 0))
-                play_sample_using_heap(0, 110, 127, 64, 100, 0, 1u);
+                play_sample_using_heap(0, 110, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
         }
     }
 
@@ -1090,7 +1090,7 @@ ubyte flashy_draw_purple_button(struct ScreenButton *p_btn)
         {
             // Projector drawing sound
             if (!IsSamplePlaying(0, 4, 0))
-                play_sample_using_heap(0, 110, 127, 64, 100, 0, 1u);
+                play_sample_using_heap(0, 110, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
         }
     }
 
@@ -1181,7 +1181,7 @@ ubyte flashy_draw_purple_button(struct ScreenButton *p_btn)
         if ((p_btn->Flags & GBxFlg_IsMouseOver) == 0)
         {
             // Mouse over sound
-            play_sample_using_heap(0, 123, 127, 64, 100, 0, 1u);
+            play_sample_using_heap(0, 123, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
             p_btn->Flags |= GBxFlg_IsMouseOver;
         }
     }
@@ -1286,7 +1286,7 @@ ubyte flashy_draw_purple_button(struct ScreenButton *p_btn)
                         // Click sound for cancel / abort button
                         smpl_id = 129;
                 }
-                play_sample_using_heap(0, smpl_id, 127, 64, 100, 0, 2u);
+                play_sample_using_heap(0, smpl_id, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2u);
 
                 if ((p_btn->Flags & GBxFlg_RadioBtn) != 0)
                     *p_btn->Radio = p_btn->RadioValue;
@@ -1323,7 +1323,7 @@ ubyte flashy_draw_purple_button(struct ScreenButton *p_btn)
                     // Click sound for cancel / abort button
                     smpl_id = 129;
                 }
-                play_sample_using_heap(0, smpl_id, 127, 64, 100, 0, 2u);
+                play_sample_using_heap(0, smpl_id, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2u);
 
                 if ((p_btn->Flags & GBxFlg_RadioBtn) != 0)
                   *p_btn->Radio = p_btn->RadioValue;

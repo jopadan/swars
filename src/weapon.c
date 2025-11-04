@@ -2106,7 +2106,7 @@ void process_automedkit(struct Thing *p_person)
 
     p_person->Health = p_person->U.UPerson.MaxHealth;
     person_weapons_remove_one(p_person, WEP_MEDI2);
-    play_dist_sample(p_person, 2, 127, 64, 100, 0, 1);
+    play_dist_sample(p_person, 2, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
 }
 
 void low_energy_alarm_stop(void)
@@ -2118,7 +2118,7 @@ void low_energy_alarm_stop(void)
 void low_energy_alarm_play(void)
 {
     if (!IsSamplePlaying(0, 93, 0))
-        play_sample_using_heap(0, 93, 127, 64, 100, -1, 3);
+        play_sample_using_heap(0, 93, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
 }
 
 void process_energy_alarm(struct Thing *p_person)

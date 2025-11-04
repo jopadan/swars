@@ -1067,7 +1067,7 @@ void set_person_persuaded(struct Thing *p_person, struct Thing *p_attacker, usho
     if (p_person->State == PerSt_DEAD)
         return;
 
-    play_dist_sample(p_person, 20, 127, 64, 100, 0, 3);
+    play_dist_sample(p_person, 20, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
     remove_path(p_person);
 
     p_attacker->U.UPerson.Energy -= energy;
@@ -2369,11 +2369,11 @@ StateChRes person_cmd_play_sample(struct Thing *p_person, short smptbl_id,
 {
     if (revert)
     {
-        play_sample_using_heap(0, smptbl_id, 127, 64, 100, 0, 1);
+        play_sample_using_heap(0, smptbl_id, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
     }
     else
     {
-        play_dist_sample(p_person, smptbl_id, 127, 64, 100, 0, 1);
+        play_dist_sample(p_person, smptbl_id, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
     }
     p_person->State = PerSt_NONE;
     return StCh_ACCEPTED;
@@ -2922,13 +2922,13 @@ void process_random_speech(struct Thing *p_person, ubyte a2)
     switch (p_person->SubType)
     {
     case SubTT_PERS_MERCENARY:
-        play_dist_speech(p_person, 57 + (rndval % 3), 127, 64, 100, 0, 3);
+        play_dist_speech(p_person, 57 + (rndval % 3), FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         break;
     case SubTT_PERS_POLICE:
-        play_dist_speech(p_person, 50 + (rndval & 3), 127, 64, 100, 0, 3);
+        play_dist_speech(p_person, 50 + (rndval & 3), FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         break;
     case SubTT_PERS_SCIENTIST:
-        play_dist_speech(p_person, 60 + (rndval % 2), 127, 64, 100, 0, 3);
+        play_dist_speech(p_person, 60 + (rndval % 2), FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         break;
     }
 }
@@ -2949,7 +2949,7 @@ int person_hit_by_bullet(struct Thing *p_person, short hp,
 TbBool person_use_medikit(struct Thing *p_person, PlayerIdx plyr)
 {
     if (plyr == local_player_no)
-        play_sample_using_heap(0, 2, 127, 64, 100, 0, 3u);
+        play_sample_using_heap(0, 2, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
     p_person->Health = p_person->U.UPerson.MaxHealth;
     if (person_carries_weapon(p_person, WEP_MEDI1)) {
         person_weapons_remove_one(p_person, WEP_MEDI1);
@@ -3740,7 +3740,7 @@ ubyte thing_select_specific_weapon(struct Thing *p_person, WeaponType wtype, uby
 
             plyr = p_person->U.UPerson.ComCur >> 2;
             if (plyr == local_player_no)
-                play_sample_using_heap(0, 2, 127, 64, 100, 0, 3u);
+                play_sample_using_heap(0, 2, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
         }
 
         p_person->Health = p_person->U.UPerson.MaxHealth;

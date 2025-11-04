@@ -22,6 +22,7 @@
 #include "bfmemory.h"
 #include "bfutility.h"
 
+#include "ssampply.h"
 #include "bigmap.h"
 #include "bmbang.h"
 #include "enginsngobjs.h"
@@ -200,7 +201,7 @@ void process_dome1(struct Thing *p_building)
         }
         else
         {
-            play_dist_sample(p_building, 47, 127, 64, 100, 0, 3);
+            play_dist_sample(p_building, 47, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
             p_building->SubState = 0;
             p_building->Timer1 = 100;
             p_building->State = BldSt_TRA_OPENED;
@@ -215,7 +216,7 @@ void process_dome1(struct Thing *p_building)
         }
         else
         {
-            play_dist_sample(p_building, 47, 127, 64, 100, 0, 3);
+            play_dist_sample(p_building, 47, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
             p_building->SubState = 127;
             p_building->Timer1 = 100;
             p_building->State = BldSt_TRA_CLOSED;
@@ -223,14 +224,14 @@ void process_dome1(struct Thing *p_building)
         break;
     case BldSt_TRA_OPENED:
         if ((p_building->Flag & TngF_TransCloseRq) != 0) {
-            play_dist_sample(p_building, 100, 127, 64, 100, 0, 3);
+            play_dist_sample(p_building, 100, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
             p_building->State = BldSt_TRA_CLOSING;
         }
         p_building->Flag &= ~(TngF_TransCloseRq|TngF_TransOpenRq);
         break;
     case BldSt_TRA_CLOSED:
         if ((p_building->Flag & TngF_TransOpenRq) != 0) {
-            play_dist_sample(p_building, 100, 127, 64, 100, 0, 3);
+            play_dist_sample(p_building, 100, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
             p_building->State = BldSt_TRA_OPENING;
         }
         p_building->Flag &= ~(TngF_TransCloseRq|TngF_TransOpenRq);
@@ -471,7 +472,7 @@ void collapse_building(short x, short y, short z, struct Thing *p_building)
     {
         short tng_x, tng_y, tng_z;
         get_thing_position_mapcoords(&tng_x, &tng_y, &tng_z, p_building->ThingOffset);
-        play_dist_sample(p_building, 0x2Du, 127, 64, 100, 0, 3);
+        play_dist_sample(p_building, 0x2Du, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         p_sthing = create_sound_effect(tng_x, tng_y, tng_z, 0x2Eu, 127, -1);
         if (p_sthing != NULL)
         {

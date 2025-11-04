@@ -73,7 +73,7 @@ void player_agent_select(PlayerIdx plyr, ThingIdx person)
             smp = 44; // 'selected' speech
         else
             smp = 46;
-        play_disk_sample(0, smp, 127, 64, 100, 0, 3);
+        play_disk_sample(0, smp, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
     }
     if (person != (ThingIdx)players[plyr].DirectControl[0])
     {
@@ -174,7 +174,7 @@ void player_agent_weapon_switch(PlayerIdx plyr, ThingIdx person, short shift)
             smp = weapon_sound_z[p_person->U.UPerson.CurrentWeapon];
         else
             smp = weapon_sound[p_person->U.UPerson.CurrentWeapon];
-        play_disk_sample(local_player_no, smp, 127, 64, 100, 0, 3);
+        play_disk_sample(local_player_no, smp, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
     }
 }
 
@@ -206,7 +206,7 @@ void person_grp_switch_to_specific_weapon(struct Thing *p_person, PlayerIdx plyr
     p_person->U.UPerson.TempWeapon = p_person->U.UPerson.CurrentWeapon;
 
     if ((plyr == local_player_no) && (p_person->U.UPerson.CurrentWeapon != 0))
-        play_disk_sample(local_player_no, 0x2Cu, 127, 64, 100, 0, 3);
+        play_disk_sample(local_player_no, 0x2Cu, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
 
     for (plagent = 0; plagent < playable_agents; plagent++)
     {
@@ -320,7 +320,7 @@ void player_agent_select_specific_weapon(PlayerIdx plyr, struct Thing *p_person,
             smp = weapon_sound_z[p_person->U.UPerson.CurrentWeapon];
         else
             smp = weapon_sound[p_person->U.UPerson.CurrentWeapon];
-        play_disk_sample(local_player_no, smp, 127, 64, 100, 0, 3);
+        play_disk_sample(local_player_no, smp, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
     }
 }
 
@@ -545,7 +545,7 @@ void process_packet(PlayerIdx plyr, struct Packet *p_pckt, ushort i)
         call_protect(p_thing, plyr);
         n = count_protect(p_thing, plyr);
         if (plyr == local_player_no && n)
-            play_sample_using_heap(0, 61, 127, 64, 5 * n + 90, 0, 3);
+            play_sample_using_heap(0, 61, FULL_VOL, EQUL_PAN, 90 + 5 * n, LOOP_NO, 3);
         result = PARes_DONE;
         break;
     case PAct_PROTECT_TOGGLE:
@@ -561,7 +561,7 @@ void process_packet(PlayerIdx plyr, struct Packet *p_pckt, ushort i)
         call_unprotect(p_thing, plyr, 0);
         n = count_protect(p_thing, plyr);
         if (plyr == local_player_no && n)
-            play_sample_using_heap(0, 61, 127, 64, 5 * n + 90, 0, 3);
+            play_sample_using_heap(0, 61, FULL_VOL, EQUL_PAN, 90 + 5 * n, LOOP_NO, 3);
         result = PARes_DONE;
         break;
     case PAct_SHOOT_AT_THING:

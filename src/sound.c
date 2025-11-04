@@ -72,7 +72,8 @@ void sfx_apply_cdvolume(void)
     SetCDVolume(70 * (127 * startscr_cdvolume / STARTSCR_VOLUME_MAX) / 100);
 }
 
-struct SampleInfo *play_sample_using_heap(ulong a1, short smptbl_id, ulong a3, ulong a4, ulong a5, char a6, ubyte type)
+struct SampleInfo *play_sample_using_heap(ulong bank_id, short smptbl_id,
+  ulong volume, ulong pan, ulong pitch, sbyte loop_count, ubyte type)
 {
     struct SampleInfo *ret;
     asm volatile (
@@ -80,7 +81,7 @@ struct SampleInfo *play_sample_using_heap(ulong a1, short smptbl_id, ulong a3, u
       "push %6\n"
       "push %5\n"
       "call ASM_play_sample_using_heap\n"
-        : "=r" (ret) : "a" (a1), "d" (smptbl_id), "b" (a3), "c" (a4), "g" (a5), "g" (a6), "g" (type));
+        : "=r" (ret) : "a" (bank_id), "d" (smptbl_id), "b" (volume), "c" (pan), "g" (pitch), "g" (loop_count), "g" (type));
     return ret;
 }
 

@@ -25,6 +25,7 @@
 #include "bfscrcopy.h"
 #include "bfutility.h"
 #include "bflib_joyst.h"
+#include "ssampply.h"
 
 #include "femain.h"
 #include "game_speed.h"
@@ -435,7 +436,7 @@ ubyte input_equip_agent_panel_shape(struct ScreenShape *shape, sbyte nagent)
     if (mouse_over_agent_panel_shape(shape))
     {
         if ((shape->Flags & 0x0200) == 0) {
-            play_sample_using_heap(0, 123, 127, 64, 100, 0, 1u);
+            play_sample_using_heap(0, 123, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
             shape->Flags |= 0x0200;
         }
         if (lbDisplay.MLeftButton || (joy.Buttons[0] != 0))
@@ -452,13 +453,13 @@ ubyte input_equip_agent_panel_shape(struct ScreenShape *shape, sbyte nagent)
                 {
                     if (nagent < cryo_agents.NumAgents)
                     {
-                        play_sample_using_heap(0, 111, 127, 64, 100, 0, 2u);
+                        play_sample_using_heap(0, 111, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2u);
                         selected_agent = nagent;
                         check_buy_sell_button();
                     }
                     else
                     {
-                        play_sample_using_heap(0, 129, 127, 64, 100, 0, 2u);
+                        play_sample_using_heap(0, 129, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2u);
                     }
                     shape->Flags &= ~0x0400;
                 }
