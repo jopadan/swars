@@ -30,6 +30,7 @@
 #include "guitext.h"
 #include "game_sprts.h"
 #include "game.h"
+#include "keyboard.h"
 #include "thing.h"
 #include "misstat.h"
 #include "player.h"
@@ -56,8 +57,37 @@ extern ushort word_1C4856[8];
 
 void show_debrief_screen(void)
 {
+#if 0
     asm volatile ("call ASM_show_debrief_screen\n"
         :  :  : "eax" );
+#endif
+    ubyte drawn;
+
+    if ((game_projector_speed && (heading_box.Flags & 0x0001) != 0) ||
+      (is_key_pressed(KC_SPACE, KMod_DONTCARE) && !edit_flag))
+    {
+        clear_key_pressed(KC_SPACE);
+        skip_flashy_draw_debrief_screen_boxes();
+    }
+    drawn = 1;
+    if (drawn) {
+        drawn = draw_heading_box();
+    }
+    if (drawn) {
+        //drawn = debrief_mission_box.DrawFn(&debrief_mission_box); -- incompatible calling convention
+        asm volatile ("call *%2\n"
+            : "=r" (drawn) : "a" (&debrief_mission_box), "g" (debrief_mission_box.DrawFn));
+    }
+    if (drawn) {
+        //drawn = debrief_people_box.DrawFn(&debrief_people_box); -- incompatible calling convention
+        asm volatile ("call *%2\n"
+            : "=r" (drawn) : "a" (&debrief_people_box), "g" (debrief_people_box.DrawFn));
+    }
+    if (drawn) {
+        //drawn = world_city_info_box.DrawFn(&world_city_info_box); -- incompatible calling convention
+        asm volatile ("call *%2\n"
+            : "=r" (drawn) : "a" (&world_city_info_box), "g" (world_city_info_box.DrawFn));
+    }
 }
 
 void draw_mission_stats_names_column(struct ScreenBox *box,
@@ -709,6 +739,14 @@ void reset_debrief_screen_boxes_flags(void)
 {
     debrief_people_box.Flags = GBxFlg_Unkn0001;
     debrief_mission_box.Flags = GBxFlg_Unkn0001;
+}
+
+void skip_flashy_draw_debrief_screen_boxes(void)
+{
+    skip_flashy_draw_heading_screen_boxes();
+    debrief_people_box.Flags |= 0x0002;
+    debrief_mission_box.Flags |= 0x0002;
+    world_city_info_box.Flags |= 0x0002;
 }
 
 /******************************************************************************/

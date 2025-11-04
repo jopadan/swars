@@ -525,9 +525,7 @@ void show_research_screen(void)
 
     drawn = 1;
     if (drawn) {
-        //drawn = heading_box.DrawFn(&heading_box); -- incompatible calling convention
-        asm volatile ("call *%2\n"
-            : "=r" (drawn) : "a" (&heading_box), "g" (heading_box.DrawFn));
+        drawn = draw_heading_box();
     }
     if (drawn) {
         //drawn = research_progress_button.DrawFn(&research_progress_button); -- incompatible calling convention

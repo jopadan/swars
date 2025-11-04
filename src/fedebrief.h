@@ -46,6 +46,7 @@ void show_debrief_screen(void);
 
 void init_debrief_screen_boxes(void);
 void reset_debrief_screen_boxes_flags(void);
+void skip_flashy_draw_debrief_screen_boxes(void);
 
 /******************************************************************************/
 #ifdef __cplusplus
