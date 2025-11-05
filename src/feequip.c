@@ -305,10 +305,61 @@ ubyte do_equip_offer_buy(ubyte click)
 
 ubyte sell_equipment(ubyte click)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_sell_equipment\n"
         : "=r" (ret) : "a" (click));
     return ret;
+#endif
+    TbBool sold;
+
+    if ((login_control__State == 5) && ((unkn_flags_08 & 0x08) != 0))
+    {
+        if ((login_control__State != 6) && (LbNetworkPlayerNumber() != net_host_player_no))
+            return 0;
+    }
+
+    sold = false;
+    if (screentype == SCRT_EQUIP)
+    {
+        struct WeaponDef *wdef;
+
+        wdef = &weapon_defs[selected_weapon + 1];
+
+        if (selected_agent == 4)
+        {
+            ushort cryo_no;
+
+            for (cryo_no = 0; cryo_no < 4; cryo_no++)
+            {
+                if (player_cryo_remove_weapon_one(cryo_no, selected_weapon + 1)) {
+                    ingame.Credits += (100 * wdef->Cost) >> 1;
+                    sold = true;
+                }
+            }
+        }
+        else
+        {
+            if (player_cryo_remove_weapon_one(selected_agent, selected_weapon + 1)) {
+                ingame.Credits += (100 * wdef->Cost) >> 1;
+                sold = true;
+            }
+
+        }
+        if ((login_control__State == 5) && ((unkn_flags_08 & 0x08) != 0))
+        {
+            network_players[local_player_no].Type = 14;
+            net_unkn_func_33();
+            ++gameturn;
+            network_players[local_player_no].Type = 15;
+        }
+    }
+
+    if (sold)
+    {
+        check_buy_sell_button();
+    }
+    return 1;
 }
 
 /** Determines if buy or sell should be available in the equip weapon offer.
@@ -452,17 +503,17 @@ void skip_flashy_draw_equipment_screen_boxes(void)
     equip_agent_name_draw_state = 1;
 }
 
-TbBool weapon_available_for_purchase(short weapon)
+TbBool weapon_available_for_purchase(short wtype)
 {
     struct WeaponDef *wdef;
 
-    if (weapon < 0 || weapon >= WEP_TYPES_COUNT)
+    if (wtype < 0 || wtype >= WEP_TYPES_COUNT)
         return false;
 
-    wdef = &weapon_defs[weapon];
+    wdef = &weapon_defs[wtype];
 
-    return ((wdef->Flags & WEPDFLG_CanPurchease) && (research.WeaponsCompleted & (1 << (weapon-1))))
-            || (login_control__State == 5 && login_control__TechLevel >= weapon_tech_level[weapon]);
+    return ((wdef->Flags & WEPDFLG_CanPurchease) && (research.WeaponsCompleted & (1 << (wtype-1))))
+            || (login_control__State == 5 && login_control__TechLevel >= weapon_tech_level[wtype]);
 }
 
 ubyte flashy_draw_agent_panel_shape(struct ScreenShape *p_shape, ubyte gbstate)
@@ -733,11 +784,11 @@ ubyte show_equipment_screen(void)
     }
     if (refresh_equip_list)
     {
-        short weapon;
+        WeaponType wtype;
         equip_list_box.Lines = 0;
-        for (weapon = 1; weapon < WEP_TYPES_COUNT; weapon++)
+        for (wtype = 1; wtype < WEP_TYPES_COUNT; wtype++)
         {
-            if (weapon_available_for_purchase(weapon)) {
+            if (weapon_available_for_purchase(wtype)) {
                 equip_list_box.Lines++;
             }
         }
