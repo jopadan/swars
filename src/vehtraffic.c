@@ -887,5 +887,4 @@ void process_next_tnode(struct Thing *p_vehicle)
     vehicle_workplace_states_finish(p_vehicle);
 }
 
-
 /******************************************************************************/

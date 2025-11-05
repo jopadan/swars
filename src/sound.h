@@ -1,3 +1,21 @@
+/******************************************************************************/
+// Syndicate Wars Fan Expansion, source port of the classic game from Bullfrog.
+/******************************************************************************/
+/** @file sound.h
+ *     Header file for sound.c.
+ * @par Purpose:
+ *     Sound related routines.
+ * @par Comment:
+ *     Just a header file - #defines, typedefs, function prototypes etc.
+ * @author   Tomasz Lis
+ * @date     22 Apr 2023 - 02 Nov 2025
+ * @par  Copying and copyrights:
+ *     This program is free software; you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation; either version 2 of the License, or
+ *     (at your option) any later version.
+ */
+/******************************************************************************/
 #ifndef SOUND_H
 #define SOUND_H
 
@@ -7,6 +25,8 @@
 #include "bftypes.h"
 #include "timer.h"
 #include "mssal.h"
+
+/******************************************************************************/
 
 #pragma pack(1)
 
@@ -43,6 +63,7 @@ extern short startscr_samplevol;
 extern short startscr_midivol;
 extern short startscr_cdvolume;
 
+/******************************************************************************/
 
 void set_default_sfx_settings(void);
 void sfx_apply_samplevol(void);
@@ -67,4 +88,5 @@ void wait_for_sound_sample_finish(ushort smpl_id);
 void setup_heaps(short setup_cmd, const char *lang);
 void reset_heaps(void);
 
+/******************************************************************************/
 #endif
