@@ -2868,7 +2868,7 @@ GLOBAL_FUNC(ASM_draw_engine_net_text)	/* 0x020B50 */
 		push   %edi
 		push   %ebp
 		sub    $0x28,%esp
-		mov    data_176cc8,%edx
+		mov    EXPORT_SYMBOL(dword_176CC8),%edx
 		test   %edx,%edx
 		je     jump_20c57
 		mov    0x54(%edx),%ax
@@ -2906,7 +2906,7 @@ GLOBAL_FUNC(ASM_draw_engine_net_text)	/* 0x020B50 */
 		test   %bl,%bl
 		jne    jump_20ba2
 	jump_20bb5:
-		mov    data_176cc8,%eax
+		mov    EXPORT_SYMBOL(dword_176CC8),%eax
 		mov    %esp,%edi
 		mov    0x54(%eax),%ax
 		and    $0xffff,%eax
@@ -2915,8 +2915,8 @@ GLOBAL_FUNC(ASM_draw_engine_net_text)	/* 0x020B50 */
 		mov    EXPORT_SYMBOL(net_player_colours)(%eax),%al
 		mov    (%esp),%bh
 		mov    %al,0x24(%esp)
-		mov    data_176cd0,%eax
-		mov    data_176ccc,%esi
+		mov    EXPORT_SYMBOL(dword_176CD0),%eax
+		mov    EXPORT_SYMBOL(dword_176CCC),%esi
 		mov    %eax,0x20(%esp)
 		xor    %eax,%eax
 		test   %bh,%bh
@@ -2959,7 +2959,7 @@ GLOBAL_FUNC(ASM_draw_engine_net_text)	/* 0x020B50 */
 		jne    jump_20c19
 	jump_20c4f:
 		xor    %ebx,%ebx
-		mov    %ebx,data_176cc8
+		mov    %ebx,EXPORT_SYMBOL(dword_176CC8)
 	jump_20c57:
 		add    $0x28,%esp
 		pop    %ebp
@@ -6625,13 +6625,13 @@ GLOBAL_FUNC(ASM_check_mouse_over_unkn2)
 		je     jump_2541f
 	jump_25401:
 		mov    -0xc(%ebp),%eax
-		mov    %eax,data_176cc8
+		mov    %eax,EXPORT_SYMBOL(dword_176CC8)
 		mov    -0x8(%ebp),%eax
 		sar    %eax
 		sub    $0x8,%esi
 		add    %eax,%edi
-		mov    %esi,data_176cd0
-		mov    %edi,data_176ccc
+		mov    %esi,EXPORT_SYMBOL(dword_176CD0)
+		mov    %edi,EXPORT_SYMBOL(dword_176CCC)
 	jump_2541f:
 		mov    %ebp,%esp
 		pop    %ebp
@@ -182805,11 +182805,11 @@ GLOBAL (dword_176CC0)	/* 0x176CC0 */
 		.long	0x0
 GLOBAL (dword_176CC4)	/* 0x176CC4 */
 		.long	0x0
-data_176cc8:
+GLOBAL (dword_176CC8)	/* 0x176CC8 */
 		.long	0x0
-data_176ccc:
+GLOBAL (dword_176CCC)	/* 0x176CCC */
 		.long	0x0
-data_176cd0:
+GLOBAL (dword_176CD0)	/* 0x176CD0 */
 		.long	0x0
 GLOBAL (unkn1_pos_x)	/* 0x176CD4 */
 		.long	0x0
