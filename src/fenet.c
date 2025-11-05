@@ -280,7 +280,7 @@ skip_modem_init:
         alert_box_text_fmt("%s", gui_strings[579]);
         goto out_fail;
     }
-    login_control__State = 5;
+    login_control__State = LognCt_Unkn5;
     net_host_player_no = LbNetworkHostPlayerNumber();
     net_players_num = LbNetworkSessionNumberPlayers();
     byte_15516C = -1;
@@ -380,7 +380,7 @@ skip_modem_init:
         alert_box_text_fmt("%s", gui_strings[579]);
         goto out_fail;
     }
-    login_control__State = 5;
+    login_control__State = LognCt_Unkn5;
     net_host_player_no = LbNetworkHostPlayerNumber();
     net_players_num = LbNetworkSessionNumberPlayers();
     byte_1C6D4A = 1;
@@ -430,7 +430,7 @@ void netgame_state_enter_5(void)
     init_variables();
     init_agents();
     srm_reset_research();
-    login_control__State = 5;
+    login_control__State = LognCt_Unkn5;
     for (plyr = 0; plyr < 8; plyr++) {
         player_mission_agents_reset(plyr);
     }
@@ -449,14 +449,14 @@ ubyte do_net_INITIATE(ubyte click)
         LOGWARN("Cannot init protocol %d - not ready", (int)nsvc.I.Type);
         return 0;
     }
-    if (login_control__State == 6)
+    if (login_control__State == LognCt_Unkn6)
     {
         if (net_unkn_func_32())
         {
           netgame_state_enter_5();
       }
     }
-    else if (login_control__State == 5)
+    else if (login_control__State == LognCt_Unkn5)
     {
         int plyr;
         plyr = LbNetworkPlayerNumber();
@@ -488,7 +488,7 @@ ubyte do_net_groups_LOGON(ubyte click)
         LOGWARN("Cannot abort protocol %d - not ready", (int)nsvc.I.Type);
         return 0;
     }
-      if (login_control__State == 5)
+      if (login_control__State == LognCt_Unkn5)
       {
         plyr = LbNetworkPlayerNumber();
         network_players[plyr].Type = 13;
@@ -498,7 +498,7 @@ ubyte do_net_groups_LOGON(ubyte click)
         net_groups_LOGON_button.Text = gui_strings[386];
         net_unkn_func_33();
       }
-    else if (login_control__State == 6)
+    else if (login_control__State == LognCt_Unkn6)
     {
         if (byte_15516C != -1 || nsvc.I.Type != NetSvc_IPX)
         {
@@ -591,7 +591,7 @@ void show_net_benefits_sub2(short x0, short y0, TbPixel *colours)
             {
                 lbDisplay.LeftButton = 0;
                 if (is_unkn_current_player() && ((unkn_flags_08 & 0x02) == 0)
-                  && (login_control__State == 5))
+                  && (login_control__State == LognCt_Unkn5))
                     login_control__TechLevel = i + 1;
             }
         }
@@ -626,7 +626,7 @@ void show_net_benefits_sub3(struct ScreenBox *box)
             {
                 lbDisplay.LeftButton = 0;
                 if (is_unkn_current_player() && ((unkn_flags_08 & 0x02) == 0)
-                  && (login_control__State == 5))
+                  && (login_control__State == LognCt_Unkn5))
                 {
                     login_control__TechLevel--;
                     if (login_control__TechLevel < 1)
@@ -652,7 +652,7 @@ void show_net_benefits_sub4(struct ScreenBox *box)
             {
                 lbDisplay.LeftButton = 0;
                 if (is_unkn_current_player() && ((unkn_flags_08 & 0x02) == 0)
-                    && (login_control__State == 5))
+                    && (login_control__State == LognCt_Unkn5))
                 {
                     login_control__TechLevel++;
                     if (login_control__TechLevel > 8)
@@ -734,7 +734,7 @@ void show_net_benefits_sub5(short x0, short y0, TbPixel *colours)
             {
                 lbDisplay.LeftButton = 0;
                 if (is_unkn_current_player() && ((unkn_flags_08 & 0x01) == 0)
-                  && (login_control__State == 5))
+                  && (login_control__State == LognCt_Unkn5))
                 {
                     login_control__Money = starting_cash_amounts[i];
                     ingame.Credits = login_control__Money;
@@ -772,7 +772,7 @@ void show_net_benefits_sub6(struct ScreenBox *box)
             {
                 lbDisplay.LeftButton = 0;
                 if (is_unkn_current_player() && ((unkn_flags_08 & 0x01) == 0)
-                    && (login_control__State == 5))
+                    && (login_control__State == LognCt_Unkn5))
                 {
                     reinit_starting_credits(-1);
                 }
@@ -798,7 +798,7 @@ void show_net_benefits_sub7(struct ScreenBox *box)
             {
                 lbDisplay.LeftButton = 0;
                 if (is_unkn_current_player() && ((unkn_flags_08 & 0x01) == 0)
-                    && (login_control__State == 5))
+                    && (login_control__State == LognCt_Unkn5))
                 {
                     reinit_starting_credits(1);
                 }
@@ -842,7 +842,7 @@ ubyte show_net_benefits_box(struct ScreenBox *box)
     show_net_benefits_sub7(box);
 
     lbDisplay.DrawFlags = 0;
-    if (is_unkn_current_player() && (login_control__State == 5))
+    if (is_unkn_current_player() && (login_control__State == LognCt_Unkn5))
     {
         //net_SET2_button.DrawFn(&net_SET2_button); -- incompatible calling convention
         asm volatile ("call *%2\n"

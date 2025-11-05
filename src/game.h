@@ -89,6 +89,20 @@ enum ScreenType {
   SCRT_99 = 99,
 };
 
+enum LoginControlStates {
+    LognCt_Unkn0 = 0,
+    LognCt_Unkn1,
+    LognCt_Unkn2,
+    LognCt_Unkn3,
+    LognCt_Unkn4,
+    LognCt_Unkn5,
+    LognCt_Unkn6,
+    LognCt_Unkn7,
+    LognCt_Unkn8,
+    LognCt_Unkn9,
+    LognCt_Unkn10,
+};
+
 enum DisplayModes {
   DpM_NONE = 0x0,
   DpM_UNKN_1 = 0x1,

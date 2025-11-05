@@ -602,7 +602,7 @@ void show_sysmenu_screen(void)
             reset_options_gfx_boxes_flags();
             break;
         case SySc_LOGOUT:
-            if (login_control__State == 5)
+            if (login_control__State == LognCt_Unkn5)
             {
                 network_players[LbNetworkPlayerNumber()].Type = 13;
                 byte_15516D = -1;
@@ -1021,7 +1021,7 @@ void show_purple_status_top_bar(void)
     global_date_box_draw();
     global_time_box_draw();
 
-    if (login_control__State == 5)
+    if (login_control__State == LognCt_Unkn5)
     {
         global_citydrop_box_draw();
         global_techlevel_box_draw();
@@ -1141,7 +1141,7 @@ TbBool is_purple_apps_utility_visible(short iconid)
     }
 
 
-    if (login_control__State == 5)
+    if (login_control__State == LognCt_Unkn5)
     {
         TbBool visible;
 

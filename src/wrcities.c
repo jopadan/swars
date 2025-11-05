@@ -510,7 +510,7 @@ void activate_cities(ubyte brief)
 
     deactivate_cities();
 
-    if (login_control__State == 5)
+    if (login_control__State == LognCt_Unkn5)
     {
         clear_cities_decor(0x01);
         return;

@@ -188,7 +188,7 @@ ubyte show_world_city_info_box(struct ScreenTextBox *p_box)
     }
     lbDisplay.DrawFlags = 0;
 
-    if (login_control__State != 5 && screentype == SCRT_WORLDMAP)
+    if (login_control__State != LognCt_Unkn5 && screentype == SCRT_WORLDMAP)
     {
         //world_info_ACCEPT_button.DrawFn(&world_info_ACCEPT_button); -- incompatible calling convention
         asm volatile ("call *%1\n"
@@ -543,7 +543,7 @@ void input_world_cities(struct ScreenBox *p_box)
         if (unkn_city_no != landmap_8C4)
         {
             unkn_city_no = landmap_8C4;
-            if (login_control__State == 5) {
+            if (login_control__State == LognCt_Unkn5) {
                 login_control__City = landmap_8C4;
                 network_players[LbNetworkPlayerNumber()].Type = 9;
             }

@@ -3738,7 +3738,7 @@ ubyte load_game_slot(ubyte click)
     int ldslot;
     int ret;
 
-    if (login_control__State != 6) {
+    if (login_control__State != LognCt_Unkn6) {
         return 0;
     }
     if (save_slot == -1) {
@@ -3818,7 +3818,7 @@ void init_variables(void)
     //word_15518A = -1; -- set but never used - remove pending
     ingame.MissionStatus = ObvStatu_COMPLETED;
     login_control__Money = starting_cash_amounts[4];
-    if (login_control__State == 6)
+    if (login_control__State == LognCt_Unkn6)
     {
         ingame.Credits = 50000;
         ingame.CashAtStart = 50000;
@@ -3830,7 +3830,7 @@ void init_variables(void)
     }
     ingame.Expenditure = 0;
     login_control__City = 19;
-    login_control__State = 6;
+    login_control__State = LognCt_Unkn6;
     byte_181189 = 0;
     unkn_flags_08 = 0x3C;
     login_control__TechLevel = 4;
@@ -4611,7 +4611,7 @@ void campaign_new_game_prepare(void)
 
 ubyte do_storage_NEW_MORTAL(ubyte click)
 {
-    if (login_control__State != 6)
+    if (login_control__State != LognCt_Unkn6)
         return 0;
 
     if (strlen(login_name) == 0)
@@ -5436,7 +5436,7 @@ void show_menu_screen_st0(void)
 
     players_init_control_mode();
 
-    login_control__State = 6;
+    login_control__State = LognCt_Unkn6;
     sprintf(net_unkn2_text, "01234567890");
 
     {
@@ -5519,7 +5519,7 @@ void net_unkn_func_29(short a1, short a2, ubyte a3, sbyte a4, ubyte a5)
 void net_new_game_prepare(void)
 {
     switch_net_screen_boxes_to_initiate();
-    login_control__State = 6;
+    login_control__State = LognCt_Unkn6;
     byte_15516D = -1;
     byte_15516C = -1;
     ingame.Credits = 50000;
@@ -5660,7 +5660,7 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
     switch (p_netplyr->Type & 0x1F)
     {
     case 2:
-        login_control__State = 8;
+        login_control__State = LognCt_Unkn8;
         LbNetworkShutDownListeners();
         LbMemorySet(unkstruct04_arr, 0, 20 * sizeof(struct TbNetworkSessionList));
         byte_1C6D48 = 0;
@@ -6442,11 +6442,11 @@ void show_menu_screen(void)
 
     input_processing_end();
 
-    if (login_control__State == 5)
+    if (login_control__State == LognCt_Unkn5)
     {
         net_unkn_func_33();
     }
-    else if (login_control__State == 8)
+    else if (login_control__State == LognCt_Unkn8)
     {
         start_into_mission = 1;
         in_network_game = 1;
