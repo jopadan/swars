@@ -639,11 +639,44 @@ void draw_sorted_sprite1b(ubyte *frv, ushort frm, short x, short y,
 
 ubyte check_mouse_overlap(ushort sspr)
 {
+#if 0
     ubyte ret;
     asm volatile (
       "call ASM_check_mouse_overlap\n"
         : "=r" (ret) : "a" (sspr));
     return ret;
+#endif
+    struct ScreenBoxBase box;
+    struct SortSprite *p_sspr;
+    struct Frame *p_frm;
+
+    p_sspr = &game_sort_sprites[sspr];
+    box.X = p_sspr->X + ((overall_scale * word_1A5834) >> 8);
+    box.Y = p_sspr->Y + ((overall_scale * word_1A5836) >> 8);
+
+    p_frm = &frame[p_sspr->Frame];
+    box.Width = (overall_scale * p_frm->SWidth) >> 9;
+    box.Height = (overall_scale * p_frm->SHeight) >> 9;
+    if (box.Width < 16)
+    {
+        box.X -= ((17 - box.Width) >> 1);
+        box.Width = 16;
+    }
+    if (box.Height < 20) {
+        box.Y -= ((21 - box.Height) >> 1);
+        box.Height = 20;
+    }
+
+    if (in_box(lbDisplay.MMouseX, lbDisplay.MMouseY, box.X, box.Y, box.Width, box.Height))
+    {
+        PlayerInfo *p_locplayer;
+
+        p_locplayer = &players[local_player_no];
+        p_locplayer->Target = p_sspr->PThing->ThingOffset;
+        p_locplayer->TargetType = 7;
+        return 1;
+    }
+    return 0;
 }
 
 void check_mouse_overlap_item(ushort sspr)
