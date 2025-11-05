@@ -1,3 +1,21 @@
+/******************************************************************************/
+// Syndicate Wars Fan Expansion, source port of the classic game from Bullfrog.
+/******************************************************************************/
+/** @file display.c
+ *     Display and graphics mode related function.
+ * @par Purpose:
+ *     Wrappers for bflibrary functions and other helpers related to display.
+ * @par Comment:
+ *     Extended wrappers for bflibrary functionalities.
+ * @author   Tomasz Lis
+ * @date     12 Nov 2008 - 25 May 2022
+ * @par  Copying and copyrights:
+ *     This program is free software; you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation; either version 2 of the License, or
+ *     (at your option) any later version.
+ */
+/******************************************************************************/
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,6 +38,8 @@
 #include "game_sprts.h"
 #include "util.h"
 #include "swlog.h"
+
+/******************************************************************************/
 
 TbScreenMode screen_mode_game_hi = Lb_SCREEN_MODE_640_480_8;
 TbScreenMode screen_mode_game_lo = Lb_SCREEN_MODE_320_200_8;
@@ -410,3 +430,5 @@ void change_brightness(short val)
     asm volatile ("call ASM_change_brightness\n"
         : : "a" (val));
 }
+
+/******************************************************************************/

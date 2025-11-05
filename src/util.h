@@ -30,14 +30,6 @@ extern "C" {
 #endif
 /******************************************************************************/
 
-#ifndef MIN
-# define MIN(a, b) ((a) < (b) ? (a) : (b))
-#endif
-
-#ifndef MAX
-# define MAX(a, b) ((a) > (b) ? (a) : (b))
-#endif
-
 #ifdef WIN32
 #ifndef strcasecmp
 # define strcasecmp stricmp

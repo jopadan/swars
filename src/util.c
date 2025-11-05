@@ -30,7 +30,9 @@
 #endif
 
 #include "util.h"
+
 #include "bffile.h"
+#include "bfutility.h"
 
 /******************************************************************************/
 #pragma pack(1)
@@ -116,7 +118,7 @@ const char *extract_path_segment(const char *path, char *buffer, size_t size)
         return (path + 1);
     }
 
-    seg_len = MIN (sep - path, (int) size);
+    seg_len = min(sep - path, (int) size);
     snprintf(buffer, size, "%.*s", seg_len, path);
 
     return sep;

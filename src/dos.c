@@ -1,3 +1,21 @@
+/******************************************************************************/
+// Syndicate Wars Fan Expansion, source port of the classic game from Bullfrog.
+/******************************************************************************/
+/** @file dos.c
+ *     Functions which were only available or have specific behaviour in DOS.
+ * @par Purpose:
+ *     Multiplatform implementation of behaviours from DOS.
+ * @par Comment:
+ *     None.
+ * @author   Tomasz Lis
+ * @date     12 Nov 2008 - 25 May 2022
+ * @par  Copying and copyrights:
+ *     This program is free software; you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation; either version 2 of the License, or
+ *     (at your option) any later version.
+ */
+/******************************************************************************/
 #include <SDL.h>
 #include <ctype.h>
 #include <dirent.h>
@@ -14,6 +32,7 @@
 #include <time.h>
 
 #include "bffile.h"
+#include "bfutility.h"
 
 #include "swlog.h"
 #include "dos.h"
@@ -45,6 +64,7 @@ static int open_flag_mapping[][2] =
   {-1,             -1}
 };
 
+/******************************************************************************/
 
 int dos_sopen(const char *path, int open_flags, int share_flags, ...)
 {
@@ -90,7 +110,7 @@ size_t dos_low_level_read(int fd, void *buffer, uint16_t ds, size_t size,
     ssize_t count;
 
     count = read(fd, buffer, size);
-    *bytes_read = MAX(0, count);
+    *bytes_read = max(0, count);
 
     return *bytes_read;
 }
@@ -100,7 +120,7 @@ size_t dos_low_level_seek_relative(int fd, int32_t pos)
     off_t new_pos;
 
     new_pos = lseek(fd, pos, SEEK_CUR);
-    new_pos = MAX(0, new_pos);
+    new_pos = max(0, new_pos);
 
     return new_pos;
 }
@@ -115,7 +135,7 @@ size_t dos_low_level_seek(int fd, uint32_t pos)
     off_t new_pos;
 
     new_pos = lseek(fd, pos, SEEK_SET);
-    new_pos = MAX(0, new_pos);
+    new_pos = max(0, new_pos);
 
     return new_pos;
 }
@@ -411,3 +431,5 @@ void __attribute__ ((noreturn)) dos_setvect(int num, void *function)
     void *eip_caller = *(&eip_caller + 7);
     print_caller_info_and_abort("dos_setvect", eip_caller);
 }
+
+/******************************************************************************/
