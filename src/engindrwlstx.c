@@ -649,6 +649,7 @@ ubyte check_mouse_overlap(ushort sspr)
     struct ScreenBoxBase box;
     struct SortSprite *p_sspr;
     struct Frame *p_frm;
+    PlayerInfo *p_locplayer;
 
     p_sspr = &game_sort_sprites[sspr];
     box.X = p_sspr->X + ((overall_scale * word_1A5834) >> 8);
@@ -657,6 +658,8 @@ ubyte check_mouse_overlap(ushort sspr)
     p_frm = &frame[p_sspr->Frame];
     box.Width = (overall_scale * p_frm->SWidth) >> 9;
     box.Height = (overall_scale * p_frm->SHeight) >> 9;
+
+    p_locplayer = &players[local_player_no];
     if (box.Width < 16)
     {
         box.X -= ((17 - box.Width) >> 1);
@@ -669,34 +672,33 @@ ubyte check_mouse_overlap(ushort sspr)
 
     if (in_box(lbDisplay.MMouseX, lbDisplay.MMouseY, box.X, box.Y, box.Width, box.Height))
     {
-        PlayerInfo *p_locplayer;
-
-        p_locplayer = &players[local_player_no];
         p_locplayer->Target = p_sspr->PThing->ThingOffset;
-        p_locplayer->TargetType = 7;
+        p_locplayer->TargetType = TrgTp_Unkn7;
         return 1;
     }
     return 0;
 }
 
-void check_mouse_overlap_item(ushort sspr)
+ubyte check_mouse_overlap_item(ushort sspr)
 {
 #if 0
     asm volatile (
       "call ASM_check_mouse_overlap_item\n"
         : : "a" (sspr));
-#else
+    return 0;
+#endif
     struct ScreenBoxBase box;
     struct SortSprite *p_sspr;
-    struct Frame *p_frame;
+    struct Frame *p_frm;
     PlayerInfo *p_locplayer;
 
     p_sspr = &game_sort_sprites[sspr];
     box.X = p_sspr->X + ((overall_scale * word_1A5834) >> 8);
     box.Y = p_sspr->Y + ((overall_scale * word_1A5836) >> 8);
-    p_frame = &frame[p_sspr->Frame];
-    box.Width = (overall_scale * p_frame->SWidth) >> 9;
-    box.Height = (overall_scale * p_frame->SHeight) >> 9;
+
+    p_frm = &frame[p_sspr->Frame];
+    box.Width = (overall_scale * p_frm->SWidth) >> 9;
+    box.Height = (overall_scale * p_frm->SHeight) >> 9;
 
     p_locplayer = &players[local_player_no];
     if (p_locplayer->TargetType == TrgTp_DroppedTng)
@@ -707,8 +709,8 @@ void check_mouse_overlap_item(ushort sspr)
         {
             if (VX < 12 || VX > 13)
                 return;
-            box.X = box.X - (box.Width >> 1);
-            box.Y = box.Y - (box.Height >> 1);
+            box.X -= (box.Width >> 1);
+            box.Y -= (box.Height >> 1);
             box.Width *= 2;
             box.Height *= 2;
         }
@@ -717,8 +719,9 @@ void check_mouse_overlap_item(ushort sspr)
     {
         p_locplayer->Target = p_sspr->PThing->ThingOffset;
         p_locplayer->TargetType = TrgTp_DroppedTng;
+        return 1;
     }
-#endif
+    return 0;
 }
 
 ubyte check_mouse_overlap_corpse(ushort sspr)
