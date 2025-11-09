@@ -473,12 +473,36 @@ void alert_box_text_fmt(const char *fmt, ...)
     va_end(val);
 }
 
-ubyte show_title_box(struct ScreenTextBox *box)
+ubyte show_title_box(struct ScreenTextBox *p_box)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_show_title_box\n"
-        : "=r" (ret) : "a" (box));
+        : "=r" (ret) : "a" (p_box));
     return ret;
+#endif
+    short scr_x, scr_y;
+    short tx_width, tx_height;
+    ubyte cyan;
+
+    if (((p_box->Flags & 0x0080) != 0) && (p_box->Timer != 255))
+    {
+        p_box->TextFadePos = -5;
+        p_box->Flags &= ~0x0080;
+    }
+    if (p_box->Text == NULL)
+        return 1;
+
+    lbFontPtr = p_box->Font;
+    cyan = (lbFontPtr == med2_font);
+    tx_width = my_string_width(p_box->Text);
+    tx_height = font_height('A');
+    scr_x = p_box->X + ((p_box->Width - tx_width) >> 1);
+    scr_y = p_box->Y + ((p_box->Height - tx_height) >> 1);
+    my_set_text_window(scr_x, scr_y, p_box->Width, p_box->Height);
+
+    return flashy_draw_text(0, 0, p_box->Text, p_box->TextSpeed,
+           p_box->TextTopLine, &p_box->TextFadePos, cyan);
 }
 
 void show_sysmenu_screen(void)
