@@ -18,6 +18,7 @@
 /******************************************************************************/
 #include "fenet.h"
 
+#include "bffont.h"
 #include "bfkeybd.h"
 #include "bfmemut.h"
 #include "bfscrcopy.h"
@@ -33,8 +34,10 @@
 #include "femain.h"
 #include "feshared.h"
 #include "game_save.h"
+#include "game_speed.h"
 #include "game_sprts.h"
 #include "game.h"
+#include "keyboard.h"
 #include "network.h"
 #include "purpldrw.h"
 #include "purpldrwlst.h"
@@ -72,8 +75,10 @@ extern int unkn_rate; // = 19200;
 extern int serial_speeds[8];
 extern char net_baudrate_text[8];
 extern ubyte byte_1C47EA;
+extern ubyte byte_1C4805;
 extern ubyte byte_1C4994;
 extern ubyte byte_155170[4];
+extern char net_unkn1_text[25];
 
 ubyte ac_do_net_protocol_option(ubyte click);
 ubyte ac_do_net_unkn40(ubyte click);
@@ -1037,12 +1042,91 @@ ubyte show_net_grpaint(struct ScreenBox *p_box)
     return 0;
 }
 
-ubyte show_net_comms_box(struct ScreenBox *box)
+ubyte show_net_comms_box(struct ScreenBox *p_box)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_show_net_comms_box\n"
-        : "=r" (ret) : "a" (box));
+        : "=r" (ret) : "a" (p_box));
     return ret;
+#endif
+    char plyrname[20];
+    char locstr[40];
+    int i;
+    short dx;
+    short tx_height;
+
+    if (byte_1C4805)
+    {
+        byte_1C4805 = 0;
+        net_unkn1_text[0] = '\0';
+    }
+    my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
+    if ((p_box->Flags & 0x1000) != 0)
+    {
+        lbFontPtr = small_med_font;
+        tx_height = font_height('A');
+    }
+    else
+    {
+        lbFontPtr = med2_font;
+        lbDisplay.DrawFlags = 0x0100;
+        draw_text_purple_list2(0, 0, gui_strings[393], 0);
+        lbDisplay.DrawFlags = 0x0004;
+        draw_box_purple_list(p_box->X + 4, p_box->Y + 18, p_box->Width - 8, 61, 56);
+        lbFontPtr = small_med_font;
+        tx_height = font_height('A');
+        draw_box_purple_list(p_box->X + 4, p_box->Y + 87, p_box->Width - 8, tx_height + 6, 56);
+        lbDisplay.DrawFlags = 0;
+        copy_box_purple_list(p_box->X - 3, p_box->Y -  3, p_box->Width + 6, p_box->Height + 6);
+        p_box->Flags |= 0x1000;
+        reset_buffered_keys();
+    }
+
+    if (login_control__State != 5)
+    {
+        edit_flag = 0;
+        return 0;
+    }
+
+    edit_flag = 1;
+    dx = 14;
+    for (i = 0; i < 5; i++)
+    {
+        if ((LbNetworkPlayerName(plyrname, byte_1C6DDC[i]) == 1) &&
+          (net_players[i].field_0[0] != '\0'))
+        {
+            const char *text;
+
+            plyrname[7] = '\0';
+            sprintf(locstr, "%s: %s", plyrname, net_players[i].field_0);
+            text = loctext_to_gtext(locstr);
+            draw_text_purple_list2(2, dx + 5, text, 0);
+            dx += tx_height + 4;
+        }
+    }
+
+    if (user_read_value(net_unkn1_text, 20, 0) && (login_control__State == 5)
+      && (net_unkn1_text[0] != '\0'))
+    {
+        int plyr;
+        plyr = LbNetworkPlayerNumber();
+        network_players[plyr].Type = 10;
+        strncpy(network_players[plyr].U.Text, net_unkn1_text,
+          min(sizeof(net_unkn1_text), sizeof(network_players[0].U.Text)));
+        byte_1C4805 = 1;
+    }
+    draw_text_purple_list2(2, 86, net_unkn1_text, 0);
+
+    if ((gameturn & 1) != 0)
+    {
+        const struct TbSprite *p_spr;
+
+        p_spr = LbFontCharSprite(lbFontPtr, 45);
+        tx_height = my_string_width(net_unkn1_text);
+        draw_sprite_purple_list(p_box->X + 6 + tx_height, p_box->Y + 92, p_spr);
+    }
+    return 0;
 }
 
 ubyte do_net_protocol_select(ubyte click)

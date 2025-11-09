@@ -1797,7 +1797,7 @@ int LbNetworkPlayerNumber(void)
     return ret;
 }
 
-int LbNetworkPlayerName(char *name, int plyr)
+TbResult LbNetworkPlayerName(char *name, int plyr)
 {
     struct TbSerialDev *serhead;
     TbResult ret;

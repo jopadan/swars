@@ -332,6 +332,7 @@ TbResult LbNetworkHostPlayerNumber(void);
 TbResult LbNetworkSetupIPXAddress(ulong addr);
 TbResult LbNetworkPlayerNumber(void);
 TbResult LbNetworkExchange(void *a1, int a2);
+TbResult LbNetworkPlayerName(char *name, int plyr);
 TbResult LbNetworkReset(void);
 TbResult LbNetworkDial(const char *distr);
 TbResult LbNetworkAnswer(void);

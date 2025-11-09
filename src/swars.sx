@@ -108511,11 +108511,11 @@ GLOBAL_FUNC(ASM_show_net_comms_box)	/* 0x08E7EC */
 		push   %ebp
 		sub    $0x4c,%esp
 		mov    %eax,0x40(%esp)
-		cmpb   $0x0,data_1c4805
+		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4805)
 		je     jump_8e810
 		xor    %dl,%dl
-		mov    %dl,data_1c4805
-		mov    %dl,net_unkn1_text
+		mov    %dl,EXPORT_SYMBOL(byte_1C4805)
+		mov    %dl,EXPORT_SYMBOL(net_unkn1_text)
 	jump_8e810:
 		mov    0x40(%esp),%eax
 		mov    0x6(%eax),%ax
@@ -108706,7 +108706,7 @@ GLOBAL_FUNC(ASM_show_net_comms_box)	/* 0x08E7EC */
 		jmp    jump_8e999
 	jump_8ea7d:
 		mov    $0x14,%edx
-		mov    $net_unkn1_text,%eax
+		mov    $EXPORT_SYMBOL(net_unkn1_text),%eax
 		xor    %ebx,%ebx
 		call   ac_user_read_value
 		test   %al,%al
@@ -108728,7 +108728,7 @@ GLOBAL_FUNC(ASM_show_net_comms_box)	/* 0x08E7EC */
 		add    %eax,%eax
 		movb   $0xa,network_players(%eax)
 		add    $network_players,%eax
-		mov    $net_unkn1_text,%esi
+		mov    $EXPORT_SYMBOL(net_unkn1_text),%esi
 		lea    0x1(%eax),%edi
 		mov    $0x1,%dh
 		push   %edi
@@ -108745,9 +108745,9 @@ GLOBAL_FUNC(ASM_show_net_comms_box)	/* 0x08E7EC */
 		jne    jump_8ead4
 	jump_8eaec:
 		pop    %edi
-		mov    %dh,data_1c4805
+		mov    %dh,EXPORT_SYMBOL(byte_1C4805)
 	jump_8eaf3:
-		mov    $net_unkn1_text,%ebx
+		mov    $EXPORT_SYMBOL(net_unkn1_text),%ebx
 		mov    $0x56,%edx
 		mov    $0x2,%eax
 		xor    %ecx,%ecx
@@ -108761,7 +108761,7 @@ GLOBAL_FUNC(ASM_show_net_comms_box)	/* 0x08E7EC */
 		add    $0x54,%ebx
 		mov    0x2(%eax),%dx
 		mov    (%eax),%cx
-		mov    $net_unkn1_text,%eax
+		mov    $EXPORT_SYMBOL(net_unkn1_text),%eax
 		add    $0x5c,%edx
 		add    $0x6,%ecx
 		call   ac_my_string_width
@@ -184400,9 +184400,9 @@ data_1c47e9:
 		.byte	0x0
 GLOBAL (byte_1C47EA)	/* 0x1C47EA */
 		.short  0x0
-net_unkn1_text:	/* 0x1C47EC */
+GLOBAL (net_unkn1_text)	/* 0x1C47EC */
 		.fill   0x19
-data_1c4805:
+GLOBAL (byte_1C4805)	/* 0x1C4805 */
 		.byte	0x0
 data_1c4806:
 		.short  0x0
