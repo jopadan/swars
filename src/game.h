@@ -431,7 +431,6 @@ extern ubyte mouser;
 extern long dword_1AA5C4;
 extern long dword_1AA5C8;
 
-extern short next_ref;
 extern ushort next_mission;
 extern ushort replay_intro_timer;
 extern ubyte show_alert;

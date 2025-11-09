@@ -29,10 +29,61 @@
 
 ushort activate_queued_mail(void)
 {
+#if 0
     ushort ret;
     asm volatile ("call ASM_activate_queued_mail\n"
         : "=r" (ret) : );
     return ret;
+#endif
+    struct EmailItem *p_mail;
+    ushort bri, eml, nml;
+    short nref;
+    ushort mtype;
+
+    if ((newmail_store[0].Flag & 0x0001) != 0)
+    {
+        bri = next_brief;
+        nref = next_ref;
+        next_ref = nref + 1;
+        next_brief = bri + 1;
+        p_mail = &brief_store[bri];
+
+        p_mail->RefNum = nref;
+        p_mail->RecvDay = global_date.Day;
+        p_mail->RecvMonth = global_date.Month;
+        p_mail->RecvYear = global_date.Year;
+        p_mail->Mission = newmail_store[0].Mission;
+        LbMemorySet(&mission_status[bri + 1], 0, sizeof(struct MissionStatus));
+
+        bri = next_brief;
+        mission_status[bri].Days = 0;
+        mission_status[bri].Hours = 0;
+        mtype = 1;
+    }
+    else
+    {
+        eml = next_email;
+        nref = next_ref;
+        next_email = eml + 1;
+        next_ref = nref + 1;
+        p_mail = &email_store[eml];
+
+        p_mail->RefNum = next_ref;
+        p_mail->RecvDay = newmail_store[0].RecvDay;
+        p_mail->RecvMonth = newmail_store[0].RecvMonth;
+        p_mail->RecvYear = newmail_store[0].RecvYear;
+        p_mail->Mission = newmail_store[0].Mission;
+        mtype = 0;
+    }
+
+    nml = new_mail;
+    for (eml = 1; eml < nml; eml++)
+    {
+        newmail_store[eml - 1] = newmail_store[eml];
+    }
+    new_mail = nml - 1;
+
+    return mtype;
 }
 
 void delete_mail(ushort mailnum, ubyte emtype)
