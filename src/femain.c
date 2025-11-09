@@ -596,6 +596,7 @@ void show_sysmenu_screen(void)
 
     if (sysscrn_no != SySc_NONE)
     {
+        int plyr;
         game_system_screen = sysscrn_no;
         unkn13_SYSTEM_button.Flags &= ~(GBxFlg_TextCopied|GBxFlg_BkCopied);
         reset_sys_scr_shared_boxes_flags();
@@ -628,7 +629,8 @@ void show_sysmenu_screen(void)
         case SySc_LOGOUT:
             if (login_control__State == LognCt_Unkn5)
             {
-                network_players[LbNetworkPlayerNumber()].Type = 13;
+                plyr = LbNetworkPlayerNumber();
+                network_players[plyr].Type = 13;
                 byte_15516D = -1;
                 byte_15516C = -1;
                 switch_net_screen_boxes_to_initiate();

@@ -27,8 +27,9 @@
 #include "bflib_joyst.h"
 #include "ssampply.h"
 
-#include "femain.h"
 #include "fecryo.h"
+#include "femain.h"
+#include "fenet.h"
 #include "game_speed.h"
 #include "guiboxes.h"
 #include "guitext.h"
@@ -284,7 +285,7 @@ ubyte do_equip_offer_buy(ubyte click)
 
     if ((login_control__State == LognCt_Unkn5) && ((unkn_flags_08 & 0x08) != 0))
     {
-        if ((login_control__State != LognCt_Unkn6) && (LbNetworkPlayerNumber() != net_host_player_no))
+        if (!local_player_hosts_the_game())
             return 0;
     }
 
@@ -315,7 +316,7 @@ ubyte sell_equipment(ubyte click)
 
     if ((login_control__State == LognCt_Unkn5) && ((unkn_flags_08 & 0x08) != 0))
     {
-        if ((login_control__State != LognCt_Unkn6) && (LbNetworkPlayerNumber() != net_host_player_no))
+        if (!local_player_hosts_the_game())
             return 0;
     }
 

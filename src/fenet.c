@@ -86,6 +86,13 @@ ubyte ac_show_net_comms_box(struct ScreenBox *box);
 ubyte ac_do_net_protocol_select(ubyte click);
 ubyte ac_show_net_protocol_box(struct ScreenBox *box);
 
+TbBool local_player_hosts_the_game(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    return login_control__State == LognCt_Unkn6 || plyr == net_host_player_no;
+}
 
 void net_service_unkstruct04_clear(void)
 {
@@ -237,18 +244,40 @@ ubyte do_serial_speed_switch(ubyte click)
 
 ubyte do_net_SET2(ubyte click)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_do_net_SET2\n"
         : "=r" (ret) : "a" (click));
     return ret;
+#endif
+    int plyr;
+
+    if (!local_player_hosts_the_game() || login_control__State != LognCt_Unkn5)
+        return 0;
+
+    plyr = LbNetworkPlayerNumber();
+    unkn_flags_08 |= 0x02;
+    network_players[plyr].Type = 6;
+    return 1;
 }
 
 ubyte do_net_SET(ubyte click)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_do_net_SET\n"
         : "=r" (ret) : "a" (click));
     return ret;
+#endif
+    int plyr;
+
+    if (!local_player_hosts_the_game() || login_control__State != LognCt_Unkn5)
+        return 0;
+
+    plyr = LbNetworkPlayerNumber();
+    unkn_flags_08 |= 0x01;
+    network_players[plyr].Type = 6;
+    return 1;
 }
 
 ubyte net_unkn_func_32(void)
