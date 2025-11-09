@@ -252,6 +252,7 @@ TbBool mouse_move_over_rect(ScrCoord box_x1, ScrCoord box_x2, ScrCoord box_y1, S
 TbBool mouse_move_over_rect_adv(ScrCoord x1, ScrCoord y1, short width, short height, TbBool a5);
 
 short mouse_move_position_horizonal_over_bar_coords(ScrCoord x, short w);
+short mouse_move_position_vertical_over_bar_coords(ScrCoord y, short h);
 short mouse_down_position_horizonal_over_bar_coords(ScrCoord x, short w);
 
 /** Returns if given position is over given box (incl. borders).

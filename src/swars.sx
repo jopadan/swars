@@ -108186,7 +108186,7 @@ GLOBAL_FUNC(ASM_show_net_grpaint)	/* 0x08E3C0 */
 		mov    (%esp),%edx
 		xor    %eax,%eax
 		mov    $0x15,%ecx
-		mov    data_155170(%edx),%al
+		mov    EXPORT_SYMBOL(byte_155170)(%edx),%al
 		mov    %ebp,%ebx
 		push   %eax
 		xor    %edx,%edx
@@ -108301,7 +108301,7 @@ GLOBAL_FUNC(ASM_show_net_grpaint)	/* 0x08E3C0 */
 		xor    %eax,%eax
 		call   ac_play_sample_using_heap
 		mov    (%esp),%al
-		mov    %al,data_1c47ea
+		mov    %al,EXPORT_SYMBOL(byte_1C47EA)
 	jump_8e58d:
 		mov    (%esp),%eax
 		add    $0x18,%edi
@@ -108473,7 +108473,7 @@ GLOBAL_FUNC(ASM_show_net_grpaint)	/* 0x08E3C0 */
 		shl    $0x2,%eax
 		add    %edx,%eax
 		mov    %bx,data_1c5b63(,%eax,2)
-		mov    data_1c47ea,%bl
+		mov    EXPORT_SYMBOL(byte_1C47EA),%bl
 		mov    %bl,data_1c5b6b(,%eax,2)
 	jump_8e7ae:
 		cmpb   $0x0,EXPORT_SYMBOL(lbDisplay)+107 # lbDisplay.MRightButton
@@ -163977,7 +163977,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_29)	/* 0x0CCF28 */
 		mov    EXPORT_SYMBOL(dword_1C6DE4),%edx
 		and    $0xff,%ebx
 		add    %eax,%edx
-		mov    data_155170(%ebx),%al
+		mov    EXPORT_SYMBOL(byte_155170)(%ebx),%al
 		mov    %al,(%edx)
 		jmp    jump_cd009
 	jump_ccf85:
@@ -163994,7 +163994,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_29)	/* 0x0CCF28 */
 		mov    %bl,%al
 		mov    %edx,EXPORT_SYMBOL(lbDisplay)+48 # lbDisplay.GraphicsWindowWidth
 		mov    %ebp,EXPORT_SYMBOL(lbDisplay)+52 # lbDisplay.GraphicsWindowHeight
-		mov    data_155170(%eax),%al
+		mov    EXPORT_SYMBOL(byte_155170)(%eax),%al
 		and    %edx,%eax
 		push   %eax
 		xor    %eax,%eax
@@ -182160,7 +182160,7 @@ GLOBAL (byte_15516C)
 GLOBAL (byte_15516D)
 		.byte	0xff
 		.ascii  "\xff\x00"
-data_155170:
+GLOBAL (byte_155170)	/* 0x155170 */
 		.ascii  "\x32\xae\x57\xf4"
 GLOBAL (byte_155174)	/* 0x155174 */
 		.byte	0xa6
@@ -184398,7 +184398,7 @@ GLOBAL (word_1C47E8)	/* 0x1C47E8 */
 		.byte	0x0
 data_1c47e9:
 		.byte	0x0
-data_1c47ea:
+GLOBAL (byte_1C47EA)	/* 0x1C47EA */
 		.short  0x0
 net_unkn1_text:	/* 0x1C47EC */
 		.fill   0x19

@@ -39,6 +39,7 @@
 #include "purpldrw.h"
 #include "purpldrwlst.h"
 #include "player.h"
+#include "sound.h"
 #include "swlog.h"
 /******************************************************************************/
 
@@ -70,7 +71,9 @@ extern struct TbSprite *fe_icons_sprites;
 extern int unkn_rate; // = 19200;
 extern int serial_speeds[8];
 extern char net_baudrate_text[8];
+extern ubyte byte_1C47EA;
 extern ubyte byte_1C4994;
+extern ubyte byte_155170[4];
 
 ubyte ac_do_net_protocol_option(ubyte click);
 ubyte ac_do_net_unkn40(ubyte click);
@@ -85,6 +88,9 @@ ubyte ac_show_net_grpaint(struct ScreenBox *box);
 ubyte ac_show_net_comms_box(struct ScreenBox *box);
 ubyte ac_do_net_protocol_select(ubyte click);
 ubyte ac_show_net_protocol_box(struct ScreenBox *box);
+
+void ac_purple_unkn1_data_to_screen(void);
+void ac_purple_unkn3_data_to_screen(void);
 
 TbBool local_player_hosts_the_game(void)
 {
@@ -943,12 +949,92 @@ void purple_unkn4_data_to_screen(void)
         lbDisplay.GraphicsScreenHeight);
 }
 
-ubyte show_net_grpaint(struct ScreenBox *box)
+ubyte show_net_grpaint(struct ScreenBox *p_box)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_show_net_grpaint\n"
-        : "=r" (ret) : "a" (box));
+        : "=r" (ret) : "a" (p_box));
     return ret;
+#endif
+    int i;
+    short dy;
+    short ln_height;
+
+    if ((p_box->Flags & 0x1000) == 0)
+    {
+        lbDisplay.DrawFlags = 0x0010;
+        draw_box_purple_list(p_box->X + 263, p_box->Y + 4, 0xDu, 0x61u, 243);
+        lbDisplay.DrawFlags = 0;
+        dy = 0;
+        for (i = 0; i < 4; i++)
+        {
+            draw_box_purple_list(p_box->X + 265, p_box->Y + dy + 6, 9, 21, byte_155170[i]);
+            dy += 24;
+        }
+        draw_flic_purple_list(ac_purple_unkn3_data_to_screen);
+        if (login_control__State != LognCt_Unkn5)
+            draw_flic_purple_list(ac_purple_unkn1_data_to_screen);
+
+        copy_box_purple_list(p_box->X - 3, p_box->Y - 3,
+          p_box->Width + 6, p_box->Height + 6);
+        p_box->Flags |= 0x1000;
+    }
+
+    dy = 0;
+    ln_height = 24;
+    draw_flic_purple_list(purple_unkn4_data_to_screen);
+    for (i = 0; i < 4; i++)
+    {
+        if (mouse_down_over_box_coords(p_box->X + 265, p_box->Y + dy + 6, p_box->X + 274, p_box->Y + dy + ln_height + 6))
+        {
+            if (lbDisplay.LeftButton)
+            {
+                lbDisplay.LeftButton = 0;
+                play_sample_using_heap(0, 111, 127, 64, 100, 0, 2u);
+                byte_1C47EA = i;
+            }
+        }
+      dy += ln_height;
+    }
+
+    if (mouse_move_over_box_coords(p_box->X + 4, p_box->Y + 4 , p_box->X + 259, p_box->Y + 100))
+    {
+        TbBool pos_progress;
+        short plyr;
+
+        plyr = LbNetworkPlayerNumber();
+        pos_progress = false;
+        if (lbDisplay.MLeftButton)
+        {
+            lbDisplay.LeftButton = 0;
+            if ((lbShift & 0x01) != 0)
+                network_players[plyr].Type = 16;
+            else
+                network_players[plyr].Type = 11;
+            pos_progress = true;
+        }
+        else if (network_players[plyr].Type == 17)
+        {
+            network_players[plyr].Type = 18;
+            pos_progress = true;
+        }
+        if (pos_progress)
+        {
+            network_players[plyr].U.Progress.npfield_8 =
+              mouse_move_position_horizonal_over_bar_coords(p_box->X + 4, p_box->Width);
+            network_players[plyr].U.Progress.npfield_A =
+              mouse_move_position_vertical_over_bar_coords(p_box->Y + 4, p_box->Height);
+            network_players[plyr].U.Progress.npfield_12 = byte_1C47EA;
+        }
+        if (lbDisplay.MRightButton)
+        {
+            lbDisplay.RightButton = 0;
+            if (is_unkn_current_player())
+                network_players[plyr].Type = 3;
+        }
+    }
+    return 0;
 }
 
 ubyte show_net_comms_box(struct ScreenBox *box)
