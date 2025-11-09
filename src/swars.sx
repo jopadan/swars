@@ -109318,7 +109318,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		add    $0x4,%eax
 		and    $0xffff,%eax
 		call   ac_my_set_text_window
-		cmpb   $0x0,data_1c4994
+		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4994)
 		jne    jump_8f4e8
 		mov    EXPORT_SYMBOL(lbFontPtr),%ecx
 		test   %ecx,%ecx
@@ -167450,10 +167450,10 @@ GLOBAL_FUNC(ASM_do_net_protocol_option)	/* 0x0D2D3C */
 /*----------------------------------------------------------------*/
 GLOBAL_FUNC(ASM_do_net_unkn40)	/* 0x0D2E90 */
 /*----------------------------------------------------------------*/
-		mov    data_1c4994,%ah
+		mov    EXPORT_SYMBOL(byte_1C4994),%ah
 		test   %ah,%ah
 		sete   %al
-		mov    %al,data_1c4994
+		mov    %al,EXPORT_SYMBOL(byte_1C4994)
 		mov    $0x1,%al
 		ret
 
@@ -184514,7 +184514,7 @@ GLOBAL (mouse_sprite_anim_frame)
 
 GLOBAL (replay_intro_timer)	/* 0x1C4992 */
 		.short  0x0
-data_1c4994:
+GLOBAL (byte_1C4994)	/* 0x1C4994 */
 		.byte	0x0
 data_1c4995:
 		.ascii  "\x00\x00\x00"

@@ -68,6 +68,9 @@ extern ubyte byte_155180; // = 109;
 extern ubyte byte_155181[];
 extern struct TbSprite *fe_icons_sprites;
 extern int unkn_rate; // = 19200;
+extern int serial_speeds[8];
+extern char net_baudrate_text[8];
+extern ubyte byte_1C4994;
 
 ubyte ac_do_net_protocol_option(ubyte click);
 ubyte ac_do_net_unkn40(ubyte click);
@@ -179,18 +182,57 @@ ubyte do_net_protocol_option(ubyte click)
 
 ubyte do_net_unkn40(ubyte click)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_do_net_unkn40\n"
         : "=r" (ret) : "a" (click));
     return ret;
+#endif
+    byte_1C4994 = (byte_1C4994 == 0);
+    return 1;
+}
+
+short serial_speeds_idx(int boud_rate)
+{
+    short i;
+
+    for (i = 0; i < (int)(sizeof(serial_speeds)/sizeof(serial_speeds[0])); i++)
+    {
+        if (serial_speeds[i] == boud_rate)
+            break;
+    }
+    if (i >= (int)(sizeof(serial_speeds)/sizeof(serial_speeds[0])))
+        i = 0;
+    return i;
 }
 
 ubyte do_serial_speed_switch(ubyte click)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_do_serial_speed_switch\n"
         : "=r" (ret) : "a" (click));
     return ret;
+#endif
+    short cur_idx, nxt_idx;
+
+    cur_idx = serial_speeds_idx(unkn_rate);
+
+    if (click)
+    {
+        nxt_idx = cur_idx - 1;
+        if (nxt_idx < 0)
+            nxt_idx = (sizeof(serial_speeds)/sizeof(serial_speeds[0])) - 1;
+    }
+    else
+    {
+        nxt_idx = cur_idx + 1;
+        if (nxt_idx >= (int)(sizeof(serial_speeds)/sizeof(serial_speeds[0])))
+            nxt_idx = 0;
+    }
+    unkn_rate = serial_speeds[nxt_idx];
+    sprintf(net_baudrate_text, "%d", unkn_rate);
+    return 1;
 }
 
 ubyte do_net_SET2(ubyte click)
