@@ -76,6 +76,7 @@ extern int serial_speeds[8];
 extern char net_baudrate_text[8];
 extern ubyte byte_1C47EA;
 extern ubyte byte_1C4805;
+extern ubyte byte_1C4806;
 extern ubyte byte_1C4994;
 extern ubyte byte_155170[4];
 extern char net_unkn1_text[25];
@@ -107,12 +108,12 @@ TbBool local_player_hosts_the_game(void)
 
 void net_service_unkstruct04_clear(void)
 {
-    int i;
+    int plyr;
 
     LbMemorySet(unkstruct04_arr, 0, sizeof(unkstruct04_arr));
     byte_1C6D48 = 0;
-    for (i = 0; i < 8; i++) {
-        unkn2_names[i][0] = '\0';
+    for (plyr = 0; plyr < 8; plyr++) {
+        unkn2_names[plyr][0] = '\0';
     }
 }
 
@@ -1228,12 +1229,296 @@ ubyte do_net_protocol_select(ubyte click)
     return 1;
 }
 
-ubyte show_net_protocol_box(struct ScreenBox *box)
+ubyte show_net_protocol_box(struct ScreenBox *p_box)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_show_net_protocol_box\n"
-        : "=r" (ret) : "a" (box));
+        : "=r" (ret) : "a" (p_box));
     return ret;
+#endif
+    const char *text;
+    short tx_height, tx_width;
+    short scr_x, scr_y;
+    ubyte drawn;
+
+    my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
+
+    if (login_control__State != 5)
+    {
+        lbFontPtr = med2_font;
+        tx_height = font_height('A');
+
+        if (nsvc.I.Type == NetSvc_IPX)
+        {
+            tx_width = 5 * LbTextCharWidth('A');
+            scr_x = ((p_box->Width - tx_width) >> 1) - 4;
+            lbDisplay.DrawFlags |= 0x0004;
+            draw_box_purple_list(text_window_x1 + scr_x, text_window_y1 + 22, tx_width + 4, tx_height + 4, 243);
+            lbDisplay.DrawFlags &= ~0x0004;
+
+            lbDisplay.DrawFlags |= 0x8000;
+            draw_text_purple_list2(scr_x + 2, 24, net_proto_param_text, 0);
+            lbDisplay.DrawFlags &= ~0x8000;
+
+            if (byte_1C4806 == 0)
+            {
+                tx_width = LbTextStringWidth(net_proto_param_text);
+                if (mouse_down_over_box_coords(text_window_x1 + scr_x + 2, text_window_y1 + 22,
+                  text_window_x1 + scr_x + 2 + tx_width, text_window_y1 + tx_height + 24 + 2))
+                {
+                    if (lbDisplay.LeftButton)
+                    {
+                        lbDisplay.LeftButton = 0;
+                        byte_1C4806 = 1;
+                        reset_buffered_keys();
+                    }
+                }
+            }
+
+            if (byte_1C4806 == 1)
+            {
+                if ((gameturn & 2) != 0)
+                {
+                    const struct TbSprite *p_spr;
+                    p_spr = LbFontCharSprite(lbFontPtr, 45);
+                    tx_width = LbTextStringWidth(net_proto_param_text);
+                    draw_sprite_purple_list(text_window_x1 + scr_x + 2 + tx_width, text_window_y1 + 27, p_spr);
+                }
+                if (user_read_value(net_proto_param_text, 4, 3))
+                {
+                    uint addr;
+
+                    byte_1C4806 = 0;
+                    addr = 0;
+                    sscanf(net_proto_param_text, "%04x", &addr);
+                    LbNetworkSetupIPXAddress(addr);
+                    net_service_unkstruct04_clear();
+
+                    if (LbNetworkServiceStart(&nsvc.I) == Lb_SUCCESS)
+                    {
+                        byte_1C4A7C = 1;
+                    }
+                    else
+                    {
+                        alert_box_text_fmt("%s", gui_strings[568]);
+                        net_protocol_option_button.Text = net_baudrate_text;
+                        net_protocol_option_button.CallBackFn = ac_do_serial_speed_switch;
+                        net_protocol_select_button.Text = gui_strings[499];
+                        nsvc.I.Type = 2;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (byte_1C4A6F)
+            {
+              //drawn = net_unkn40_button.DrawFn(&net_unkn40_button); -- incompatible calling convention
+              asm volatile ("call *%2\n"
+                  : "=r" (drawn) : "a" (&net_unkn40_button), "g" (net_unkn40_button.DrawFn));
+              if (drawn == 3)
+              {
+                  scr_y = net_unkn40_button.Y + 3;
+                  scr_x = net_unkn40_button.X + 3;
+                  draw_line_purple_list(scr_x +  0, scr_y + 0, scr_x +  3, scr_y + 0, 174);
+                  draw_line_purple_list(scr_x +  3, scr_y + 0, scr_x +  3, scr_y + 9, 174);
+                  draw_line_purple_list(scr_x +  3, scr_y + 9, scr_x +  6, scr_y + 9, 174);
+                  draw_line_purple_list(scr_x +  6, scr_y + 9, scr_x +  6, scr_y + 0, 174);
+                  draw_line_purple_list(scr_x +  6, scr_y + 0, scr_x +  9, scr_y + 0, 174);
+                  draw_line_purple_list(scr_x +  9, scr_y + 0, scr_x +  9, scr_y + 9, 174);
+                  draw_line_purple_list(scr_x +  9, scr_y + 9, scr_x + 12, scr_y + 9, 174);
+                  draw_line_purple_list(scr_x + 12, scr_y + 9, scr_x + 12, scr_y + 0, 174);
+                  draw_line_purple_list(scr_x + 12, scr_y + 0, scr_x + 15, scr_y + 0, 174);
+              }
+              my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
+              if (!byte_1C4994)
+              {
+                  tx_width = 15 * LbTextCharWidth('A');
+                  scr_x = ((p_box->Width - tx_width) >> 1) - 4;
+                  lbDisplay.DrawFlags |= 0x0004;
+                  draw_box_purple_list(scr_x + text_window_x1, text_window_y1 + 22, tx_width + 4, tx_height + 4, 243);
+                  lbDisplay.DrawFlags &= ~0x0004;
+                  lbDisplay.DrawFlags |= 0x8000;
+                  draw_text_purple_list2(scr_x + 2, 24, net_unkn2_text, 0);
+                  lbDisplay.DrawFlags &= ~0x8000;
+                  if (!byte_1C4806)
+                  {
+                      tx_width = LbTextStringWidth(net_unkn2_text);
+                      if (mouse_down_over_box_coords(text_window_x1 + scr_x + 2, text_window_y1 + 22,
+                        text_window_x1 + scr_x + 2 + tx_width, text_window_y1 + tx_height + 24 + 2))
+                      {
+                          if (lbDisplay.LeftButton)
+                          {
+                              lbDisplay.LeftButton = 0;
+                              byte_1C4806 = 1;
+                              reset_buffered_keys();
+                          }
+                      }
+                  }
+                  if ( byte_1C4806 == 1 )
+                  {
+                    if ((gameturn & 2) != 0)
+                    {
+                        const struct TbSprite *p_spr;
+                        p_spr = LbFontCharSprite(lbFontPtr, 45);
+                        tx_width = LbTextStringWidth(net_unkn2_text);
+                        draw_sprite_purple_list(text_window_x1 + scr_x + 2 + tx_width, text_window_y1 + 27, p_spr);
+                    }
+                    if (user_read_value(net_unkn2_text, 0xEu, 2))
+                    {
+                        byte_1C4806 = 0;
+                    }
+                  }
+                  goto LABEL_67;
+              }
+              byte_1C4806 = 0;
+            }
+            //net_protocol_option_button.DrawFn(&net_protocol_option_button); -- incompatible calling convention
+            asm volatile ("call *%1\n"
+              :  : "a" (&net_protocol_option_button), "g" (net_protocol_option_button.DrawFn));
+        }
+LABEL_67:
+        //net_protocol_select_button.DrawFn(&net_protocol_select_button); -- incompatible calling convention
+        asm volatile ("call *%1\n"
+          :  : "a" (&net_protocol_select_button), "g" (net_protocol_select_button.DrawFn));
+    }
+    else
+    {
+        lbFontPtr = small_med_font;
+        tx_height = font_height('A');
+        lbDisplay.DrawColour = 87;
+
+        scr_y = 2;
+        text = gui_strings[506];
+        draw_text_purple_list2(4, scr_y, text, 0);
+
+        scr_y += tx_height + 4;
+        text = gui_strings[505];
+        draw_text_purple_list2(4, scr_y, text, 0);
+
+        scr_y += tx_height + 4;
+        text = gui_strings[515];
+        draw_text_purple_list2(4, scr_y, text, 0);
+
+        scr_y += tx_height + 4;
+        text = gui_strings[538];
+        draw_text_purple_list2(4, scr_y, text, 0);
+        lbDisplay.DrawFlags |= (0x8000 | 0x0040);
+
+        scr_y = 2;
+        if ((unkn_flags_08 & 0x04) != 0)
+            text = gui_strings[479];
+        else
+            text = gui_strings[478];
+        tx_width = my_string_width(text);
+        draw_text_purple_list2(165 - (tx_width >> 1), scr_y, text, 0);
+        lbDisplay.DrawFlags &= ~0x8000;
+        if (is_unkn_current_player())
+        {
+            if (mouse_down_over_box_coords(text_window_x1 + 4, text_window_y1 + scr_y - 2,
+              text_window_x1 + (tx_width >> 1) + 165, text_window_y1 + tx_height + scr_y + 2))
+            {
+                if (lbDisplay.LeftButton)
+                {
+                    int plyr;
+                    lbDisplay.LeftButton = 0;
+                    if ((unkn_flags_08 & 0x0004) != 0)
+                        unkn_flags_08 &= ~0x0004;
+                    else
+                        unkn_flags_08 |= 0x0004;
+                    plyr = LbNetworkPlayerNumber();
+                    network_players[plyr].Type = 6;
+                }
+            }
+        }
+
+        scr_y += tx_height + 4;
+        lbDisplay.DrawFlags |= 0x8000u;
+        if ((unkn_flags_08 & 0x08) != 0)
+            text = gui_strings[479];
+        else
+            text = gui_strings[478];
+        tx_width = my_string_width(text);
+        draw_text_purple_list2(165 - (tx_width >> 1), scr_y, text, 0);
+        lbDisplay.DrawFlags &= ~0x8000;
+        if (is_unkn_current_player())
+        {
+            if (mouse_down_over_box_coords(text_window_x1 + 4, text_window_y1 + scr_y - 2,
+              text_window_x1 + (tx_width >> 1) + 165, text_window_y1 + scr_y + tx_height + 2))
+            {
+                if (lbDisplay.LeftButton)
+                {
+                    int plyr;
+                    lbDisplay.LeftButton = 0;
+                    if ((unkn_flags_08 & 0x0008) != 0)
+                        unkn_flags_08 &= ~0x0008;
+                    else
+                        unkn_flags_08 |= 0x0008;
+                    plyr = LbNetworkPlayerNumber();
+                    network_players[plyr].Type = 6;
+                }
+            }
+        }
+
+        scr_y += tx_height + 4;
+        lbDisplay.DrawFlags |= 0x8000;
+        if ((unkn_flags_08 & 0x10) != 0)
+            text = gui_strings[479];
+        else
+            text = gui_strings[478];
+        tx_width = my_string_width(text);
+        draw_text_purple_list2(165 - (tx_width >> 1), scr_y, text, 0);
+        lbDisplay.DrawFlags &= ~0x8000;
+        if (is_unkn_current_player())
+        {
+            if (mouse_down_over_box_coords(text_window_x1 + 4, text_window_y1 + scr_y - 2,
+              text_window_x1 + (tx_width >> 1) + 165, text_window_y1 + scr_y + tx_height + 2))
+            {
+                if (lbDisplay.LeftButton)
+                {
+                    int plyr;
+                    lbDisplay.LeftButton = 0;
+                    if ((unkn_flags_08 & 0x0010) != 0)
+                        unkn_flags_08 &= ~0x0010;
+                    else
+                        unkn_flags_08 |= 0x0010;
+                    plyr = LbNetworkPlayerNumber();
+                    network_players[plyr].Type = 6;
+                }
+            }
+        }
+
+        scr_y += tx_height + 4;
+        lbDisplay.DrawFlags |= 0x8000;
+        if ((unkn_flags_08 & 0x20) != 0)
+            text = gui_strings[479];
+        else
+            text = gui_strings[478];
+        tx_width = my_string_width(text);
+        draw_text_purple_list2(165 - (tx_width >> 1), scr_y, text, 0);
+        lbDisplay.DrawFlags &= ~0x8000;
+        if (is_unkn_current_player())
+        {
+            if (mouse_down_over_box_coords(text_window_x1 + 4, text_window_y1 + scr_y - 2,
+              text_window_x1 + (tx_width >> 1) + 165, text_window_y1 + scr_y + tx_height + 2))
+            {
+                if (lbDisplay.LeftButton)
+                {
+                    int plyr;
+                    lbDisplay.LeftButton = 0;
+                    if ((unkn_flags_08 & 0x0020) != 0)
+                        unkn_flags_08 &= ~0x0020;
+                    else
+                        unkn_flags_08 |= 0x0020;
+                    plyr = LbNetworkPlayerNumber();
+                    network_players[plyr].Type = 6;
+                }
+            }
+        }
+        lbDisplay.DrawFlags &= ~0x0040;
+    }
+    return 0;
 }
 
 ubyte show_net_faction_box(struct ScreenBox *box)

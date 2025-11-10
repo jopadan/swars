@@ -109064,7 +109064,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    EXPORT_SYMBOL(lbDisplay)+96,%dx # lbDisplay__DrawFlags
 		and    $0x7f,%dh
 		mov    %dx,EXPORT_SYMBOL(lbDisplay)+96 # lbDisplay__DrawFlags
-		cmpb   $0x0,data_1c4806
+		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4806)
 		jne    jump_8f028
 		xor    %eax,%eax
 		mov    EXPORT_SYMBOL(lbDisplay)+100,%ax # lbDisplay.ScreenMode
@@ -109137,11 +109137,11 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		je     jump_8f028
 		xor    %cl,%cl
 		mov    %cl,EXPORT_SYMBOL(lbDisplay)+103 # lbDisplay.LeftButton
-		movb   $0x1,data_1c4806
+		movb   $0x1,EXPORT_SYMBOL(byte_1C4806)
 		call   ac_reset_buffered_keys
 	jump_8f028:
 		xor    %eax,%eax
-		mov    data_1c4806,%al
+		mov    EXPORT_SYMBOL(byte_1C4806),%al
 		cmp    $0x1,%eax
 		jne    jump_8f502
 		testb  $0x2,gameturn
@@ -109171,7 +109171,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		xor    %ah,%ah
 		push   $EXPORT_SYMBOL(net_proto_param_text)
 		mov    $0x1108,%ebx
-		mov    %ah,data_1c4806
+		mov    %ah,EXPORT_SYMBOL(byte_1C4806)
 		call   ac_sscanf
 		add    $0xc,%esp
 		xor    %edx,%edx
@@ -109367,7 +109367,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    EXPORT_SYMBOL(lbDisplay)+96,%dx # lbDisplay__DrawFlags
 		and    $0x7f,%dh
 		mov    %dx,EXPORT_SYMBOL(lbDisplay)+96 # lbDisplay__DrawFlags
-		cmpb   $0x0,data_1c4806
+		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4806)
 		jne    jump_8f467
 		xor    %eax,%eax
 		mov    EXPORT_SYMBOL(lbDisplay)+100,%ax # lbDisplay.ScreenMode
@@ -109440,11 +109440,11 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		je     jump_8f467
 		xor    %ch,%ch
 		mov    %ch,EXPORT_SYMBOL(lbDisplay)+103 # lbDisplay.LeftButton
-		movb   $0x1,data_1c4806
+		movb   $0x1,EXPORT_SYMBOL(byte_1C4806)
 		call   ac_reset_buffered_keys
 	jump_8f467:
 		xor    %eax,%eax
-		mov    data_1c4806,%al
+		mov    EXPORT_SYMBOL(byte_1C4806),%al
 		cmp    $0x1,%eax
 		jne    jump_8f502
 		testb  $0x2,gameturn
@@ -109470,7 +109470,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		test   %al,%al
 		je     jump_8f502
 		xor    %dl,%dl
-		mov    %dl,data_1c4806
+		mov    %dl,EXPORT_SYMBOL(byte_1C4806)
 		mov    $net_protocol_select_button,%eax
 		call   *EXPORT_SYMBOL(net_protocol_select_button)+0x10
 		xor    %al,%al
@@ -109485,7 +109485,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 	jump_8f4e8:
 		xor    %dh,%dh
 		mov    $net_protocol_option_button,%eax
-		mov    %dh,data_1c4806
+		mov    %dh,EXPORT_SYMBOL(byte_1C4806)
 		jmp    jump_8f4fc
 	jump_8f4f7:
 		mov    $net_protocol_option_button,%eax
@@ -184404,7 +184404,7 @@ GLOBAL (net_unkn1_text)	/* 0x1C47EC */
 		.fill   0x19
 GLOBAL (byte_1C4805)	/* 0x1C4805 */
 		.byte	0x0
-data_1c4806:
+GLOBAL (byte_1C4806)	/* 0x1C4806 */
 		.short  0x0
 GLOBAL (scientist_lost_reason)	/* 0x1C4808 */
 		.fill   0x3c
