@@ -1101,7 +1101,7 @@ ubyte show_net_comms_box(struct ScreenBox *p_box)
             const char *text;
 
             plyrname[7] = '\0';
-            sprintf(locstr, "%s: %s", plyrname, net_players[i].field_0);
+            snprintf(locstr, sizeof(locstr), "%s: %s", plyrname, net_players[i].field_0);
             text = loctext_to_gtext(locstr);
             draw_text_purple_list2(2, dx + 5, text, 0);
             dx += tx_height + 4;
@@ -1808,10 +1808,134 @@ ubyte show_net_groups_box(struct ScreenBox *p_box)
 
 ubyte show_net_users_box(struct ScreenBox *p_box)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_show_net_users_box\n"
         : "=r" (ret) : "a" (p_box));
     return ret;
+#endif
+    const char *text;
+    struct TbNetworkPlayer *p_netplyr;
+    char locstr[16];
+    short plyr;
+    short scr_x, scr_y;
+    short tx_width, tx_height;
+
+    my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
+    if ((p_box->Flags & 0x1000) == 0)
+    {
+        lbFontPtr = med2_font;
+        tx_height = font_height('A');
+        lbDisplay.DrawFlags = 0x0100;
+        draw_text_purple_list2(0, 1, gui_strings[389], 0);
+        lbDisplay.DrawFlags = 0;
+        scr_y = tx_height + 8;
+        lbFontPtr = small_med_font;
+        tx_height = font_height('A');
+        lbDisplay.DrawFlags = 0x0004;
+        for (plyr = 0; plyr < 8; plyr++)
+        {
+            struct TbSprite *p_spr;
+            p_spr = &fe_icons_sprites[138];
+            draw_box_purple_list(p_box->X + 4, p_box->Y + scr_y + 4, 109, tx_height + 6, 56);
+            draw_sprite_purple_list(p_box->X + 113, p_box->Y + scr_y + 4, p_spr);
+            draw_box_purple_list(p_box->X + p_spr->SWidth + 113, p_box->Y + scr_y + 4, 15, tx_height + 6, 56);
+            scr_y += tx_height + 9;
+        }
+        lbDisplay.DrawFlags = 0;
+
+        copy_box_purple_list(p_box->X - 3, p_box->Y - 3, p_box->Width + 6, p_box->Height + 6);
+        p_box->Flags |= 0x1000;
+    }
+
+    lbFontPtr = small_med_font;
+    tx_height = font_height('A');
+    scr_y = 18;
+    if (login_control__State == 5)
+    {
+        ingame.InNetGame_UNSURE = -1;
+        for (plyr = 0; plyr < 8; plyr++)
+        {
+            TbResult ret;
+            ret = LbNetworkPlayerName(locstr, plyr);
+            if (ret != Lb_SUCCESS)
+            {
+                ingame.InNetGame_UNSURE &= ~(1 << plyr);
+                unkn2_names[plyr][0] = '\0';
+                continue;
+            }
+            if (strlen(locstr) == 0)
+            {
+                unkn2_names[plyr][0] = '\0';
+                ingame.InNetGame_UNSURE &= ~(1 << plyr);
+                continue;
+            }
+            if (byte_15516D == plyr)
+            {
+                lbDisplay.DrawFlags = 0x0040;
+                lbDisplay.DrawColour = 87;
+            }
+            else
+            {
+                lbDisplay.DrawFlags = 0;
+            }
+            strncpy(unkn2_names[plyr], locstr, sizeof(unkn2_names[0]));
+            tx_width = my_string_width(locstr);
+            scr_x = (110 - tx_width) >> 1;
+            if (is_unkn_current_player())
+                lbDisplay.DrawFlags |= 0x8000;
+            text = loctext_to_gtext(locstr);
+            draw_text_purple_list2(scr_x, scr_y + 3, text, 0);
+            lbDisplay.DrawFlags &= ~0x8000;
+
+            text = gui_strings[394 + group_types[plyr]];
+            scr_x = ((64 - my_string_width(text)) >> 1) + 139;
+            draw_text_purple_list2(scr_x, scr_y + 3, text, 0);
+            if (byte_1C5C28[plyr])
+            {
+                struct TbSprite *p_spr, *p_dspr;
+                p_spr = &fe_icons_sprites[138];
+                p_dspr = &fe_icons_sprites[109 + byte_1C5C28[plyr]];
+                draw_sprite_purple_list(p_box->X + (112 + p_spr->SWidth) + 4,
+                  p_box->Y + 4 + scr_y + 2, p_dspr);
+            }
+            if (is_unkn_current_player())
+            {
+                if (mouse_down_over_box_coords(text_window_x1, text_window_y1 + scr_y + 1,
+                  text_window_x2, text_window_y1 + tx_height + scr_y + 5))
+                {
+                    if (lbDisplay.LeftButton)
+                    {
+                        lbDisplay.LeftButton = 0;
+                        if (byte_15516D == plyr)
+                            byte_15516D = -1;
+                        else
+                            byte_15516D = plyr;
+                    }
+                }
+            }
+            scr_y += tx_height + 9;
+        }
+    }
+    else if (byte_15516C != -1)
+    {
+        p_netplyr = unkstruct04_arr[byte_15516C].Player;
+        for (plyr = 0; plyr < 8; plyr++)
+        {
+            const char *name;
+            name = p_netplyr[plyr].Name;
+            if (strlen(name))
+            {
+                snprintf(locstr, sizeof(locstr), "%s", name);
+                tx_width = my_string_width(locstr);
+                scr_x = (110 - tx_width) >> 1;
+                text = loctext_to_gtext(locstr);
+                draw_text_purple_list2(scr_x, scr_y + 3, text, 0);
+                scr_y += tx_height + 9;
+            }
+        }
+    }
+    return 0;
 }
 
 ubyte do_unkn8_EJECT(ubyte click)
