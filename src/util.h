@@ -42,7 +42,14 @@ extern "C" {
  *
  * Converts national characters in addition to normal alphabet.
  */
-ubyte chrtoupper(ubyte ch);
+ubyte fontchrtoupper(ubyte ch);
+
+/** Converts string to be used with application specific fonts to upper case.
+ *
+ * Converts national characters in addition to normal alphabet.
+ */
+void fontstrtoupper(char *s);
+
 void strtolower (char *string);
 void strtocapwords(char *s);
 

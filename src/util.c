@@ -47,7 +47,7 @@ extern struct CharacterSubst subst_table_lower_to_upper[66];
 #pragma pack()
 /******************************************************************************/
 
-ubyte chrtoupper(ubyte ch)
+ubyte fontchrtoupper(ubyte ch)
 {
     // TODO this should be just a simple conversion array, not such convoluted code
     if (ch <= 127)
@@ -70,6 +70,15 @@ ubyte chrtoupper(ubyte ch)
     return ch;
 }
 
+
+void fontstrtoupper(char *s)
+{
+    while (*s != '\0')
+    {
+        *s = fontchrtoupper(*s);
+        s++;
+    }
+}
 
 void strtolower(char *string)
 {

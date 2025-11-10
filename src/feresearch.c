@@ -448,7 +448,7 @@ void draw_unkn20_subfunc_01(int x, int y, char *text, ubyte a4)
               return;
             if (lbFontPtr != small_med_font || language_3str[0] != 'e')
             {
-                ch = chrtoupper(ch);
+                ch = fontchrtoupper(ch);
             }
             w = LbSprFontCharWidth(lbFontPtr, ch);
             dx = w >> 1;
