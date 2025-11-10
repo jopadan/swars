@@ -1605,10 +1605,83 @@ ubyte show_net_faction_box(struct ScreenBox *p_box)
 
 ubyte show_net_team_box(struct ScreenBox *p_box)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_show_net_team_box\n"
         : "=r" (ret) : "a" (p_box));
     return ret;
+#endif
+    short scr_y;
+    short tx_height;
+    int i;
+
+    my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
+
+    if ((p_box->Flags & 0x1000) != 0)
+    {
+        lbFontPtr = small_med_font;
+        tx_height = font_height('A');
+    }
+    else
+    {
+        lbFontPtr = med2_font;
+        tx_height = font_height('A');
+        scr_y = 0;
+        lbDisplay.DrawFlags = 0x0100;
+        draw_text_purple_list2(0, scr_y, gui_strings[391], 0);
+        scr_y += tx_height + 3;
+
+        lbFontPtr = small_med_font;
+        tx_height = font_height('A');
+        lbDisplay.DrawFlags = 0x0004;
+
+        for (i = 0; i < 4; i++)
+        {
+            draw_box_purple_list(p_box->X + 4, p_box->Y + 4 + scr_y,
+              p_box->Width - 8, tx_height + 4, 56);
+            scr_y += tx_height + 5;
+        }
+        lbDisplay.DrawFlags = 0;
+        copy_box_purple_list(p_box->X - 3, p_box->Y - 3,
+          p_box->Width + 6, p_box->Height + 6);
+        p_box->Flags |= 0x1000;
+    }
+
+    scr_y = 13;
+    for (i = 0; i < 4; i++)
+    {
+        if (byte_181189 == i + 1)
+        {
+            lbDisplay.DrawFlags = 0x140;
+            lbDisplay.DrawColour = 87;
+        }
+        else
+        {
+            lbDisplay.DrawFlags = 0x100;
+        }
+        lbDisplay.DrawFlags |= 0x8000;
+        draw_text_purple_list2(0, scr_y + 2, gui_strings[397 + i], 0);
+        lbDisplay.DrawFlags &= ~0x8000;
+
+        if (mouse_down_over_box_coords(text_window_x1, text_window_y1 + scr_y - 2,
+           text_window_x2, text_window_y1 + scr_y + tx_height + 2))
+        {
+            if (lbDisplay.LeftButton)
+            {
+              int plyr;
+              lbDisplay.LeftButton = 0;
+              if (byte_181189 == i + 1)
+                  byte_181189 = 0;
+              else
+                  byte_181189 = i + 1;
+              plyr = LbNetworkPlayerNumber();
+              network_players[plyr].Type = 7;
+            }
+        }
+        scr_y += tx_height + 5;
+    }
+    lbDisplay.DrawFlags = 0;
+    return 0;
 }
 
 ubyte show_net_groups_box(struct ScreenBox *p_box)
