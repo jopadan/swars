@@ -1246,8 +1246,11 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
 
     if (login_control__State != 5)
     {
+        TbBool draw_option;
+
         lbFontPtr = med2_font;
         tx_height = font_height('A');
+        draw_option = true;
 
         if (nsvc.I.Type == NetSvc_IPX)
         {
@@ -1309,6 +1312,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                     }
                 }
             }
+            draw_option = false;
         }
         else
         {
@@ -1332,21 +1336,22 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                   draw_line_purple_list(scr_x + 12, scr_y + 0, scr_x + 15, scr_y + 0, 174);
               }
               my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
-              if (!byte_1C4994)
+              if (!byte_1C4994) // Instead of option box, draw keyboard input
               {
                   tx_width = 15 * LbTextCharWidth('A');
                   scr_x = ((p_box->Width - tx_width) >> 1) - 4;
+                  scr_y = 22;
                   lbDisplay.DrawFlags |= 0x0004;
-                  draw_box_purple_list(scr_x + text_window_x1, text_window_y1 + 22, tx_width + 4, tx_height + 4, 243);
+                  draw_box_purple_list(scr_x + text_window_x1, text_window_y1 + scr_y, tx_width + 4, tx_height + 4, 243);
                   lbDisplay.DrawFlags &= ~0x0004;
                   lbDisplay.DrawFlags |= 0x8000;
-                  draw_text_purple_list2(scr_x + 2, 24, net_unkn2_text, 0);
+                  draw_text_purple_list2(scr_x + 2, scr_y + 2, net_unkn2_text, 0);
                   lbDisplay.DrawFlags &= ~0x8000;
                   if (!byte_1C4806)
                   {
                       tx_width = LbTextStringWidth(net_unkn2_text);
-                      if (mouse_down_over_box_coords(text_window_x1 + scr_x + 2, text_window_y1 + 22,
-                        text_window_x1 + scr_x + 2 + tx_width, text_window_y1 + tx_height + 24 + 2))
+                      if (mouse_down_over_box_coords(text_window_x1 + scr_x + 2, text_window_y1 + scr_y,
+                        text_window_x1 + scr_x + 2 + tx_width, text_window_y1 + scr_y + tx_height + 2 + 2))
                       {
                           if (lbDisplay.LeftButton)
                           {
@@ -1356,29 +1361,30 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                           }
                       }
                   }
-                  if ( byte_1C4806 == 1 )
+                  if (byte_1C4806 == 1)
                   {
-                    if ((gameturn & 2) != 0)
-                    {
-                        const struct TbSprite *p_spr;
-                        p_spr = LbFontCharSprite(lbFontPtr, 45);
-                        tx_width = LbTextStringWidth(net_unkn2_text);
-                        draw_sprite_purple_list(text_window_x1 + scr_x + 2 + tx_width, text_window_y1 + 27, p_spr);
-                    }
-                    if (user_read_value(net_unkn2_text, 0xEu, 2))
-                    {
-                        byte_1C4806 = 0;
-                    }
+                      if ((gameturn & 2) != 0)
+                      {
+                          const struct TbSprite *p_spr;
+                          p_spr = LbFontCharSprite(lbFontPtr, 45);
+                          tx_width = LbTextStringWidth(net_unkn2_text);
+                          draw_sprite_purple_list(text_window_x1 + scr_x + 2 + tx_width, text_window_y1 + 27, p_spr);
+                      }
+                      if (user_read_value(net_unkn2_text, 0xEu, 2))
+                      {
+                          byte_1C4806 = 0;
+                      }
                   }
-                  goto LABEL_67;
+                  draw_option = false;
               }
               byte_1C4806 = 0;
             }
+        }
+        if (draw_option) {
             //net_protocol_option_button.DrawFn(&net_protocol_option_button); -- incompatible calling convention
             asm volatile ("call *%1\n"
               :  : "a" (&net_protocol_option_button), "g" (net_protocol_option_button.DrawFn));
         }
-LABEL_67:
         //net_protocol_select_button.DrawFn(&net_protocol_select_button); -- incompatible calling convention
         asm volatile ("call *%1\n"
           :  : "a" (&net_protocol_select_button), "g" (net_protocol_select_button.DrawFn));
