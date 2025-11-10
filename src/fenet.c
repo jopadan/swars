@@ -1527,35 +1527,103 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
     return 0;
 }
 
-ubyte show_net_faction_box(struct ScreenBox *box)
+ubyte show_net_faction_box(struct ScreenBox *p_box)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_show_net_faction_box\n"
-        : "=r" (ret) : "a" (box));
+        : "=r" (ret) : "a" (p_box));
     return ret;
+#endif
+    short tx_height;
+    short scr_y;
+    int i;
+
+    my_set_text_window(p_box->X + 2, p_box->Y + 4, p_box->Width - 4, p_box->Height - 8);
+
+    if ((p_box->Flags & 0x1000) == 0)
+    {
+        lbFontPtr = med2_font;
+        tx_height = font_height('A');
+        lbDisplay.DrawFlags = 0x0100;
+        draw_text_purple_list2(0, 0, gui_strings[392], 0);
+        scr_y = tx_height + 10;
+
+        lbFontPtr = small_med_font;
+        tx_height = font_height('A');
+        lbDisplay.DrawFlags = 0x0004;
+
+        for (i = 0; i < 2; i++)
+        {
+            draw_box_purple_list(p_box->X + 4, p_box->Y + 4 + scr_y,
+              p_box->Width - 8, tx_height + 6, 56);
+            scr_y += tx_height + 9;
+        }
+        lbDisplay.DrawFlags = 0;
+
+        copy_box_purple_list(p_box->X - 3, p_box->Y - 3,
+          p_box->Width + 6, p_box->Height + 6);
+        p_box->Flags |= 0x1000;
+    }
+
+    lbFontPtr = small_med_font;
+    tx_height = font_height('A');
+
+    scr_y = 20;
+    for (i = 0; i < 2; i++)
+    {
+        if (byte_181183 == i)
+        {
+            lbDisplay.DrawFlags = (0x0040 | 0x0100);
+            lbDisplay.DrawColour = 87;
+        }
+        else
+        {
+            lbDisplay.DrawFlags = 0x0100;
+        }
+        lbDisplay.DrawFlags |= 0x8000;
+        draw_text_purple_list2(0, scr_y + 3, gui_strings[394 + i], 0);
+        lbDisplay.DrawFlags &= ~0x8000;
+
+        if (mouse_down_over_box_coords(text_window_x1, text_window_y1 - 2,
+           text_window_x2, text_window_y1 + scr_y + tx_height + 2))
+        {
+            if (lbDisplay.LeftButton)
+            {
+              int plyr;
+              lbDisplay.LeftButton = 0;
+              byte_181183 = i;
+              plyr = LbNetworkPlayerNumber();
+              network_players[plyr].Type = 8;
+            }
+        }
+        scr_y += tx_height + 9;
+    }
+    lbDisplay.DrawFlags = 0;
+    return 0;
 }
 
-ubyte show_net_team_box(struct ScreenBox *box)
+ubyte show_net_team_box(struct ScreenBox *p_box)
 {
     ubyte ret;
     asm volatile ("call ASM_show_net_team_box\n"
-        : "=r" (ret) : "a" (box));
+        : "=r" (ret) : "a" (p_box));
     return ret;
 }
 
-ubyte show_net_groups_box(struct ScreenBox *box)
+ubyte show_net_groups_box(struct ScreenBox *p_box)
 {
     ubyte ret;
     asm volatile ("call ASM_show_net_groups_box\n"
-        : "=r" (ret) : "a" (box));
+        : "=r" (ret) : "a" (p_box));
     return ret;
 }
 
-ubyte show_net_users_box(struct ScreenBox *box)
+ubyte show_net_users_box(struct ScreenBox *p_box)
 {
     ubyte ret;
     asm volatile ("call ASM_show_net_users_box\n"
-        : "=r" (ret) : "a" (box));
+        : "=r" (ret) : "a" (p_box));
     return ret;
 }
 
