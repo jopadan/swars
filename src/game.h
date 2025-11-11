@@ -419,7 +419,6 @@ extern ubyte refresh_equip_list;
 extern ubyte flic_mods[5];
 extern ubyte old_flic_mods[5];
 extern ubyte reload_background_flag;
-extern ushort word_1811AE;
 
 extern struct LevelDef level_def;
 

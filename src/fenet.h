@@ -34,6 +34,7 @@ extern "C" {
 TbBool local_player_hosts_the_game(void);
 
 void init_net_screen_boxes(void);
+void net_service_unkstruct04_clear(void);
 void show_netgame_unkn_case1(void);
 void reset_net_screen_boxes_flags(void);
 void reset_net_screen_EJECT_flags(void);

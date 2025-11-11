@@ -17478,7 +17478,7 @@ GLOBAL_FUNC (ASM_process_packets)	/* 0x3E728 */
 		cmp    %edx,%eax
 		je     jump_3e8a3
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		je     jump_3e8f9
 	jump_3e8a3:
@@ -17493,7 +17493,7 @@ GLOBAL_FUNC (ASM_process_packets)	/* 0x3E728 */
 		mov    EXPORT_SYMBOL(local_player_no),%al
 		call   ac_LbNetworkSessionStop
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		je     jump_3fd18
 		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A6F)
@@ -19090,7 +19090,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		jmp    jump_3ff3c
 	jump_3ff6e:
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		je     jump_400a8
 		xor    %ebx,%ebx
@@ -19239,7 +19239,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		call   ac_StopAllSamples
 	jump_401ee:
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		je     jump_40209
 		mov    EXPORT_SYMBOL(ingame)+0x927,%edi # ingame.fld_unkC4B
@@ -19249,7 +19249,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		mov    EXPORT_SYMBOL(ingame)+0x927,%edi # ingame.fld_unkC4B
 	jump_4020f:
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		jne    jump_4028a
 		xor    %esi,%esi
@@ -19325,7 +19325,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		call   ac_PacketRecord_Write
 	jump_402e2:
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		jne    jump_40334
 		xor    %ebx,%ebx
@@ -108803,13 +108803,13 @@ GLOBAL_FUNC(ASM_do_net_protocol_select)	/* 0x08EB50 */
 		add    $0x4,%ebx
 		test   %dl,%dl
 		je     jump_8ec36
-		mov    EXPORT_SYMBOL(word_1811AE),%dx
+		mov    nsvc__I__Type,%dx
 		dec    %dx
-		mov    %dx,EXPORT_SYMBOL(word_1811AE)
+		mov    %dx,nsvc__I__Type
 		jne    jump_8ebd1
 		mov    $0x5,%esi
 		mov    data_1c4a70,%cl
-		mov    %si,EXPORT_SYMBOL(word_1811AE)
+		mov    %si,nsvc__I__Type
 		test   %cl,%cl
 		je     jump_8ec11
 		mov    $0x1,%ch
@@ -108829,10 +108829,10 @@ GLOBAL_FUNC(ASM_do_net_protocol_select)	/* 0x08EB50 */
 		mov    net_protocol_select_button,%ax
 		mov    $0x5,%edi
 		add    $0xc,%eax
-		mov    %di,EXPORT_SYMBOL(word_1811AE)
+		mov    %di,nsvc__I__Type
 		mov    %ax,net_protocol_select_button
 	jump_8ec11:
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%ax
 		jb     jump_8ec2d
 		jbe    jump_8ecb7
@@ -108848,9 +108848,9 @@ GLOBAL_FUNC(ASM_do_net_protocol_select)	/* 0x08EB50 */
 		pop    %ebx
 		ret
 	jump_8ec36:
-		incw   EXPORT_SYMBOL(word_1811AE)
+		incw   nsvc__I__Type
 		xor    %edx,%edx
-		mov    EXPORT_SYMBOL(word_1811AE),%dx
+		mov    nsvc__I__Type,%dx
 		cmp    $0x5,%edx
 		jle    jump_8ec11
 		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A6F)
@@ -108861,7 +108861,7 @@ GLOBAL_FUNC(ASM_do_net_protocol_select)	/* 0x08EB50 */
 	jump_8ec5e:
 		mov    $0x1,%esi
 		mov    EXPORT_SYMBOL(byte_1C4A6F),%bl
-		mov    %si,EXPORT_SYMBOL(word_1811AE)
+		mov    %si,nsvc__I__Type
 		test   %bl,%bl
 		je     jump_8ec11
 		mov    net_protocol_select_button,%di
@@ -108877,7 +108877,7 @@ GLOBAL_FUNC(ASM_do_net_protocol_select)	/* 0x08EB50 */
 		mov    %ax,net_protocol_select_button
 		mov    %bx,net_unkn40_button
 		mov    %dh,EXPORT_SYMBOL(byte_1C4A6F)
-		mov    %cx,EXPORT_SYMBOL(word_1811AE)
+		mov    %cx,nsvc__I__Type
 		jmp    jump_8ec11
 	jump_8ecb7:
 		mov    $0x1108,%ebx
@@ -108892,7 +108892,7 @@ GLOBAL_FUNC(ASM_do_net_protocol_select)	/* 0x08EB50 */
 	jump_8ecdc:
 		add    $0x10,%eax
 		xor    %bh,%bh
-		mov    %bh,data_1c499c(%eax)
+		mov    %bh,EXPORT_SYMBOL(unkn2_names)-0x10(%eax)
 		cmp    $0x80,%eax
 		jne    jump_8ecdc
 		mov    $EXPORT_SYMBOL(nsvc),%eax
@@ -108926,7 +108926,7 @@ GLOBAL_FUNC(ASM_do_net_protocol_select)	/* 0x08EB50 */
 		mov    EXPORT_SYMBOL(gui_strings)+0x7CC,%eax
 		add    $0x8,%esp
 		mov    %cl,show_alert
-		mov    %dx,EXPORT_SYMBOL(word_1811AE)
+		mov    %dx,nsvc__I__Type
 		mov    %eax,EXPORT_SYMBOL(net_protocol_select_button)+0x08
 		mov    $ac_do_serial_speed_switch,%eax
 		mov    %ebp,EXPORT_SYMBOL(net_protocol_option_button)+0x8
@@ -109014,7 +109014,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		and    $0xff,%eax
 		mov    %eax,0x10(%esp)
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		jne    jump_8f155
 		mov    EXPORT_SYMBOL(lbFontPtr),%eax
@@ -109183,7 +109183,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 	jump_8f0c9:
 		add    $0x10,%eax
 		xor    %dh,%dh
-		mov    %dh,data_1c499c(%eax)
+		mov    %dh,EXPORT_SYMBOL(unkn2_names)-0x10(%eax)
 		cmp    $0x80,%eax
 		jne    jump_8f0c9
 		mov    $EXPORT_SYMBOL(nsvc),%eax
@@ -109207,7 +109207,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    %edi,EXPORT_SYMBOL(net_protocol_option_button)+0x18
 		mov    $0x2,%ebx
 		mov    %eax,EXPORT_SYMBOL(net_protocol_select_button)+0x08
-		mov    %bx,EXPORT_SYMBOL(word_1811AE)
+		mov    %bx,nsvc__I__Type
 		mov    $net_protocol_select_button,%eax
 		call   *EXPORT_SYMBOL(net_protocol_select_button)+0x10
 		xor    %al,%al
@@ -110745,7 +110745,7 @@ GLOBAL_FUNC(ASM_show_net_groups_box)	/* 0x0901E0 */
 		ret
 	jump_90497:
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		jne    jump_9043b
 		mov    $unkstruct04_arr,%ebp
@@ -116323,16 +116323,16 @@ GLOBAL_FUNC(ASM_show_netgame_unkn_case1)	/* 0x09BA5C */
 		push   %edx
 		push   %esi
 		push   %edi
-		cmpb   $0x0,data_1c4995
+		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4995)
 		jne    jump_9bb68
 		mov    $0xd15c,%edx
 		mov    $0x1,%ecx
 		mov    $login_name,%esi
-		mov    $data_1811e2,%edi
+		mov    $EXPORT_SYMBOL(byte_1811E2),%edi
 		xor    %ebx,%ebx
-		mov    %dx,data_1811ac
+		mov    %dx,nsvc__I__GameId
 		mov    %bx,data_1811b2
-		mov    %cx,EXPORT_SYMBOL(word_1811AE)
+		mov    %cx,nsvc__I__Type
 		push   %edi
 	jump_9ba9a:
 		mov    (%esi),%al
@@ -116350,7 +116350,7 @@ GLOBAL_FUNC(ASM_show_netgame_unkn_case1)	/* 0x09BA5C */
 		mov    $0x1108,%ebx
 		xor    %dl,%dl
 		mov    $unkstruct04_arr,%eax
-		mov    %dl,data_1811ea
+		mov    %dl,EXPORT_SYMBOL(byte_1C4995)+8
 		xor    %edx,%edx
 		call   ac_memset
 		xor    %dh,%dh
@@ -116359,7 +116359,7 @@ GLOBAL_FUNC(ASM_show_netgame_unkn_case1)	/* 0x09BA5C */
 	jump_9bad6:
 		add    $0x10,%eax
 		xor    %bl,%bl
-		mov    %bl,data_1c499c(%eax)
+		mov    %bl,EXPORT_SYMBOL(unkn2_names)-0x10(%eax)
 		cmp    $0x80,%eax
 		jne    jump_9bad6
 		mov    $EXPORT_SYMBOL(nsvc),%eax
@@ -116380,17 +116380,17 @@ GLOBAL_FUNC(ASM_show_netgame_unkn_case1)	/* 0x09BA5C */
 		call   ac_sprintf
 		mov    $0x1,%al
 		add    $0x8,%esp
-		mov    %si,EXPORT_SYMBOL(word_1811AE)
+		mov    %si,nsvc__I__Type
 		mov    %al,show_alert
 		mov    EXPORT_SYMBOL(gui_strings)+0x7CC,%eax
 		mov    %ebx,EXPORT_SYMBOL(net_protocol_option_button)+0x8
 		mov    %eax,EXPORT_SYMBOL(net_protocol_select_button)+0x08
 		mov    $0x1,%ah
 		mov    %ecx,EXPORT_SYMBOL(net_protocol_option_button)+0x18
-		mov    %ah,data_1c4995
+		mov    %ah,EXPORT_SYMBOL(byte_1C4995)
 		jmp    jump_9bbde
 	jump_9bb61:
-		movb   $0x1,data_1c4995
+		movb   $0x1,EXPORT_SYMBOL(byte_1C4995)
 	jump_9bb68:
 		mov    $net_protocol_box,%eax
 		call   *EXPORT_SYMBOL(net_protocol_box)+0x0C
@@ -116413,10 +116413,10 @@ GLOBAL_FUNC(ASM_show_netgame_unkn_case1)	/* 0x09BA5C */
 		cmp    $0x6,%eax
 		jne    jump_9bbde
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		jne    jump_9bbde
-		call   net_unkn_func_30
+		call   ac_net_unkn_func_30
 	jump_9bbde:
 		pop    %edi
 		pop    %esi
@@ -116897,7 +116897,7 @@ GLOBAL_FUNC(ASM_show_controls_joystick_box)	/* 0x09BBE4 */
 		cmp    $0x5,%eax
 		jne    jump_9c1e0
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		jne    jump_9c21c
 	jump_9c1e0:
@@ -164027,7 +164027,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_29)	/* 0x0CCF28 */
 
 
 /*----------------------------------------------------------------*/
-net_unkn_func_30:	/* 0x0CD0AC */
+GLOBAL_FUNC(ASM_net_unkn_func_30)	/* 0x0CD0AC */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx
@@ -164209,7 +164209,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_31)	/* 0x0CD2EC */
 		push   %ebp
 		mov    %eax,%esi
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		xor    %cl,%cl
 		cmp    $0x1,%eax
 		je     jump_cd3ec
@@ -164222,7 +164222,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_31)	/* 0x0CD2EC */
 	jump_cd320:
 		add    $0x10,%eax
 		xor    %dl,%dl
-		mov    %dl,data_1c499c(%eax)
+		mov    %dl,EXPORT_SYMBOL(unkn2_names)-0x10(%eax)
 		cmp    $0x80,%eax
 		jne    jump_cd320
 		mov    $EXPORT_SYMBOL(nsvc),%eax
@@ -164314,7 +164314,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_31)	/* 0x0CD2EC */
 		repnz movsb %ds:(%esi),%es:(%edi)
 		pop    %edi
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		je     jump_cd478
 		movzbl EXPORT_SYMBOL(local_player_no),%esi
@@ -164358,7 +164358,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_31)	/* 0x0CD2EC */
 		call   ac_LbNetworkHangUp
 	jump_cd4bc:
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		je     jump_cd4e1
 		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
@@ -164374,7 +164374,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_31)	/* 0x0CD2EC */
 		mov    $0x2,%edx
 		mov    $EXPORT_SYMBOL(net_baudrate_text),%ebp
 		mov    EXPORT_SYMBOL(gui_strings)+0x7CC,%eax
-		mov    %dx,EXPORT_SYMBOL(word_1811AE)
+		mov    %dx,nsvc__I__Type
 		mov    %eax,EXPORT_SYMBOL(net_protocol_select_button)+0x08
 		mov    $ac_do_serial_speed_switch,%eax
 		mov    %ebp,EXPORT_SYMBOL(net_protocol_option_button)+0x8
@@ -164407,7 +164407,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_32)	/* 0x0CD528 */
 		call   ac_LbNetworkSessionActive
 		test   %eax,%eax
 		jne    jump_cd79b
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		je     jump_cd63f
 		mov    $0x1108,%ebx
@@ -164420,7 +164420,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_32)	/* 0x0CD528 */
 	jump_cd56d:
 		add    $0x10,%eax
 		xor    %dh,%dh
-		mov    %dh,data_1c499c(%eax)
+		mov    %dh,EXPORT_SYMBOL(unkn2_names)-0x10(%eax)
 		cmp    $0x80,%eax
 		jne    jump_cd56d
 		mov    $EXPORT_SYMBOL(nsvc),%eax
@@ -164517,7 +164517,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_32)	/* 0x0CD528 */
 		mov    %al,EXPORT_SYMBOL(net_players_num)
 		xor    %eax,%eax
 		mov    %dl,EXPORT_SYMBOL(byte_15516C)
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		mov    %dl,EXPORT_SYMBOL(byte_15516D)
 		cmp    $0x1,%eax
 		je     jump_cd6e4
@@ -164564,7 +164564,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_32)	/* 0x0CD528 */
 		call   ac_LbNetworkHangUp
 	jump_cd72d:
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		je     jump_cd752
 		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
@@ -164581,7 +164581,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_32)	/* 0x0CD528 */
 		mov    $EXPORT_SYMBOL(net_baudrate_text),%edi
 		mov    $ac_do_serial_speed_switch,%ebp
 		mov    EXPORT_SYMBOL(gui_strings)+0x7CC,%eax
-		mov    %bx,EXPORT_SYMBOL(word_1811AE)
+		mov    %bx,nsvc__I__Type
 		mov    %eax,EXPORT_SYMBOL(net_protocol_select_button)+0x08
 		mov    %edi,EXPORT_SYMBOL(net_protocol_option_button)+0x8
 		mov    %ebp,EXPORT_SYMBOL(net_protocol_option_button)+0x18
@@ -167413,7 +167413,7 @@ GLOBAL_FUNC(ASM_do_net_protocol_option)	/* 0x0D2D3C */
 	jump_d2e14:
 		add    $0x10,%edx
 		xor    %ch,%ch
-		mov    %ch,data_1c499c(%edx)
+		mov    %ch,EXPORT_SYMBOL(unkn2_names)-0x10(%edx)
 		cmp    $0x80,%edx
 		jne    jump_d2e14
 		mov    $EXPORT_SYMBOL(nsvc),%eax
@@ -167432,7 +167432,7 @@ GLOBAL_FUNC(ASM_do_net_protocol_option)	/* 0x0D2D3C */
 		call   ac_sprintf
 		mov    $0x1,%al
 		add    $0x8,%esp
-		mov    %di,EXPORT_SYMBOL(word_1811AE)
+		mov    %di,nsvc__I__Type
 		mov    %ebx,EXPORT_SYMBOL(net_protocol_option_button)+0x8
 		mov    %al,show_alert
 		mov    EXPORT_SYMBOL(gui_strings)+0x7CC,%eax
@@ -167766,7 +167766,7 @@ GLOBAL_FUNC(ASM_do_net_INITIATE)	/* 0x0D3184 */
 		push   %ecx
 		push   %edx
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		jne    jump_d31a3
 		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
@@ -167859,7 +167859,7 @@ GLOBAL_FUNC(ASM_do_net_groups_LOGON)	/* 0x0D3274 */
 		push   %ecx
 		push   %edx
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		jne    jump_d3293
 		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
@@ -167879,7 +167879,7 @@ GLOBAL_FUNC(ASM_do_net_groups_LOGON)	/* 0x0D3274 */
 		cmp    $0xffffffff,%eax
 		jne    jump_d32c1
 		xor    %eax,%eax
-		mov    EXPORT_SYMBOL(word_1811AE),%ax
+		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		je     jump_d3335
 	jump_d32c1:
@@ -183138,9 +183138,9 @@ GLOBAL (byte_181189)
 
 GLOBAL (nsvc)	/* 0x1811A8 */
 		.long	0x0
-data_1811ac:
+nsvc__I__GameId:
 		.short  0x0
-GLOBAL (word_1811AE)	/* 0x1811AE */
+nsvc__I__Type:	/* 0x1811AE */
 		.short  0x0
 data_1811b0:
 		.short  0x0
@@ -183154,10 +183154,8 @@ data_1811c2:
 		.short  0x0
 data_1811c4:
 		.fill   0x1e
-data_1811e2:
-		.fill   0x8
-data_1811ea:
-		.fill   0x8
+GLOBAL (byte_1811E2)	/* 0x1811E2 */
+		.fill   0x10
 GLOBAL (unkn_flags_08)	/* 0x1811F2 */
 		.byte	0x0
 		.fill   0x4b1
@@ -184516,12 +184514,10 @@ GLOBAL (replay_intro_timer)	/* 0x1C4992 */
 		.short  0x0
 GLOBAL (byte_1C4994)	/* 0x1C4994 */
 		.byte	0x0
-data_1c4995:
+GLOBAL (byte_1C4995)	/* 0x1C4995 */
 		.ascii  "\x00\x00\x00"
 GLOBAL (net_unkn2_text)	/* 0x1C4998 */
-		.long	0x0
-data_1c499c:
-		.fill   0x10
+		.fill   0x14
 GLOBAL (unkn2_names)	/* 0x1C49AC */
 		.fill   0x80
 GLOBAL (new_weapons_researched)	/* 0x1c4a2c */

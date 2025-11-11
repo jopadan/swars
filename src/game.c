@@ -5721,7 +5721,7 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
         byte_15516D = -1;
         reset_net_screen_EJECT_flags();
         LbNetworkSessionStop();
-        if (word_1811AE == 1)
+        if (nsvc.I.Type == 1)
         {
             if (p_netplyr->U.Progress.val_15516D == netplyr)
             {
@@ -5744,16 +5744,12 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
         break;
     case 13:
         LbNetworkSessionStop();
-        if (word_1811AE == 1)
+        if (nsvc.I.Type == 1)
         {
             if (plyr == netplyr || net_host_player_no == plyr)
             {
                 net_new_game_prepare();
-                memset(unkstruct04_arr, 0, 0x1108u);
-                byte_1C6D48 = 0;
-                for (i = 0; i < PLAYERS_LIMIT; i++) {
-                    unkn2_names[i][0] = '\0';
-                }
+                net_service_unkstruct04_clear();
             }
         }
         else
@@ -5883,7 +5879,7 @@ void net_unkn_func_33(void)
     {
         LbNetworkSessionStop();
         net_new_game_prepare();
-        if (word_1811AE != 1)
+        if (nsvc.I.Type != 1)
         {
             if (byte_1C4A6F)
                 LbNetworkHangUp();
@@ -6158,10 +6154,10 @@ void show_load_and_prep_mission(void)
         flic_unkn03(AniSl_BILLBOARD);
         xdo_next_frame(AniSl_BILLBOARD);
 
-        if ( in_network_game )
+        if (in_network_game)
         {
-            if (word_1811AE != 1)
-                ingame.InNetGame_UNSURE = 3;
+            if (nsvc.I.Type != NetSvc_IPX)
+                ingame.InNetGame_UNSURE = ((1 << 0) | (1 << 1)); // two players
             ingame.DetailLevel = 0;
             bang_set_detail(ingame.DetailLevel == 0);
         }

@@ -39,14 +39,14 @@
 void net_player_leave(PlayerIdx plyr)
 {
     kill_my_players(plyr);
-    if ((plyr == net_host_player_no) || (plyr == local_player_no) || (nsvc.I.Type != 1))
+    if ((plyr == net_host_player_no) || (plyr == local_player_no) || (nsvc.I.Type != NetSvc_IPX))
     {
         ingame.DisplayMode = DpM_PURPLEMNU;
         StopCD();
         StopAllSamples();
         SetMusicVolume(100, 0);
         LbNetworkSessionStop();
-        if (nsvc.I.Type != 1 && byte_1C4A6F)
+        if (nsvc.I.Type != NetSvc_IPX && byte_1C4A6F)
             LbNetworkHangUp();
     }
     else

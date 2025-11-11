@@ -79,8 +79,10 @@ extern ubyte byte_1C47EA;
 extern ubyte byte_1C4805;
 extern ubyte byte_1C4806;
 extern ubyte byte_1C4994;
+extern ubyte byte_1C4995;
 extern ubyte byte_155170[4];
 extern char net_unkn1_text[25];
+extern char byte_1811E2[16];
 
 ubyte ac_do_net_protocol_option(ubyte click);
 ubyte ac_do_net_unkn40(ubyte click);
@@ -1431,20 +1433,22 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                     byte_1C4806 = 0;
                     addr = 0;
                     sscanf(net_proto_param_text, "%04x", &addr);
+                    nsvc.I.Param = addr;
                     LbNetworkSetupIPXAddress(addr);
                     net_service_unkstruct04_clear();
 
-                    if (LbNetworkServiceStart(&nsvc.I) == Lb_SUCCESS)
+                    if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
                     {
-                        byte_1C4A7C = 1;
-                    }
-                    else
-                    {
+                        LOGERR("Failed on LbNetworkServiceStart");
                         alert_box_text_fmt("%s", gui_strings[568]);
                         net_protocol_option_button.Text = net_baudrate_text;
                         net_protocol_option_button.CallBackFn = ac_do_serial_speed_switch;
                         net_protocol_select_button.Text = gui_strings[499];
-                        nsvc.I.Type = 2;
+                        nsvc.I.Type = NetSvc_COM1;
+                    }
+                    else
+                    {
+                        byte_1C4A7C = 1;
                     }
                 }
             }
@@ -1806,6 +1810,37 @@ ubyte show_net_groups_box(struct ScreenBox *p_box)
     return 0;
 }
 
+int refresh_users_in_net_game(void)
+{
+    char locstr[16];
+    int n;
+    short plyr;
+
+    n = 0;
+    ingame.InNetGame_UNSURE = (1 << 8) - 1;
+    for (plyr = 0; plyr < 8; plyr++)
+    {
+        TbResult ret;
+        ret = LbNetworkPlayerName(locstr, plyr);
+        if (ret != Lb_SUCCESS)
+        {
+            unkn2_names[plyr][0] = '\0';
+            ingame.InNetGame_UNSURE &= ~(1 << plyr);
+            continue;
+        }
+        if (locstr[0] == '\0')
+        {
+            unkn2_names[plyr][0] = '\0';
+            ingame.InNetGame_UNSURE &= ~(1 << plyr);
+            continue;
+        }
+        strncpy(unkn2_names[plyr], locstr, sizeof(unkn2_names[0]));
+        n++;
+    }
+    LOGSYNC("Net players %d", n);
+    return n;
+}
+
 ubyte show_net_users_box(struct ScreenBox *p_box)
 {
 #if 0
@@ -1816,7 +1851,6 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
 #endif
     const char *text;
     struct TbNetworkPlayer *p_netplyr;
-    char locstr[16];
     short plyr;
     short scr_x, scr_y;
     short tx_width, tx_height;
@@ -1853,21 +1887,13 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
     scr_y = 18;
     if (login_control__State == 5)
     {
-        ingame.InNetGame_UNSURE = -1;
+        refresh_users_in_net_game();
+
         for (plyr = 0; plyr < 8; plyr++)
         {
-            TbResult ret;
-            ret = LbNetworkPlayerName(locstr, plyr);
-            if (ret != Lb_SUCCESS)
+            text = unkn2_names[plyr];
+            if (text[0] == '\0')
             {
-                ingame.InNetGame_UNSURE &= ~(1 << plyr);
-                unkn2_names[plyr][0] = '\0';
-                continue;
-            }
-            if (strlen(locstr) == 0)
-            {
-                unkn2_names[plyr][0] = '\0';
-                ingame.InNetGame_UNSURE &= ~(1 << plyr);
                 continue;
             }
             if (byte_15516D == plyr)
@@ -1879,12 +1905,11 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
             {
                 lbDisplay.DrawFlags = 0;
             }
-            strncpy(unkn2_names[plyr], locstr, sizeof(unkn2_names[0]));
-            tx_width = my_string_width(locstr);
+            tx_width = my_string_width(text);
             scr_x = (110 - tx_width) >> 1;
             if (is_unkn_current_player())
                 lbDisplay.DrawFlags |= 0x8000;
-            text = loctext_to_gtext(locstr);
+            text = loctext_to_gtext(text);
             draw_text_purple_list2(scr_x, scr_y + 3, text, 0);
             lbDisplay.DrawFlags &= ~0x8000;
 
@@ -1924,18 +1949,25 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
         {
             const char *name;
             name = p_netplyr[plyr].Name;
-            if (strlen(name))
+            if (name[0] != '\0')
             {
-                snprintf(locstr, sizeof(locstr), "%s", name);
-                tx_width = my_string_width(locstr);
+                tx_width = my_string_width(name);
                 scr_x = (110 - tx_width) >> 1;
-                text = loctext_to_gtext(locstr);
+                text = loctext_to_gtext(name);
                 draw_text_purple_list2(scr_x, scr_y + 3, text, 0);
                 scr_y += tx_height + 9;
             }
         }
     }
     return 0;
+}
+
+int net_unkn_func_30(void)
+{
+    int ret;
+    asm volatile ("call ASM_net_unkn_func_30\n"
+        : "=r" (ret) : );
+    return ret;
 }
 
 ubyte do_unkn8_EJECT(ubyte click)
