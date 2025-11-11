@@ -108790,11 +108790,11 @@ GLOBAL_FUNC(ASM_do_net_protocol_select)	/* 0x08EB50 */
 		push   %edi
 		push   %ebp
 		mov    %al,%dl
-		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
+		cmpb   $0x0,EXPORT_SYMBOL(net_service_started)
 		je     jump_8eb6e
 		xor    %dh,%dh
 		call   ac_LbNetworkReset
-		mov    %dh,EXPORT_SYMBOL(byte_1C4A7C)
+		mov    %dh,EXPORT_SYMBOL(net_service_started)
 	jump_8eb6e:
 		mov    net_protocol_select_button,%ax
 		mov    EXPORT_SYMBOL(net_protocol_select_button)+0x04,%bx
@@ -108903,7 +108903,7 @@ GLOBAL_FUNC(ASM_do_net_protocol_select)	/* 0x08EB50 */
 		mov    $0xff,%al
 		mov    $EXPORT_SYMBOL(net_proto_param_text),%edx
 		mov    $ASM_do_net_protocol_option,%ebx
-		mov    %ch,EXPORT_SYMBOL(byte_1C4A7C)
+		mov    %ch,EXPORT_SYMBOL(net_service_started)
 		mov    %al,EXPORT_SYMBOL(byte_15516C)
 		mov    %edx,EXPORT_SYMBOL(net_protocol_option_button)+0x8
 		mov    %ebx,EXPORT_SYMBOL(net_protocol_option_button)+0x18
@@ -109190,7 +109190,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		call   ac_LbNetworkServiceStart
 		cmp    $0x1,%eax
 		jne    jump_8f0f6
-		movb   $0x1,EXPORT_SYMBOL(byte_1C4A7C)
+		movb   $0x1,EXPORT_SYMBOL(net_service_started)
 		jmp    jump_8f502
 	jump_8f0f6:
 		mov    EXPORT_SYMBOL(gui_strings)+0x8E0,%ecx
@@ -116323,7 +116323,7 @@ GLOBAL_FUNC(ASM_show_netgame_unkn_case1)	/* 0x09BA5C */
 		push   %edx
 		push   %esi
 		push   %edi
-		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4995)
+		cmpb   $0x0,EXPORT_SYMBOL(net_autostart_done)
 		jne    jump_9bb68
 		mov    $0xd15c,%edx
 		mov    $0x1,%ecx
@@ -116350,7 +116350,7 @@ GLOBAL_FUNC(ASM_show_netgame_unkn_case1)	/* 0x09BA5C */
 		mov    $0x1108,%ebx
 		xor    %dl,%dl
 		mov    $unkstruct04_arr,%eax
-		mov    %dl,EXPORT_SYMBOL(byte_1C4995)+8
+		mov    %dl,EXPORT_SYMBOL(net_autostart_done)+8
 		xor    %edx,%edx
 		call   ac_memset
 		xor    %dh,%dh
@@ -116363,13 +116363,13 @@ GLOBAL_FUNC(ASM_show_netgame_unkn_case1)	/* 0x09BA5C */
 		cmp    $0x80,%eax
 		jne    jump_9bad6
 		mov    $EXPORT_SYMBOL(nsvc),%eax
-		mov    %bl,EXPORT_SYMBOL(byte_1C4A7C)
+		mov    %bl,EXPORT_SYMBOL(net_service_started)
 		call   ac_LbNetworkServiceStart
 		cmp    $0x1,%eax
 		jne    jump_9bb04
-		movb   $0x1,EXPORT_SYMBOL(byte_1C4A7C)
+		movb   $0x1,EXPORT_SYMBOL(net_service_started)
 	jump_9bb04:
-		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
+		cmpb   $0x0,EXPORT_SYMBOL(net_service_started)
 		jne    jump_9bb61
 		mov    EXPORT_SYMBOL(gui_strings)+0x8E0,%edx
 		push   %edx
@@ -116387,10 +116387,10 @@ GLOBAL_FUNC(ASM_show_netgame_unkn_case1)	/* 0x09BA5C */
 		mov    %eax,EXPORT_SYMBOL(net_protocol_select_button)+0x08
 		mov    $0x1,%ah
 		mov    %ecx,EXPORT_SYMBOL(net_protocol_option_button)+0x18
-		mov    %ah,EXPORT_SYMBOL(byte_1C4995)
+		mov    %ah,EXPORT_SYMBOL(net_autostart_done)
 		jmp    jump_9bbde
 	jump_9bb61:
-		movb   $0x1,EXPORT_SYMBOL(byte_1C4995)
+		movb   $0x1,EXPORT_SYMBOL(net_autostart_done)
 	jump_9bb68:
 		mov    $net_protocol_box,%eax
 		call   *EXPORT_SYMBOL(net_protocol_box)+0x0C
@@ -164245,7 +164245,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_31)	/* 0x0CD2EC */
 		mov    $0x1,%bl
 		mov    %eax,%edx
 		shl    $0x2,%eax
-		mov    %bl,EXPORT_SYMBOL(byte_1C4A7C)
+		mov    %bl,EXPORT_SYMBOL(net_service_started)
 		sub    %edx,%eax
 		xor    %dh,%dh
 		mov    EXPORT_SYMBOL(byte_1C4A6F),%bh
@@ -164361,15 +164361,15 @@ GLOBAL_FUNC(ASM_net_unkn_func_31)	/* 0x0CD2EC */
 		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		je     jump_cd4e1
-		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
+		cmpb   $0x0,EXPORT_SYMBOL(net_service_started)
 		je     jump_cd4d7
 		call   ac_LbNetworkReset
 	jump_cd4d7:
 		xor    %cl,%cl
-		mov    %cl,EXPORT_SYMBOL(byte_1C4A7C)
+		mov    %cl,EXPORT_SYMBOL(net_service_started)
 		jmp    jump_cd515
 	jump_cd4e1:
-		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
+		cmpb   $0x0,EXPORT_SYMBOL(net_service_started)
 		jne    jump_cd515
 		mov    $0x2,%edx
 		mov    $EXPORT_SYMBOL(net_baudrate_text),%ebp
@@ -164447,7 +164447,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_32)	/* 0x0CD528 */
 		mov    %bl,data_1a63ae(%eax)
 		mov    $0x1,%bh
 		mov    EXPORT_SYMBOL(byte_1C4A6F),%cl
-		mov    %bh,EXPORT_SYMBOL(byte_1C4A7C)
+		mov    %bh,EXPORT_SYMBOL(net_service_started)
 		test   %cl,%cl
 		je     jump_cd63f
 		call   ac_LbNetworkInit
@@ -164567,15 +164567,15 @@ GLOBAL_FUNC(ASM_net_unkn_func_32)	/* 0x0CD528 */
 		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		je     jump_cd752
-		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
+		cmpb   $0x0,EXPORT_SYMBOL(net_service_started)
 		je     jump_cd748
 		call   ac_LbNetworkReset
 	jump_cd748:
 		xor    %ah,%ah
-		mov    %ah,EXPORT_SYMBOL(byte_1C4A7C)
+		mov    %ah,EXPORT_SYMBOL(net_service_started)
 		jmp    jump_cd787
 	jump_cd752:
-		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
+		cmpb   $0x0,EXPORT_SYMBOL(net_service_started)
 		jne    jump_cd787
 		mov    $0x2,%ebx
 		mov    $EXPORT_SYMBOL(net_baudrate_text),%edi
@@ -167351,11 +167351,11 @@ GLOBAL_FUNC(ASM_do_net_protocol_option)	/* 0x0D2D3C */
 		push   %edx
 		push   %edi
 		mov    %al,%dl
-		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
+		cmpb   $0x0,EXPORT_SYMBOL(net_service_started)
 		je     jump_d2d58
 		xor    %dh,%dh
 		call   ac_LbNetworkReset
-		mov    %dh,EXPORT_SYMBOL(byte_1C4A7C)
+		mov    %dh,EXPORT_SYMBOL(net_service_started)
 	jump_d2d58:
 		mov    EXPORT_SYMBOL(lbShift),%bl
 		mov    $0x1,%eax
@@ -167420,7 +167420,7 @@ GLOBAL_FUNC(ASM_do_net_protocol_option)	/* 0x0D2D3C */
 		call   ac_LbNetworkServiceStart
 		cmp    $0x1,%eax
 		jne    jump_d2e3f
-		movb   $0x1,EXPORT_SYMBOL(byte_1C4A7C)
+		movb   $0x1,EXPORT_SYMBOL(net_service_started)
 		jmp    jump_d2e86
 	jump_d2e3f:
 		mov    EXPORT_SYMBOL(gui_strings)+0x8E0,%edx
@@ -167769,7 +167769,7 @@ GLOBAL_FUNC(ASM_do_net_INITIATE)	/* 0x0D3184 */
 		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		jne    jump_d31a3
-		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
+		cmpb   $0x0,EXPORT_SYMBOL(net_service_started)
 		jne    jump_d31a3
 		xor    %al,%al
 		pop    %edx
@@ -167862,7 +167862,7 @@ GLOBAL_FUNC(ASM_do_net_groups_LOGON)	/* 0x0D3274 */
 		mov    nsvc__I__Type,%ax
 		cmp    $0x1,%eax
 		jne    jump_d3293
-		cmpb   $0x0,EXPORT_SYMBOL(byte_1C4A7C)
+		cmpb   $0x0,EXPORT_SYMBOL(net_service_started)
 		jne    jump_d3293
 		xor    %al,%al
 		pop    %edx
@@ -184514,7 +184514,7 @@ GLOBAL (replay_intro_timer)	/* 0x1C4992 */
 		.short  0x0
 GLOBAL (byte_1C4994)	/* 0x1C4994 */
 		.byte	0x0
-GLOBAL (byte_1C4995)	/* 0x1C4995 */
+GLOBAL (net_autostart_done)	/* 0x1C4995 */
 		.ascii  "\x00\x00\x00"
 GLOBAL (net_unkn2_text)	/* 0x1C4998 */
 		.fill   0x14
@@ -184545,7 +184545,7 @@ GLOBAL (hotspot_buffer)	/* 0x1C4A74 */
  */
 GLOBAL (back_buffer)
 		.long	0x0
-GLOBAL (byte_1C4A7C)	/* 0x1C4A7C */
+GLOBAL (net_service_started)	/* 0x1C4A7C */
 		.byte	0x0
 GLOBAL (change_screen)	/* 0x1C4A7D */
 		.byte	0x0

@@ -5739,7 +5739,7 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
             if (byte_1C4A6F)
                 LbNetworkHangUp();
             LbNetworkReset();
-            byte_1C4A7C = 0;
+            net_service_started = 0;
         }
         break;
     case 13:
@@ -5761,7 +5761,7 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
             if ( byte_1C4A6F )
               LbNetworkHangUp();
             LbNetworkReset();
-            byte_1C4A7C = 0;
+            net_service_started = 0;
         }
         if (screentype == SCRT_CRYO)
         {
@@ -5884,7 +5884,7 @@ void net_unkn_func_33(void)
             if (byte_1C4A6F)
                 LbNetworkHangUp();
             LbNetworkReset();
-            byte_1C4A7C = 0;
+            net_service_started = 0;
         }
     }
 
