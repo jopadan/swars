@@ -109166,7 +109166,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		call   ac_user_read_value
 		test   %al,%al
 		je     jump_8f502
-		push   $data_1811b2
+		push   $nsvc__I__Param
 		push   $asc04x
 		xor    %ah,%ah
 		push   $EXPORT_SYMBOL(net_proto_param_text)
@@ -116331,7 +116331,7 @@ GLOBAL_FUNC(ASM_show_netgame_unkn_case1)	/* 0x09BA5C */
 		mov    $EXPORT_SYMBOL(byte_1811E2),%edi
 		xor    %ebx,%ebx
 		mov    %dx,nsvc__I__GameId
-		mov    %bx,data_1811b2
+		mov    %bx,nsvc__I__Param
 		mov    %cx,nsvc__I__Type
 		push   %edi
 	jump_9ba9a:
@@ -167369,26 +167369,26 @@ GLOBAL_FUNC(ASM_do_net_protocol_option)	/* 0x0D2D3C */
 	jump_d2d7b:
 		test   %dl,%dl
 		je     jump_d2d9d
-		sub    %ax,data_1811b2
-		mov    data_1811b0,%eax
+		sub    %ax,nsvc__I__Param
+		mov    nsvc__I__Flags,%eax
 		sar    $0x10,%eax
 		test   %eax,%eax
 		jge    jump_d2dc2
-		movw   $0xaba,data_1811b2
+		movw   $0xaba,nsvc__I__Param
 		jmp    jump_d2dc2
 	jump_d2d9d:
-		mov    data_1811b2,%dx
+		mov    nsvc__I__Param,%dx
 		add    %eax,%edx
 		xor    %eax,%eax
 		mov    %dx,%ax
-		mov    %dx,data_1811b2
+		mov    %dx,nsvc__I__Param
 		cmp    $0xaba,%eax
 		jle    jump_d2dc2
 		xor    %ebx,%ebx
-		mov    %bx,data_1811b2
+		mov    %bx,nsvc__I__Param
 	jump_d2dc2:
 		xor    %eax,%eax
-		mov    data_1811b2,%ax
+		mov    nsvc__I__Param,%ax
 		push   %eax
 		push   $asc04x_0
 		push   $EXPORT_SYMBOL(net_proto_param_text)
@@ -183142,9 +183142,9 @@ nsvc__I__GameId:
 		.short  0x0
 nsvc__I__Type:	/* 0x1811AE */
 		.short  0x0
-data_1811b0:
+nsvc__I__Flags:
 		.short  0x0
-data_1811b2:
+nsvc__I__Param:
 		.short  0x0
 data_1811b4:
 		.fill   0x6

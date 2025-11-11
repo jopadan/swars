@@ -192,9 +192,9 @@ ubyte do_net_protocol_option(ubyte click)
     if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
     {
         LOGERR("Failed on LbNetworkServiceStart");
+        alert_box_text_fmt("%s", gui_strings[568]);
         nsvc.I.Type = NetSvc_COM1;
         net_service_gui_switch();
-        alert_box_text_fmt("%s", gui_strings[568]);
         return 1;
     }
 
@@ -470,7 +470,7 @@ skip_modem_init:
     net_host_player_no = LbNetworkHostPlayerNumber();
     net_players_num = LbNetworkSessionNumberPlayers();
     byte_1C6D4A = 1;
-    LbMemoryCopy(&nsvc.F, p_nsession, 0x28u);
+    LbMemoryCopy(&nsvc.S, p_nsession, sizeof(struct TbNetworkSession));
     if (nsvc.I.Type != NetSvc_IPX) {
         players[local_player_no].DoubleMode = 0;
     }
@@ -588,7 +588,10 @@ ubyte do_net_groups_LOGON(ubyte click)
     {
         if (byte_15516C != -1 || nsvc.I.Type != NetSvc_IPX)
         {
-            if (net_unkn_func_31(&unkstruct04_arr[byte_15516C].Session))
+            struct TbNetworkSession *p_nsession;
+
+            p_nsession = &unkstruct04_arr[byte_15516C].Session;
+            if (net_unkn_func_31(p_nsession))
             {
                 netgame_state_enter_5();
             }
@@ -1213,9 +1216,9 @@ ubyte do_net_protocol_select(ubyte click)
         if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
         {
             LOGERR("Failed on LbNetworkServiceStart");
+            alert_box_text_fmt("%s", gui_strings[568]);
             nsvc.I.Type = NetSvc_COM1;
             net_service_gui_switch();
-            alert_box_text_fmt("%s", gui_strings[568]);
             break;
         }
         byte_1C4A7C = 1;
@@ -1441,10 +1444,8 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                     {
                         LOGERR("Failed on LbNetworkServiceStart");
                         alert_box_text_fmt("%s", gui_strings[568]);
-                        net_protocol_option_button.Text = net_baudrate_text;
-                        net_protocol_option_button.CallBackFn = ac_do_serial_speed_switch;
-                        net_protocol_select_button.Text = gui_strings[499];
                         nsvc.I.Type = NetSvc_COM1;
+                        net_service_gui_switch();
                     }
                     else
                     {
@@ -1753,11 +1754,11 @@ ubyte show_net_groups_box(struct ScreenBox *p_box)
     {
         if (nsvc.I.Type == NetSvc_IPX)
         {
-            struct TbNetworkSessionList *p_session;
+            struct TbNetworkSession *p_nsession;
 
             for (i = 0; i < byte_1C6D48; i++)
             {
-                p_session = &unkstruct04_arr[i];
+                p_nsession = &unkstruct04_arr[i].Session;
 
                 if (byte_15516C == i)
                 {
@@ -1768,7 +1769,7 @@ ubyte show_net_groups_box(struct ScreenBox *p_box)
                 {
                     lbDisplay.DrawFlags = 0x0100;
                 }
-                text = net_group_name_to_gtext(p_session->Session.Name);
+                text = net_group_name_to_gtext(p_nsession->Name);
                 lbDisplay.DrawFlags |= 0x8000;
                 draw_text_purple_list2(0, scr_y, text, 0);
                 lbDisplay.DrawFlags &= ~0x8000;
@@ -1989,9 +1990,62 @@ ubyte do_unkn8_EJECT(ubyte click)
 
 void show_netgame_unkn_case1(void)
 {
+#if 1
     asm volatile (
       "call ASM_show_netgame_unkn_case1\n"
         :  :  : "eax" );
+    return;
+#endif
+    if (!byte_1C4995)
+    {
+        nsvc.I.GameId = 0xD15C;
+        nsvc.I.Param = 0;
+        nsvc.I.Type = NetSvc_IPX;
+
+        strncpy(byte_1811E2, login_name, sizeof(byte_1811E2));
+        byte_1811E2[8] = '\0';
+        net_service_unkstruct04_clear();
+
+        byte_1C4A7C = (LbNetworkServiceStart(&nsvc.I) == Lb_SUCCESS);
+        if (!byte_1C4A7C)
+        {
+            byte_1C4995 = 1;
+            LOGERR("Failed on LbNetworkServiceStart");
+            alert_box_text_fmt("%s", gui_strings[568]);
+            nsvc.I.Type = NetSvc_COM1;
+            net_service_gui_switch();
+            return;
+        }
+        byte_1C4995 = 1;
+    }
+    //net_protocol_box.DrawFn(&net_protocol_box); -- incompatible calling convention
+    asm volatile ("call *%1\n"
+      :  : "a" (&net_protocol_box), "g" (net_protocol_box.DrawFn));
+    //net_groups_box.DrawFn(&net_groups_box); -- incompatible calling convention
+    asm volatile ("call *%1\n"
+      :  : "a" (&net_groups_box), "g" (net_groups_box.DrawFn));
+    //net_users_box.DrawFn(&net_users_box); -- incompatible calling convention
+    asm volatile ("call *%1\n"
+      :  : "a" (&net_users_box), "g" (net_users_box.DrawFn));
+    //net_faction_box.DrawFn(&net_faction_box); -- incompatible calling convention
+    asm volatile ("call *%1\n"
+      :  : "a" (&net_faction_box), "g" (net_faction_box.DrawFn));
+    //net_team_box.DrawFn(&net_team_box); -- incompatible calling convention
+    asm volatile ("call *%1\n"
+      :  : "a" (&net_team_box), "g" (net_team_box.DrawFn));
+    //net_benefits_box.DrawFn(&net_benefits_box); -- incompatible calling convention
+    asm volatile ("call *%1\n"
+      :  : "a" (&net_benefits_box), "g" (net_benefits_box.DrawFn));
+    //net_comms_box.DrawFn(&net_comms_box); -- incompatible calling convention
+    asm volatile ("call *%1\n"
+      :  : "a" (&net_comms_box), "g" (net_comms_box.DrawFn));
+    //net_grpaint.DrawFn(&net_grpaint); -- incompatible calling convention
+    asm volatile ("call *%1\n"
+      :  : "a" (&net_grpaint), "g" (net_grpaint.DrawFn));
+
+    if ((login_control__State == 6) && (nsvc.I.Type == NetSvc_IPX)) {
+        net_unkn_func_30();
+    }
 }
 
 void init_net_screen_boxes(void)

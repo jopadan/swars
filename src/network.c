@@ -115,6 +115,7 @@ struct NetworkServiceInfo Network_Service_List[] = {
     {0, 0, 0, 0, 0},
 };
 
+/******************************************************************************/
 TbResult LbNetworkSetSessionCreateFunction(void *func)
 {
     NetworkServicePtr.F.SessionCreate = func;
@@ -2222,4 +2223,5 @@ void net_system_reset(void)
     LbNetworkSetSessionAnswerFunction(NULL);
     LbNetworkSetSessionHangUpFunction(NULL);
 }
+
 /******************************************************************************/
