@@ -155,6 +155,22 @@ void net_service_switch(ushort svctp)
     net_service_gui_switch();
 }
 
+/** Restart the network service after an option change.
+ */
+TbBool net_service_restart(void)
+{
+    net_service_unkstruct04_clear();
+
+    if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
+    {
+        LOGERR("Failed on LbNetworkServiceStart");
+        alert_box_text_fmt("%s", gui_strings[568]);
+        return false;
+    }
+    net_service_started = 1;
+    return true;
+}
+
 ubyte do_net_protocol_option(ubyte click)
 {
 #if 0
@@ -194,17 +210,10 @@ ubyte do_net_protocol_option(ubyte click)
     sprintf(net_proto_param_text, "%04x", (int)nsvc.I.Param);
     LbStringToUpper(net_proto_param_text);
 
-    net_service_unkstruct04_clear();
-
-    if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
-    {
-        LOGERR("Failed on LbNetworkServiceStart");
-        alert_box_text_fmt("%s", gui_strings[568]);
+    if (!net_service_restart()) {
         // Switch to a service which is always available
         net_service_switch(NetSvc_COM1);
-        return 1;
     }
-    net_service_started = 1;
 
     return 1;
 }
@@ -320,15 +329,8 @@ ubyte net_unkn_func_32(void)
     if (nsvc.I.Type == NetSvc_IPX)
         goto skip_modem_init;
 
-    net_service_unkstruct04_clear();
-
-    if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
-    {
-        LOGERR("Failed on LbNetworkServiceStart");
-        alert_box_text_fmt("%s", gui_strings[568]);
+    if (!net_service_restart())
         goto out_fail;
-    }
-    net_service_started = 1;
 
     LbNetworkSetBaud(unkn_rate);
     players[local_player_no].DoubleMode = 0;
@@ -423,15 +425,8 @@ ubyte net_unkn_func_31(struct TbNetworkSession *p_nsession)
     if (nsvc.I.Type == NetSvc_IPX)
       goto skip_modem_init;
 
-    net_service_unkstruct04_clear();
-
-    if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
-    {
-        LOGERR("Failed on LbNetworkServiceStart");
-        alert_box_text_fmt("%s", gui_strings[568]);
+    if (!net_service_restart())
         goto out_fail;
-    }
-    net_service_started = 1;
 
     LbNetworkSetBaud(unkn_rate);
     players[local_player_no].DoubleMode = 0;
@@ -1219,15 +1214,11 @@ ubyte do_net_protocol_select(ubyte click)
     default:
         break;
     case NetSvc_IPX:
-        if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
-        {
-            LOGERR("Failed on LbNetworkServiceStart");
-            alert_box_text_fmt("%s", gui_strings[568]);
+        if (!net_service_restart()) {
             // Switch to a service which is always available
             net_service_switch(NetSvc_COM1);
             break;
         }
-        net_service_started = 1;
         byte_15516C = -1;
         break;
     case NetSvc_COM1:
@@ -1443,18 +1434,10 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                     sscanf(net_proto_param_text, "%04x", &addr);
                     nsvc.I.Param = addr;
                     LbNetworkSetupIPXAddress(addr);
-                    net_service_unkstruct04_clear();
 
-                    if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
-                    {
-                        LOGERR("Failed on LbNetworkServiceStart");
-                        alert_box_text_fmt("%s", gui_strings[568]);
+                    if (!net_service_restart()) {
                         // Switch to a service which is always available
                         net_service_switch(NetSvc_COM1);
-                    }
-                    else
-                    {
-                        net_service_started = 1;
                     }
                 }
             }
@@ -2011,18 +1994,12 @@ void show_netgame_unkn_case1(void)
 
         strncpy(byte_1811E2, login_name, sizeof(byte_1811E2));
         byte_1811E2[8] = '\0';
-        net_service_unkstruct04_clear();
 
-        if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
-        {
-            net_service_started = 0;
-            LOGERR("Failed on LbNetworkServiceStart");
-            alert_box_text_fmt("%s", gui_strings[568]);
+        if (!net_service_restart()) {
             // Switch to a service which is always available
             net_service_switch(NetSvc_COM1);
             return;
         }
-        net_service_started = 1;
     }
     //net_protocol_box.DrawFn(&net_protocol_box); -- incompatible calling convention
     asm volatile ("call *%1\n"
