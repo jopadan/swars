@@ -220,12 +220,15 @@ struct TbIPXPlayerData2 {
     short field_49[98];
 };
 
-struct TbIPXPlayerData3Sub {
-    ubyte field_2D[28];
+struct TbIPXOnePlayer {
+    ubyte field_0[4];
+    ubyte field_4[6];
+    char name[16];
+    short field_1A;
 };
 
 struct TbIPXPlayerData3 {
-    struct TbIPXPlayerData3Sub Sub1[2]; // offset=45
+    struct TbIPXOnePlayer player[8]; // offset=45
 };
 
 struct TbIPXPlayerData { // sizeof=226

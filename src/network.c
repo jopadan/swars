@@ -512,9 +512,9 @@ int ipx_join_session(struct IPXSessionList *p_ipxsess, char *a2)
 
             for (k = 0; k < 8; k++)
             {
-                struct TbIPXPlayerData3Sub *p_pdtsub;
-                p_pdtsub = &p_plyrdt->Data.Data3.Sub1[k];
-                if (memcmp(&p_pdtsub->field_2D[4], ipxhead.field_1C, 6) == 0)
+                struct TbIPXOnePlayer *p_nplyr;
+                p_nplyr = &p_plyrdt->Data.Data3.player[k];
+                if (memcmp(p_nplyr->field_4, ipxhead.field_1C, 6) == 0)
                 {
                     tm_start = 0;
                     ret = 1;
@@ -662,10 +662,23 @@ int ipx_stop_network(void)
 
 TbResult ipx_get_player_name(char *name, int plyr)
 {
+#if 0
     int ret;
     asm volatile ("call ASM_ipx_get_player_name\n"
         : "=r" (ret) : "a" (name), "d" (plyr) );
     return ret;
+#endif
+    if (plyr >= 8)
+        return Lb_FAIL;
+    if (IPXHandler == NULL)
+        return Lb_FAIL;
+    if (!IPXHandler->SessionActive)
+        return Lb_FAIL;
+    if (!IPXPlayer.Data.Data3.player[plyr].field_1A)
+        return Lb_FAIL;
+
+    strcpy(name, IPXPlayer.Data.Data3.player[plyr].name);
+    return Lb_SUCCESS;
 }
 
 TbResult ipx_network_send(int plyr, ubyte *data, int dtlen)
@@ -895,12 +908,12 @@ int radica_update(void)
     return Lb_SUCCESS;
 }
 
-TbResult radica_service_init(struct NetworkServiceInfo *nsvc)
+TbResult radica_service_init(struct NetworkServiceInfo *p_nsvc)
 {
     TbResult ret;
     LOGDBG("Starting");
     asm volatile ("call ASM_radica_service_init\n"
-        : "=r" (ret) : "a" (nsvc) );
+        : "=r" (ret) : "a" (p_nsvc) );
     return ret;
 }
 
@@ -1767,6 +1780,7 @@ TbResult LbNetworkSetupIPXAddress(ulong addr)
 #if 0
     IPXHandler->unkn_addr_field = addr;
 #endif
+    NetworkServicePtr.I.Param = addr;
     return Lb_SUCCESS;
 }
 
