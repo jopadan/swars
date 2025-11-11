@@ -171,6 +171,19 @@ TbBool net_service_restart(void)
     return true;
 }
 
+/** Stop the network service if it was started.
+ */
+TbBool net_service_stop(void)
+{
+    if (net_service_started)
+    {
+        LbNetworkReset();
+        net_service_started = 0;
+        return true;
+    }
+    return false;
+}
+
 ubyte do_net_protocol_option(ubyte click)
 {
 #if 0
@@ -181,11 +194,8 @@ ubyte do_net_protocol_option(ubyte click)
 #endif
     short param, dt;
 
-    if (net_service_started)
-    {
-        LbNetworkReset();
-        net_service_started = 0;
-    }
+    net_service_stop();
+
     dt = 0x01;
     if ((lbShift & KMod_SHIFT) != 0)
         dt = 0x10;
@@ -401,10 +411,7 @@ out_fail:
     }
     else
     {
-        if (net_service_started) {
-            LbNetworkReset();
-        }
-        net_service_started = 0;
+        net_service_stop();
     }
     return 0;
 #endif
@@ -497,9 +504,7 @@ out_fail:
     }
     else
     {
-        if (net_service_started)
-            LbNetworkReset();
-        net_service_started = 0;
+        net_service_stop();
     }
     return 0;
 #endif
@@ -1150,11 +1155,7 @@ ubyte do_net_protocol_select(ubyte click)
     short proto;
     short pos_x;
 
-    if (net_service_started)
-    {
-      LbNetworkReset();
-      net_service_started = 0;
-    }
+    net_service_stop();
 
     pos_x = net_protocol_select_button.X - 12 + net_protocol_select_button.Width + 4;
 
