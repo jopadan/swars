@@ -66,12 +66,12 @@ struct NetworkServiceFunction { // sizeof=36
 
 struct TbNetworkSession { // sizeof=40
     NSESS_HANDLE Id; // offset=0
-    ulong GameId; // offset=2
-    char Name[8]; // offset=6
-    short HostPlayerNumber; // offset=14
-    short MaxPlayers; // offset=16
-    short Flags; // offset=18
-    ubyte Reserved[20]; // offset=20
+    ulong GameId; // offset=4
+    char Name[8]; // offset=8 (orig.=6)
+    short HostPlayerNumber; // offset=16 (orig.=14)
+    short MaxPlayers; // offset=18 (orig.=16)
+    short Flags; // offset=20 (orig.=18)
+    ubyte Reserved[18]; // offset=22 (orig.=20)
 };
 
 struct TbNetworkService { // sizeof=10
@@ -293,7 +293,7 @@ struct TbNetworkPlayer { // sizeof=22
 
 struct TbNetworkSessionList { // sizeof=218
     struct TbNetworkSession Session; // offset=0
-    struct TbNetworkPlayer Player[8];
+    struct TbNetworkPlayer Player[8]; // offset=28
     short NumberOfPlayers; // offset=216
 };
 

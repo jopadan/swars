@@ -110752,9 +110752,9 @@ GLOBAL_FUNC(ASM_show_net_groups_box)	/* 0x0901E0 */
 		add    $0x6,%ebp
 	jump_904ac:
 		xor    %eax,%eax
-		mov    data_1c6d45,%edx
-		mov    0x3c(%esp),%ax
+		mov    EXPORT_SYMBOL(byte_1C6D48)-3,%edx
 		sar    $0x18,%edx
+		mov    0x3c(%esp),%ax
 		cmp    %edx,%eax
 		jge    jump_9043b
 		mov    unkn_city_no,%edx
@@ -164036,7 +164036,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_30)	/* 0x0CD0AC */
 		push   %edi
 		push   %ebp
 		sub    $0xe8,%esp
-		mov    data_1c6d45,%eax
+		mov    EXPORT_SYMBOL(byte_1C6D48)-3,%eax
 		sar    $0x18,%eax
 		cmp    $0x14,%eax
 		jge    jump_cd2ae
@@ -164054,7 +164054,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_30)	/* 0x0CD0AC */
 		add    $0xda,%ecx
 		inc    %ebx
 	jump_cd0f3:
-		mov    data_1c6d45,%eax
+		mov    EXPORT_SYMBOL(byte_1C6D48)-3,%eax
 		sar    $0x18,%eax
 		cmp    %eax,%ebx
 		jge    jump_cd143
@@ -164082,7 +164082,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_30)	/* 0x0CD0AC */
 	jump_cd143:
 		test   %si,%si
 		jne    jump_cd191
-		mov    data_1c6d45,%eax
+		mov    EXPORT_SYMBOL(byte_1C6D48)-3,%eax
 		sar    $0x18,%eax
 		imul   $0xda,%eax,%eax
 		mov    $unkstruct04_arr,%edi
@@ -164130,20 +164130,20 @@ GLOBAL_FUNC(ASM_net_unkn_func_30)	/* 0x0CD0AC */
 		mov    %eax,data_1ddbe8(%edx)
 		mov    %edi,0xdc(%esp)
 	jump_cd1e9:
-		mov    data_1c6d45,%eax
-		mov    0xdc(%esp),%ecx
+		mov    EXPORT_SYMBOL(byte_1C6D48)-3,%eax
 		sar    $0x18,%eax
+		mov    0xdc(%esp),%ecx
 		cmp    %ecx,%eax
 		jg     jump_cd1a6
 		decb   EXPORT_SYMBOL(byte_1C6D48)
-		mov    data_1c6d45,%eax
+		mov    EXPORT_SYMBOL(byte_1C6D48)-3,%eax
 		sar    $0x18,%eax
 		imul   $0xda,%eax,%eax
 		mov    $0xda,%ebx
 		xor    %edx,%edx
 		add    $unkstruct04_arr,%eax
 		call   ac_memset
-		mov    data_1c6d45,%eax
+		mov    EXPORT_SYMBOL(byte_1C6D48)-3,%eax
 		sar    $0x18,%eax
 		xor    %esi,%esi
 		mov    %esi,data_1ddbf0(,%eax,4)
@@ -164155,9 +164155,9 @@ GLOBAL_FUNC(ASM_net_unkn_func_30)	/* 0x0CD0AC */
 		mov    %ebp,0xe0(%esp)
 		mov    %eax,0xe4(%esp)
 	jump_cd252:
-		mov    data_1c6d45,%eax
-		mov    0xe4(%esp),%ecx
+		mov    EXPORT_SYMBOL(byte_1C6D48)-3,%eax
 		sar    $0x18,%eax
+		mov    0xe4(%esp),%ecx
 		cmp    %ecx,%eax
 		jle    jump_cd2ae
 		mov    0xe0(%esp),%edx
@@ -184848,11 +184848,9 @@ GLOBAL (net_player_colours)
 GLOBAL (group_types)	/* 0x1C5C38 */
 		.fill   0x8
 GLOBAL (unkstruct04_arr)	/* 0x1C5C40 */
-		.fill   0x1103
-data_1c6d43:
-		.short  0x0
-data_1c6d45:
-		.ascii  "\x00\x00\x00"
+		.fill   0x1108
+		.fill   0x100
+		.align	4
 GLOBAL (byte_1C6D48)	/* 0x1c6d48 */
 		.byte	0x0
 GLOBAL (net_host_player_no)	/* 0x1C6D49 */

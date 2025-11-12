@@ -18,6 +18,8 @@
 /******************************************************************************/
 #include "fenet.h"
 
+#include <assert.h>
+
 #include "bffont.h"
 #include "bfkeybd.h"
 #include "bfmemut.h"
@@ -111,9 +113,15 @@ TbBool local_player_hosts_the_game(void)
 
 void net_service_unkstruct04_clear(void)
 {
-    int plyr;
+    ushort i, plyr;
 
-    LbMemorySet(unkstruct04_arr, 0, sizeof(unkstruct04_arr));
+    assert(sizeof(struct TbNetworkSession) == 40);
+    assert(sizeof(struct TbNetworkPlayer) == 22);
+    assert(sizeof(struct TbNetworkSessionList) == 40+22*8+2);
+
+    for (i = 0; i < sizeof(unkstruct04_arr)/sizeof(unkstruct04_arr[0]); i++)
+        LbMemorySet(&unkstruct04_arr[i], 0, sizeof(struct TbNetworkSessionList));
+
     byte_1C6D48 = 0;
     for (plyr = 0; plyr < 8; plyr++) {
         unkn2_names[plyr][0] = '\0';
@@ -159,6 +167,7 @@ void net_service_switch(ushort svctp)
  */
 TbBool net_service_restart(void)
 {
+    LOGSYNC("Restart");
     net_service_unkstruct04_clear();
 
     if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
@@ -182,6 +191,25 @@ TbBool net_service_stop(void)
         return true;
     }
     return false;
+}
+
+/** Initialize network sessions, create local session.
+ *
+ * Requires the network service to be started before.
+ */
+TbBool net_sessions_init(void)
+{
+    LOGSYNC("Prep local session");
+    LbMemoryCopy(nsvc.S.Name, login_name, min(sizeof(nsvc.S.Name),sizeof(login_name)));
+    nsvc.S.MaxPlayers = 8;
+    nsvc.S.HostPlayerNumber = 0;
+    if (LbNetworkSessionCreate(&nsvc.S, nsvc.S.Name) != Lb_SUCCESS)
+    {
+        LOGERR("Failed on LbNetworkSessionCreate");
+        alert_box_text_fmt("%s", gui_strings[579]);
+        return false;
+    }
+    return true;
 }
 
 ubyte do_net_protocol_option(ubyte click)
@@ -377,15 +405,9 @@ ubyte net_unkn_func_32(void)
     }
 
 skip_modem_init:
-    LbMemoryCopy(nsvc.S.Name, login_name, min(sizeof(nsvc.S.Name),sizeof(login_name)));
-    nsvc.S.MaxPlayers = 8;
-    nsvc.S.HostPlayerNumber = 0;
-    if (LbNetworkSessionCreate(&nsvc.S, nsvc.S.Name) != Lb_SUCCESS)
-    {
-        LOGERR("Failed on LbNetworkSessionCreate");
-        alert_box_text_fmt("%s", gui_strings[579]);
+    if (!net_sessions_init())
         goto out_fail;
-    }
+
     login_control__State = LognCt_Unkn5;
     net_host_player_no = LbNetworkHostPlayerNumber();
     net_players_num = LbNetworkSessionNumberPlayers();
@@ -393,6 +415,7 @@ skip_modem_init:
     byte_15516D = -1;
     if (nsvc.I.Type != NetSvc_IPX)
         players[local_player_no].DoubleMode = 0;
+
     load_missions(99);
     for (i = 0; i < 8; i++) {
         network_players[i].Type = 17;
@@ -512,15 +535,9 @@ out_fail:
 
 void netgame_state_enter_5(void)
 {
-    const char *text;
     PlayerIdx plyr;
 
-    net_INITIATE_button.Text = gui_strings[387];
-    if (byte_1C4A6F)
-        text = gui_strings[520];
-    else
-        text = gui_strings[388];
-    net_groups_LOGON_button.Text = text;
+    switch_net_screen_boxes_to_execute();
     init_variables();
     init_agents();
     srm_reset_research();
@@ -547,8 +564,8 @@ ubyte do_net_INITIATE(ubyte click)
     {
         if (net_unkn_func_32())
         {
-          netgame_state_enter_5();
-      }
+            netgame_state_enter_5();
+        }
     }
     else if (login_control__State == LognCt_Unkn5)
     {
@@ -586,10 +603,9 @@ ubyte do_net_groups_LOGON(ubyte click)
       {
         plyr = LbNetworkPlayerNumber();
         network_players[plyr].Type = 13;
-        byte_15516D = -1;
-        net_INITIATE_button.Text = gui_strings[385];
         byte_15516C = -1;
-        net_groups_LOGON_button.Text = gui_strings[386];
+        byte_15516D = -1;
+        switch_net_screen_boxes_to_initiate();
         net_unkn_func_33();
       }
     else if (login_control__State == LognCt_Unkn6)
@@ -1979,7 +1995,7 @@ ubyte do_unkn8_EJECT(ubyte click)
 
 void show_netgame_unkn_case1(void)
 {
-#if 1
+#if 0
     asm volatile (
       "call ASM_show_netgame_unkn_case1\n"
         :  :  : "eax" );
@@ -2230,11 +2246,14 @@ void switch_net_screen_boxes_to_initiate(void)
 
 void switch_net_screen_boxes_to_execute(void)
 {
+    const char *text;
+
     net_INITIATE_button.Text = gui_strings[387];
     if (byte_1C4A6F)
-        net_groups_LOGON_button.Text = gui_strings[520];
+        text = gui_strings[520];
     else
-        net_groups_LOGON_button.Text = gui_strings[388];
+        text = gui_strings[388];
+    net_groups_LOGON_button.Text = text;
 }
 
 /******************************************************************************/
