@@ -2005,7 +2005,7 @@ void draw_new_panel(void)
     for (panel = 0; true; panel++)
     {
         struct GamePanel *p_panel;
-        TbBool is_visible;
+        TbBool is_visible, is_blinking;
         TbBool is_disabled, is_subordnt;
 
         p_panel = &game_panel[panel];
@@ -2016,12 +2016,14 @@ void draw_new_panel(void)
         if (!panel_for_speciifc_agent(panel))
         {
             is_visible = (p_panel->Spr[0] != 0);
+            is_blinking = false;
             is_disabled = false;
             is_subordnt = false;
         }
         else
         {
             is_visible = true;
+            is_blinking = false;
             if (p_panel->ID >= playable_agents)
             {
                 is_visible = false;
@@ -2041,6 +2043,7 @@ void draw_new_panel(void)
                     wep_delay = player_agent_weapon_delay(local_player_no, p_panel->ID, weapon);
 
                     is_visible = (weapon != 0) && ((wep_delay == 0) || (gameturn & 1));
+                    is_blinking = (weapon != 0) && (wep_delay != 0);
                 }
                 else
                 {
@@ -2057,6 +2060,20 @@ void draw_new_panel(void)
                 is_disabled = (((p_agent->Flag2 & TgF2_Unkn10000000) != 0) ||
                   person_is_executing_commands(p_agent->ThingOffset));
             }
+        }
+
+        // Store data about panel state to be used by input handling
+        switch (p_panel->Type)
+        {
+        case PanT_AgentWeapon:
+            // If a panel is blinking only as visual effect, this should not affect input
+            if (is_visible || is_blinking)
+                panel_wep[p_panel->ID] |= PaMF_EXISTS;
+            if (is_disabled)
+                panel_wep[p_panel->ID] |= PaMF_DISABLED;
+            if (is_subordnt)
+                panel_wep[p_panel->ID] |= PaMF_SUBORDNT;
+            break;
         }
 
         if (!is_visible)
@@ -2195,11 +2212,7 @@ void draw_new_panel(void)
             // Medi sprite gets switched when we have medikit, so no need for update
             break;
         case PanT_AgentWeapon:
-            panel_wep[p_panel->ID] |= PaMF_EXISTS;
-            if (is_disabled)
-                panel_wep[p_panel->ID] |= PaMF_DISABLED;
-            if (is_subordnt)
-                panel_wep[p_panel->ID] |= PaMF_SUBORDNT;
+            // Weapon sprite will be drawn later based on panel_wep[] flags
             break;
         case PanT_WeaponEnergy:
             // Fill the left energy bar
@@ -2232,7 +2245,7 @@ void draw_new_panel(void)
 
     ingame.Scanner.MX = engn_xc >> 7;
     ingame.Scanner.MZ = engn_zc >> 7;
-    ingame.Scanner.Angle = 2047 - ((engn_anglexz >> 5) & 0x7FF);
+    ingame.Scanner.Angle = (2*LbFPMath_PI - 1) - ((engn_anglexz >> 5) & LbFPMath_AngleMask);
     SCANNER_draw_new_transparent();
 
     draw_panel_objective_info();
