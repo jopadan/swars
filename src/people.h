@@ -327,6 +327,8 @@ void person_init_plant_mine(struct Thing *p_person, short x, short y, short z, i
  * @return Gives Value from ThingWeaponSelectFlags enum based on results of the action.
  */
 ubyte thing_select_specific_weapon(struct Thing *p_person, WeaponType wtype, ubyte flag);
+ubyte thing_select_best_weapon_for_range(struct Thing *p_person, int range);
+ubyte thing_deselect_weapon(struct Thing *p_person);
 
 void person_go_enter_vehicle_fast(struct Thing *p_person, struct Thing *p_vehicle, ushort plyr);
 void person_go_enter_vehicle(struct Thing *p_person, struct Thing *p_vehicle);

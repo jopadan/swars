@@ -225,8 +225,7 @@ void person_grp_switch_to_specific_weapon(struct Thing *p_person, PlayerIdx plyr
             stop_looped_weapon_sample(p_agent, p_agent->U.UPerson.CurrentWeapon);
             if (flag == WepSel_HIDE)
             {
-                player_agent_update_prev_weapon(p_agent);
-                p_agent->U.UPerson.CurrentWeapon = WEP_NULL;
+                thing_deselect_weapon(p_agent);
             }
             else if (p_agent->U.UPerson.TempWeapon != WEP_NULL)
             {
@@ -234,10 +233,7 @@ void person_grp_switch_to_specific_weapon(struct Thing *p_person, PlayerIdx plyr
             }
             else
             {
-                choose_best_weapon_for_range(p_agent, 1280);
-                p_agent->U.UPerson.AnimMode = gun_out_anim(p_agent, 0);
-                reset_person_frame(p_agent);
-                p_agent->Speed = calc_person_speed(p_agent);
+                thing_select_best_weapon_for_range(p_agent, 1280);
             }
         }
         else

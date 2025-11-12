@@ -3772,6 +3772,27 @@ ubyte thing_select_specific_weapon(struct Thing *p_person, WeaponType wtype, uby
     return (p_person->U.UPerson.CurrentWeapon != WEP_NULL) ? WepSel_SELECT : WepSel_HIDE;
 }
 
+ubyte thing_select_best_weapon_for_range(struct Thing *p_person, int range)
+{
+    choose_best_weapon_for_range(p_person, range);
+    p_person->U.UPerson.AnimMode = gun_out_anim(p_person, 0);
+    reset_person_frame(p_person);
+    p_person->Speed = calc_person_speed(p_person);
+
+    return (p_person->U.UPerson.CurrentWeapon != WEP_NULL) ? WepSel_SELECT : WepSel_HIDE;
+}
+
+ubyte thing_deselect_weapon(struct Thing *p_person)
+{
+    player_agent_update_prev_weapon(p_person);
+    p_person->U.UPerson.CurrentWeapon = WEP_NULL;
+    p_person->U.UPerson.AnimMode = gun_out_anim(p_person, 0);
+    reset_person_frame(p_person);
+    p_person->Speed = calc_person_speed(p_person);
+
+    return WepSel_HIDE;
+}
+
 void person_go_enter_vehicle_fast(struct Thing *p_person, struct Thing *p_vehicle, ushort plyr)
 {
     asm volatile (
