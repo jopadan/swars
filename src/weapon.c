@@ -1528,10 +1528,73 @@ void init_clone_disguise(struct Thing *p_person)
 
 int gun_out_anim(struct Thing *p_person, ubyte shoot_flag)
 {
+#if 0
     int ret;
     asm volatile ("call ASM_gun_out_anim\n"
         : "=r" (ret) : "a" (p_person), "d" (shoot_flag));
     return ret;
+#endif
+    if ((p_person->Flag & TngF_Destroyed) != 0) {
+        return p_person->U.UPerson.AnimMode;
+    }
+
+    switch (p_person->U.UPerson.CurrentWeapon)
+    {
+    case WEP_FLAMER:
+    case WEP_QDEVASTATOR:
+    case WEP_MINIGUN:
+    case WEP_LASER:
+    case WEP_ELLASER:
+    case WEP_LONGRANGE:
+    case WEP_BEAM:
+        if (p_person->SubType == SubTT_PERS_AGENT)
+            p_person->U.UPerson.FrameId.Version[3] = 1;
+        if (shoot_flag == 2)
+            return 7;
+        if (shoot_flag == 1)
+            return 15;
+        return 2;
+
+    default:
+    case WEP_NULL:
+    case WEP_NUCLGREN:
+    case WEP_H2HTASER:
+    case WEP_CRAZYGAS:
+    case WEP_KOGAS:
+    case WEP_ELEMINE:
+    case WEP_EXPLMINE:
+    case WEP_NAPALMMINE:
+    case WEP_AIRSTRIKE:
+    case WEP_RAZORWIRE:
+    case WEP_PERSUADER2:
+    case WEP_ENERGYSHLD:
+    case WEP_CEREBUSIFF:
+    case WEP_MEDI1:
+    case WEP_MEDI2:
+    case WEP_EXPLWIRE:
+    case WEP_CLONESHLD:
+    case WEP_UNUSED1F:
+        if (p_person->SubType == SubTT_PERS_AGENT)
+            p_person->U.UPerson.FrameId.Version[3] = 0;
+        if (p_person->State == PerSt_WAIT)
+            return 21;
+        return 0;
+
+    case WEP_UZI:
+    case WEP_RAP:
+    case WEP_PERSUADRTRN:
+    case WEP_SONICBLAST:
+    case WEP_STASISFLD:
+    case WEP_SOULGUN:
+    case WEP_TIMEGUN:
+        if (p_person->SubType == SubTT_PERS_AGENT)
+            p_person->U.UPerson.FrameId.Version[3] = 0;
+        if (shoot_flag == 2)
+            return 6;
+        if (shoot_flag == 1)
+            return 14;
+        return 1;
+    }
 }
 
 ushort player_weapon_time(struct Thing *p_person)
