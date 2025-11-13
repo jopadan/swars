@@ -657,7 +657,7 @@ void process_next_tnode(struct Thing *p_vehicle)
         if ((p_tnode->GateLink != 0) && ((p_tnode->Flags & TNdF_Unkn8000) == 0) && (nxdist_sq < 0x10000))
         {
             p_gtveh = &things[p_tnode->GateLink];
-            p_gtveh->Flag |= TngF_Unkn0100;
+            p_gtveh->Flag |= TngF_VehUnkn0100;
         }
     }
 

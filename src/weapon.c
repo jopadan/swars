@@ -1284,7 +1284,7 @@ void init_fire_weapon(struct Thing *p_person)
                 if (p_target != NULL)
                 {
                     if ((p_target->Flag & TngF_Destroyed) == 0)
-                        p_person->Flag2 |= TngF_Unkn00200000;
+                        p_person->Flag2 |= TgF2_Unkn00200000;
                 }
             }
             p_person->U.UPerson.FrameId.Version[4] = 1;
@@ -1315,7 +1315,7 @@ void init_fire_weapon(struct Thing *p_person)
                 if (p_target != NULL)
                 {
                     if ((p_target->Flag & TngF_Destroyed) == 0)
-                        p_person->Flag2 |= TngF_Unkn00200000;
+                        p_person->Flag2 |= TgF2_Unkn00200000;
                 }
             }
             p_person->U.UPerson.FrameId.Version[4] = 3;
@@ -1339,7 +1339,7 @@ void init_fire_weapon(struct Thing *p_person)
                 if (p_target != NULL)
                 {
                     if ((p_target->Flag & TngF_Destroyed) == 0)
-                        p_person->Flag2 |= TngF_Unkn00200000;
+                        p_person->Flag2 |= TgF2_Unkn00200000;
                 }
             }
             if ((p_person->Flag & TngF_Unkn1000) != 0)
@@ -1352,7 +1352,7 @@ void init_fire_weapon(struct Thing *p_person)
                 if (p_target != NULL)
                 {
                     if ((p_target->Flag & TngF_Destroyed) == 0)
-                        p_person->Flag2 |= TngF_Unkn00200000;
+                        p_person->Flag2 |= TgF2_Unkn00200000;
                 }
             }
             if (((p_person->Flag2 & TgF2_ExistsOffMap) == 0)
@@ -1423,7 +1423,7 @@ void init_fire_weapon(struct Thing *p_person)
                 if (p_target != NULL)
                 {
                     if ((p_target->Flag & TngF_Destroyed) == 0)
-                        p_person->Flag2 |= TngF_Unkn00200000;
+                        p_person->Flag2 |= TgF2_Unkn00200000;
                 }
             }
             p_person->U.UPerson.FrameId.Version[4] = 1;
@@ -1442,7 +1442,7 @@ void init_fire_weapon(struct Thing *p_person)
                 if (p_target != NULL)
                 {
                     if ((p_target->Flag & TngF_Destroyed) == 0)
-                        p_person->Flag2 |= TngF_Unkn00200000;
+                        p_person->Flag2 |= TgF2_Unkn00200000;
                 }
             }
             if ((p_person->Flag & TngF_Unkn1000) != 0)
@@ -1455,7 +1455,7 @@ void init_fire_weapon(struct Thing *p_person)
                 if (p_target != NULL)
                 {
                     if ((p_target->Flag & TngF_Destroyed) == 0)
-                        p_person->Flag2 |= TngF_Unkn00200000;
+                        p_person->Flag2 |= TgF2_Unkn00200000;
                 }
             }
             if ((p_person->Flag & TngF_Unkn1000) != 0)

@@ -3810,9 +3810,21 @@ void person_go_enter_vehicle(struct Thing *p_person, struct Thing *p_vehicle)
 
 void person_shield_toggle(struct Thing *p_person, PlayerIdx plyr)
 {
+#if 0
     asm volatile (
       "call ASM_person_shield_toggle\n"
         : : "a" (p_person), "d" (plyr));
+#endif
+    if ((p_person->Flag & TngF_PersSupShld) != 0)
+    {
+        p_person->Flag &= ~(TngF_Unkn00200000|TngF_PersSupShld);
+    }
+    else
+    {
+        p_person->Flag |= (TngF_Unkn00200000|TngF_PersSupShld);
+        if (plyr == local_player_no)
+            play_sample_using_heap(0, 96, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
+    }
 }
 
 void make_peeps_scatter(struct Thing *p_person, int x, int z)
@@ -4327,7 +4339,7 @@ void person_destroy_building(struct Thing *p_person)
         }
         else
         {
-            p_person->Flag &= ~(TngF_Unkn00200000|TngF_Unkn0800|TngF_Unkn0100);
+            p_person->Flag &= ~(TngF_Unkn00200000|TngF_Unkn0800|TngF_PersSupShld);
             p_person->Flag |= TngF_Unkn0800;
             if ((p_person->Flag & TngF_InVehicle) != 0) {
                 struct Thing *p_vehicle;
@@ -4617,7 +4629,7 @@ short person_move(struct Thing *p_person)
     }
     speed_x = (p_person->Speed * p_person->VX) >> 4;
     speed_z = (p_person->Speed * p_person->VZ) >> 4;
-    p_person->Flag2 &= ~TngF_Unkn0100;
+    p_person->Flag2 &= ~TgF2_Unkn0100;
     y = p_person->Y;
 
     retry = 2;
@@ -4668,10 +4680,10 @@ short person_move(struct Thing *p_person)
             p_cmd = &game_commands[p_person->U.UPerson.Within];
             if (!check_person_within(p_cmd, PRCCOORD_TO_MAPCOORD(speed_x + x),
               PRCCOORD_TO_MAPCOORD(speed_z + z))) {
-                p_person->Flag2 |= TngF_Unkn0080;
+                p_person->Flag2 |= TgF2_Unkn0080;
                 return 1;
             }
-            p_person->Flag2 &= ~TngF_Unkn0080;
+            p_person->Flag2 &= ~TgF2_Unkn0080;
         }
 
         tile_x = MAPCOORD_TO_TILE(PRCCOORD_TO_MAPCOORD(p_person->X));

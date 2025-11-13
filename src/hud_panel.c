@@ -1764,7 +1764,7 @@ void update_game_panel(void)
         case PanT_WeaponEnergy:
             // If supershield is enabled for the current agent, draw energy bar in red
             p_agent = &things[p_locplayer->DirectControl[0]];
-            panel_sprites_switch(panel, (p_agent->Type == TT_PERSON) && (p_agent->Flag & TngF_Unkn0100) != 0);
+            panel_sprites_switch(panel, (p_agent->Type == TT_PERSON) && (p_agent->Flag & TngF_PersSupShld) != 0);
             break;
         }
     }
