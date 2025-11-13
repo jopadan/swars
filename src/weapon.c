@@ -1005,7 +1005,7 @@ void do_weapon_quantities_max_to_player(struct Thing *p_person)
 
 void do_weapon_quantities1(struct Thing *p_person)
 {
-    if (in_network_game)
+    if ((in_network_game) || ((p_person->Flag & TngF_PlayerAgent) == 0))
     {
         // No action
     }
@@ -1017,7 +1017,11 @@ void do_weapon_quantities1(struct Thing *p_person)
 
 void do_weapon_quantities_proper1(struct Thing *p_person)
 {
-    if (in_network_game)
+    if ((p_person->Flag & TngF_PlayerAgent) == 0)
+    {
+        // No action - only player agents have quantities of weapons
+    }
+    else if (in_network_game)
     {
         do_weapon_quantities_player_to_net(p_person);
     }
