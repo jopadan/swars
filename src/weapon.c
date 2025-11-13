@@ -628,8 +628,6 @@ TbBool weapons_has_weapon(ulong weapons, WeaponType wtype)
     return (weapons & wepflg) != 0;
 }
 
-/** Returns weapon set in given flags with index below last.
- */
 ushort weapons_prev_weapon(ulong weapons, WeaponType last_wtype)
 {
     WeaponType wtype;
@@ -644,6 +642,20 @@ ushort weapons_prev_weapon(ulong weapons, WeaponType last_wtype)
             return wtype;
     }
     return 0;
+}
+
+ushort weapons_count_used_slots(ulong weapons)
+{
+    ushort used_slots;
+    WeaponType wtype;
+
+    used_slots = 0;
+    for (wtype = WEP_NULL + 1; wtype < WEP_TYPES_COUNT; wtype++)
+    {
+        if (weapons_has_weapon(weapons, wtype))
+            used_slots++;
+    }
+    return used_slots;
 }
 
 void weapons_remove_weapon(ulong *p_weapons, struct WeaponsFourPack *p_fourpacks, WeaponType wtype)
@@ -723,14 +735,14 @@ TbBool weapons_add_one(ulong *p_weapons, struct WeaponsFourPack *p_fourpacks, We
     ushort fp;
     TbBool is_first;
 
-    if (number_of_set_bits(*p_weapons) >= WEAPONS_CARRIED_MAX_COUNT)
-        return false;
-
     is_first = ((*p_weapons & (1 << (wtype-1))) == 0);
+
+    if ((is_first) && (weapons_count_used_slots(*p_weapons) >= WEAPONS_CARRIED_MAX_COUNT))
+        return false;
 
     fp = weapon_fourpack_index(wtype);
     if (fp < WFRPK_COUNT) {
-        if ((!is_first) && (p_fourpacks->Amount[fp] > 3))
+        if ((!is_first) && (p_fourpacks->Amount[fp] >= WEAPONS_FOURPACK_MAX_COUNT))
             return false;
 
         if (is_first)
@@ -758,14 +770,14 @@ TbBool weapons_add_one_for_player(ulong *p_weapons,
     ushort fp;
     TbBool is_first;
 
-    if (number_of_set_bits(*p_weapons) >= WEAPONS_CARRIED_MAX_COUNT)
-        return false;
-
     is_first = ((*p_weapons & (1 << (wtype-1))) == 0);
+
+    if ((is_first) && (weapons_count_used_slots(*p_weapons) >= WEAPONS_CARRIED_MAX_COUNT))
+        return false;
 
     fp = weapon_fourpack_index(wtype);
     if (fp < WFRPK_COUNT) {
-        if ((!is_first) && (p_plfourpacks[fp][plagent] > 3))
+        if ((!is_first) && (p_plfourpacks[fp][plagent] >= WEAPONS_FOURPACK_MAX_COUNT))
             return false;
 
         if (is_first)

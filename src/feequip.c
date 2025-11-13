@@ -207,7 +207,6 @@ void equip_update_for_selected_weapon(void)
 ubyte do_equip_offer_buy_weapon(ubyte click)
 {
     struct WeaponDef *wdef;
-        short nagent;
     ubyte nbought;
 
     wdef = &weapon_defs[selected_weapon + 1];
@@ -216,17 +215,19 @@ ubyte do_equip_offer_buy_weapon(ubyte click)
     if (selected_agent != 4)
     {
         long cost;
+        short plagent;
         TbBool added;
 
         cost = 100 * wdef->Cost;
-        nagent = selected_agent;
+        plagent = selected_agent;
 
         if (ingame.Credits - cost < 0)
             added = false;
-        else if (!free_slot(nagent, selected_weapon))
+        else if (!free_slot(plagent, selected_weapon + 1)) {
             added = false;
-        else
-            added = player_cryo_add_weapon_one(nagent, selected_weapon + 1);
+        } else {
+            added = player_cryo_add_weapon_one(plagent, selected_weapon + 1);
+        }
 
         if (added) {
             ingame.Credits -= cost;
@@ -237,20 +238,21 @@ ubyte do_equip_offer_buy_weapon(ubyte click)
     else
     {
         long cost;
-        short nagent;
+        short plagent;
         TbBool added;
 
         cost = 100 * wdef->Cost;
 
-        for (nagent = 0; nagent < 4; nagent++)
+        for (plagent = 0; plagent < 4; plagent++)
         {
             if (ingame.Credits - cost < 0)
                 break;
 
-            if (!free_slot(nagent, selected_weapon))
+            if (!free_slot(plagent, selected_weapon + 1)) {
                 added = false;
-            else
-                added = player_cryo_add_weapon_one(nagent, selected_weapon + 1);
+            } else {
+                added = player_cryo_add_weapon_one(plagent, selected_weapon + 1);
+            }
 
             if (added) {
                 ingame.Credits -= cost;
@@ -504,11 +506,11 @@ void skip_flashy_draw_equipment_screen_boxes(void)
     equip_agent_name_draw_state = 1;
 }
 
-TbBool weapon_available_for_purchase(short wtype)
+TbBool weapon_available_for_purchase(WeaponType wtype)
 {
     struct WeaponDef *wdef;
 
-    if (wtype < 0 || wtype >= WEP_TYPES_COUNT)
+    if (wtype < WEP_NULL + 1 || wtype >= WEP_TYPES_COUNT)
         return false;
 
     wdef = &weapon_defs[wtype];
@@ -613,7 +615,7 @@ ubyte input_equip_agent_panel_shape(struct ScreenShape *shape, sbyte nagent)
             }
             else
             {
-                if (free_slot(nagent, mo_weapon))
+                if (free_slot(nagent, mo_weapon + 1))
                 {
                     LOGSYNC("Transferred weapon %s from agent %d to agent %d",
                       weapon_codename(mo_weapon+1), mo_from_agent, nagent);
@@ -787,7 +789,7 @@ ubyte show_equipment_screen(void)
     {
         WeaponType wtype;
         equip_list_box.Lines = 0;
-        for (wtype = 1; wtype < WEP_TYPES_COUNT; wtype++)
+        for (wtype = WEP_NULL + 1; wtype < WEP_TYPES_COUNT; wtype++)
         {
             if (weapon_available_for_purchase(wtype)) {
                 equip_list_box.Lines++;
@@ -1145,8 +1147,10 @@ ubyte show_weapon_list(struct ScreenTextBox *box)
         short msy, msx;
         short y1, y2;
         const char *text;
+        WeaponType wtype;
 
-        if (!weapon_available_for_purchase(weapon+1))
+        wtype = weapon + 1;
+        if (!weapon_available_for_purchase(wtype))
             continue;
 
         msy = lbDisplay.GraphicsScreenHeight < 400 ? 2 * lbDisplay.MouseY : lbDisplay.MouseY;
@@ -1174,7 +1178,7 @@ ubyte show_weapon_list(struct ScreenTextBox *box)
         }
         struct TbSprite *spr;
 
-        spr = &fepanel_sprites[weapon_sprite_index(weapon + 1, true)];
+        spr = &fepanel_sprites[weapon_sprite_index(wtype, true)];
         lbDisplay.DrawFlags |= 0x8000;
         draw_sprite_purple_list(text_window_x1 + 2, h0 + text_window_y1, spr);
         lbDisplay.DrawFlags &= ~0x8000;
@@ -1183,10 +1187,10 @@ ubyte show_weapon_list(struct ScreenTextBox *box)
             ushort strid;
 
             p_campgn = &campaigns[background_type];
-            strid = p_campgn->WeaponsTextIdShift + weapon;
+            strid = p_campgn->WeaponsTextIdShift + wtype - 1;
             text = gui_strings[strid];
         }
-        spr = &fepanel_sprites[15 + weapon];
+        spr = &fepanel_sprites[15 + wtype - 1];
         draw_text_purple_list2(spr->SWidth + 4, h0 + 1, text, 0);
         h0 += sheight + 3;
     }
@@ -1210,7 +1214,7 @@ void draw_fourpack_slots(short x, short y, ubyte fp)
     if (selected_agent < 0)
         return;
 
-    fpcount = 4;
+    fpcount = WEAPONS_FOURPACK_MAX_COUNT;
     if (selected_agent != 4)
     {
         fpcount = cryo_agents.FourPacks[selected_agent].Amount[fp];

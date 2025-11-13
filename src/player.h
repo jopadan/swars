@@ -121,9 +121,12 @@ void player_update_agents_from_cryo(PlayerInfo *p_player);
 void cryo_update_agents_from_player(PlayerInfo *p_player);
 void players_sync_from_cryo(void);
 
-TbBool free_slot(ushort plagent, ubyte weapon);
-TbBool player_cryo_add_weapon_one(ushort cryo_no, ubyte weapon);
-TbBool player_cryo_remove_weapon_one(ushort cryo_no, ubyte weapon);
+/** Returns if given agent of the local players team has a free slot for a weapon.
+ */
+TbBool free_slot(ushort plagent, WeaponType wtype);
+
+TbBool player_cryo_add_weapon_one(ushort cryo_no, WeaponType wtype);
+TbBool player_cryo_remove_weapon_one(ushort cryo_no, WeaponType wtype);
 TbBool player_cryo_transfer_weapon_between_agents(ushort from_cryo_no,
   ushort to_cryo_no, ubyte weapon);
 TbBool player_cryo_add_cybmod(ushort cryo_no, ubyte cybmod);

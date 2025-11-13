@@ -239,46 +239,39 @@ TbBool player_agent_is_executing_commands(PlayerIdx plyr, ushort plagent)
     return person_is_executing_commands(p_agent->ThingOffset);
 }
 
-TbBool free_slot(ushort plagent, ubyte weapon)
+TbBool free_slot(ushort plagent, WeaponType wtype)
 {
 #if 0
     TbBool ret;
     asm volatile ("call ASM_free_slot\n"
-        : "=r" (ret) : "a" (plagent & 0xff), "d" (weapon));
+        : "=r" (ret) : "a" (plagent & 0xff), "d" (wtype-1));
     return ret;
 #endif
     PlayerInfo *p_locplyr;
-    WeaponType wtype;
-    ubyte used_slots;
     TbBool has_free;
     ushort fp;
 
     p_locplyr = &players[local_player_no];
-    used_slots = 0;
-    // TODO make it accept the "normal" wtype
 
-    fp = weapon_fourpack_index(weapon+1);
-    if ((fp < WFRPK_COUNT) && weapons_has_weapon(p_locplyr->Weapons[plagent], weapon+1))
+    fp = weapon_fourpack_index(wtype);
+    if ((fp < WFRPK_COUNT) && weapons_has_weapon(p_locplyr->Weapons[plagent], wtype))
     {
-        has_free = cryo_agents.FourPacks[plagent].Amount[fp] < 4;
+        has_free = cryo_agents.FourPacks[plagent].Amount[fp] < WEAPONS_FOURPACK_MAX_COUNT;
     }
     else
     {
-        for (wtype = WEP_NULL + 1; wtype < WEP_TYPES_COUNT; wtype++)
-        {
-            if (weapons_has_weapon(p_locplyr->Weapons[plagent], wtype))
-                used_slots++;
-        }
+        ushort used_slots;
+        used_slots = weapons_count_used_slots(p_locplyr->Weapons[plagent]);
         has_free = used_slots < WEAPONS_CARRIED_MAX_COUNT;
     }
     return has_free;
 }
 
-TbBool player_cryo_add_weapon_one(ushort cryo_no, ubyte weapon)
+TbBool player_cryo_add_weapon_one(ushort cryo_no, WeaponType wtype)
 {
     TbBool added;
 
-    added = weapons_add_one(&cryo_agents.Weapons[cryo_no], &cryo_agents.FourPacks[cryo_no], weapon);
+    added = weapons_add_one(&cryo_agents.Weapons[cryo_no], &cryo_agents.FourPacks[cryo_no], wtype);
     if (!added)
         return false;
 
@@ -313,11 +306,11 @@ TbBool player_cryo_add_cybmod(ushort cryo_no, ubyte cybmod)
     return true;
 }
 
-TbBool player_cryo_remove_weapon_one(ushort cryo_no, ubyte weapon)
+TbBool player_cryo_remove_weapon_one(ushort cryo_no, WeaponType wtype)
 {
     TbBool rmved;
 
-    rmved = weapons_remove_one(&cryo_agents.Weapons[cryo_no], &cryo_agents.FourPacks[cryo_no], weapon);
+    rmved = weapons_remove_one(&cryo_agents.Weapons[cryo_no], &cryo_agents.FourPacks[cryo_no], wtype);
     if (!rmved)
         return false;
 

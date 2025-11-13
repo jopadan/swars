@@ -31,6 +31,7 @@ extern "C" {
 #pragma pack(1)
 
 #define WEAPONS_CARRIED_MAX_COUNT 6
+#define WEAPONS_FOURPACK_MAX_COUNT 4
 #define WEP_CATEGORIES_COUNT 11
 
 /** Range of the weapon can never exceed this limit.
@@ -173,7 +174,14 @@ TbBool weapon_has_targetting(WeaponType wtype);
 ushort weapon_sprite_index(WeaponType wtype, TbBool enabled);
 
 TbBool weapons_has_weapon(ulong weapons, WeaponType wtype);
+
+/** Returns weapon set in given flags with index below last.
+ */
 ushort weapons_prev_weapon(ulong weapons, WeaponType last_wtype);
+
+/** Returns how many weapon slots are occupied in given weapons flags.
+ */
+ushort weapons_count_used_slots(ulong weapons);
 
 ushort weapon_fourpack_index(WeaponType wtype);
 void weapons_remove_weapon(ulong *p_weapons,
