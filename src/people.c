@@ -941,7 +941,8 @@ void change_player_angle(struct Thing *p_person, ushort angle)
         return;
 
     p_person->U.UPerson.Angle = angle;
-    person_anim = people_frames[p_person->SubType][p_person->U.UPerson.AnimMode] - 1;
+    person_anim = people_frames[p_person->SubType][p_person->U.UPerson.AnimMode];
+
     // TODO why are we not updating p_person->StartFrame here?
     sframe = person_anim - 1;
     p_person->Frame = nstart_ani[sframe + 1 + p_person->U.UPerson.Angle];
