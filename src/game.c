@@ -2084,12 +2084,19 @@ void screen_mode_switch_to_next(void)
 
 void teleport_current_agent(PlayerInfo *p_locplayer)
 {
+    struct Thing *p_person;
     short dcthing;
+
     dcthing = p_locplayer->DirectControl[mouser];
-    delete_node(&things[dcthing]);
-    things[dcthing].X = MAPCOORD_TO_PRCCOORD(mouse_map_x,0);
-    things[dcthing].Z = MAPCOORD_TO_PRCCOORD(mouse_map_z,0);
-    things[dcthing].Y = alt_at_point(mouse_map_x, mouse_map_z);
+    p_person = &things[dcthing];
+
+    remove_path(p_person);
+    if (on_mapwho(p_person))
+        delete_node(p_person);
+    p_person->U.UPerson.OnFace = 0; // Can only teleport to ground
+    p_person->X = MAPCOORD_TO_PRCCOORD(mouse_map_x, 0);
+    p_person->Z = MAPCOORD_TO_PRCCOORD(mouse_map_z, 0);
+    p_person->Y = alt_at_point(mouse_map_x, mouse_map_z);
     add_node_thing(dcthing);
 }
 

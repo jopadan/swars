@@ -983,6 +983,8 @@ void navi_onscreen_debug(TbBool a1);
 
 TbBool thing_is_destroyed(ThingIdx thing);
 
+ubyte on_mapwho(struct Thing *p_thing);
+
 /** Delete the thing from `mapwho` chain.
  */
 TbResult delete_node(struct Thing *p_thing);

@@ -853,6 +853,7 @@ void person_resurrect(struct Thing *p_person)
     p_person->Flag &= ~TngF_Destroyed;
     p_person->Flag &= ~TngF_Unkn02000000;
     p_person->State = PerSt_WAIT;
+    remove_path(p_person);
     p_person->Health = p_person->U.UPerson.MaxHealth * 3 / 4;
     set_person_anim_mode(p_person, 1);
 }
@@ -1559,15 +1560,6 @@ void build_navigate_path_to_face_xz(struct Thing *p_thing, short face, int x, in
 {
     asm volatile ("call ASM_build_navigate_path_to_face_xz\n"
         : : "a" (p_thing), "d" (face), "b" (x), "c" (z));
-}
-
-ubyte on_mapwho(struct Thing *p_thing)
-{
-    ubyte ret;
-    asm volatile (
-      "call ASM_on_mapwho\n"
-        : "=r" (ret) : "a" (p_thing));
-    return ret;
 }
 
 void check_weapon(struct Thing *p_person, int range)

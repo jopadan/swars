@@ -229,6 +229,15 @@ const char *state_change_result_name(StateChRes res)
     return state_change_result_names[res];
 }
 
+ubyte on_mapwho(struct Thing *p_thing)
+{
+    ubyte ret;
+    asm volatile (
+      "call ASM_on_mapwho\n"
+        : "=r" (ret) : "a" (p_thing));
+    return ret;
+}
+
 void move_mapwho(struct Thing *p_thing, int x, int y, int z)
 {
     asm volatile (
