@@ -3715,11 +3715,13 @@ ubyte thing_select_specific_weapon(struct Thing *p_person, WeaponType wtype, uby
         : "=r" (ret) : "a" (p_person), "d" (wtype), "b" (flag));
     return ret;
 #endif
+    ubyte animode;
+
     if ((p_person->Flag & TngF_Destroyed) != 0)
         return WepSel_SKIP;
     if (wtype == WEP_AIRSTRIKE && current_map == 65) // map065 The Moon
     {
-        play_dist_sample(p_person, 0x81u, 0x7Fu, 0x40u, 100, 0, 3);
+        play_dist_sample(p_person, 129, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         p_person->U.UPerson.CurrentWeapon = WEP_NULL;
         return WepSel_SKIP;
     }
@@ -3741,7 +3743,7 @@ ubyte thing_select_specific_weapon(struct Thing *p_person, WeaponType wtype, uby
 
             plyr = p_person->U.UPerson.ComCur >> 2;
             if (plyr == local_player_no)
-                play_sample_using_heap(0, 2, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
+                play_sample_using_heap(0, 2, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         }
 
         p_person->Health = p_person->U.UPerson.MaxHealth;
@@ -3758,16 +3760,16 @@ ubyte thing_select_specific_weapon(struct Thing *p_person, WeaponType wtype, uby
             player_agent_update_prev_weapon(p_person);
         }
         p_person->U.UPerson.CurrentWeapon = WEP_NULL;
+
+        animode = 0;
     }
     else
     {
         p_person->U.UPerson.CurrentWeapon = wtype;
-    }
-    {
-        ubyte animode;
+
         animode = gun_out_anim(p_person, 0);
-        switch_person_anim_mode(p_person, animode);
     }
+    switch_person_anim_mode(p_person, animode);
     p_person->Speed = calc_person_speed(p_person);
 
     return (p_person->U.UPerson.CurrentWeapon != WEP_NULL) ? WepSel_SELECT : WepSel_HIDE;
