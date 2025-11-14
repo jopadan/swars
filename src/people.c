@@ -3061,19 +3061,89 @@ void person_start_dying(struct Thing *p_person, int hp, ushort type)
     case DMG_BEAM:
     case DMG_LASER:
     case DMG_ELSTRAND:
-        set_person_dead(p_thing, 12);
+        set_person_dead(p_person, 12);
         break;
     default:
     case DMG_UNKN5:
     case DMG_MINIGUN:
     case DMG_UNKN9:
-        set_person_dead(p_thing, 11);
+        set_person_dead(p_person, 11);
         break;
     case DMG_RAP:
     case DMG_LONGRANGE:
-        set_person_dead(p_thing, 10);
+        set_person_dead(p_person, 10);
         break;
     }
+}
+
+TbBool persons_have_truce(struct Thing *p_person1, struct Thing *p_person2)
+{
+    ubyte pers1grp, pers2grp;
+
+    if (p_person1 == NULL) {
+        return false;
+    }
+
+    if (p_person2 == NULL) {
+        return false;
+    }
+
+    pers1grp = p_person1->U.UPerson.EffectiveGroup;
+    pers2grp = p_person2->U.UPerson.EffectiveGroup & 0x7F;
+
+    return thing_group_have_truce(pers1grp, pers2grp);
+}
+
+void persons_set_groups_kill_on_sight(struct Thing *p_attacker, struct Thing *p_victim)
+{
+    ubyte attack_grp, victim_grp;
+
+    if ((p_attacker == NULL) || ((p_attacker->Flag & TngF_PlayerAgent) == 0)) {
+        return;
+    }
+
+    if ((p_victim == NULL) || (p_victim != p_attacker->PTarget)) {
+        return;
+    }
+
+    attack_grp = p_attacker->U.UPerson.EffectiveGroup;
+    victim_grp = p_victim->U.UPerson.EffectiveGroup & 0x7F;
+
+    if (p_victim->SubType == SubTT_PERS_BRIEFCASE_M || p_victim->SubType == SubTT_PERS_WHITE_BRUN_F ||
+      p_victim->SubType == SubTT_PERS_WHIT_BLOND_F || p_victim->SubType == SubTT_PERS_LETH_JACKT_M) {
+        return;
+    }
+    thing_group_set_kill_on_sight(attack_grp, victim_grp, true);
+}
+
+int mods_affect_hit_points(struct Thing *p_thing, ushort type, int hp)
+{
+    switch (type)
+    {
+    case DMG_UZI:
+    case DMG_MINIGUN:
+    case DMG_LONGRANGE:
+        if (cybmod_skin_level(&p_thing->U.UPerson.UMod) == 1)
+            hp >>= 1;
+        break;
+    case DMG_ELLASER:
+    case DMG_BEAM:
+    case DMG_LASER:
+    case DMG_ELSTRAND:
+        if (cybmod_skin_level(&p_thing->U.UPerson.UMod) == 3)
+            hp >>= 1;
+        break;
+    case DMG_UNKN5:
+    case DMG_RAP:
+        break;
+    case DMG_UNKN9:
+        if (cybmod_skin_level(&p_thing->U.UPerson.UMod) == 1)
+            hp = 3 * (hp >> 2);
+        break;
+    default:
+        break;
+    }
+    return hp;
 }
 
 int person_hit_by_bullet(struct Thing *p_thing, short hp,
@@ -3195,46 +3265,11 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
         }
         break;
     case TT_PERSON:
-          if (p_attacker != NULL)
-          {
-              ubyte attack_grp, victim_grp;
-              attack_grp = p_attacker->U.UPerson.EffectiveGroup & 0x1F;
-              victim_grp = p_thing->U.UPerson.EffectiveGroup & 0x7F;
-              if (thing_group_have_truce(attack_grp, victim_grp))
-                  return 1;
-              if (((p_attacker->Flag & TngF_PlayerAgent) != 0) && (p_thing == p_attacker->PTarget))
-              {
-                  if (p_thing->SubType != SubTT_PERS_BRIEFCASE_M && p_thing->SubType != SubTT_PERS_WHITE_BRUN_F &&
-                    p_thing->SubType != SubTT_PERS_WHIT_BLOND_F && p_thing->SubType != SubTT_PERS_LETH_JACKT_M) {
-                      thing_group_set_kill_on_sight(attack_grp, victim_grp, true);
-                  }
-              }
+          if (persons_have_truce(p_attacker, p_thing)) {
+              return 1;
           }
-          switch (type)
-          {
-          case DMG_UZI:
-          case DMG_MINIGUN:
-          case DMG_LONGRANGE:
-              if (cybmod_skin_level(&p_thing->U.UPerson.UMod) == 1)
-                  hp1 >>= 1;
-              break;
-          case DMG_ELLASER:
-          case DMG_BEAM:
-          case DMG_LASER:
-          case DMG_ELSTRAND:
-              if (cybmod_skin_level(&p_thing->U.UPerson.UMod) == 3)
-                  hp1 >>= 1;
-              break;
-          case DMG_UNKN5:
-          case DMG_RAP:
-              break;
-          case DMG_UNKN9:
-              if (cybmod_skin_level(&p_thing->U.UPerson.UMod) == 1)
-                  hp1 = 3 * (hp1 >> 2);
-              break;
-          default:
-              break;
-          }
+          persons_set_groups_kill_on_sight(p_attacker, p_thing);
+          hp1 = mods_affect_hit_points(p_thing, type, hp);
 
           if ((p_attacker != NULL) && (type != DMG_ELSTRAND) && ((p_thing->Flag & TngF_Unkn1000) == 0)
             && ((p_thing->Flag & TngF_Destroyed) == 0) && ((p_attacker->Flag2 & TgF2_ExistsOffMap) == 0)
@@ -3302,8 +3337,8 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
 
         if ((p_thing->Flag2 & TgF2_KnockedOut) == 0)
         {
-          init_recoil(p_thing, vx, vy, vz, type);
-          return 0;
+            init_recoil(p_thing, vx, vy, vz, type);
+            return 0;
         }
         break;
     case TT_BUILDING:
