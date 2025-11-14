@@ -229,6 +229,32 @@ const char *state_change_result_name(StateChRes res)
     return state_change_result_names[res];
 }
 
+struct Thing *effective_owner_of_thing(struct Thing *p_thing)
+{
+    struct Thing *p_owntng;
+
+    if (p_thing == NULL) {
+        return NULL;
+    }
+
+    // Consider player agent an owner even if it got persuaded
+    if ((p_thing->Flag & TngF_PlayerAgent) != 0) {
+        return p_thing;
+    }
+
+    p_owntng = &things[p_thing->Owner];
+
+    if (((p_thing->Flag & TngF_Persuaded) != 0) && (p_owntng->Flag & TngF_PlayerAgent) != 0) {
+        return p_owntng;
+    }
+
+    if (p_thing->Type == TT_MINE && p_thing->SubType == 48) {
+        return p_owntng;
+    }
+
+    return p_thing;
+}
+
 ubyte on_mapwho(struct Thing *p_thing)
 {
     ubyte ret;

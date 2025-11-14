@@ -106,6 +106,61 @@ void persuaded_person_add_to_stats(struct Thing *p_person, ushort brief)
     }
 }
 
+void killed_person_add_to_stats(struct Thing *p_person, ushort brief)
+{
+    struct MissionStatus *p_mistat;
+
+    p_mistat = &mission_status[brief];
+
+    switch (p_person->SubType)
+    {
+    case SubTT_PERS_AGENT:
+          //p_mistat->AgentsKilled++; -- only in MP
+          // fall through
+    case SubTT_PERS_ZEALOT:
+    case SubTT_PERS_HIGH_PRIEST:
+    case SubTT_PERS_PUNK_F:
+    case SubTT_PERS_PUNK_M:
+          p_mistat->SP.EnemiesKilled++;
+          break;
+    case SubTT_PERS_BRIEFCASE_M:
+    case SubTT_PERS_WHITE_BRUN_F:
+    case SubTT_PERS_SCIENTIST:
+    case SubTT_PERS_SHADY_M:
+    case SubTT_PERS_WHIT_BLOND_F:
+    case SubTT_PERS_LETH_JACKT_M:
+    case SubTT_PERS_FAST_BLOND_F:
+          p_mistat->SP.CivsKilled++;
+          break;
+    case SubTT_PERS_MERCENARY:
+    case SubTT_PERS_MECH_SPIDER:
+    case SubTT_PERS_POLICE:
+          p_mistat->SP.SecurityKilled++;
+          break;
+    default:
+          break;
+    }
+}
+
+void killed_mp_agent_add_to_stats(struct Thing *p_victim, PlayerIdx attack_plyr)
+{
+    struct MissionStatus *p_mistat;
+    PlayerIdx victim_plyr;
+
+    if (attack_plyr >= PLAYERS_LIMIT) {
+        LOGERR("Attacking player %d out of range", (int)attack_plyr);
+        return;
+    }
+    victim_plyr = p_victim->U.UPerson.ComCur >> 2;
+    if (victim_plyr >= PLAYERS_LIMIT) {
+        LOGERR("Victim player %d out of range", (int)victim_plyr);
+        return;
+    }
+    p_mistat = &mission_status[attack_plyr];
+
+    p_mistat->MP.AgentsKilled[victim_plyr]++;
+}
+
 void persuaded_person_remove_from_stats(struct Thing *p_person, ushort brief)
 {
     struct MissionStatus *p_mistat;

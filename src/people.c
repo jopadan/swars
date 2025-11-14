@@ -3018,6 +3018,35 @@ void init_recoil(struct Thing *p_person, short vx, short vy, short vz, ushort ty
         :  : "a" (p_person), "d" (vx), "b" (vy), "c" (vz), "g" (type));
 }
 
+void person_update_kill_stats(struct Thing *p_attacker, struct Thing *p_victim)
+{
+    if (p_attacker == NULL)
+        return;
+
+    if (in_network_game)
+    {
+        if ((p_victim->Flag & TngF_PlayerAgent) != 0)
+        {
+          struct Thing *p_realowner;
+          PlayerIdx attack_plyr;
+
+          p_realowner = effective_owner_of_thing(p_attacker);
+
+          if ((p_realowner != NULL) && ((p_realowner->Flag & TngF_PlayerAgent) != 0))
+          {
+              attack_plyr = p_realowner->U.UPerson.ComCur >> 2;
+              killed_mp_agent_add_to_stats(p_victim, attack_plyr);
+          }
+      }
+    }
+    else
+    {
+        if (p_attacker->U.UObject.EffectiveGroup == ingame.MyGroup) {
+            killed_person_add_to_stats(p_victim, open_brief);
+        }
+    }
+}
+
 int person_hit_by_bullet(struct Thing *p_thing, short hp,
   int vx, int vy, int vz, struct Thing *p_attacker, ushort type)
 {
@@ -3255,77 +3284,8 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
                 break;
             }
 
-          if (p_attacker != NULL)
-          {
-            struct MissionStatus *p_mistat;
-
-            if (in_network_game)
-            {
-                if ((p_thing->Flag & TngF_PlayerAgent) != 0)
-                {
-                  struct Thing *p_realowner;
-                  p_realowner = NULL;
-                  if ((p_attacker->Flag & TngF_PlayerAgent) != 0)
-                  {
-                      p_realowner = p_attacker;
-                  }
-                  else if ((p_attacker->Flag & TngF_Persuaded) != 0 && (things[p_attacker->Owner].Flag & TngF_PlayerAgent) != 0)
-                  {
-                      p_realowner = &things[p_attacker->Owner];
-                  }
-                  else if (p_attacker->Type == 15 && p_attacker->SubType == 48)
-                  {
-                      p_realowner = &things[p_attacker->Owner];
-                  }
-
-                  if ((p_realowner != NULL) && ((p_realowner->Flag & TngF_PlayerAgent) != 0))
-                  {
-                      PlayerIdx attack_plyr, victim_plyr;
-
-                      attack_plyr = p_realowner->U.UPerson.ComCur >> 2;
-                      victim_plyr = p_thing->U.UPerson.ComCur >> 2;
-
-                      if ((attack_plyr < PLAYERS_LIMIT) && (victim_plyr < PLAYERS_LIMIT)) {
-                          p_mistat = &mission_status[attack_plyr];
-                          p_mistat->MP.AgentsKilled[victim_plyr]++;
-                      }
-                  }
-              }
-            }
-            else
-            {
-              if (p_attacker->U.UObject.EffectiveGroup == ingame.MyGroup)
-              {
-                  p_mistat = &mission_status[open_brief];
-                  switch (p_thing->SubType)
-                  {
-                  case 1:
-                  case 2:
-                  case 3:
-                  case 9:
-                  case 12:
-                      p_mistat->SP.EnemiesKilled++;
-                      break;
-                  case 4:
-                  case 5:
-                  case 10:
-                  case 11:
-                  case 13:
-                  case 14:
-                      p_mistat->SP.CivsKilled++;
-                      break;
-                  case 6:
-                  case 7:
-                  case 8:
-                      p_mistat->SP.SecurityKilled++;
-                      break;
-                  default:
-                      break;
-                  }
-              }
-            }
-          }
-          return prev_health;
+            person_update_kill_stats(p_attacker, p_thing);
+            return prev_health;
         }
 
         if ((p_thing->Flag2 & TgF2_KnockedOut) == 0)
@@ -3336,7 +3296,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
         break;
     case TT_BUILDING:
         if (p_attacker != NULL)
-            p_attacker->U.UPerson.Flag3 |= 0x40u;
+            p_attacker->U.UPerson.Flag3 |= 0x40;
         if (p_thing->SubType != 32)
         {
             if ((p_thing->Flag & TngF_Destroyed) == 0)

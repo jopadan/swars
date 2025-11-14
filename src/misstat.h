@@ -68,8 +68,10 @@ void clear_mission_status_all(void);
 void clear_mission_status(ushort brief);
 void clear_open_mission_status(void);
 
+void killed_person_add_to_stats(struct Thing *p_person, ushort brief);
 void persuaded_person_add_to_stats(struct Thing *p_person, ushort brief);
 void persuaded_person_remove_from_stats(struct Thing *p_person, ushort brief);
+void killed_mp_agent_add_to_stats(struct Thing *p_victim, PlayerIdx attack_plyr);
 
 void stats_mp_add_person_kills_person(ThingIdx killer, ThingIdx victim);
 
