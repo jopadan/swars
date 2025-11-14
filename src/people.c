@@ -1291,6 +1291,55 @@ void process_stamina(struct Thing *p_person)
         : : "a" (p_person));
 }
 
+void process_shield(struct Thing *p_person)
+{
+#if 0
+    asm volatile (
+      "call ASM_process_shield\n"
+        : : "a" (p_person));
+#endif
+    struct PeepStat *p_pestat;
+
+    if (p_person->U.UPerson.ShieldEnergy < -300)
+        p_person->U.UPerson.ShieldEnergy = -300;
+
+    if (p_person->U.UPerson.ShieldGlowTimer > 0)
+        p_person->U.UPerson.ShieldGlowTimer--;
+
+    p_pestat = &peep_type_stats[p_person->SubType];
+
+    if ((p_person->Flag & TngF_Unkn00200000) != 0)
+    {
+        p_person->U.UPerson.ShieldEnergy -= 16;
+        if (p_person->U.UPerson.ShieldEnergy <= 0)
+            p_person->Flag &= ~TngF_Unkn00200000;
+    }
+    else
+    {
+        p_person->U.UPerson.ShieldEnergy += 8;
+        if (p_person->U.UPerson.ShieldEnergy > p_pestat->MaxShield)
+            p_person->U.UPerson.ShieldEnergy = p_pestat->MaxShield;
+    }
+
+    if ((p_person->Flag & TngF_PersSupShld) != 0)
+    {
+        short delta, en_drain;
+
+        delta = p_pestat->MaxShield - p_person->U.UPerson.ShieldEnergy;
+        if (delta > 0)
+        {
+            en_drain = delta / PERSON_ENERGY_TO_SHIELD_MUL;
+            if (en_drain > p_person->U.UPerson.Energy) {
+                delta = PERSON_ENERGY_TO_SHIELD_MUL * p_person->U.UPerson.Energy;
+                p_person->Flag &= ~TngF_PersSupShld;
+            }
+            en_drain = delta / PERSON_ENERGY_TO_SHIELD_MUL;
+            p_person->U.UPerson.ShieldEnergy += delta;
+            p_person->U.UPerson.Energy -= en_drain;
+        }
+    }
+}
+
 ubyte conditional_command_state_true(ushort cmd, struct Thing *p_me, ubyte from)
 {
 #if 0

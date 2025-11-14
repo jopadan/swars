@@ -2104,7 +2104,7 @@ void person_give_all_weapons(struct Thing *p_person)
 {
     WeaponType wtype;
 
-    for (wtype = WEP_TYPES_COUNT-1; wtype > 0; wtype--)
+    for (wtype = WEP_TYPES_COUNT-1; wtype > WEP_NULL; wtype--)
     {
         struct WeaponDef *wdef;
         ulong wepflg;
@@ -2127,7 +2127,7 @@ void mark_all_weapons_researched(void)
 {
     WeaponType wtype;
 
-    for (wtype = WEP_TYPES_COUNT-1; wtype > 0; wtype--)
+    for (wtype = WEP_TYPES_COUNT-1; wtype > WEP_NULL; wtype--)
     {
         struct WeaponDef *wdef;
 

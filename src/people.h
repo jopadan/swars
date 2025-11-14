@@ -136,6 +136,10 @@ enum PersonFlags3 {
 
 #define PERSON_MAX_SPEED 2048
 
+/** Multiplayer when transferring weapon energy points to shield points.
+ */
+#define PERSON_ENERGY_TO_SHIELD_MUL 4
+
 enum ThingWeaponSelectFlags {
     WepSel_TOGGLE = 0,
     WepSel_HIDE,
@@ -243,6 +247,7 @@ short calc_person_speed(struct Thing *p_person);
 void check_persons_target(struct Thing *p_person);
 void check_persons_target2(struct Thing *p_person);
 void process_stamina(struct Thing *p_person);
+void process_shield(struct Thing *p_person);
 void process_person(struct Thing *p_person);
 void process_random_speech(struct Thing *p_person, ubyte a2);
 

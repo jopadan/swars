@@ -311,13 +311,6 @@ void unkn_update_lights(void)
     return;
 }
 
-void process_shield(struct Thing *p_thing)
-{
-    asm volatile (
-      "call ASM_process_shield\n"
-        : : "a" (p_thing));
-}
-
 void process_rocket(struct Thing *p_rocket)
 {
     asm volatile (
@@ -604,26 +597,26 @@ void process_temp_light(struct SimpleThing *p_sthing)
     apply_full_light(lgtng_x, lgtng_y >> 3, lgtng_z, bri, 0);
 }
 
+void process_burning_static(struct SimpleThing *p_sthing)
+{
+    p_sthing->Timer1--;
+    if (p_sthing->Timer1 != 0)
+        return;
+    p_sthing->State = 13;
+    p_sthing->Frame = nstart_ani[p_sthing->StartFrame];
+    stop_sample_using_heap(p_sthing->ThingOffset, 29);
+}
+
 void process_static(struct SimpleThing *p_sthing)
 {
     switch (p_sthing->State)
     {
     case 36:
-        play_dist_ssample(p_sthing, 0x1D, 0x7F, 0x40, 100, 0, 2);
-        p_sthing->Timer1--;
-        if (p_sthing->Timer1 != 0)
-            break;
-        p_sthing->State = 13;
-        p_sthing->Frame = nstart_ani[p_sthing->StartFrame];
-        stop_sample_using_heap(p_sthing->ThingOffset, 0x1Du);
+        play_dist_ssample(p_sthing, 29, 0x7F, 0x40, 100, 0, 2);
+        process_burning_static(p_sthing);
         break;
     case 12:
-        p_sthing->Timer1--;
-        if (p_sthing->Timer1 != 0)
-            break;
-        p_sthing->State = 13;
-        p_sthing->Frame = nstart_ani[p_sthing->StartFrame];
-       stop_sample_using_heap(p_sthing->ThingOffset, 0x1Du);
+        process_burning_static(p_sthing);
         break;
     }
 }
