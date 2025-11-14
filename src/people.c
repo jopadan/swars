@@ -3047,6 +3047,35 @@ void person_update_kill_stats(struct Thing *p_attacker, struct Thing *p_victim)
     }
 }
 
+/** Set a person into dying state.
+ *
+ * @param p_person The person which will start dying.
+ * @param hp Amount of Hit Points subtracted from health by the final blow.
+ * @param type Type of damage which caused the death.
+ */
+void person_start_dying(struct Thing *p_person, int hp, ushort type)
+{
+    switch (type)
+    {
+    case DMG_ELLASER:
+    case DMG_BEAM:
+    case DMG_LASER:
+    case DMG_ELSTRAND:
+        set_person_dead(p_thing, 12);
+        break;
+    default:
+    case DMG_UNKN5:
+    case DMG_MINIGUN:
+    case DMG_UNKN9:
+        set_person_dead(p_thing, 11);
+        break;
+    case DMG_RAP:
+    case DMG_LONGRANGE:
+        set_person_dead(p_thing, 10);
+        break;
+    }
+}
+
 int person_hit_by_bullet(struct Thing *p_thing, short hp,
   int vx, int vy, int vz, struct Thing *p_attacker, ushort type)
 {
@@ -3171,12 +3200,14 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               ubyte attack_grp, victim_grp;
               attack_grp = p_attacker->U.UPerson.EffectiveGroup & 0x1F;
               victim_grp = p_thing->U.UPerson.EffectiveGroup & 0x7F;
-              if ( ((1 << victim_grp) & war_flags[attack_grp].Truce) != 0 )
+              if (thing_group_have_truce(attack_grp, victim_grp))
                   return 1;
               if (((p_attacker->Flag & TngF_PlayerAgent) != 0) && (p_thing == p_attacker->PTarget))
               {
-                  if ( p_thing->SubType != 4 && p_thing->SubType != 5 && p_thing->SubType != 13 && p_thing->SubType != 14 )
-                    war_flags[attack_grp].KillOnSight |= (1 << victim_grp);
+                  if (p_thing->SubType != SubTT_PERS_BRIEFCASE_M && p_thing->SubType != SubTT_PERS_WHITE_BRUN_F &&
+                    p_thing->SubType != SubTT_PERS_WHIT_BLOND_F && p_thing->SubType != SubTT_PERS_LETH_JACKT_M) {
+                      thing_group_set_kill_on_sight(attack_grp, victim_grp, true);
+                  }
               }
           }
           switch (type)
@@ -3224,7 +3255,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               if ( victim_grp <= 0x63u && attack_grp <= 0x63u && victim_grp != attack_grp )
               {
                 if ((p_thing->Flag & TngF_Persuaded) == 0)
-                    war_flags[victim_grp].KillOnSight |= 1 << attack_grp;
+                    thing_group_set_kill_on_sight(victim_grp, attack_grp, true);
                 if ((p_thing->Flag & TngF_Persuaded) == 0 && war_flags[victim_grp].Guardians[0])
                     find_and_alert_guardian(p_thing, p_attacker);
               }
@@ -3264,26 +3295,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
         {
             int prev_health;
             prev_health = p_thing->Health + hp1 + energy_decr;
-            switch (type)
-            {
-            case DMG_ELLASER:
-            case DMG_BEAM:
-            case DMG_LASER:
-            case DMG_ELSTRAND:
-                set_person_dead(p_thing, 0xCu);
-                break;
-            default:
-            case DMG_UNKN5:
-            case DMG_MINIGUN:
-            case DMG_UNKN9:
-                set_person_dead(p_thing, 0xBu);
-                break;
-            case DMG_RAP:
-            case DMG_LONGRANGE:
-                set_person_dead(p_thing, 0xAu);
-                break;
-            }
-
+            person_start_dying(p_thing, hp1 + energy_decr, type);
             person_update_kill_stats(p_attacker, p_thing);
             return prev_health;
         }
