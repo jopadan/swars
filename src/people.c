@@ -3039,7 +3039,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
 
     hp1 = hp;
 
-    if ((p_thing->Flag & 0x40000000) != 0)
+    if ((p_thing->Flag & TngF_Unkn40000000) != 0)
         return 1;
     switch (p_thing->Type)
     {
@@ -3052,7 +3052,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
     case TT_PERSON:
         if (p_thing->State == PerSt_PERSON_BURNING)
             return 1;
-        if ((p_thing->Flag & 0x10000000) != 0)
+        if ((p_thing->Flag & TngF_InVehicle) != 0)
         {
             p_thing = &things[p_thing->U.UPerson.Vehicle];
             if (p_thing->Type != TT_VEHICLE)
@@ -3093,9 +3093,9 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
             }
             return 1;
         }
-        if ((p_thing->Flag & 0x0002) != 0)
+        if ((p_thing->Flag & TngF_Destroyed) != 0)
             return 1;
-        if ((p_thing->Flag & 0x40000000) != 0)
+        if ((p_thing->Flag & TngF_Unkn40000000) != 0)
             return 1;
         break;
     default:
@@ -3105,10 +3105,10 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
     switch (p_thing->Type)
     {
     case TT_VEHICLE:
-        if ((p_thing->Flag & 0x0002) == 0)
+        if ((p_thing->Flag & TngF_Destroyed) == 0)
         {
             int health_decr;
-            p_thing->Flag |= 0x01000000;
+            p_thing->Flag |= TngF_Unkn01000000;
             if (p_thing->SubType == SubTT_VEH_TANK)
                 hp1 = hp >> 1;
             if (p_thing->SubType == SubTT_VEH_MECH)
@@ -3124,12 +3124,12 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
             p_thing->OldTarget = p_attacker->ThingOffset;
             if (p_thing->SubType == SubTT_VEH_MECH)
             {
-                p_thing->Flag |= 0x0002;
+                p_thing->Flag |= TngF_Destroyed;
                 init_mech_explode(p_thing);
             }
             else
             {
-                p_thing->Flag |= 0x0002;
+                p_thing->Flag |= TngF_Destroyed;
                 start_crashing(p_thing);
                 play_dist_sample(p_thing, 95, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 1);
             }
@@ -3144,7 +3144,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               victim_grp = p_thing->U.UPerson.EffectiveGroup & 0x7F;
               if ( ((1 << victim_grp) & war_flags[attack_grp].Truce) != 0 )
                   return 1;
-              if (((p_attacker->Flag & 0x2000) != 0) && (p_thing == p_attacker->PTarget))
+              if (((p_attacker->Flag & TngF_PlayerAgent) != 0) && (p_thing == p_attacker->PTarget))
               {
                   if ( p_thing->SubType != 4 && p_thing->SubType != 5 && p_thing->SubType != 13 && p_thing->SubType != 14 )
                     war_flags[attack_grp].KillOnSight |= (1 << victim_grp);
@@ -3176,32 +3176,32 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               break;
           }
 
-          if ((p_attacker != NULL) && (type != 10) && ((p_thing->Flag & 0x1000) == 0)
-            && ((p_thing->Flag & 0x0002) == 0) && ((p_attacker->Flag2 & 0x1000000) == 0)
-            && ((p_thing->Flag2 & 0x0010) == 0))
+          if ((p_attacker != NULL) && (type != 10) && ((p_thing->Flag & TngF_Unkn1000) == 0)
+            && ((p_thing->Flag & TngF_Destroyed) == 0) && ((p_attacker->Flag2 & TgF2_ExistsOffMap) == 0)
+            && ((p_thing->Flag2 & TgF2_KnockedOut) == 0))
           {
               set_interrupt_target(p_thing, p_attacker);
           }
-          if ((p_thing->Flag & 0x0002) != 0) {
+          if ((p_thing->Flag & TngF_Destroyed) != 0) {
               return 1;
           }
           if ((p_attacker != NULL) && (type != 10)
             && !thing_group_have_truce(p_attacker->U.UPerson.EffectiveGroup, p_thing->U.UPerson.EffectiveGroup & 0x7F)
-            && (((p_attacker->Flag & 0x1000) != 0) || ((p_thing == p_attacker->PTarget) && (p_attacker->Flag2 & 0x1000000) == 0)))
+            && (((p_attacker->Flag & TngF_Unkn1000) != 0) || ((p_thing == p_attacker->PTarget) && (p_attacker->Flag2 & TgF2_ExistsOffMap) == 0)))
           {
               ubyte attack_grp, victim_grp;
               victim_grp = p_thing->U.UPerson.EffectiveGroup;
               attack_grp = p_attacker->U.UPerson.EffectiveGroup;
               if ( victim_grp <= 0x63u && attack_grp <= 0x63u && victim_grp != attack_grp )
               {
-                if ( (p_thing->Flag & 0x80000) == 0 )
-                  war_flags[victim_grp].KillOnSight |= 1 << attack_grp;
-                if ( (p_thing->Flag & 0x80000) == 0 && war_flags[victim_grp].Guardians[0] )
-                  find_and_alert_guardian(p_thing, p_attacker);
+                if ((p_thing->Flag & TngF_Persuaded) == 0)
+                    war_flags[victim_grp].KillOnSight |= 1 << attack_grp;
+                if ((p_thing->Flag & TngF_Persuaded) == 0 && war_flags[victim_grp].Guardians[0])
+                    find_and_alert_guardian(p_thing, p_attacker);
               }
           }
           energy_decr = 0;
-          if ((p_thing->Flag & 0x200000) != 0)
+          if ((p_thing->Flag & TngF_Unkn00200000) != 0)
           {
               p_thing->U.UPerson.ShieldEnergy -= hp1;
               p_thing->U.UPerson.ShieldGlowTimer = 4;
@@ -3261,15 +3261,15 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
 
             if (in_network_game)
             {
-                if ((p_thing->Flag & 0x2000) != 0)
+                if ((p_thing->Flag & TngF_PlayerAgent) != 0)
                 {
                   struct Thing *p_realowner;
                   p_realowner = NULL;
-                  if ((p_attacker->Flag & 0x2000) != 0)
+                  if ((p_attacker->Flag & TngF_PlayerAgent) != 0)
                   {
                       p_realowner = p_attacker;
                   }
-                  else if ((p_attacker->Flag & 0x80000) != 0 && (things[p_attacker->Owner].Flag & 0x2000) != 0)
+                  else if ((p_attacker->Flag & TngF_Persuaded) != 0 && (things[p_attacker->Owner].Flag & TngF_PlayerAgent) != 0)
                   {
                       p_realowner = &things[p_attacker->Owner];
                   }
@@ -3278,7 +3278,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
                       p_realowner = &things[p_attacker->Owner];
                   }
 
-                  if ((p_realowner != NULL) && ((p_realowner->Flag & 0x2000) != 0))
+                  if ((p_realowner != NULL) && ((p_realowner->Flag & TngF_PlayerAgent) != 0))
                   {
                       PlayerIdx attack_plyr, victim_plyr;
 
@@ -3328,7 +3328,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
           return prev_health;
         }
 
-        if ((p_thing->Flag2 & 0x0010) == 0)
+        if ((p_thing->Flag2 & TgF2_KnockedOut) == 0)
         {
           init_recoil(p_thing, vx, vy, vz, type);
           return 0;
@@ -3339,7 +3339,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
             p_attacker->U.UPerson.Flag3 |= 0x40u;
         if (p_thing->SubType != 32)
         {
-            if ((p_thing->Flag & 0x0002) == 0)
+            if ((p_thing->Flag & TngF_Destroyed) == 0)
             {
                 play_dist_sample(p_thing, 65, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
                 health = p_thing->Health - (hp >> 1);
@@ -3349,8 +3349,8 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
             }
             return hp;
         }
-        p_thing->Flag |= 0x01000000;
-        if ((p_thing->Flag & 0x0002) == 0)
+        p_thing->Flag |= TngF_Unkn01000000;
+        if ((p_thing->Flag & TngF_Destroyed) == 0)
         {
             int health_decr;
             health_decr = hp >> 1 >> 1;
@@ -3373,7 +3373,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               bang_new4(p_thing->X, p_thing->Y, p_thing->Z, 20);
               p_thing->State = 13;
               p_thing->StartFrame = 1069;
-              p_thing->Flag |= 0x0002;
+              p_thing->Flag |= TngF_Destroyed;
               p_thing->Frame = nstart_ani[1069];
               return p_thing->Health + hp1;
             }
