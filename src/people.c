@@ -3021,7 +3021,7 @@ void init_recoil(struct Thing *p_person, short vx, short vy, short vz, ushort ty
 int person_hit_by_bullet(struct Thing *p_thing, short hp,
   int vx, int vy, int vz, struct Thing *p_attacker, ushort type)
 {
-#if 1
+#if 0
     int ret;
     asm volatile (
       "push %7\n"
