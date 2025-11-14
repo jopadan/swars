@@ -18,6 +18,8 @@
 /******************************************************************************/
 #include "thing.h"
 
+#include <assert.h>
+
 #include "bfbox.h"
 #include "bfutility.h"
 #include "bfmemut.h"
@@ -623,13 +625,31 @@ void process_temp_light(struct SimpleThing *p_sthing)
     apply_full_light(lgtng_x, lgtng_y >> 3, lgtng_z, bri, 0);
 }
 
+void set_thing_frame(struct Thing *p_thing, ushort anim_start)
+{
+    assert(p_thing->Type != TT_PERSON);
+    p_thing->StartFrame = anim_start;
+    p_thing->Frame = nstart_ani[p_thing->StartFrame];
+}
+
+void reset_thing_frame(struct Thing *p_thing)
+{
+    assert(p_thing->Type != TT_PERSON);
+    p_thing->Frame = nstart_ani[p_thing->StartFrame];
+}
+
+void reset_sthing_frame(struct SimpleThing *p_sthing)
+{
+    p_sthing->Frame = nstart_ani[p_sthing->StartFrame];
+}
+
 void process_burning_static(struct SimpleThing *p_sthing)
 {
     p_sthing->Timer1--;
     if (p_sthing->Timer1 != 0)
         return;
     p_sthing->State = 13;
-    p_sthing->Frame = nstart_ani[p_sthing->StartFrame];
+    reset_sthing_frame(p_sthing);
     stop_sample_using_heap(p_sthing->ThingOffset, 29);
 }
 

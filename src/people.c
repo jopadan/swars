@@ -3379,9 +3379,8 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               play_dist_sample(p_thing, 37, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
               bang_new4(p_thing->X, p_thing->Y, p_thing->Z, 20);
               p_thing->State = 13;
-              p_thing->StartFrame = 1069;
               p_thing->Flag |= TngF_Destroyed;
-              p_thing->Frame = nstart_ani[1069];
+              set_thing_frame(p_thing, 1069);
               return p_thing->Health + hp1;
             }
         }

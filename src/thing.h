@@ -985,6 +985,20 @@ TbBool thing_is_destroyed(ThingIdx thing);
 
 struct Thing *effective_owner_of_thing(struct Thing *p_thing);
 
+/** Set a thing frame with single-angle sprite.
+ * Can be used for all sprite things except people.
+ */
+void set_thing_frame(struct Thing *p_thing, ushort anim_start);
+
+/** Reset a thing frame with single-angle sprite.
+ * Can be used for all sprite things except people.
+ */
+void reset_thing_frame(struct Thing *p_thing);
+
+/** Reset a simple thing frame with single-angle sprite.
+ */
+void reset_sthing_frame(struct SimpleThing *p_sthing);
+
 ubyte on_mapwho(struct Thing *p_thing);
 
 /** Delete the thing from `mapwho` chain.
