@@ -85,6 +85,22 @@ enum WeaponFourPackIndex
     WFRPK_COUNT,
 };
 
+enum DamageType
+{
+  DMG_NULL = 0,
+  DMG_UZI = 1,
+  DMG_ELLASER = 2,
+  DMG_BEAM = 3,
+  DMG_LASER = 4,
+  DMG_UNKN5 = 5,
+  DMG_RAP = 6,
+  DMG_MINIGUN = 7,
+  DMG_LONGRANGE = 8,
+  DMG_UNKN9 = 9,
+  DMG_ELSTRAND = 10,
+  DMG_TYPES_COUNT,
+};
+
 enum ProcessProximityWieldWeaponTargetSelect {
     PTargSelect_Persuader = 0,
     PTargSelect_PersuadeAdv,

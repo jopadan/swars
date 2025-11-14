@@ -636,7 +636,7 @@ void init_mgun_laser(struct Thing *p_owner, ushort bmsize)
         p_hitstng = &sthings[-hittng];
         //TODO is it really ok to use person hit function for hitting SimpleThings?
         person_hit_by_bullet((struct Thing *)p_hitstng, damage, p_shot->VX - cor_x,
-          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, 4);
+          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_LASER);
     }
     else if (rhit != 0) // hit normal thing
     {
@@ -646,7 +646,7 @@ void init_mgun_laser(struct Thing *p_owner, ushort bmsize)
         hittng = (short)rhit;
         p_hittng = &things[hittng];
         person_hit_by_bullet(p_hittng, damage, p_shot->VX - cor_x,
-          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, 4);
+          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_LASER);
     }
     p_shot->StartTimer1 = bmsize;
     p_shot->Timer1 = bmsize;

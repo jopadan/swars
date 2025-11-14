@@ -3091,7 +3091,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
         {
             if (p_thing->U.UPerson.AnimMode == 20)
             {
-              if (type == 6)
+              if (type == DMG_RAP)
               {
                 int frame;
                 p_thing->Timer1 = 16;
@@ -3105,7 +3105,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
                 p_thing->StartFrame = people_frames[p_thing->SubType][p_thing->U.UPerson.AnimMode] - 1;
                 return 1;
               }
-              if (type == 1 || type == 7 || type == 8 || type == 9)
+              if (type == DMG_UZI || type == DMG_MINIGUN || type == DMG_LONGRANGE || type == DMG_UNKN9)
               {
                   p_thing->Frame = frame[p_thing->Frame].Next;
                   return 1;
@@ -3143,7 +3143,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
             if (p_thing->SubType == SubTT_VEH_MECH)
                 hp1 >>= 2;
             play_dist_sample(p_thing, 65, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 1);
-            if (type == 1 || type == 7)
+            if (type == DMG_UZI || type == DMG_MINIGUN)
                 hp1 >>= 1;
             health_decr = hp1 >> 1;
             p_thing->Health -= health_decr;
@@ -3181,23 +3181,23 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
           }
           switch (type)
           {
-          case 1:
-          case 7:
-          case 8:
+          case DMG_UZI:
+          case DMG_MINIGUN:
+          case DMG_LONGRANGE:
               if (cybmod_skin_level(&p_thing->U.UPerson.UMod) == 1)
                   hp1 >>= 1;
               break;
-          case 2:
-          case 3:
-          case 4:
-          case 10:
+          case DMG_ELLASER:
+          case DMG_BEAM:
+          case DMG_LASER:
+          case DMG_ELSTRAND:
               if (cybmod_skin_level(&p_thing->U.UPerson.UMod) == 3)
                   hp1 >>= 1;
               break;
-          case 5:
-          case 6:
+          case DMG_UNKN5:
+          case DMG_RAP:
               break;
-          case 9:
+          case DMG_UNKN9:
               if (cybmod_skin_level(&p_thing->U.UPerson.UMod) == 1)
                   hp1 = 3 * (hp1 >> 2);
               break;
@@ -3205,7 +3205,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               break;
           }
 
-          if ((p_attacker != NULL) && (type != 10) && ((p_thing->Flag & TngF_Unkn1000) == 0)
+          if ((p_attacker != NULL) && (type != DMG_ELSTRAND) && ((p_thing->Flag & TngF_Unkn1000) == 0)
             && ((p_thing->Flag & TngF_Destroyed) == 0) && ((p_attacker->Flag2 & TgF2_ExistsOffMap) == 0)
             && ((p_thing->Flag2 & TgF2_KnockedOut) == 0))
           {
@@ -3214,7 +3214,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
           if ((p_thing->Flag & TngF_Destroyed) != 0) {
               return 1;
           }
-          if ((p_attacker != NULL) && (type != 10)
+          if ((p_attacker != NULL) && (type != DMG_ELSTRAND)
             && !thing_group_have_truce(p_attacker->U.UPerson.EffectiveGroup, p_thing->U.UPerson.EffectiveGroup & 0x7F)
             && (((p_attacker->Flag & TngF_Unkn1000) != 0) || ((p_thing == p_attacker->PTarget) && (p_attacker->Flag2 & TgF2_ExistsOffMap) == 0)))
           {
@@ -3266,20 +3266,20 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
             prev_health = p_thing->Health + hp1 + energy_decr;
             switch (type)
             {
-            case 2:
-            case 3:
-            case 4:
-            case 10:
+            case DMG_ELLASER:
+            case DMG_BEAM:
+            case DMG_LASER:
+            case DMG_ELSTRAND:
                 set_person_dead(p_thing, 0xCu);
                 break;
             default:
-            case 5:
-            case 7:
-            case 9:
+            case DMG_UNKN5:
+            case DMG_MINIGUN:
+            case DMG_UNKN9:
                 set_person_dead(p_thing, 0xBu);
                 break;
-            case 6:
-            case 8:
+            case DMG_RAP:
+            case DMG_LONGRANGE:
                 set_person_dead(p_thing, 0xAu);
                 break;
             }
