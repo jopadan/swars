@@ -917,6 +917,16 @@ void set_person_stats_type(struct Thing *p_person, ushort stype)
     p_person->Speed = calc_person_speed(p_person);
 }
 
+/** Set a person frame with single-angle sprite.
+ * Person frames are a bit different from other things, even the
+ * single-angle ones, because StartFrame in incremented when used as frame index.
+ */
+void set_person_frame_noangle(struct Thing *p_person, ushort anim_start)
+{
+    p_person->StartFrame = anim_start - 1;
+    p_person->Frame = nstart_ani[p_person->StartFrame + 1];
+}
+
 void reset_person_frame(struct Thing *p_person)
 {
     ushort person_anim;
@@ -1111,8 +1121,7 @@ void set_person_persuaded(struct Thing *p_person, struct Thing *p_attacker, usho
     }
     if ((p_person->Flag2 & TgF2_KnockedOut) == 0)
     {
-          p_person->StartFrame = 1059;
-          p_person->Frame = nstart_ani[p_person->StartFrame + 1];
+          set_person_frame_noangle(p_person, 1060);
     }
     p_person->Timer1 = 48;
     p_person->StartTimer1 = 48;
@@ -3192,16 +3201,13 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
             {
               if (type == DMG_RAP)
               {
-                int frame;
                 p_thing->Timer1 = 16;
                 p_thing->StartTimer1 = 16;
                 p_thing->SubState = 26;
-                p_thing->U.UPerson.AnimMode = 10;
                 p_thing->U.UPerson.FrameId.Version[4] = 0;
                 p_thing->U.UPerson.FrameId.Version[3] = 0;
-                frame = nstart_ani[people_frames[p_thing->SubType][p_thing->U.UPerson.AnimMode] + p_thing->U.UPerson.Angle];
-                p_thing->Frame = frame;
-                p_thing->StartFrame = people_frames[p_thing->SubType][p_thing->U.UPerson.AnimMode] - 1;
+                p_thing->U.UPerson.AnimMode = 10;
+                reset_person_frame(p_thing);
                 return 1;
               }
               if (type == DMG_UZI || type == DMG_MINIGUN || type == DMG_LONGRANGE || type == DMG_UNKN9)
@@ -3215,8 +3221,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               p_thing->U.UPerson.FrameId.Version[4] = 0;
               p_thing->U.UPerson.FrameId.Version[3] = 0;
               p_thing->U.UPerson.AnimMode = 12;
-              p_thing->Frame = nstart_ani[1067];
-              p_thing->StartFrame = 1066;
+              set_person_frame_noangle(p_thing, 1067);
               play_dist_sample(p_thing, 57, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 3);
             }
             return 1;
