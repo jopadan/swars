@@ -27184,7 +27184,7 @@ change_player_angle:	/* 0x0477E4 */
 
 
 /*----------------------------------------------------------------*/
-set_interrupt_target:	/* 0x04783C */
+GLOBAL_FUNC(ASM_set_interrupt_target)	/* 0x04783C */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx
@@ -27710,7 +27710,7 @@ GLOBAL_FUNC(ASM_alert_peeps)	/* 0x047D40 */
 	jump_47e85:
 		mov    %edi,%edx
 		mov    %esi,%eax
-		call   set_interrupt_target
+		call   ac_set_interrupt_target
 	jump_47e8e:
 		mov    0x2(%esi),%ax
 		jmp    jump_47ea2
@@ -28370,7 +28370,7 @@ GLOBAL_FUNC(ASM_set_person_dead)	/* 0x0480DC */
 
 
 /*----------------------------------------------------------------*/
-init_recoil:	/* 0x048600 */
+GLOBAL_FUNC(ASM_init_recoil)	/* 0x048600 */
 /*----------------------------------------------------------------*/
 		push   %esi
 		push   %edi
@@ -28846,7 +28846,7 @@ GLOBAL_FUNC(ASM_person_hit_by_bullet)	/* 0x048868 */
 		jne    jump_48bcf
 		orb    $0x2,0xc(%esi)
 		mov    %esi,%eax
-		call   init_mech_explode
+		call   ac_init_mech_explode
 		mov    0x38(%esi),%eax
 		sar    $0x10,%eax
 		add    %edi,%eax
@@ -28949,7 +28949,7 @@ GLOBAL_FUNC(ASM_person_hit_by_bullet)	/* 0x048868 */
 		test   %eax,%eax
 		jg     jump_491e5
 		mov    %esi,%eax
-		call   init_mgun_explode
+		call   ac_init_mgun_explode
 		mov    0x38(%esi),%eax
 		sar    $0x10,%eax
 		add    %edx,%eax
@@ -29060,7 +29060,7 @@ func_48db9:
 		jne    jump_48dea
 		mov    %ebp,%edx
 		mov    %esi,%eax
-		call   set_interrupt_target
+		call   ac_set_interrupt_target
 	jump_48dea:
 		testb  $0x2,0xc(%esi)
 		je     jump_48dfe
@@ -29130,7 +29130,7 @@ func_48db9:
 		je     jump_48ebe
 		mov    %ebp,%edx
 		mov    %esi,%eax
-		call   find_and_alert_guardian
+		call   ac_find_and_alert_guardian
 	jump_48ebe:
 		xor    %ecx,%ecx
 		mov    0xe(%esi),%dh
@@ -29182,7 +29182,7 @@ func_48db9:
 		and    $0x1,%eax
 		push   $0x64
 		mov    $0x7f,%ebx
-		mov    sfx_woman_shot(%eax),%dl
+		mov    EXPORT_SYMBOL(sfx_woman_shot)(%eax),%dl
 		jmp    jump_48fa0
 	jump_48f77:
 		push   $0x2
@@ -29196,7 +29196,7 @@ func_48db9:
 		and    $0x7,%eax
 		xor    %edx,%edx
 		push   $0x64
-		mov    sfx_man_shot(%eax),%dl
+		mov    EXPORT_SYMBOL(sfx_man_shot)(%eax),%dl
 	jump_48fa0:
 		mov    %esi,%eax
 		call   ac_play_dist_sample
@@ -29385,7 +29385,7 @@ func_4908c:
 		push   %eax
 		sar    $0x10,%edx
 		mov    %esi,%eax
-		call   init_recoil
+		call   ac_init_recoil
 		xor    %eax,%eax
 		add    $0x10,%esp
 		pop    %ebp
@@ -29857,7 +29857,7 @@ GLOBAL_FUNC(ASM_person_hit_razor_wire)	/* 0x049294 */
 		and    $0x1,%eax
 		push   $0x64
 		mov    $0x40,%ecx
-		mov    sfx_woman_shot(%eax),%dl
+		mov    EXPORT_SYMBOL(sfx_woman_shot)(%eax),%dl
 		jmp    jump_496db
 	jump_496b2:
 		push   $0x2
@@ -29871,7 +29871,7 @@ GLOBAL_FUNC(ASM_person_hit_razor_wire)	/* 0x049294 */
 		and    $0x7,%eax
 		push   $0x64
 		mov    $0x7f,%ebx
-		mov    sfx_man_shot(%eax),%dl
+		mov    EXPORT_SYMBOL(sfx_man_shot)(%eax),%dl
 	jump_496db:
 		mov    %edi,%eax
 		call   ac_play_dist_sample
@@ -41919,7 +41919,7 @@ GLOBAL_FUNC(ASM_process_soul)	/* 0x052020 */
 		movswl %bx,%ebx
 		mov    %edi,%eax
 		sar    $0x10,%edx
-		call   init_recoil
+		call   ac_init_recoil
 	jump_521eb:
 		mov    0x3b(%edi),%dl
 		inc    %dl
@@ -62218,7 +62218,7 @@ apply_unkn_vehicle50_damage:	/* 0x061E30 */
 		or     $0x2,%bl
 		mov    %esi,%eax
 		mov    %bl,0xc(%esi)
-		call   init_mech_explode
+		call   ac_init_mech_explode
 		jmp    jump_61f5f
 	jump_61f23:
 		mov    0xc(%esi),%dh
@@ -63491,7 +63491,7 @@ do_shockwave_vehicle:	/* 0x062E10 */
 		test   %ecx,%ecx
 		jg     jump_62e8d
 		mov    %ebx,%eax
-		call   init_mgun_explode
+		call   ac_init_mgun_explode
 	jump_62e8d:
 		pop    %esi
 		ret    $0x8
@@ -63735,7 +63735,7 @@ func_63034:
 		mov    %esi,%eax
 		xor    %ebx,%ebx
 		sar    $0x10,%edx
-		call   init_recoil
+		call   ac_init_recoil
 		movb   $0xa,0x7d(%esi)
 	jump_63150:
 		add    $0x4,%esp
@@ -65678,7 +65678,7 @@ GLOBAL_FUNC(ASM_explode_thing_building)	/* 0x063F34 */
 		cmp    $0x20,%eax
 		jne    jump_648a1
 		mov    %esi,%eax
-		call   init_mgun_explode
+		call   ac_init_mgun_explode
 		jmp    jump_6483b
 	jump_648a1:
 		mov    0xc6(%esp),%ebx
@@ -65955,7 +65955,7 @@ GLOBAL_FUNC(ASM_explode_thing_building)	/* 0x063F34 */
 		jne    jump_64c52
 		orb    $0x2,0xc(%esi)
 		mov    %esi,%eax
-		call   init_mech_explode
+		call   ac_init_mech_explode
 		jmp    jump_64c79
 	jump_64c52:
 		orb    $0x2,0xc(%esi)
@@ -73439,7 +73439,7 @@ find_best_guardian:	/* 0x06BFC0 */
 
 
 /*----------------------------------------------------------------*/
-find_and_alert_guardian:	/* 0x06C0BC */
+GLOBAL_FUNC(ASM_find_and_alert_guardian)	/* 0x06C0BC */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx
@@ -74569,7 +74569,7 @@ find_target_from_players:	/* 0x06CCB0 */
 	jump_6cde5:
 		mov    %esi,%edx
 		mov    %ebp,%eax
-		call   set_interrupt_target
+		call   ac_set_interrupt_target
 		mov    $0x1,%edx
 		mov    $0x1,%al
 		mov    %dx,EXPORT_SYMBOL(ingame)+0x967 # ingame.fld_unkC8B
@@ -74683,7 +74683,7 @@ find_target_from_persuaded_peeps:	/* 0x06CE04 */
 		je     jump_6ce55
 		mov    %esi,%edx
 		mov    %ebp,%eax
-		call   set_interrupt_target
+		call   ac_set_interrupt_target
 		mov    $0x1,%al
 		add    $0x14,%esp
 		pop    %ebp
@@ -74945,7 +74945,7 @@ find_target_from_group:	/* 0x06CF40 */
 		je     jump_6d235
 		mov    %esi,%edx
 		mov    %edi,%eax
-		call   set_interrupt_target
+		call   ac_set_interrupt_target
 		mov    $0x1,%al
 		add    $0x14,%esp
 		pop    %ebp
@@ -82633,7 +82633,7 @@ GLOBAL_FUNC(ASM_start_crashing)	/* 0x07811C */
 		movw   $0xd,0xa(%eax)
 		or     $0x2,%cl
 		mov    %cl,0xc(%eax)
-		call   init_mech_explode
+		call   ac_init_mech_explode
 		jmp    jump_781ad
 	jump_7813f:
 		xor    %edx,%edx
@@ -91496,7 +91496,7 @@ GLOBAL_FUNC(ASM_process_building)	/* 0x07E660 */
 
 
 /*----------------------------------------------------------------*/
-init_mgun_explode:	/* 0x07E78C */
+GLOBAL_FUNC(ASM_init_mgun_explode)	/* 0x07E78C */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx
@@ -146280,7 +146280,7 @@ mech_unkn_func_20:	/* 0x0BEBC0 */
 
 
 /*----------------------------------------------------------------*/
-init_mech_explode:	/* 0x0BEE30 */
+GLOBAL_FUNC(ASM_init_mech_explode)	/* 0x0BEE30 */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx
@@ -156551,7 +156551,7 @@ napalm_person:	/* 0x0C6FB0 */
 		xor    %ebx,%ebx
 		movswl %dx,%ecx
 		movswl %dx,%edx
-		call   init_recoil
+		call   ac_init_recoil
 	jump_c718b:
 		xor    %al,%al
 		pop    %esi
@@ -181887,9 +181887,9 @@ paQdataSavegam_5:	/* 0x15330C */
 paQdataSavegam_6:	/* 0x153310 */
 		.long   aQdataSavegam_6
 
-sfx_man_shot:	/* 0x153350 */
+ASM_sfx_man_shot:	/* 0x153350 */
 		.ascii  "\x0b\x1a\x29\x2a\x2b\x0b\x1a\x29"
-sfx_woman_shot:	/* 0x153358 */
+ASM_sfx_woman_shot:	/* 0x153358 */
 		.ascii  "\x0c\x1b"
 data_15335a:
 		.short  0x0

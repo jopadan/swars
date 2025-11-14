@@ -1094,6 +1094,12 @@ void process_parked_flyer(struct Thing *p_vehicle)
         : : "a" (p_vehicle));
 }
 
+void init_mech_explode(struct Thing *p_vehicle)
+{
+    asm volatile ("call ASM_init_mech_explode\n"
+        : : "a" (p_vehicle));
+}
+
 void process_train(struct Thing *p_vehicle)
 {
     int dtvel;

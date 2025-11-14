@@ -303,7 +303,7 @@ TbBool person_is_persuaded_by_player(ThingIdx thing, ushort plyr);
 void player_change_person(short thing, ushort plyr);
 void make_peeps_scatter(struct Thing *p_person, int x, int z);
 int person_hit_by_bullet(struct Thing *p_person, short hp,
-  int vx, int vy, int vz, struct Thing *p_attacker, int type);
+  int vx, int vy, int vz, struct Thing *p_attacker, ushort type);
 
 /** Restores agents health by consuming a medikit, or just restores if no medikit available.
  */

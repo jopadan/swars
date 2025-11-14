@@ -185,6 +185,7 @@ struct VehStateConfig
 void init_mech(void);
 void mech_unkn_func_02(void);
 void mech_unkn_func_09(ThingIdx thing);
+void init_mech_explode(struct Thing *p_vehicle);
 
 TbBool vehicle_is_destroyed(ThingIdx thing);
 

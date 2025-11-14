@@ -448,6 +448,14 @@ void collapse_building_station(struct Thing *p_building)
     }
 }
 
+void init_mgun_explode(struct Thing *p_thing)
+{
+    asm volatile (
+      "call ASM_init_mgun_explode\n"
+        :  : "a" (p_thing));
+    return;
+}
+
 void collapse_building(short x, short y, short z, struct Thing *p_building)
 {
 #if 0

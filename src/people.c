@@ -25,7 +25,7 @@
 #include "bfutility.h"
 #include "ssampply.h"
 
-#include "pepgroup.h"
+#include "bmbang.h"
 #include "bigmap.h"
 #include "building.h"
 #include "command.h"
@@ -40,10 +40,12 @@
 #include "game_sprani.h"
 #include "lvobjctv.h"
 #include "misstat.h"
+#include "pepgroup.h"
 #include "player.h"
 #include "scandraw.h"
 #include "sound.h"
 #include "thing.h"
+#include "thing_fire.h"
 #include "thing_search.h"
 #include "tngcolisn.h"
 #include "vehicle.h"
@@ -205,6 +207,14 @@ const struct Direction angle_direction[] = {
     {-181,  181},
 };
 
+ubyte sfx_man_shot[] = {
+  11, 26, 41, 42, 43, 11, 26, 41,
+};
+ubyte sfx_woman_shot[] = {
+  12, 27,
+};
+
+extern ushort female_peep;
 extern short word_1AA38E;
 extern short word_1AA390;
 extern short word_1AA392;
@@ -2975,17 +2985,404 @@ void process_random_speech(struct Thing *p_person, ubyte a2)
     }
 }
 
-int person_hit_by_bullet(struct Thing *p_person, short hp,
-  int vx, int vy, int vz, struct Thing *p_attacker, int type)
+void set_interrupt_target(struct Thing *p_person, struct Thing *p_target)
 {
+    asm volatile ("call ASM_set_interrupt_target\n"
+        : : "a" (p_person), "d" (p_target));
+    return;
+}
+
+void set_person_dead(struct Thing *p_person, ushort anim_mode)
+{
+#if 1
+    asm volatile ("call ASM_set_person_dead\n"
+        : : "a" (p_person), "d" (anim_mode));
+    return;
+#endif
+}
+
+uint find_and_alert_guardian(struct Thing *p_person, struct Thing *p_attacker)
+{
+    uint ret;
+    asm volatile (
+      "call ASM_find_and_alert_guardian\n"
+        : "=r" (ret) : "a" (p_person), "d" (p_attacker));
+    return ret;
+}
+
+void init_recoil(struct Thing *p_person, short vx, short vy, short vz, ushort type)
+{
+    asm volatile (
+      "push %4\n"
+      "call ASM_init_recoil\n"
+        :  : "a" (p_person), "d" (vx), "b" (vy), "c" (vz), "g" (type));
+}
+
+int person_hit_by_bullet(struct Thing *p_thing, short hp,
+  int vx, int vy, int vz, struct Thing *p_attacker, ushort type)
+{
+#if 1
     int ret;
     asm volatile (
       "push %7\n"
       "push %6\n"
       "push %5\n"
       "call ASM_person_hit_by_bullet\n"
-        : "=r" (ret) : "a" (p_person), "d" (hp), "b" (vx), "c" (vy), "g" (vz), "g" (p_attacker), "g" (type));
+        : "=r" (ret) : "a" (p_thing), "d" (hp), "b" (vx), "c" (vy), "g" (vz), "g" (p_attacker), "g" (type));
     return ret;
+#endif
+    struct SimpleThing *p_sthing;
+
+    short hp1;
+    int health;
+    int energy_decr;
+
+    hp1 = hp;
+
+    if ((p_thing->Flag & 0x40000000) != 0)
+        return 1;
+    switch (p_thing->Type)
+    {
+    case SmTT_STATIC:
+        p_sthing = (struct SimpleThing *)p_thing;
+        p_sthing->U.UScenery.Health -= hp;
+        if (p_sthing->U.UScenery.Health <= 0)
+            set_static_on_fire(p_sthing);
+        return 100;
+    case TT_PERSON:
+        if (p_thing->State == PerSt_PERSON_BURNING)
+            return 1;
+        if ((p_thing->Flag & 0x10000000) != 0)
+        {
+            p_thing = &things[p_thing->U.UPerson.Vehicle];
+            if (p_thing->Type != TT_VEHICLE)
+                return 0;
+        }
+        if (p_thing->State == 13)
+        {
+            if (p_thing->U.UPerson.AnimMode == 20)
+            {
+              if (type == 6)
+              {
+                int frame;
+                p_thing->Timer1 = 16;
+                p_thing->StartTimer1 = 16;
+                p_thing->SubState = 26;
+                p_thing->U.UPerson.AnimMode = 10;
+                p_thing->U.UPerson.FrameId.Version[4] = 0;
+                p_thing->U.UPerson.FrameId.Version[3] = 0;
+                frame = nstart_ani[people_frames[p_thing->SubType][p_thing->U.UPerson.AnimMode] + p_thing->U.UPerson.Angle];
+                p_thing->Frame = frame;
+                p_thing->StartFrame = people_frames[p_thing->SubType][p_thing->U.UPerson.AnimMode] - 1;
+                return 1;
+              }
+              if (type == 1 || type == 7 || type == 8 || type == 9)
+              {
+                  p_thing->Frame = frame[p_thing->Frame].Next;
+                  return 1;
+              }
+              p_thing->Timer1 = 16;
+              p_thing->StartTimer1 = 16;
+              p_thing->SubState = 26;
+              p_thing->U.UPerson.FrameId.Version[4] = 0;
+              p_thing->U.UPerson.FrameId.Version[3] = 0;
+              p_thing->U.UPerson.AnimMode = 12;
+              p_thing->Frame = nstart_ani[1067];
+              p_thing->StartFrame = 1066;
+              play_dist_sample(p_thing, 57, 127, 64, 100, 0, 3);
+            }
+            return 1;
+        }
+        if ((p_thing->Flag & 0x0002) != 0)
+            return 1;
+        if ((p_thing->Flag & 0x40000000) != 0)
+            return 1;
+        break;
+    default:
+        break;
+    }
+
+    switch (p_thing->Type)
+    {
+    case TT_VEHICLE:
+        if ((p_thing->Flag & 0x0002) == 0)
+        {
+            int health_decr;
+            p_thing->Flag |= 0x01000000;
+            if (p_thing->SubType == SubTT_VEH_TANK)
+                hp1 = hp >> 1;
+            if (p_thing->SubType == SubTT_VEH_MECH)
+                hp1 >>= 2;
+            play_dist_sample(p_thing, 65u, 127u, 64u, 100, 0, 1);
+            if (type == 1 || type == 7)
+                hp1 >>= 1;
+            health_decr = hp1 >> 1;
+            p_thing->Health -= health_decr;
+            p_thing->U.UVehicle.RecoilTimer = 5;
+            if (p_thing->Health > 0)
+                return health_decr;
+            p_thing->OldTarget = p_attacker->ThingOffset;
+            if (p_thing->SubType == SubTT_VEH_MECH)
+            {
+                p_thing->Flag |= 0x0002;
+                init_mech_explode(p_thing);
+            }
+            else
+            {
+                p_thing->Flag |= 0x0002;
+                start_crashing(p_thing);
+                play_dist_sample(p_thing, 95u, 127u, 0x40u, 100, 0, 1);
+            }
+            return p_thing->Health + health_decr;
+        }
+        break;
+    case TT_PERSON:
+          if (p_attacker != NULL)
+          {
+              ubyte attack_grp, victim_grp;
+              attack_grp = p_attacker->U.UPerson.EffectiveGroup & 0x1F;
+              victim_grp = p_thing->U.UPerson.EffectiveGroup & 0x7F;
+              if ( ((1 << victim_grp) & war_flags[attack_grp].Truce) != 0 )
+                  return 1;
+              if (((p_attacker->Flag & 0x2000) != 0) && (p_thing == p_attacker->PTarget))
+              {
+                  if ( p_thing->SubType != 4 && p_thing->SubType != 5 && p_thing->SubType != 13 && p_thing->SubType != 14 )
+                    war_flags[attack_grp].KillOnSight |= (1 << victim_grp);
+              }
+          }
+          switch (type)
+          {
+          case 1:
+          case 7:
+          case 8:
+              if (cybmod_skin_level(&p_thing->U.UPerson.UMod) == 1)
+                  hp1 >>= 1;
+              break;
+          case 2:
+          case 3:
+          case 4:
+          case 10:
+              if (cybmod_skin_level(&p_thing->U.UPerson.UMod) == 3)
+                  hp1 >>= 1;
+              break;
+          case 5:
+          case 6:
+              break;
+          case 9:
+              if (cybmod_skin_level(&p_thing->U.UPerson.UMod) == 1)
+                  hp1 = 3 * (hp1 >> 2);
+              break;
+          default:
+              break;
+          }
+
+          if ((p_attacker != NULL) && (type != 10) && ((p_thing->Flag & 0x1000) == 0)
+            && ((p_thing->Flag & 0x0002) == 0) && ((p_attacker->Flag2 & 0x1000000) == 0)
+            && ((p_thing->Flag2 & 0x0010) == 0))
+          {
+              set_interrupt_target(p_thing, p_attacker);
+          }
+          if ((p_thing->Flag & 0x0002) != 0) {
+              return 1;
+          }
+          if ((p_attacker != NULL) && (type != 10)
+            && !thing_group_have_truce(p_attacker->U.UPerson.EffectiveGroup, p_thing->U.UPerson.EffectiveGroup & 0x7F)
+            && (((p_attacker->Flag & 0x1000) != 0) || ((p_thing == p_attacker->PTarget) && (p_attacker->Flag2 & 0x1000000) == 0)))
+          {
+              ubyte attack_grp, victim_grp;
+              victim_grp = p_thing->U.UPerson.EffectiveGroup;
+              attack_grp = p_attacker->U.UPerson.EffectiveGroup;
+              if ( victim_grp <= 0x63u && attack_grp <= 0x63u && victim_grp != attack_grp )
+              {
+                if ( (p_thing->Flag & 0x80000) == 0 )
+                  war_flags[victim_grp].KillOnSight |= 1 << attack_grp;
+                if ( (p_thing->Flag & 0x80000) == 0 && war_flags[victim_grp].Guardians[0] )
+                  find_and_alert_guardian(p_thing, p_attacker);
+              }
+          }
+          energy_decr = 0;
+          if ((p_thing->Flag & 0x200000) != 0)
+          {
+              p_thing->U.UPerson.ShieldEnergy -= hp1;
+              p_thing->U.UPerson.ShieldGlowTimer = 4;
+              if (p_thing->U.UPerson.ShieldEnergy >= 0)
+              {
+                if (p_thing->U.UPerson.ShieldEnergy > 1024)
+                  p_thing->U.UPerson.ShieldEnergy = 1024;
+                return 0;
+              }
+              p_thing->Health += p_thing->U.UPerson.ShieldEnergy;
+              energy_decr = -p_thing->U.UPerson.ShieldEnergy;
+          }
+          else
+          {
+              if (p_thing->U.UPerson.RecoilTimer <= 1)
+              {
+                  ushort smpl_no;
+
+                  if (((1 << p_thing->SubType) & female_peep) != 0) {
+                      smpl_no = sfx_woman_shot[(gameturn + p_thing->ThingOffset) & 1];
+                  } else {
+                      smpl_no = sfx_man_shot[(gameturn + p_thing->ThingOffset) & 7];
+                  }
+                  play_dist_sample(p_thing, smpl_no, 0x7Fu, 0x40u, 100, 0, 2);
+              }
+              p_thing->Health -= hp1;
+              p_thing->U.UPerson.ShieldEnergy -= hp1;
+          }
+
+        if (p_thing->Health <= 0)
+        {
+            int prev_health;
+            prev_health = p_thing->Health + hp1 + energy_decr;
+            switch (type)
+            {
+            case 2:
+            case 3:
+            case 4:
+            case 10:
+                set_person_dead(p_thing, 0xCu);
+                break;
+            default:
+            case 5:
+            case 7:
+            case 9:
+                set_person_dead(p_thing, 0xBu);
+                break;
+            case 6:
+            case 8:
+                set_person_dead(p_thing, 0xAu);
+                break;
+            }
+
+          if (p_attacker != NULL)
+          {
+            struct MissionStatus *p_mistat;
+
+            if (in_network_game)
+            {
+                if ((p_thing->Flag & 0x2000) != 0)
+                {
+                  struct Thing *p_realowner;
+                  p_realowner = NULL;
+                  if ((p_attacker->Flag & 0x2000) != 0)
+                  {
+                      p_realowner = p_attacker;
+                  }
+                  else if ((p_attacker->Flag & 0x80000) != 0 && (things[p_attacker->Owner].Flag & 0x2000) != 0)
+                  {
+                      p_realowner = &things[p_attacker->Owner];
+                  }
+                  else if (p_attacker->Type == 15 && p_attacker->SubType == 48)
+                  {
+                      p_realowner = &things[p_attacker->Owner];
+                  }
+
+                  if ((p_realowner != NULL) && ((p_realowner->Flag & 0x2000) != 0))
+                  {
+                      PlayerIdx attack_plyr, victim_plyr;
+
+                      attack_plyr = p_realowner->U.UPerson.ComCur >> 2;
+                      victim_plyr = p_thing->U.UPerson.ComCur >> 2;
+
+                      if ((attack_plyr < PLAYERS_LIMIT) && (victim_plyr < PLAYERS_LIMIT)) {
+                          p_mistat = &mission_status[attack_plyr];
+                          p_mistat->MP.AgentsKilled[victim_plyr]++;
+                      }
+                  }
+              }
+            }
+            else
+            {
+              if (p_attacker->U.UObject.EffectiveGroup == ingame.MyGroup)
+              {
+                  p_mistat = &mission_status[open_brief];
+                  switch (p_thing->SubType)
+                  {
+                  case 1:
+                  case 2:
+                  case 3:
+                  case 9:
+                  case 12:
+                      p_mistat->SP.EnemiesKilled++;
+                      break;
+                  case 4:
+                  case 5:
+                  case 10:
+                  case 11:
+                  case 13:
+                  case 14:
+                      p_mistat->SP.CivsKilled++;
+                      break;
+                  case 6:
+                  case 7:
+                  case 8:
+                      p_mistat->SP.SecurityKilled++;
+                      break;
+                  default:
+                      break;
+                  }
+              }
+            }
+          }
+          return prev_health;
+        }
+
+        if ((p_thing->Flag2 & 0x0010) == 0)
+        {
+          init_recoil(p_thing, vx, vy, vz, type);
+          return 0;
+        }
+        break;
+    case TT_BUILDING:
+        if (p_attacker != NULL)
+            p_attacker->U.UPerson.Flag3 |= 0x40u;
+        if (p_thing->SubType != 32)
+        {
+            if ((p_thing->Flag & 0x0002) == 0)
+            {
+                play_dist_sample(p_thing, 65u, 127u, 64u, 100, 0, 1);
+                health = p_thing->Health - (hp >> 1);
+                if (health < 0)
+                    collapse_building(p_thing->X >> 8, p_thing->Y >> 8, p_thing->Z >> 8, p_thing);
+                p_thing->Health = health;
+            }
+            return hp;
+        }
+        p_thing->Flag |= 0x01000000;
+        if ((p_thing->Flag & 0x0002) == 0)
+        {
+            int health_decr;
+            health_decr = hp >> 1 >> 1;
+            p_thing->Health -= health_decr;
+            p_thing->U.UObject.Cost = 5;
+            if (p_thing->Health <= 0)
+            {
+                init_mgun_explode(p_thing);
+                return p_thing->Health + health_decr;
+            }
+        }
+        break;
+    case TT_MINE:
+        if (p_thing->State != 13)
+        {
+            p_thing->Health -= hp;
+            if (p_thing->Health <= 0)
+            {
+              play_dist_sample(p_thing, 0x25u, 0x7Fu, 0x40u, 100, 0, 3);
+              bang_new4(p_thing->X, p_thing->Y, p_thing->Z, 20);
+              p_thing->State = 13;
+              p_thing->StartFrame = 1069;
+              p_thing->Flag |= 0x0002;
+              p_thing->Frame = nstart_ani[1069];
+              return p_thing->Health + hp1;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    return 0;
 }
 
 TbBool person_use_medikit(struct Thing *p_person, PlayerIdx plyr)
@@ -3158,15 +3555,6 @@ ushort check_col_collision(int x, int y, int z)
       "call ASM_check_col_collision\n"
         : "=r" (ret) : "a" (x), "d" (y), "b" (z));
     return ret;
-#endif
-}
-
-void set_person_dead(struct Thing *p_person, ushort anim_mode)
-{
-#if 1
-    asm volatile ("call ASM_set_person_dead\n"
-        : : "a" (p_person), "d" (anim_mode));
-    return;
 #endif
 }
 

@@ -132,6 +132,8 @@ TbBool building_can_transform_open(ThingIdx bldng);
 
 struct Thing *create_building_thing(int x, int y, int z, ushort a4, ushort a5, ushort a6);
 
+void init_mgun_explode(struct Thing *p_thing);
+
 void collapse_building(short x, short y, short z, struct Thing *p_building);
 
 void process_building(struct Thing *p_building);
