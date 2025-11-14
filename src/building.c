@@ -480,7 +480,7 @@ void collapse_building(short x, short y, short z, struct Thing *p_building)
     {
         short tng_x, tng_y, tng_z;
         get_thing_position_mapcoords(&tng_x, &tng_y, &tng_z, p_building->ThingOffset);
-        play_dist_sample(p_building, 0x2Du, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
+        play_dist_sample(p_building, 45, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         p_sthing = create_sound_effect(tng_x, tng_y, tng_z, 0x2Eu, 127, -1);
         if (p_sthing != NULL)
         {

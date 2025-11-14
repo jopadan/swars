@@ -197,7 +197,7 @@ ubyte show_login_name(struct ScreenBox *p_box)
     if (strcmp(login_name, "POOSLICE") == 0)
     {
         ingame.UserFlags |= 0x04;
-        play_sample_using_heap(0, 71, 127, 64, 100, 0, 3u);
+        play_sample_using_heap(0, 71, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 3u);
     }
     if ((gameturn & 1) != 0)
     {

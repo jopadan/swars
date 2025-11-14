@@ -938,7 +938,7 @@ void process_tank_turret(struct Thing *p_tank)
         if (dt_angle <= 1) {
             // Play rotation stop sample
             if (!IsSamplePlaying(p_tank->ThingOffset, 47, 0))
-                play_dist_sample(p_tank, 47, 127, 0x40u, 100, 0, 1);
+                play_dist_sample(p_tank, 47, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
             p_turret->Flag2 &= ~TgF2_Unkn0200;
         }
     }
@@ -948,7 +948,7 @@ void process_tank_turret(struct Thing *p_tank)
         // Huge values of OldTarget (beyond pi) indicate that previously we had no target.
         if ((abs(dt_angle) >= LbFPMath_PI/75) && (p_tank->OldTarget < abs(angle) || p_tank->OldTarget > LbFPMath_PI)) {
             if (!IsSamplePlaying(p_tank->ThingOffset, 48, 0))
-                play_dist_sample(p_tank, 48, 127, 0x40u, 100, 0, 1);
+                play_dist_sample(p_tank, 48, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
             p_turret->Flag2 |= TgF2_Unkn0200;
         }
     }
@@ -1157,7 +1157,7 @@ void process_train(struct Thing *p_vehicle)
         {
             p_vehicle->State = VehSt_UNKN_14;
             p_vehicle->U.UVehicle.Timer2 = 100;
-            play_dist_sample(p_vehicle, 225 + (LbRandomAnyShort() % 4), 0x7Fu, 0x40u, 100, 0, 1);
+            play_dist_sample(p_vehicle, 225 + (LbRandomAnyShort() % 4), FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
         }
         break;
     case VehSt_UNKN_14:

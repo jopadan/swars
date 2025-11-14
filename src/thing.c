@@ -430,7 +430,7 @@ void FIRE_process_flame(struct SimpleThing *p_sthing)
 void FIRE_finish_flame(struct SimpleThing *p_sthing, ThingIdx thing)
 {
     ReleaseLoopedSample(thing, 16);
-    play_dist_ssample(p_sthing, 0x17, 0x7F, 0x40, 100, 0, 3);
+    play_dist_ssample(p_sthing, 0x17, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
     remove_sthing(thing);
     delete_snode(p_sthing);
 }
@@ -612,7 +612,7 @@ void process_static(struct SimpleThing *p_sthing)
     switch (p_sthing->State)
     {
     case 36:
-        play_dist_ssample(p_sthing, 29, 0x7F, 0x40, 100, 0, 2);
+        play_dist_ssample(p_sthing, 29, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
         process_burning_static(p_sthing);
         break;
     case 12:
@@ -629,7 +629,7 @@ void process_sfx(struct SimpleThing *p_sthing)
         if (!dont_bother_with_explode_faces)
             break;
         stop_sample_using_heap(p_sthing->ThingOffset, 0x2E);
-        play_dist_ssample(p_sthing, 0x2F, 0x7F, 0x40, 100, 0, 3);
+        play_dist_ssample(p_sthing, 0x2F, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         p_sthing->State = 2;
         p_sthing->Timer1 = 100;
         break;

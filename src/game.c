@@ -559,7 +559,7 @@ void anim_billboard_broadcast_sound(void)
     p_thing = &things[ingame.VisibleBillboardThing];
     smpl_no = byte_154BB4[billboard_anim_no];
     rnd = LbRandomPosShort() & 1;
-    play_dist_sample(p_thing, smpl_no + rnd, 0x7Fu, 0x40, 100, 0, 1);
+    play_dist_sample(p_thing, smpl_no + rnd, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
 }
 
 void flic_unkn03(ubyte anislot)

@@ -28,6 +28,7 @@
 #include "bfstrut.h"
 #include "bftext.h"
 #include "bfutility.h"
+#include "ssampply.h"
 
 #include "campaign.h"
 #include "guiboxes.h"
@@ -1027,7 +1028,7 @@ ubyte show_net_grpaint(struct ScreenBox *p_box)
             if (lbDisplay.LeftButton)
             {
                 lbDisplay.LeftButton = 0;
-                play_sample_using_heap(0, 111, 127, 64, 100, 0, 2u);
+                play_sample_using_heap(0, 111, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 2u);
                 byte_1C47EA = i;
             }
         }

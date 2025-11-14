@@ -3089,7 +3089,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               p_thing->U.UPerson.AnimMode = 12;
               p_thing->Frame = nstart_ani[1067];
               p_thing->StartFrame = 1066;
-              play_dist_sample(p_thing, 57, 127, 64, 100, 0, 3);
+              play_dist_sample(p_thing, 57, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 3);
             }
             return 1;
         }
@@ -3113,7 +3113,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
                 hp1 = hp >> 1;
             if (p_thing->SubType == SubTT_VEH_MECH)
                 hp1 >>= 2;
-            play_dist_sample(p_thing, 65u, 127u, 64u, 100, 0, 1);
+            play_dist_sample(p_thing, 65, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 1);
             if (type == 1 || type == 7)
                 hp1 >>= 1;
             health_decr = hp1 >> 1;
@@ -3131,7 +3131,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
             {
                 p_thing->Flag |= 0x0002;
                 start_crashing(p_thing);
-                play_dist_sample(p_thing, 95u, 127u, 0x40u, 100, 0, 1);
+                play_dist_sample(p_thing, 95, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 1);
             }
             return p_thing->Health + health_decr;
         }
@@ -3225,7 +3225,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
                   } else {
                       smpl_no = sfx_man_shot[(gameturn + p_thing->ThingOffset) & 7];
                   }
-                  play_dist_sample(p_thing, smpl_no, 0x7Fu, 0x40u, 100, 0, 2);
+                  play_dist_sample(p_thing, smpl_no, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
               }
               p_thing->Health -= hp1;
               p_thing->U.UPerson.ShieldEnergy -= hp1;
@@ -3341,7 +3341,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
         {
             if ((p_thing->Flag & 0x0002) == 0)
             {
-                play_dist_sample(p_thing, 65u, 127u, 64u, 100, 0, 1);
+                play_dist_sample(p_thing, 65, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
                 health = p_thing->Health - (hp >> 1);
                 if (health < 0)
                     collapse_building(p_thing->X >> 8, p_thing->Y >> 8, p_thing->Z >> 8, p_thing);
@@ -3369,7 +3369,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
             p_thing->Health -= hp;
             if (p_thing->Health <= 0)
             {
-              play_dist_sample(p_thing, 0x25u, 0x7Fu, 0x40u, 100, 0, 3);
+              play_dist_sample(p_thing, 37, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
               bang_new4(p_thing->X, p_thing->Y, p_thing->Z, 20);
               p_thing->State = 13;
               p_thing->StartFrame = 1069;
@@ -5026,7 +5026,7 @@ short person_move(struct Thing *p_person)
         process_random_speech(p_person, 0);
     }
     if ((p_person->SubType == SubTT_PERS_MECH_SPIDER) && !IsSamplePlaying(p_person->ThingOffset, 79, 0)) {
-        play_dist_sample(p_person, 0x4Fu, 0x7Fu, 0x40u, 100, -1, 3);
+        play_dist_sample(p_person, 79, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
     }
     if (p_person->U.UPerson.AnimMode == 21) {
         p_person->U.UPerson.AnimMode = 0;

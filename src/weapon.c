@@ -1259,7 +1259,7 @@ void init_fire_weapon(struct Thing *p_person)
     {
         if (wtype == WEP_MINIGUN) {
             plagent = p_person->U.UPerson.ComCur & 3;
-            play_dist_sample(p_person, 88 + plagent, 0x7Fu, 0x40u, 100, 0, 2);
+            play_dist_sample(p_person, 88 + plagent, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
         }
     }
     else
@@ -1306,7 +1306,7 @@ void init_fire_weapon(struct Thing *p_person)
                 else
                     plagent = 0;
 
-                play_dist_sample(p_person, 80 + plagent, 0x7Fu, 0x40u, 100 + i, -1, 3);
+                play_dist_sample(p_person, 80 + plagent, FULL_VOL, EQUL_PAN, NORM_PTCH + i, LOOP_4EVER, 3);
             }
             p_person->Flag2 |= TgF2_Unkn0200;
             break;
@@ -1332,7 +1332,7 @@ void init_fire_weapon(struct Thing *p_person)
                 else
                     plagent = 0;
 
-                play_dist_sample(p_person, 84 + plagent, 0x7Fu, 0x40u, 100, -1, 3);
+                play_dist_sample(p_person, 84 + plagent, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
             }
             p_person->Flag2 |= TgF2_Unkn0200;
             break;
@@ -1347,7 +1347,7 @@ void init_fire_weapon(struct Thing *p_person)
                 }
             }
             if ((p_person->Flag & TngF_Unkn1000) != 0)
-                play_dist_sample(p_person, 7u, 0x7Fu, 0x40u, 100, -1, 3);
+                play_dist_sample(p_person, 7, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
             break;
         case WEP_ELLASER:
             if ((p_person->Flag & TngF_PlayerAgent) != 0)
@@ -1361,7 +1361,7 @@ void init_fire_weapon(struct Thing *p_person)
             }
             if (((p_person->Flag2 & TgF2_ExistsOffMap) == 0)
               && ((p_person->Flag & TngF_Unkn1000) != 0))
-                play_dist_sample(p_person, 7u, 0x7Fu, 0x40u, 100, -1, 3);
+                play_dist_sample(p_person, 7, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
             break;
         case WEP_RAP:
             // Targetted shots are created somewhere else
@@ -1373,7 +1373,7 @@ void init_fire_weapon(struct Thing *p_person)
             }
             p_person->U.UPerson.Energy -= wdef->EnergyUsed;
             init_grenade(p_person, 3);
-            play_dist_sample(p_person, 0x24u, 0x7Fu, 0x40u, 100, 0, 2);
+            play_dist_sample(p_person, 36, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
             p_person->U.UPerson.WeaponTurn = wdef->ReFireDelay;
             if ((p_person->Flag & TngF_PlayerAgent) == 0)
                 choose_best_weapon_for_range(p_person, 1280);
@@ -1391,7 +1391,7 @@ void init_fire_weapon(struct Thing *p_person)
             }
             p_person->U.UPerson.Energy -= wdef->EnergyUsed;
             init_grenade(p_person, 4);
-            play_dist_sample(p_person, 0x24u, 0x7Fu, 0x40u, 100, 0, 2);
+            play_dist_sample(p_person, 36, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
             p_person->U.UPerson.WeaponTurn = wdef->ReFireDelay;
             if ((p_person->Flag & TngF_PlayerAgent) == 0)
                 choose_best_weapon_for_range(p_person, 1280);
@@ -1403,7 +1403,7 @@ void init_fire_weapon(struct Thing *p_person)
             }
             p_person->U.UPerson.Energy -= wdef->EnergyUsed;
             init_grenade(p_person, 5);
-            play_dist_sample(p_person, 0x24u, 0x7Fu, 0x40u, 100, 0, 2);
+            play_dist_sample(p_person, 36, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
             p_person->U.UPerson.WeaponTurn = wdef->ReFireDelay;
             if ((p_person->Flag & TngF_PlayerAgent) == 0)
                 choose_best_weapon_for_range(p_person, 1280);
@@ -1433,7 +1433,7 @@ void init_fire_weapon(struct Thing *p_person)
             p_person->U.UPerson.FrameId.Version[4] = 1;
             init_long_range(p_person);
             p_person->U.UPerson.WeaponTurn = wdef->ReFireDelay;
-            play_dist_sample(p_person, 0x21u, 0x7Fu, 0x40u, 100, 0, 3);
+            play_dist_sample(p_person, 33, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
             break;
         case WEP_AIRSTRIKE:
             give_take_me_weapon(p_person, wtype, -1, p_person->ThingOffset);
@@ -1450,7 +1450,7 @@ void init_fire_weapon(struct Thing *p_person)
                 }
             }
             if ((p_person->Flag & TngF_Unkn1000) != 0)
-                play_dist_sample(p_person, 7u, 0x7Fu, 0x40u, 100, -1, 3);
+                play_dist_sample(p_person, 7, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
             break;
         case WEP_QDEVASTATOR:
             if ((p_person->Flag & TngF_PlayerAgent) != 0)
@@ -1463,7 +1463,7 @@ void init_fire_weapon(struct Thing *p_person)
                 }
             }
             if ((p_person->Flag & TngF_Unkn1000) != 0)
-                play_dist_sample(p_person, 7u, 0x7Fu, 0x40u, 100, -1, 3);
+                play_dist_sample(p_person, 7, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
             break;
         case WEP_STASISFLD:
             p_person->U.UPerson.Energy -= wdef->EnergyUsed;
@@ -2297,7 +2297,7 @@ void process_weapon_wind_down(struct Thing *p_person)
             plagent = 0;
         ReleaseLoopedSample(p_person->ThingOffset, 84 + plagent);
         plagent = p_person->U.UPerson.ComCur & 3;
-        play_dist_sample(p_person, 88 + plagent, 0x7F, 0x40, 100, 0, 1);
+        play_dist_sample(p_person, 88 + plagent, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
         p_person->Flag2 &= ~TgF2_Unkn0200;
         break;
     }
@@ -2354,7 +2354,7 @@ void process_weapon_continuous_fire(struct Thing *p_person)
                         plagent = 0;
                     ReleaseLoopedSample(p_person->ThingOffset, 84 + plagent);
                     plagent = p_person->U.UPerson.ComCur & 3;
-                    play_dist_sample(p_person, 88 + plagent, 0x7F, 0x40, 100, 0, 1);
+                    play_dist_sample(p_person, 88 + plagent, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
                     p_person->Flag2 &= ~TgF2_Unkn0200;
                 }
                 break;
@@ -2363,7 +2363,7 @@ void process_weapon_continuous_fire(struct Thing *p_person)
                   ((p_person->Flag & TngF_Unkn0800) == 0))
                 {
                     stop_sample_using_heap(p_person->ThingOffset, 14);
-                    play_dist_sample(p_person, 15, 0x7F, 0x40, 100, 0, 2);
+                    play_dist_sample(p_person, 15, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
                     p_person->Flag2 &= ~TgF2_Unkn0200;
                 }
                 break;
@@ -2424,14 +2424,14 @@ void weapon_init_shot(struct Thing *p_person, WeaponType wtype)
             init_laser(p_person, p_person->U.UPerson.WeaponTimer);
         stop_sample_using_heap(p_person->ThingOffset, 7);
         stop_sample_using_heap(p_person->ThingOffset, 52);
-        play_dist_sample(p_person, 18, 0x7F, 0x40, 100, 0, 3);
+        play_dist_sample(p_person, 18, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         break;
     case WEP_ELLASER:
         init_laser_elec(p_person, p_person->U.UPerson.WeaponTimer);
         stop_sample_using_heap(p_person->ThingOffset, 7);
         stop_sample_using_heap(p_person->ThingOffset, 52);
         if ((p_person->Flag2 & TgF2_ExistsOffMap) == 0)
-            play_dist_sample(p_person, 6, 0x7F, 0x40, 100, 0, 3);
+            play_dist_sample(p_person, 6, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         break;
     case WEP_RAP:
         init_rocket(p_person);
@@ -2442,13 +2442,13 @@ void weapon_init_shot(struct Thing *p_person, WeaponType wtype)
          init_laser_beam(p_person, p_person->U.UPerson.WeaponTimer, 17);
          stop_sample_using_heap(p_person->ThingOffset, 7);
          stop_sample_using_heap(p_person->ThingOffset, 52);
-         play_dist_sample(p_person, 5, 0x7F, 0x40, 100, 0, 3);
+         play_dist_sample(p_person, 5, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         break;
     case WEP_QDEVASTATOR:
         init_laser_q_sep(p_person, p_person->U.UPerson.WeaponTimer);
         stop_sample_using_heap(p_person->ThingOffset, 7);
         stop_sample_using_heap(p_person->ThingOffset, 52);
-        play_dist_sample(p_person, 28, 0x7F, 0x40, 100, 0, 3);
+        play_dist_sample(p_person, 28, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
         break;
     default:
         break;
@@ -2512,8 +2512,8 @@ void process_wielded_weapon_fire(struct Thing *p_person, WeaponType wtype)
                 if ((p_person->U.UPerson.WeaponTurn == 0)
                     && ((p_person->Flag2 & TgF2_Unkn0400) == 0))
                 {
-                    play_dist_sample(p_person, 14, 0x7F, 0x40, 100, -1, 2);
-                    play_dist_sample(p_person, 13, 0x7F, 0x40, 100, 0, 2);
+                    play_dist_sample(p_person, 14, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 2);
+                    play_dist_sample(p_person, 13, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
                     p_person->Flag2 |= TgF2_Unkn0200;
                 }
                 init_fire_weapon(p_person);
@@ -2631,7 +2631,7 @@ void process_wielded_weapon(struct Thing *p_person)
             if (p_person->U.UPerson.WeaponTimer == 14)
             {
                 stop_sample_using_heap(p_person->ThingOffset, 7);
-                play_dist_sample(p_person, 52, 0x7F, 0x40, 100, -1, 3);
+                play_dist_sample(p_person, 52, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
             }
             else
             {

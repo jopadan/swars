@@ -206,7 +206,7 @@ void person_grp_switch_to_specific_weapon(struct Thing *p_person, PlayerIdx plyr
     p_person->U.UPerson.TempWeapon = p_person->U.UPerson.CurrentWeapon;
 
     if ((plyr == local_player_no) && (p_person->U.UPerson.CurrentWeapon != 0))
-        play_disk_sample(local_player_no, 0x2Cu, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
+        play_disk_sample(local_player_no, 44, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
 
     for (plagent = 0; plagent < playable_agents; plagent++)
     {

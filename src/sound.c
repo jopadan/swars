@@ -113,13 +113,13 @@ void stop_sample_using_heap(long source_id, ulong sample_number)
         : : "a" (source_id), "d" (sample_number));
 }
 
-int play_dist_speech(struct Thing *p_thing, ushort samp, ushort vol, ushort pan, int pitch, int loop, ubyte type)
+int play_dist_speech(struct Thing *p_thing, ushort speech_no, ushort vol, ushort pan, int pitch, int loop, ubyte type)
 {
     if ((p_thing <= &things[0]) || (p_thing >= &things[THINGS_LIMIT])) {
-        LOGERR("Speech %hu playback requested on invalid thing", samp);
+        LOGERR("Speech %hu playback requested on invalid thing", speech_no);
         return -1;
     }
-    play_dist_sample(p_thing, 129 + samp,  vol, pan, pitch, loop, type);
+    play_dist_sample(p_thing, 129 + speech_no,  vol, pan, pitch, loop, type);
     return 0;
 }
 
