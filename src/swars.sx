@@ -104052,7 +104052,7 @@ GLOBAL_FUNC(ASM_init_crater_textures)	/* 0x0885B0 */
 
 
 /*----------------------------------------------------------------*/
-create_crater:	/* 0x88e88 */
+ASM_create_crater:	/* 0x88e88 */
 /*----------------------------------------------------------------*/
 		push   %ecx
 		push   %esi
@@ -104086,13 +104086,13 @@ create_crater:	/* 0x88e88 */
 		xor    %edx,%edx
 		mov    %bx,data_1c4308(,%eax,8)
 		mov    %dx,data_1c430a(,%eax,8)
-		incb   data_1c4769
+		incb   EXPORT_SYMBOL(byte_1C4769)
 		mov    data_1c4766,%eax
 		sar    $0x18,%eax
 		test   %eax,%eax
 		jge    jump_88f0c
 		xor    %dl,%dl
-		mov    %dl,data_1c4769
+		mov    %dl,EXPORT_SYMBOL(byte_1C4769)
 	jump_88f0c:
 		add    $0x64,%esp
 		pop    %edi
@@ -105507,7 +105507,7 @@ unused_func_192:	/* 0x89e94 */
 
 
 /*----------------------------------------------------------------*/
-unused_func_026:	/* 0x89f90 */
+GLOBAL_FUNC(ASM_unused_func_026)	/* 0x89f90 */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx
@@ -105589,7 +105589,7 @@ unused_func_026:	/* 0x89f90 */
 		mov    data_1c4702(%esi),%eax
 		sar    $0x10,%edx
 		sar    $0x10,%eax
-		call   create_crater
+		call   ac_create_crater
 		mov    data_1c4706(%esi),%ebx
 		sar    $0x10,%ebx
 		test   %ebx,%ebx
@@ -105697,7 +105697,7 @@ GLOBAL_FUNC(ASM_process_map_craters)	/* 0x08A1EC */
 /*----------------------------------------------------------------*/
 		push   %edx
 		mov    EXPORT_SYMBOL(map_crater_first),%al
-		mov    data_1c4769,%ah
+		mov    EXPORT_SYMBOL(byte_1C4769),%ah
 		cmp    %ah,%al
 		je     jump_8a21c
 		mov    %al,%dl
@@ -105712,7 +105712,7 @@ GLOBAL_FUNC(ASM_process_map_craters)	/* 0x08A1EC */
 		jge    jump_8a214
 		xor    %dl,%dl
 	jump_8a214:
-		cmp    data_1c4769,%dl
+		cmp    EXPORT_SYMBOL(byte_1C4769),%dl
 		jne    jump_8a200
 	jump_8a21c:
 		pop    %edx
@@ -184944,7 +184944,7 @@ data_1c4767:
 		.byte	0x0
 GLOBAL (map_crater_first)	/* 0x1C4768 */
 		.byte	0x0
-data_1c4769:
+GLOBAL (byte_1C4769)		/* 0x1C4769 */
 		.byte	0x0
 GLOBAL (map_crater_last)	/* 0x1C476A */
 		.byte	0x0

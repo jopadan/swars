@@ -27,6 +27,12 @@ extern "C" {
 /******************************************************************************/
 #pragma pack(1)
 
+struct MapCreater {
+    short MapX;
+    short MapY;
+    short Depth;
+    short Iterations;
+};
 
 #pragma pack()
 /******************************************************************************/
@@ -34,6 +40,9 @@ extern "C" {
 void new_bang(int x, int y, int z, int type, int owner, int c);
 void bang_new5(int x, int y, int z, int type, int owner);
 void bang_new4(int x, int y, int z, int type);
+
+ubyte unused_func_026(ubyte a1);
+void create_crater(short x, short y, short depth);
 
 /******************************************************************************/
 #ifdef __cplusplus

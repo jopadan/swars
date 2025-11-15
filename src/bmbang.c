@@ -18,7 +18,11 @@
 /******************************************************************************/
 #include "bmbang.h"
 
+#include "swlog.h"
 /******************************************************************************/
+
+extern ubyte byte_1C4769;
+extern struct MapCreater map_craters[128];
 
 void new_bang(int x, int y, int z, int type, int owner, int c)
 {
@@ -39,4 +43,29 @@ void bang_new4(int x, int y, int z, int type)
     new_bang(x, y, z, type, 0, 0);
 }
 
+void create_crater(short x, short y, short depth)
+{
+    int cratr_no;
+
+    LOGSYNC("crater at (%d,%d) depth %d\n", x, y, depth);
+    if (x > 0x80 || y > 0x80)
+        return;
+    cratr_no = byte_1C4769;
+    byte_1C4769++;
+    if (byte_1C4769 > 127)
+        byte_1C4769 = 0;
+    map_craters[cratr_no].MapX = x;
+    map_craters[cratr_no].MapY = y;
+    map_craters[cratr_no].Depth = depth;
+    map_craters[cratr_no].Iterations = 0;
+}
+
+ubyte unused_func_026(ubyte a1)
+{
+    ubyte ret;
+    asm volatile (
+      "call ASM_unused_func_026\n"
+        : "=r" (ret) : "a" (a1));
+    return ret;
+}
 /******************************************************************************/
