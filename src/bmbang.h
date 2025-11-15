@@ -41,8 +41,8 @@ void new_bang(int x, int y, int z, int type, int owner, int c);
 void bang_new5(int x, int y, int z, int type, int owner);
 void bang_new4(int x, int y, int z, int type);
 
+void unused_func_025(short a1, short a2, short a3);
 ubyte unused_func_026(ubyte a1);
-void create_crater(short x, short y, short depth);
 
 /******************************************************************************/
 #ifdef __cplusplus

@@ -68,4 +68,12 @@ ubyte unused_func_026(ubyte a1)
         : "=r" (ret) : "a" (a1));
     return ret;
 }
+
+void unused_func_025(short a1, short a2, short a3)
+{
+    asm volatile (
+      "call ASM_unused_func_025\n"
+        : : "a" (a1), "d" (a2), "b" (a3));
+}
+
 /******************************************************************************/

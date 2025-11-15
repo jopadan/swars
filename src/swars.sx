@@ -105348,7 +105348,7 @@ unused_func_024:	/* 0x89cec */
 
 
 /*----------------------------------------------------------------*/
-unused_func_025:	/* 0x89d90 */
+GLOBAL_FUNC(ASM_unused_func_025)	/* 0x89d90 */
 /*----------------------------------------------------------------*/
 		push   %ecx
 		push   %esi
@@ -105451,7 +105451,7 @@ unused_func_192:	/* 0x89e94 */
 		sar    $0x18,%edx
 		lea    0x0(,%edx,4),%eax
 		add    %edx,%eax
-		mov    %cx,data_1c4704(,%eax,2)
+		mov    %cx,EXPORT_SYMBOL(map_cratunkn2)(,%eax,2)
 		xor    %ecx,%ecx
 		mov    %si,data_1c4706(,%eax,2)
 		mov    %bl,%cl
@@ -105524,7 +105524,7 @@ GLOBAL_FUNC(ASM_unused_func_026)	/* 0x89f90 */
 		mov    $0x1,%ch
 		cmp    $0x80,%eax
 		jge    jump_8a0f5
-		mov    data_1c4704(%esi),%edx
+		mov    EXPORT_SYMBOL(map_cratunkn2)(%esi),%edx
 		sar    $0x10,%edx
 		cmp    $0x80,%edx
 		jge    jump_8a0f5
@@ -105571,7 +105571,7 @@ GLOBAL_FUNC(ASM_unused_func_026)	/* 0x89f90 */
 		add    %edx,%eax
 		mov    EXPORT_SYMBOL(map_crater_last),%dl
 		mov    %dl,data_1c470c(,%eax,2)
-		mov    data_1c4704(,%eax,2),%edx
+		mov    EXPORT_SYMBOL(map_cratunkn2)(,%eax,2),%edx
 		mov    data_1c4702(,%eax,2),%eax
 		sar    $0x10,%edx
 		sar    $0x10,%eax
@@ -105585,7 +105585,7 @@ GLOBAL_FUNC(ASM_unused_func_026)	/* 0x89f90 */
 		mov    EXPORT_SYMBOL(map_crater_last),%ebx
 		add    %esi,%esi
 		sar    $0x10,%ebx
-		mov    data_1c4704(%esi),%edx
+		mov    EXPORT_SYMBOL(map_cratunkn2)(%esi),%edx
 		mov    data_1c4702(%esi),%eax
 		sar    $0x10,%edx
 		sar    $0x10,%eax
@@ -105652,7 +105652,7 @@ GLOBAL_FUNC(ASM_unused_func_026)	/* 0x89f90 */
 		sar    $0x10,%eax
 		sub    %edx,%eax
 	jump_8a17f:
-		mov    %ax,data_1c4704(%esi)
+		mov    %ax,EXPORT_SYMBOL(map_cratunkn2)(%esi)
 		xor    %edx,%edx
 		mov    %cl,%dl
 		lea    0x0(,%edx,4),%esi
@@ -105668,7 +105668,7 @@ GLOBAL_FUNC(ASM_unused_func_026)	/* 0x89f90 */
 		mov    %edx,%eax
 		sar    $0x1f,%edx
 		idiv   %ebx
-		mov    data_1c4704(%esi),%eax
+		mov    EXPORT_SYMBOL(map_cratunkn2)(%esi),%eax
 		sar    $0x10,%eax
 		add    %edx,%eax
 		jmp    jump_8a1dc
@@ -105679,7 +105679,7 @@ GLOBAL_FUNC(ASM_unused_func_026)	/* 0x89f90 */
 		mov    %edx,%eax
 		sar    $0x1f,%edx
 		idiv   %ebx
-		mov    data_1c4704(%esi),%eax
+		mov    EXPORT_SYMBOL(map_cratunkn2)(%esi),%eax
 		sar    $0x10,%eax
 		sub    %edx,%eax
 	jump_8a1dc:
@@ -184916,7 +184916,7 @@ data_1c430a:
 		.fill   0x3f8
 data_1c4702:
 		.short  0x0
-data_1c4704:
+GLOBAL (map_cratunkn2) 	/* 0x1C4704 */
 		.short  0x0
 data_1c4706:
 		.short  0x0
