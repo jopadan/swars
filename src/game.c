@@ -1541,9 +1541,9 @@ void func_13A78(void)
         :  :  : "eax" );
 }
 
-void unkstruct03_process(void)
+void process_map_craters(void)
 {
-    asm volatile ("call ASM_unkstruct03_process\n"
+    asm volatile ("call ASM_process_map_craters\n"
         :  :  : "eax" );
 }
 
@@ -1700,7 +1700,7 @@ void process_engine_unk3(void)
     mech_unkn_dw_1DC890 = mech_unkn_tile_x3;
     mech_unkn_dw_1DC894 = mech_unkn_tile_y3;
 
-    unkstruct03_process();
+    process_map_craters();
     func_13A78();
 
     if (((ingame.Flags & GamF_Unkn00400000) == 0) &&

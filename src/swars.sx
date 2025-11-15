@@ -104052,6 +104052,165 @@ GLOBAL_FUNC(ASM_init_crater_textures)	/* 0x0885B0 */
 
 
 /*----------------------------------------------------------------*/
+create_crater:	/* 0x88e88 */
+/*----------------------------------------------------------------*/
+		push   %ecx
+		push   %esi
+		push   %edi
+		sub    $0x64,%esp
+		mov    %eax,%esi
+		mov    %edx,%ecx
+		movswl %bx,%eax
+		push   %eax
+		movswl %dx,%edx
+		push   %edx
+		movswl %si,%edi
+		push   %edi
+		push   $aCraterAtDDDept
+		lea    0x10(%esp),%eax
+		push   %eax
+		call   ac_sprintf
+		add    $0x14,%esp
+		test   %edi,%edi
+		jl     jump_88f0c
+		cmp    $0x80,%edi
+		jg     jump_88f0c
+		test   %edx,%edx
+		jl     jump_88f0c
+		cmp    $0x80,%edx
+		jg     jump_88f0c
+		mov    data_1c4766,%eax
+		sar    $0x18,%eax
+		mov    %si,EXPORT_SYMBOL(map_craters)(,%eax,8)
+		mov    %cx,data_1c4306(,%eax,8)
+		xor    %edx,%edx
+		mov    %bx,data_1c4308(,%eax,8)
+		mov    %dx,data_1c430a(,%eax,8)
+		incb   data_1c4769
+		mov    data_1c4766,%eax
+		sar    $0x18,%eax
+		test   %eax,%eax
+		jge    jump_88f0c
+		xor    %dl,%dl
+		mov    %dl,data_1c4769
+	jump_88f0c:
+		add    $0x64,%esp
+		pop    %edi
+		pop    %esi
+		pop    %ecx
+		ret
+
+
+/*----------------------------------------------------------------*/
+unused_func_191:	/* 0x88f14 */
+/*----------------------------------------------------------------*/
+		push   %ebx
+		push   %ecx
+		push   %edx
+		xor    %edx,%edx
+		mov    %ax,%dx
+		lea    0x0(,%edx,8),%eax
+		add    %edx,%eax
+		mov    game_textures,%edx
+		add    %eax,%eax
+		add    %edx,%eax
+		mov    0x4(%eax),%dl
+		mov    0x6(%eax),%dh
+		cmp    %dh,%dl
+		jb     jump_88f3b
+		mov    %dh,%dl
+	jump_88f3b:
+		mov    (%eax),%dh
+		mov    0x2(%eax),%bl
+		cmp    %bl,%dh
+		jb     jump_88f46
+		mov    %bl,%dh
+	jump_88f46:
+		cmp    %dl,%dh
+		jae    jump_88f57
+		mov    (%eax),%dl
+		mov    0x2(%eax),%cl
+		cmp    %cl,%dl
+		jb     jump_88f63
+		mov    %cl,%dl
+		jmp    jump_88f63
+	jump_88f57:
+		mov    0x4(%eax),%dl
+		mov    0x6(%eax),%bh
+		cmp    %bh,%dl
+		jb     jump_88f63
+		mov    %bh,%dl
+	jump_88f63:
+		xor    %ebx,%ebx
+		mov    0x3(%eax),%ch
+		mov    %dl,%bl
+		mov    0x1(%eax),%dl
+		cmp    %ch,%dl
+		jb     jump_88f73
+		mov    %ch,%dl
+	jump_88f73:
+		mov    0x5(%eax),%dh
+		mov    0x7(%eax),%cl
+		cmp    %cl,%dh
+		jb     jump_88f7f
+		mov    %cl,%dh
+	jump_88f7f:
+		cmp    %dh,%dl
+		jae    jump_88f91
+		mov    0x1(%eax),%dl
+		mov    0x3(%eax),%dh
+		cmp    %dh,%dl
+		jb     jump_88f9d
+		mov    %dh,%dl
+		jmp    jump_88f9d
+	jump_88f91:
+		mov    0x5(%eax),%dl
+		mov    0x7(%eax),%ch
+		cmp    %ch,%dl
+		jb     jump_88f9d
+		mov    %ch,%dl
+	jump_88f9d:
+		xor    %ecx,%ecx
+		mov    0x8(%eax),%cl
+		and    $0xff,%edx
+		test   %ecx,%ecx
+		jne    jump_88fbf
+		cmp    $0x40,%edx
+		je     jump_88fb6
+		cmp    $0x60,%edx
+		jne    jump_88fbf
+	jump_88fb6:
+		mov    $0x1,%eax
+		pop    %edx
+		pop    %ecx
+		pop    %ebx
+		ret
+	jump_88fbf:
+		mov    0x8(%eax),%al
+		and    $0xff,%eax
+		cmp    $0x2,%eax
+		jne    jump_88fe7
+		cmp    $0xe0,%ebx
+		jne    jump_88fe7
+		cmp    $0x20,%edx
+		je     jump_88fde
+		cmp    $0x60,%edx
+		jne    jump_88fe7
+	jump_88fde:
+		mov    $0x1,%eax
+		pop    %edx
+		pop    %ecx
+		pop    %ebx
+		ret
+	jump_88fe7:
+		xor    %eax,%eax
+		pop    %edx
+		pop    %ecx
+		pop    %ebx
+		ret
+
+
+/*----------------------------------------------------------------*/
 is_that_a_sea_texture:	/* 0x088FF0 */
 /*----------------------------------------------------------------*/
 		push   %ebx
@@ -104122,7 +104281,7 @@ is_that_a_sea_texture:	/* 0x088FF0 */
 
 
 /*----------------------------------------------------------------*/
-unkstruct03_do_iteration:	/* 0x08907C */
+process_map_crater:	/* 0x08907C */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx
@@ -104145,13 +104304,13 @@ unkstruct03_do_iteration:	/* 0x08907C */
 		sar    $0x10,%edx
 		cmp    $0x5,%edx
 		jle    jump_890e8
-		incb   unkstruct03_first
+		incb   EXPORT_SYMBOL(map_crater_first)
 		mov    data_1c4765,%eax
 		sar    $0x18,%eax
 		test   %eax,%eax
 		jge    jump_890d3
 		xor    %dh,%dh
-		mov    %dh,unkstruct03_first
+		mov    %dh,EXPORT_SYMBOL(map_crater_first)
 	jump_890d3:
 		xor    %eax,%eax
 		mov    0x44(%esp),%al
@@ -104202,7 +104361,7 @@ unkstruct03_do_iteration:	/* 0x08907C */
 		lea    -0x1(%eax),%ebx
 		inc    %eax
 		mov    %eax,0x1c(%esp)
-		mov    unkstruct03_arr(,%edx,8),%eax
+		mov    EXPORT_SYMBOL(map_craters)(,%edx,8),%eax
 		sar    $0x10,%eax
 		lea    -0x1(%eax),%edx
 		mov    %ebx,0x18(%esp)
@@ -104248,7 +104407,7 @@ unkstruct03_do_iteration:	/* 0x08907C */
 		xor    %eax,%eax
 		mov    0x44(%esp),%al
 		mov    data_1c4306(,%eax,8),%dx
-		mov    unkstruct03_arr(,%eax,8),%si
+		mov    EXPORT_SYMBOL(map_craters)(,%eax,8),%si
 		xor    %eax,%eax
 		mov    0x2c(%esp),%ax
 		mov    0x10(%esp),%ecx
@@ -105115,10 +105274,429 @@ unkstruct03_do_iteration:	/* 0x08907C */
 
 
 /*----------------------------------------------------------------*/
-GLOBAL_FUNC(ASM_unkstruct03_process)	/* 0x08A1EC */
+unused_func_024:	/* 0x89cec */
+/*----------------------------------------------------------------*/
+		push   %ebx
+		push   %ecx
+		push   %esi
+		sub    $0x4,%esp
+		mov    %al,(%esp)
+		test   %al,%al
+		jne    jump_89cfd
+		movb   $0x1,(%esp)
+	jump_89cfd:
+		xor    %eax,%eax
+		mov    %dl,%al
+		test   %eax,%eax
+		jne    jump_89d44
+		movzbl (%esp),%esi
+		xor    %ebx,%ebx
+		jmp    jump_89d38
+	jump_89d0d:
+		imul   $0x12,%eax,%eax
+		mov    game_my_big_map,%ecx
+		xor    %edx,%edx
+		add    %eax,%ecx
+		call   ac_LbRandomAnyShort
+		mov    %ax,%dx
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %esi
+		mov    %edx,%eax
+		mov    0x4(%ecx),%edx
+		sar    $0x10,%edx
+		add    %eax,%edx
+		inc    %ebx
+		mov    %dx,0x6(%ecx)
+	jump_89d38:
+		movswl %bx,%eax
+		cmp    $0x4000,%eax
+		jl     jump_89d0d
+		jmp    jump_89d86
+	jump_89d44:
+		cmp    $0x1,%eax
+		jne    jump_89d86
+		movzbl (%esp),%esi
+		xor    %ebx,%ebx
+		jmp    jump_89d7c
+	jump_89d51:
+		imul   $0x12,%eax,%eax
+		mov    game_my_big_map,%ecx
+		xor    %edx,%edx
+		add    %eax,%ecx
+		call   ac_LbRandomAnyShort
+		mov    %ax,%dx
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %esi
+		mov    %edx,%eax
+		mov    0x4(%ecx),%edx
+		sar    $0x10,%edx
+		sub    %eax,%edx
+		inc    %ebx
+		mov    %dx,0x6(%ecx)
+	jump_89d7c:
+		movswl %bx,%eax
+		cmp    $0x4000,%eax
+		jl     jump_89d51
+	jump_89d86:
+		add    $0x4,%esp
+		pop    %esi
+		pop    %ecx
+		pop    %ebx
+		ret
+
+
+/*----------------------------------------------------------------*/
+unused_func_025:	/* 0x89d90 */
+/*----------------------------------------------------------------*/
+		push   %ecx
+		push   %esi
+		push   %edi
+		mov    %eax,%ecx
+		mov    %edx,%edi
+		mov    %ebx,%esi
+		movswl %bx,%edx
+		mov    $0xa,%ebx
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %ebx
+		mov    %al,%bl
+		test   %al,%al
+		jne    jump_89db0
+		mov    $0x1,%bl
+	jump_89db0:
+		mov    $0x1,%ah
+		mov    %cx,data_1c470e
+		mov    %di,data_1c4710
+		xor    %edx,%edx
+		mov    %ah,data_1c476e
+		xor    %ecx,%ecx
+		mov    %ah,data_1c476b
+		mov    %bl,%cl
+		mov    %ah,EXPORT_SYMBOL(map_crater_last)
+		mov    %cx,data_1c4712
+		mov    %cx,data_1c4714
+		call   ac_LbRandomAnyShort
+		mov    %ax,%dx
+		mov    $0x9,%edi
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %edi
+		cmp    $0x4,%edx
+		jle    jump_89e1b
+		mov    data_1c4767,%edx
+		sar    $0x18,%edx
+		lea    0x0(,%edx,4),%eax
+		add    %edx,%eax
+		neg    %ecx
+		mov    %cx,data_1c4708(,%eax,2)
+	jump_89e1b:
+		xor    %edx,%edx
+		call   ac_LbRandomAnyShort
+		mov    %ax,%dx
+		mov    $0x9,%edi
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %edi
+		cmp    $0x4,%edx
+		jle    jump_89e54
+		mov    data_1c4767,%edx
+		sar    $0x18,%edx
+		lea    0x0(,%edx,4),%eax
+		xor    %bh,%bh
+		add    %edx,%eax
+		neg    %ebx
+		mov    %bx,data_1c470a(,%eax,2)
+	jump_89e54:
+		mov    data_1c4767,%edx
+		sar    $0x18,%edx
+		lea    0x0(,%edx,4),%eax
+		add    %edx,%eax
+		xor    %bl,%bl
+		mov    %si,data_1c476c
+		mov    %bl,data_1c470d(,%eax,2)
+		mov    %bl,%dl
+		mov    %bl,data_1c470c(,%eax,2)
+		xor    %dh,%dh
+		mov    $0x2,%bh
+		mov    %dx,data_1c4770
+		mov    %bh,EXPORT_SYMBOL(map_crater_last)
+		pop    %edi
+		pop    %esi
+		pop    %ecx
+		ret
+
+
+/*----------------------------------------------------------------*/
+unused_func_192:	/* 0x89e94 */
+/*----------------------------------------------------------------*/
+		push   %ebx
+		push   %ecx
+		push   %esi
+		mov    %eax,%ecx
+		mov    %edx,%esi
+		mov    EXPORT_SYMBOL(map_crater_last),%edx
+		sar    $0x10,%edx
+		mov    $0xa,%ebx
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %ebx
+		mov    %al,%bl
+		test   %al,%al
+		jne    jump_89eb8
+		mov    $0x1,%bl
+	jump_89eb8:
+		mov    data_1c4767,%edx
+		sar    $0x18,%edx
+		lea    0x0(,%edx,4),%eax
+		add    %edx,%eax
+		mov    %cx,data_1c4704(,%eax,2)
+		xor    %ecx,%ecx
+		mov    %si,data_1c4706(,%eax,2)
+		mov    %bl,%cl
+		mov    %cx,data_1c4708(,%eax,2)
+		xor    %edx,%edx
+		mov    %cx,data_1c470a(,%eax,2)
+		call   ac_LbRandomAnyShort
+		mov    %ax,%dx
+		mov    $0x9,%esi
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %esi
+		cmp    $0x4,%edx
+		jle    jump_89f25
+		mov    data_1c4767,%edx
+		sar    $0x18,%edx
+		lea    0x0(,%edx,4),%eax
+		add    %edx,%eax
+		neg    %ecx
+		mov    %cx,data_1c4708(,%eax,2)
+	jump_89f25:
+		xor    %edx,%edx
+		call   ac_LbRandomAnyShort
+		mov    %ax,%dx
+		mov    $0x9,%esi
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %esi
+		cmp    $0x4,%edx
+		jle    jump_89f62
+		xor    %eax,%eax
+		mov    data_1c4767,%edx
+		mov    %bl,%al
+		sar    $0x18,%edx
+		mov    %eax,%ebx
+		lea    0x0(,%edx,4),%eax
+		add    %edx,%eax
+		neg    %ebx
+		mov    %bx,data_1c470a(,%eax,2)
+	jump_89f62:
+		incb   EXPORT_SYMBOL(map_crater_last)
+		mov    data_1c4767,%edx
+		sar    $0x18,%edx
+		lea    0x0(,%edx,4),%eax
+		add    %edx,%eax
+		xor    %dl,%dl
+		mov    %dl,data_1c470d(,%eax,2)
+		mov    %dl,data_1c470c(,%eax,2)
+		pop    %esi
+		pop    %ecx
+		pop    %ebx
+		ret
+
+
+/*----------------------------------------------------------------*/
+unused_func_026:	/* 0x89f90 */
+/*----------------------------------------------------------------*/
+		push   %ebx
+		push   %ecx
+		push   %edx
+		push   %esi
+		mov    %al,%cl
+		xor    %edx,%edx
+		mov    %al,%dl
+		lea    0x0(,%edx,4),%esi
+		add    %edx,%esi
+		add    %esi,%esi
+		mov    data_1c4702(%esi),%eax
+		sar    $0x10,%eax
+		mov    $0x1,%ch
+		cmp    $0x80,%eax
+		jge    jump_8a0f5
+		mov    data_1c4704(%esi),%edx
+		sar    $0x10,%edx
+		cmp    $0x80,%edx
+		jge    jump_8a0f5
+		test   %eax,%eax
+		jl     jump_8a0f5
+		test   %edx,%edx
+		jl     jump_8a0f5
+		xor    %edx,%edx
+		call   ac_LbRandomAnyShort
+		mov    %ax,%dx
+		mov    $0x43,%ebx
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %ebx
+		cmp    $0x11,%edx
+		jne    jump_8a094
+		mov    data_1c4767,%edx
+		sar    $0x18,%edx
+		cmp    $0x9,%edx
+		jge    jump_8a094
+		mov    data_1c470c(%esi),%bl
+		test   %bl,%bl
+		je     jump_8a046
+		lea    0x0(,%edx,4),%eax
+		add    %eax,%edx
+		add    %edx,%edx
+		mov    %bl,data_1c470c(%edx)
+		xor    %edx,%edx
+		mov    %bl,%dl
+		lea    0x0(,%edx,4),%eax
+		add    %eax,%edx
+		add    %edx,%edx
+		mov    EXPORT_SYMBOL(map_crater_last),%al
+		mov    %al,data_1c470d(%edx)
+	jump_8a046:
+		mov    data_1c4767,%edx
+		sar    $0x18,%edx
+		lea    0x0(,%edx,4),%eax
+		add    %edx,%eax
+		xor    %edx,%edx
+		mov    %cl,%dl
+		mov    %cl,data_1c470d(,%eax,2)
+		lea    0x0(,%edx,4),%eax
+		add    %edx,%eax
+		mov    EXPORT_SYMBOL(map_crater_last),%dl
+		mov    %dl,data_1c470c(,%eax,2)
+		mov    data_1c4704(,%eax,2),%edx
+		mov    data_1c4702(,%eax,2),%eax
+		sar    $0x10,%edx
+		sar    $0x10,%eax
+		mov    $0x2,%ch
+		call   unused_func_192
+	jump_8a094:
+		xor    %edx,%edx
+		mov    %cl,%dl
+		lea    0x0(,%edx,4),%esi
+		add    %edx,%esi
+		mov    EXPORT_SYMBOL(map_crater_last),%ebx
+		add    %esi,%esi
+		sar    $0x10,%ebx
+		mov    data_1c4704(%esi),%edx
+		mov    data_1c4702(%esi),%eax
+		sar    $0x10,%edx
+		sar    $0x10,%eax
+		call   create_crater
+		mov    data_1c4706(%esi),%ebx
+		sar    $0x10,%ebx
+		test   %ebx,%ebx
+		jle    jump_8a163
+		xor    %edx,%edx
+		call   ac_LbRandomAnyShort
+		mov    %ax,%dx
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %ebx
+		mov    data_1c4702(%esi),%eax
+		sar    $0x10,%eax
+		add    %edx,%eax
+		jmp    jump_8a17f
+	jump_8a0f5:
+		xor    %ebx,%ebx
+		mov    %cl,%bl
+		lea    0x0(,%ebx,4),%esi
+		mov    EXPORT_SYMBOL(map_crater_first),%ecx
+		add    %ebx,%esi
+		sar    $0x18,%ecx
+		add    %esi,%esi
+		cmp    %ecx,%ebx
+		jne    jump_8a11e
+		mov    data_1c470c(%esi),%al
+		mov    %al,data_1c476b
+		jmp    jump_8a15c
+	jump_8a11e:
+		xor    %edx,%edx
+		mov    data_1c470d(%esi),%dl
+		lea    0x0(,%edx,4),%eax
+		add    %eax,%edx
+		add    %edx,%edx
+		mov    data_1c470c(%esi),%al
+		mov    %al,data_1c470c(%edx)
+		test   %al,%al
+		je     jump_8a15c
+		xor    %edx,%edx
+		mov    %al,%dl
+		lea    0x0(,%edx,4),%eax
+		add    %eax,%edx
+		add    %edx,%edx
+		mov    data_1c470d(%esi),%al
+		mov    %al,data_1c470d(%edx)
+	jump_8a15c:
+		xor    %al,%al
+		pop    %esi
+		pop    %edx
+		pop    %ecx
+		pop    %ebx
+		ret
+	jump_8a163:
+		xor    %edx,%edx
+		call   ac_LbRandomAnyShort
+		mov    %ax,%dx
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %ebx
+		mov    data_1c4702(%esi),%eax
+		sar    $0x10,%eax
+		sub    %edx,%eax
+	jump_8a17f:
+		mov    %ax,data_1c4704(%esi)
+		xor    %edx,%edx
+		mov    %cl,%dl
+		lea    0x0(,%edx,4),%esi
+		add    %edx,%esi
+		add    %esi,%esi
+		mov    data_1c4708(%esi),%ebx
+		sar    $0x10,%ebx
+		test   %ebx,%ebx
+		jle    jump_8a1c0
+		xor    %edx,%edx
+		call   ac_LbRandomAnyShort
+		mov    %ax,%dx
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %ebx
+		mov    data_1c4704(%esi),%eax
+		sar    $0x10,%eax
+		add    %edx,%eax
+		jmp    jump_8a1dc
+	jump_8a1c0:
+		xor    %edx,%edx
+		call   ac_LbRandomAnyShort
+		mov    %ax,%dx
+		mov    %edx,%eax
+		sar    $0x1f,%edx
+		idiv   %ebx
+		mov    data_1c4704(%esi),%eax
+		sar    $0x10,%eax
+		sub    %edx,%eax
+	jump_8a1dc:
+		mov    %ax,data_1c4706(%esi)
+		mov    %ch,%al
+		pop    %esi
+		pop    %edx
+		pop    %ecx
+		pop    %ebx
+		ret
+
+
+/*----------------------------------------------------------------*/
+GLOBAL_FUNC(ASM_process_map_craters)	/* 0x08A1EC */
 /*----------------------------------------------------------------*/
 		push   %edx
-		mov    unkstruct03_first,%al
+		mov    EXPORT_SYMBOL(map_crater_first),%al
 		mov    data_1c4769,%ah
 		cmp    %ah,%al
 		je     jump_8a21c
@@ -105128,7 +105706,7 @@ GLOBAL_FUNC(ASM_unkstruct03_process)	/* 0x08A1EC */
 		xor    %eax,%eax
 		mov    %dl,%al
 		inc    %dl
-		call   unkstruct03_do_iteration
+		call   process_map_crater
 		movsbl %dl,%eax
 		test   %eax,%eax
 		jge    jump_8a214
@@ -182488,6 +183066,8 @@ aDelete_pointND:	/* 0x15D721 */
 ascDDDD:	/* 0x15D824 */
 		.string "(%d,%d)(%d,%d)"
 		.byte	0x0
+aCraterAtDDDept:	/* 0x15d834 */
+		.string "crater at (%d,%d) depth %d\n"
 
 ascSS_0:	/* 0x15D861 */
 		.string "%s: %s"
@@ -184326,7 +184906,7 @@ data_1c4300:
 		.short  0x0
 data_1c4302:
 		.short  0x0
-unkstruct03_arr:	/* 0x1C4304 */
+GLOBAL (map_craters)	/* 0x1C4304 */
 		.short  0x0
 data_1c4306:
 		.short  0x0
@@ -184362,11 +184942,11 @@ data_1c4766:
 		.byte	0x0
 data_1c4767:
 		.byte	0x0
-unkstruct03_first:	/* 0x1C4768 */
+GLOBAL (map_crater_first)	/* 0x1C4768 */
 		.byte	0x0
 data_1c4769:
 		.byte	0x0
-unkstruct03_last:	/* 0x1C476A */
+GLOBAL (map_crater_last)	/* 0x1C476A */
 		.byte	0x0
 data_1c476b:
 		.byte	0x0
