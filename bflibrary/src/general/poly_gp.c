@@ -581,6 +581,35 @@ static void gpoly_convert_uv3(struct gpoly_factors *p_inc, uint u, uint v)
     p_inc->S[3] = fctr_vs;
 }
 
+/** Copy of gpoly_convert_uv3() with stricter limit of vu factor to avoid
+ * going out of bounds at borders.
+ */
+static void gpoly_convert_uv3_vlimit(struct gpoly_factors *p_inc, uint u, uint v)
+{
+    uint fctr_us, fctr_vs, fctr_vu;
+    TbBool mone;
+
+    fctr_vs = p_inc->S[0] >> 8;
+    fctr_us = u >> 16;
+    fctr_vu = ((u << 16) & 0xFFFF0000) | ((fctr_vs) & 0xFFFF);
+    if ((fctr_vu & 0x8000) != 0) {
+        mone = fctr_vu < 0xFFFF;
+        fctr_vu -= 0xFFFF;
+        fctr_us = ((fctr_us) & 0xFFFFFF00) | ((fctr_us - mone) & 0xFF);
+    }
+    p_inc->S[1] = fctr_vu;
+
+    fctr_vs = v >> 16;
+    fctr_vu = ((v << 16) & 0xFFFFFF00) | ((fctr_us) & 0xFF);
+    if ((fctr_vu & 0x80) != 0) {
+        mone = fctr_vu < 0x100;
+        fctr_vu -= 0x100;
+        fctr_vs = ((fctr_vs) & 0xFFFFFF00) | ((fctr_vs - mone) & 0xFF);
+    }
+    p_inc->S[2] = fctr_vu;
+    p_inc->S[3] = fctr_vs;
+}
+
 static void gpoly_get_uv_simp(struct gpoly_factors *p_inc, const struct gpoly_point *p_pt1, const struct gpoly_point *p_pt2)
 {
     int dist_c5, mag_a1;
@@ -770,13 +799,13 @@ void gpoly_sta_md05(struct gpoly_state *st)
     {
         int fctr_s;
 
-        gpoly_convert_uv3(&st->incB, st->incB.S[1], st->incB.S[2]);
+        gpoly_convert_uv3_vlimit(&st->incB, st->incB.S[1], st->incB.S[2]);
         gpoly_convert_uv3(&st->incD, st->incD.S[1], st->incD.S[2]);
 
         fctr_s = (uint)(ptA_Vb_prc << 8) >> 24 << 8;
         st->bldA.B[2] = ((ptA_Ua_prc << 16) & 0xFFFF0000) | ((ptA_S_prc >> 8) & 0xFFFF);
         st->bldA.B[0] = ((ptA_Vb_prc << 16) & 0xFFFFFF00) | ((ptA_Ua_prc >> 16) & 0xFF);
-        st->bldA.B[1] = ((fctr_s) & 0xFFFFFF00) | ((ptA_S_prc) & 0xFF);
+        st->bldA.B[1] = (fctr_s & 0xFFFFFF00) | ((ptA_S_prc) & 0xFF);
     }
 
     if (st->var_134 >= 0)
@@ -922,7 +951,7 @@ void gpoly_sta_md28(struct gpoly_state *st)
     {
         int fctr_s;
 
-        gpoly_convert_uv3(&st->incB, st->incB.S[1], st->incB.S[2]);
+        gpoly_convert_uv3_vlimit(&st->incB, st->incB.S[1], st->incB.S[2]);
         gpoly_convert_uv3(&st->incD, st->incD.S[1], st->incD.S[2]);
 
         fctr_s = (uint)(ptA_Vb_prc << 8) >> 24 << 8;
