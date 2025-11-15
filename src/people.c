@@ -3296,7 +3296,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               {
                 if ((p_thing->Flag & TngF_Persuaded) == 0)
                     thing_group_set_kill_on_sight(victim_grp, attack_grp, true);
-                if ((p_thing->Flag & TngF_Persuaded) == 0 && war_flags[victim_grp].Guardians[0])
+                if (((p_thing->Flag & TngF_Persuaded) == 0) && war_flags[victim_grp].Guardians[0])
                     find_and_alert_guardian(p_thing, p_attacker);
               }
           }
@@ -3307,9 +3307,9 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               p_thing->U.UPerson.ShieldGlowTimer = 4;
               if (p_thing->U.UPerson.ShieldEnergy >= 0)
               {
-                if (p_thing->U.UPerson.ShieldEnergy > 1024)
-                  p_thing->U.UPerson.ShieldEnergy = 1024;
-                return 0;
+                  if (p_thing->U.UPerson.ShieldEnergy > PERSON_MAX_SHIELD)
+                      p_thing->U.UPerson.ShieldEnergy = PERSON_MAX_SHIELD;
+                  return 0;
               }
               p_thing->Health += p_thing->U.UPerson.ShieldEnergy;
               energy_decr = -p_thing->U.UPerson.ShieldEnergy;
@@ -3347,16 +3347,19 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
         }
         break;
     case TT_BUILDING:
-        if (p_attacker != NULL)
+        if (p_attacker != NULL) {
             p_attacker->U.UPerson.Flag3 |= 0x40;
+        }
         if (p_thing->SubType != 32)
         {
             if ((p_thing->Flag & TngF_Destroyed) == 0)
             {
                 play_dist_sample(p_thing, 65, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
                 health = p_thing->Health - (hp >> 1);
-                if (health < 0)
-                    collapse_building(p_thing->X >> 8, p_thing->Y >> 8, p_thing->Z >> 8, p_thing);
+                if (health < 0) {
+                    collapse_building(PRCCOORD_TO_MAPCOORD(p_thing->X),
+                      PRCCOORD_TO_MAPCOORD(p_thing->Y), PRCCOORD_TO_MAPCOORD(p_thing->Z), p_thing);
+                }
                 p_thing->Health = health;
             }
             return hp;

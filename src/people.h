@@ -134,6 +134,10 @@ enum PersonFlags3 {
  */
 #define PERSON_MAX_ENERGY_LIMIT 32255
 
+/** Max shield charge of a person.
+ */
+#define PERSON_MAX_SHIELD 1024
+
 #define PERSON_MAX_SPEED 2048
 
 /** Multiplayer when transferring weapon energy points to shield points.

@@ -1929,7 +1929,7 @@ void draw_new_panel_health_overlay(short panel, ushort plagent, TbBool darkened)
     }
     // Draw shield level over health
     lv = p_agent->U.UPerson.ShieldEnergy;
-    draw_health_level(x, y, w, h, lv, 0x400, colour_lookup[ColLU_WHITE], 1);
+    draw_health_level(x, y, w, h, lv, PERSON_MAX_SHIELD, colour_lookup[ColLU_WHITE], 1);
 }
 
 void draw_new_panel_mood_overlay(short panel, ushort plagent, TbBool darkened)
