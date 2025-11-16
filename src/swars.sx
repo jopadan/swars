@@ -29717,7 +29717,7 @@ GLOBAL_FUNC(ASM_person_hit_razor_wire)	/* 0x049294 */
 	jump_494f8:
 		sar    $0x8,%edx
 		sar    $0x8,%eax
-		call   do_shockwave
+		call   ac_do_shockwave
 		testb  $0x7,gameturn
 		je     jump_49578
 		cmpb   $0x0,0x4(%esp)
@@ -53200,7 +53200,7 @@ init_electricity_bomb:	/* 0x05A4D0 */
 		push   $0x1
 		mov    %esi,%edx
 		mov    %ebp,%eax
-		call   do_shockwave
+		call   ac_do_shockwave
 		add    $0xc,%esp
 		pop    %ebp
 		pop    %edi
@@ -54516,7 +54516,7 @@ GLOBAL_FUNC(ASM_unused_func_115)	/* 0x5B440 */
 
 
 /*----------------------------------------------------------------*/
-do_shockwave:	/* 0x05B598 */
+GLOBAL_FUNC(ASM_do_shockwave)	/* 0x05B598 */
 /*----------------------------------------------------------------*/
 		push   %esi
 		push   %edi
@@ -54626,7 +54626,7 @@ do_shockwave:	/* 0x05B598 */
 		mov    %eax,%ebx
 		mov    %edi,%edx
 		mov    $0x200,%eax
-		call   do_shockwave_building
+		call   ac_do_shockwave_building
 		jmp    jump_5b76f
 	jump_5b72c:
 		cmpl   $0x3e8,0xac(%esp)
@@ -54721,7 +54721,7 @@ do_shockwave:	/* 0x05B598 */
 		push   %esi
 		mov    %edi,%ecx
 		mov    0x98(%esp),%eax
-		call   do_shockwave_person
+		call   ac_do_shockwave_person
 	jump_5b870:
 		xor    %eax,%eax
 		mov    0x9(%esi),%al
@@ -54784,7 +54784,7 @@ do_shockwave:	/* 0x05B598 */
 		push   %esi
 		mov    %edi,%ecx
 		mov    0xa0(%esp),%eax
-		call   do_shockwave_vehicle
+		call   ac_do_shockwave_vehicle
 	jump_5b935:
 		xor    %eax,%eax
 		mov    0x9(%esi),%al
@@ -54916,7 +54916,7 @@ do_shockwave:	/* 0x05B598 */
 		push   %esi
 		mov    0xa8(%esp),%eax
 		mov    %edi,%ecx
-		call   do_shockwave_scale_effect
+		call   ac_do_shockwave_scale_effect
 	jump_5badb:
 		xor    %eax,%eax
 		mov    0x9(%esi),%al
@@ -63446,7 +63446,7 @@ GLOBAL_FUNC (ASM_mapwho_unkn01)	/* 0x62A38 */
 
 
 /*----------------------------------------------------------------*/
-do_shockwave_vehicle:	/* 0x062E10 */
+GLOBAL_FUNC(ASM_do_shockwave_vehicle)	/* 0x062E10 */
 /*----------------------------------------------------------------*/
 		push   %esi
 		mov    %ebx,%esi
@@ -63498,7 +63498,7 @@ do_shockwave_vehicle:	/* 0x062E10 */
 
 
 /*----------------------------------------------------------------*/
-do_shockwave_building:	/* 0x062E94 */
+GLOBAL_FUNC(ASM_do_shockwave_building)	/* 0x062E94 */
 /*----------------------------------------------------------------*/
 		push   %esi
 		testb  $0x2,0xc(%ebx)
@@ -63543,7 +63543,7 @@ vtable_62ed4:
 
 
 /*----------------------------------------------------------------*/
-do_shockwave_person:	/* 0x062F0C */
+GLOBAL_FUNC(ASM_do_shockwave_person)	/* 0x062F0C */
 /*----------------------------------------------------------------*/
 		push   %esi
 		push   %edi
@@ -63746,7 +63746,7 @@ func_63034:
 
 
 /*----------------------------------------------------------------*/
-do_shockwave_scale_effect:	/* 0x06315C */
+GLOBAL_FUNC(ASM_do_shockwave_scale_effect)	/* 0x06315C */
 /*----------------------------------------------------------------*/
 		push   %esi
 		push   %edi
@@ -65922,7 +65922,7 @@ GLOBAL_FUNC(ASM_explode_thing_building)	/* 0x063F34 */
 		push   %esi
 		mov    %ebp,%edx
 		mov    0x98(%esp),%eax
-		call   do_shockwave_person
+		call   ac_do_shockwave_person
 	jump_64bf5:
 		xor    %eax,%eax
 		mov    0x9(%esi),%al
@@ -69266,7 +69266,7 @@ func_67864:
 		sar    $0x8,%ebx
 		sar    $0x8,%edx
 		sar    $0x8,%eax
-		call   do_shockwave
+		call   ac_do_shockwave
 		jmp    jump_677d7
 	jump_678bb:
 		mov    0x26(%esi),%ax
@@ -69343,7 +69343,7 @@ func_67864:
 		sar    $0x8,%edx
 		sar    $0x8,%eax
 		movw   $0x41c,0x26(%esi)
-		call   do_shockwave
+		call   ac_do_shockwave
 		mov    game_full_lights,%edi
 		pop    %edi
 		pop    %esi
@@ -69386,7 +69386,7 @@ func_67864:
 		sar    $0x8,%ebx
 		sar    $0x8,%edx
 		sar    $0x8,%eax
-		call   do_shockwave
+		call   ac_do_shockwave
 		mov    0x14(%esi),%eax
 		sar    $0x10,%eax
 		movw   $0x28,0x28(%esi)
@@ -89403,7 +89403,7 @@ GLOBAL_FUNC(ASM_init_vehicle_explode)	/* 0x07CDE4 */
 		sar    $0x8,%eax
 		shl    $0x2,%ecx
 	jump_7cfa5:
-		call   do_shockwave
+		call   ac_do_shockwave
 		add    $0x34,%esp
 		pop    %edi
 		pop    %esi
@@ -91551,7 +91551,7 @@ GLOBAL_FUNC(ASM_init_mgun_explode)	/* 0x07E78C */
 		sar    $0x8,%ebx
 		sar    $0x8,%edx
 		sar    $0x8,%eax
-		call   do_shockwave
+		call   ac_do_shockwave
 	jump_7e837:
 		pop    %esi
 		pop    %edx
@@ -150212,7 +150212,7 @@ GLOBAL_FUNC(ASM_init_uzi)	/* 0x0C1C0C */
 		push   $0x1
 		mov    0xc(%esp),%edx
 		mov    0x8(%esp),%eax
-		call   do_shockwave
+		call   ac_do_shockwave
 	jump_c200b:
 		cmpl   $0x0,0x10(%esp)
 		jle    jump_c201c
@@ -150577,7 +150577,7 @@ GLOBAL_FUNC(ASM_init_long_range)	/* 0x0C2078 */
 		push   $0x1
 		mov    0xc(%esp),%edx
 		mov    0x8(%esp),%eax
-		call   do_shockwave
+		call   ac_do_shockwave
 	jump_c2455:
 		cmpl   $0x0,0x18(%esp)
 		jle    jump_c2466
@@ -150952,7 +150952,7 @@ GLOBAL_FUNC(ASM_init_minigun)	/* 0x0C24C4 */
 		push   $0x1
 		mov    0xc(%esp),%edx
 		mov    0x8(%esp),%eax
-		call   do_shockwave
+		call   ac_do_shockwave
 	jump_c28c6:
 		cmpl   $0x0,0x18(%esp)
 		jle    jump_c28d7
@@ -156419,7 +156419,7 @@ GLOBAL_FUNC(ASM_process_nuclear_bomb)	/* 0x0C67EC */
 		push   %eax
 		mov    -0x20(%ebp),%edx
 		mov    -0x10(%ebp),%eax
-		call   do_shockwave
+		call   ac_do_shockwave
 		mov    -0x1c(%ebp),%eax
 		mov    0x14(%eax),%eax
 		mov    $0x1,%edx
@@ -160604,7 +160604,7 @@ GLOBAL_FUNC(ASM_process_rocket)	/* 0x0C9100 */
 		mov    0x18(%esi),%eax
 		sar    $0x8,%edx
 		sar    $0x8,%eax
-		call   do_shockwave
+		call   ac_do_shockwave
 		mov    things,%ecx
 		mov    %esi,%edx
 		sub    %ecx,%edx
@@ -162377,7 +162377,7 @@ func_ca88e:
 		push   $0x320
 		sar    $0x8,%ebx
 		sar    $0x8,%eax
-		call   do_shockwave
+		call   ac_do_shockwave
 	jump_cad87:
 		mov    $0x3,%ebx
 		mov    gameturn,%eax
@@ -176384,7 +176384,7 @@ GLOBAL_FUNC(ASM_FIRE_process_flame)	/* 0x0DAAB8 */
 		mov    0x18(%eax),%eax
 		sar    $0x8,%edx
 		sar    $0x8,%eax
-		call   do_shockwave
+		call   ac_do_shockwave
 	jump_dacb3:
 		mov    %esi,%eax
 		call   snap_razor_wire

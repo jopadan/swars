@@ -18,6 +18,7 @@
 /******************************************************************************/
 #include "bmbang.h"
 
+#include "thing.h"
 #include "swlog.h"
 /******************************************************************************/
 
@@ -76,4 +77,50 @@ void unused_func_025(short a1, short a2, short a3)
         : : "a" (a1), "d" (a2), "b" (a3));
 }
 
+void do_shockwave(int x, int y, int z, int radius, int intensity, struct Thing *p_owner)
+{
+    asm volatile (
+      "push %5\n"
+      "push %4\n"
+      "call ASM_do_shockwave\n"
+        : : "a" (x), "d" (y), "b" (z), "c" (radius), "g" (intensity), "g" (p_owner));
+}
+
+
+void do_shockwave_building(int dist, int intensity, struct Thing *p_thing, struct Thing *p_owner)
+{
+    asm volatile (
+      "call ASM_do_shockwave_building\n"
+        : : "a" (dist), "d" (intensity), "b" (p_thing), "c" (p_owner));
+}
+
+void do_shockwave_vehicle(int dx, int dz, int dist, int intensity,
+  struct Thing *p_vevicle, struct Thing *p_owner)
+{
+    asm volatile (
+      "push %5\n"
+      "push %4\n"
+      "call ASM_do_shockwave_vehicle\n"
+        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "g" (p_vevicle), "g" (p_owner));
+}
+
+void do_shockwave_person(int dx, int dz, int dist, int intensity,
+  struct Thing *p_person, struct Thing *p_owner)
+{
+    asm volatile (
+      "push %5\n"
+      "push %4\n"
+      "call ASM_do_shockwave_person\n"
+        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "g" (p_person), "g" (p_owner));
+}
+
+void do_shockwave_scale_effect(int dx, int dz, int dist, int intensity,
+  struct SimpleThing *p_sthing, struct Thing *p_owner)
+{
+    asm volatile (
+      "push %5\n"
+      "push %4\n"
+      "call ASM_do_shockwave_scale_effect\n"
+        : : "a" (dx), "d" (dz), "b" (dist), "c" (intensity), "g" (p_sthing), "g" (p_owner));
+}
 /******************************************************************************/
