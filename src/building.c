@@ -727,4 +727,43 @@ void process_building(struct Thing *p_building)
     }
 }
 
+int building_hit_by_bullet(struct Thing *p_thing, short hp,
+  int vx, int vy, int vz, struct Thing *p_attacker, ushort type)
+{
+    if (p_attacker != NULL) {
+        p_attacker->U.UPerson.Flag3 |= 0x40;
+    }
+    if (p_thing->SubType != 32)
+    {
+        if ((p_thing->Flag & TngF_Destroyed) == 0)
+        {
+            int health;
+
+            play_dist_sample(p_thing, 65, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
+            health = p_thing->Health - (hp >> 1);
+            if (health < 0) {
+                collapse_building(PRCCOORD_TO_MAPCOORD(p_thing->X),
+                  PRCCOORD_TO_MAPCOORD(p_thing->Y), PRCCOORD_TO_MAPCOORD(p_thing->Z), p_thing);
+            }
+            p_thing->Health = health;
+        }
+        return hp;
+    }
+    p_thing->Flag |= TngF_Unkn01000000;
+    if ((p_thing->Flag & TngF_Destroyed) == 0)
+    {
+        int health_decr;
+
+        health_decr = hp >> 1 >> 1;
+        p_thing->Health -= health_decr;
+        p_thing->U.UObject.Cost = 5;
+        if (p_thing->Health <= 0)
+        {
+            init_mgun_explode(p_thing);
+            return p_thing->Health + health_decr;
+        }
+    }
+    return 0;
+}
+
 /******************************************************************************/

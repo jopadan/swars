@@ -37,6 +37,7 @@
 #include "sound.h"
 #include "thing.h"
 #include "swlog.h"
+#include "weapon.h"
 /******************************************************************************/
 
 #pragma pack(1)
@@ -1437,6 +1438,48 @@ void preprogress_trains_turns(ulong nturns)
                 process_vehicle(p_thing);
         }
     }
+}
+
+int vehicle_hit_by_bullet(struct Thing *p_vehicle, short hp,
+  int vx, int vy, int vz, struct Thing *p_attacker, ushort type)
+{
+    int health_decr;
+
+    if ((p_vehicle->Flag & TngF_Destroyed) != 0) {
+        return 0;
+    }
+
+    p_vehicle->Flag |= TngF_Unkn01000000;
+    if (p_vehicle->SubType == SubTT_VEH_TANK)
+        hp = hp >> 1;
+    if (p_vehicle->SubType == SubTT_VEH_MECH)
+        hp >>= 2;
+
+    play_dist_sample(p_vehicle, 65, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 1);
+
+    if (type == DMG_UZI || type == DMG_MINIGUN)
+        hp >>= 1;
+    health_decr = hp >> 1;
+
+    p_vehicle->Health -= health_decr;
+    p_vehicle->U.UVehicle.RecoilTimer = 5;
+    if (p_vehicle->Health > 0) {
+        return health_decr;
+    }
+
+    p_vehicle->OldTarget = p_attacker->ThingOffset;
+    if (p_vehicle->SubType == SubTT_VEH_MECH)
+    {
+        p_vehicle->Flag |= TngF_Destroyed;
+        init_mech_explode(p_vehicle);
+    }
+    else
+    {
+        p_vehicle->Flag |= TngF_Destroyed;
+        start_crashing(p_vehicle);
+        play_dist_sample(p_vehicle, 95, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 1);
+    }
+    return p_vehicle->Health + health_decr;
 }
 
 /******************************************************************************/

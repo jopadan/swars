@@ -26,7 +26,9 @@
 #include "bfscreen.h"
 #include "ssampply.h"
 
+#include "bigmap.h"
 #include "building.h"
+#include "bmbang.h"
 #include "display.h"
 #include "enginfexpl.h"
 #include "enginsngobjs.h"
@@ -38,8 +40,8 @@
 #include "pepgroup.h"
 #include "player.h"
 #include "sound.h"
+#include "thing_fire.h"
 #include "vehicle.h"
-#include "bigmap.h"
 #include "game.h"
 #include "swlog.h"
 /******************************************************************************/
@@ -1526,6 +1528,39 @@ struct SimpleThing *create_sound_effect(int x, int y, int z, ushort sample, int 
       "call ASM_create_sound_effect\n"
         : "=r" (ret) : "a" (x), "d" (y), "b" (z), "c" (sample), "g" (vol), "g" (loop));
     return ret;
+}
+
+void mine_detonate(struct Thing *p_thing)
+{
+    play_dist_sample(p_thing, 37, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
+    bang_new4(p_thing->X, p_thing->Y, p_thing->Z, 20);
+    p_thing->State = 13;
+    p_thing->Flag |= TngF_Destroyed;
+    set_thing_frame(p_thing, 1069);
+}
+
+int mine_hit_by_bullet(struct Thing *p_thing, short hp,
+  int vx, int vy, int vz, struct Thing *p_attacker, ushort type)
+{
+    if (p_thing->State == 13) {
+        return 0;
+    }
+    p_thing->Health -= hp;
+    if (p_thing->Health <= 0) {
+        mine_detonate(p_thing);
+        return p_thing->Health + hp;
+    }
+    return 0;
+}
+
+int static_hit_by_bullet(struct SimpleThing *p_sthing, short hp,
+  int vx, int vy, int vz, struct Thing *p_attacker, ushort type)
+{
+    p_sthing->U.UScenery.Health -= hp;
+    if (p_sthing->U.UScenery.Health <= 0) {
+        set_static_on_fire(p_sthing);
+    }
+    return 100;
 }
 
 /******************************************************************************/

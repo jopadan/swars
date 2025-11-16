@@ -3168,24 +3168,16 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
         : "=r" (ret) : "a" (p_thing), "d" (hp), "b" (vx), "c" (vy), "g" (vz), "g" (p_attacker), "g" (type));
     return ret;
 #endif
-    struct SimpleThing *p_sthing;
-
     short hp1;
-    int health;
     int energy_decr;
 
     hp1 = hp;
 
     if ((p_thing->Flag & TngF_Unkn40000000) != 0)
         return 1;
+
     switch (p_thing->Type)
     {
-    case SmTT_STATIC:
-        p_sthing = (struct SimpleThing *)p_thing;
-        p_sthing->U.UScenery.Health -= hp;
-        if (p_sthing->U.UScenery.Health <= 0)
-            set_static_on_fire(p_sthing);
-        return 100;
     case TT_PERSON:
         if (p_thing->State == PerSt_PERSON_BURNING)
             return 1;
@@ -3237,38 +3229,11 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
 
     switch (p_thing->Type)
     {
+    case SmTT_STATIC:
+        return static_hit_by_bullet((struct SimpleThing *)p_thing,
+          hp, vx, vy, vz, p_attacker, type);
     case TT_VEHICLE:
-        if ((p_thing->Flag & TngF_Destroyed) == 0)
-        {
-            int health_decr;
-            p_thing->Flag |= TngF_Unkn01000000;
-            if (p_thing->SubType == SubTT_VEH_TANK)
-                hp1 = hp >> 1;
-            if (p_thing->SubType == SubTT_VEH_MECH)
-                hp1 >>= 2;
-            play_dist_sample(p_thing, 65, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 1);
-            if (type == DMG_UZI || type == DMG_MINIGUN)
-                hp1 >>= 1;
-            health_decr = hp1 >> 1;
-            p_thing->Health -= health_decr;
-            p_thing->U.UVehicle.RecoilTimer = 5;
-            if (p_thing->Health > 0)
-                return health_decr;
-            p_thing->OldTarget = p_attacker->ThingOffset;
-            if (p_thing->SubType == SubTT_VEH_MECH)
-            {
-                p_thing->Flag |= TngF_Destroyed;
-                init_mech_explode(p_thing);
-            }
-            else
-            {
-                p_thing->Flag |= TngF_Destroyed;
-                start_crashing(p_thing);
-                play_dist_sample(p_thing, 95, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 1);
-            }
-            return p_thing->Health + health_decr;
-        }
-        break;
+        return vehicle_hit_by_bullet(p_thing, hp, vx, vy, vz, p_attacker, type);
     case TT_PERSON:
           if (persons_have_truce(p_attacker, p_thing)) {
               return 1;
@@ -3347,51 +3312,9 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
         }
         break;
     case TT_BUILDING:
-        if (p_attacker != NULL) {
-            p_attacker->U.UPerson.Flag3 |= 0x40;
-        }
-        if (p_thing->SubType != 32)
-        {
-            if ((p_thing->Flag & TngF_Destroyed) == 0)
-            {
-                play_dist_sample(p_thing, 65, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
-                health = p_thing->Health - (hp >> 1);
-                if (health < 0) {
-                    collapse_building(PRCCOORD_TO_MAPCOORD(p_thing->X),
-                      PRCCOORD_TO_MAPCOORD(p_thing->Y), PRCCOORD_TO_MAPCOORD(p_thing->Z), p_thing);
-                }
-                p_thing->Health = health;
-            }
-            return hp;
-        }
-        p_thing->Flag |= TngF_Unkn01000000;
-        if ((p_thing->Flag & TngF_Destroyed) == 0)
-        {
-            int health_decr;
-            health_decr = hp >> 1 >> 1;
-            p_thing->Health -= health_decr;
-            p_thing->U.UObject.Cost = 5;
-            if (p_thing->Health <= 0)
-            {
-                init_mgun_explode(p_thing);
-                return p_thing->Health + health_decr;
-            }
-        }
-        break;
+        return building_hit_by_bullet(p_thing, hp, vx, vy, vz, p_attacker, type);
     case TT_MINE:
-        if (p_thing->State != 13)
-        {
-            p_thing->Health -= hp;
-            if (p_thing->Health <= 0)
-            {
-              play_dist_sample(p_thing, 37, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
-              bang_new4(p_thing->X, p_thing->Y, p_thing->Z, 20);
-              p_thing->State = 13;
-              p_thing->Flag |= TngF_Destroyed;
-              set_thing_frame(p_thing, 1069);
-              return p_thing->Health + hp1;
-            }
-        }
+        return mine_hit_by_bullet(p_thing, hp, vx, vy, vz, p_attacker, type);
         break;
     default:
         break;

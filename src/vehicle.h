@@ -209,6 +209,9 @@ void preprogress_trains_turns(ulong nturns);
 const char *vehicle_type_name(ushort vtype);
 void snprint_vehicle_state(char *buf, ulong buflen, struct Thing *p_thing);
 
+int vehicle_hit_by_bullet(struct Thing *p_vehicle, short hp,
+  int vx, int vy, int vz, struct Thing *p_attacker, ushort type);
+
 /******************************************************************************/
 #ifdef __cplusplus
 }

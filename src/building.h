@@ -138,6 +138,9 @@ void collapse_building(short x, short y, short z, struct Thing *p_building);
 
 void process_building(struct Thing *p_building);
 
+int building_hit_by_bullet(struct Thing *p_thing, short hp,
+  int vx, int vy, int vz, struct Thing *p_attacker, ushort type);
+
 /******************************************************************************/
 #ifdef __cplusplus
 }

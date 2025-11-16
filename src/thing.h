@@ -1054,6 +1054,12 @@ TbBool thing_intersects_cylinder(ThingIdx thing, short X, short Y, short Z, usho
 
 struct SimpleThing *create_sound_effect(int x, int y, int z, ushort sample, int vol, int loop);
 
+int mine_hit_by_bullet(struct Thing *p_thing, short hp,
+  int vx, int vy, int vz, struct Thing *p_attacker, ushort type);
+
+int static_hit_by_bullet(struct SimpleThing *p_sthing, short hp,
+  int vx, int vy, int vz, struct Thing *p_attacker, ushort type);
+
 /******************************************************************************/
 #ifdef __cplusplus
 }
