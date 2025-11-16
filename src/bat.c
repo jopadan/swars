@@ -564,7 +564,7 @@ void BAT_play(void)
           BAT_bricks_clear();
           BAT_reset_free_balls();
           BAT_start_new_game();
-          ingame.UserFlags |= 0x01;
+          ingame.UserFlags |= UsrF_WonBAT;
       }
       break;
 
