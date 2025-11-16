@@ -823,7 +823,7 @@ TbResult ipx_receive_packet_from_player_wait(int plyr, ubyte *data, int dtlen)
     return Lb_SUCCESS;
 }
 
-int ipx_session_list_conv(struct TbNetworkSessionList *nslist, int listlen)
+int ipx_session_list_conv(struct TbNetworkSessionList *p_nslist, int listlen)
 {
     struct TbNetworkSessionList *nslent;
     struct IPXSessionList ipxsess;
@@ -832,7 +832,7 @@ int ipx_session_list_conv(struct TbNetworkSessionList *nslist, int listlen)
 
     memset(&ipxsess, 0, sizeof(struct IPXSessionList));
 
-    nslent = nslist;
+    nslent = p_nslist;
     for (i = 0; i < listlen; i++)
     {
         TbResult ret;
@@ -918,12 +918,12 @@ TbResult radica_service_init(struct NetworkServiceInfo *p_nsvc)
     return ret;
 }
 
-int radica_session_list(struct TbNetworkSessionList *nslist, int listlen)
+int radica_session_list(struct TbNetworkSessionList *p_nslist, int listlen)
 {
     int ret;
     LOGDBG("Starting");
     asm volatile ("call ASM_radica_session_list\n"
-        : "=r" (ret) : "a" (nslist), "d" (listlen) );
+        : "=r" (ret) : "a" (p_nslist), "d" (listlen) );
     return ret;
 }
 
@@ -1432,7 +1432,7 @@ TbResult LbNetworkUpdate(void)
     return ret;
 }
 
-int LbNetworkSessionList(struct TbNetworkSessionList *nslist, int listlen)
+int LbNetworkSessionList(struct TbNetworkSessionList *p_nslist, int listlen)
 {
     int ret;
 
@@ -1440,7 +1440,7 @@ int LbNetworkSessionList(struct TbNetworkSessionList *nslist, int listlen)
     switch (NetworkServicePtr.I.Type)
     {
     case NetSvc_IPX:
-        ret = ipx_session_list_conv(nslist, listlen);
+        ret = ipx_session_list_conv(p_nslist, listlen);
         break;
     case NetSvc_COM1:
     case NetSvc_COM2:
@@ -1449,7 +1449,7 @@ int LbNetworkSessionList(struct TbNetworkSessionList *nslist, int listlen)
         ret = 0;
         break;
     case NetSvc_RADICA:
-        ret = radica_session_list(nslist, listlen);
+        ret = radica_session_list(p_nslist, listlen);
         break;
     }
     return ret;

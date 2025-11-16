@@ -31,6 +31,7 @@
 #include "ssampply.h"
 
 #include "campaign.h"
+#include "dos.h"
 #include "guiboxes.h"
 #include "guitext.h"
 #include "display.h"
@@ -86,6 +87,7 @@ extern ubyte net_autostart_done;
 extern ubyte byte_155170[4];
 extern char net_unkn1_text[25];
 extern char byte_1811E2[16];
+extern uint32_t sessionlist_last_update[20];
 
 ubyte ac_do_net_protocol_option(ubyte click);
 ubyte ac_do_net_unkn40(ubyte click);
@@ -1969,12 +1971,94 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
     return 0;
 }
 
+void net_sessionlist_remove(int sess_no)
+{
+    int nxt_sess_no;
+    struct TbNetworkSessionList *p_cur_nslist;
+    struct TbNetworkSessionList *p_nxt_nslist;
+
+    p_cur_nslist = &unkstruct04_arr[sess_no];
+    p_nxt_nslist = &unkstruct04_arr[sess_no + 1];
+    for (nxt_sess_no = sess_no + 1; nxt_sess_no < byte_1C6D48; nxt_sess_no++)
+    {
+        LbMemoryCopy(p_cur_nslist, p_nxt_nslist, sizeof(struct TbNetworkSessionList));
+        sessionlist_last_update[nxt_sess_no - 1] = sessionlist_last_update[nxt_sess_no];
+        ++p_cur_nslist;
+        ++p_nxt_nslist;
+    }
+    LbMemorySet(&unkstruct04_arr[--byte_1C6D48], 0, sizeof(struct TbNetworkSessionList));
+    sessionlist_last_update[byte_1C6D48] = 0;
+}
+
+void net_sessionlist_update_latest_one(void)
+{
+    struct TbNetworkSessionList locsesslst;
+    struct TbNetworkSessionList *p_nslist;
+    TbBool sess_found;
+    int sess_no;
+
+    if (LbNetworkSessionList(&locsesslst, 1) != 1) {
+        LOGSYNC("No session to update");
+        return;
+    }
+
+    sess_found = false;
+
+    for (sess_no = 0; sess_no < byte_1C6D48; sess_no++)
+    {
+        p_nslist = &unkstruct04_arr[sess_no];
+        if (strcmp(p_nslist->Session.Name, locsesslst.Session.Name) == 0)
+        {
+            sess_found = 1;
+            break;
+        }
+    }
+    if (!sess_found) {
+        sess_no = byte_1C6D48;
+        byte_1C6D48++;
+    }
+    LOGSYNC("Updating session %d", sess_no);
+    p_nslist = &unkstruct04_arr[sess_no];
+    LbMemoryCopy(p_nslist, &locsesslst, sizeof(struct TbNetworkSessionList));
+    sessionlist_last_update[sess_no] = dos_clock();
+}
+
+void net_sessionlist_remove_old(void)
+{
+    int sess_no;
+
+    for (sess_no = 0; sess_no < byte_1C6D48; sess_no++)
+    {
+        if (dos_clock() - sessionlist_last_update[sess_no] > 4 * DOS_CLOCKS_PER_SEC)
+        {
+            LOGSYNC("Retiring session %d", sess_no);
+            net_sessionlist_remove(sess_no);
+            sess_no--;
+        }
+    }
+}
+
 int net_unkn_func_30(void)
 {
+#if 0
     int ret;
     asm volatile ("call ASM_net_unkn_func_30\n"
         : "=r" (ret) : );
     return ret;
+#endif
+    int preval;
+
+    if (byte_1C6D48 < 20)
+    {
+        net_sessionlist_update_latest_one();
+        net_sessionlist_remove_old();
+    }
+    preval = byte_15516C;
+    if (byte_15516C == -1 && byte_1C6D48)
+        byte_15516C = 0;
+    if (!byte_1C6D48)
+        byte_15516C = -1;
+    return preval;
 }
 
 ubyte do_unkn8_EJECT(ubyte click)

@@ -315,6 +315,7 @@ TbResult LbNetworkReadConfig(const char *fname);
 TbResult LbNetworkSetBaud(int rate);
 TbResult LbNetworkSessionCreate(struct TbNetworkSession *session, char *a2);
 TbResult LbNetworkSessionJoin(struct TbNetworkSession *session, char *a2);
+int LbNetworkSessionList(struct TbNetworkSessionList *p_nslist, int listlen);
 TbResult LbNetworkSetTimeoutSec(ulong tmsec);
 
 TbResult LbNetworkSetSessionCreateFunction(void *func);
