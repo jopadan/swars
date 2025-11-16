@@ -30,6 +30,7 @@
 #include "campaign.h"
 #include "display.h"
 #include "thing.h"
+#include "game_options.h"
 #include "game_speed.h"
 #include "game.h"
 #include "keyboard.h"

@@ -25,6 +25,7 @@
 #include "ssampply.h"
 
 #include "game_bstype.h"
+#include "game_options.h"
 #include "game.h"
 #include "guitext.h"
 #include "hud_panel.h"

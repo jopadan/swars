@@ -36,6 +36,7 @@
 #include "display.h"
 #include "femain.h"
 #include "feequip.h"
+#include "game_options.h"
 #include "guiboxes.h"
 #include "guitext.h"
 #include "keyboard.h"

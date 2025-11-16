@@ -144,6 +144,8 @@ syndwarsfx_SOURCES = \
 	game_bstype.h \
 	game_data.c \
 	game_data.h \
+	game_options.c \
+	game_options.h \
 	game_save.c \
 	game_save.h \
 	game_speed.c \

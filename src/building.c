@@ -26,6 +26,7 @@
 #include "bigmap.h"
 #include "bmbang.h"
 #include "enginsngobjs.h"
+#include "game_options.h"
 #include "game_speed.h"
 #include "game.h"
 #include "matrix.h"

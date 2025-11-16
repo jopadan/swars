@@ -30,6 +30,7 @@
 #include "fecryo.h"
 #include "femain.h"
 #include "fenet.h"
+#include "game_options.h"
 #include "game_speed.h"
 #include "guiboxes.h"
 #include "guitext.h"

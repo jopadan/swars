@@ -30,6 +30,7 @@
 #include "display.h"
 #include "engintrns.h"
 #include "game.h"
+#include "game_options.h"
 #include "game_sprts.h"
 #include "keyboard.h"
 #include "pathtrig.h"

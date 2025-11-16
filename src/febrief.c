@@ -29,6 +29,7 @@
 #include "femail.h"
 #include "femain.h"
 #include "game_data.h"
+#include "game_options.h"
 #include "guiboxes.h"
 #include "guitext.h"
 #include "purpldrw.h"

@@ -23,6 +23,7 @@
 #include "weapon.h"
 #include "cybmod.h"
 #include "feresearch.h"
+#include "game_options.h"
 #include "game.h"
 #include "guitext.h"
 #include "wadfile.h"

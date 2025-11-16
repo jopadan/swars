@@ -28,6 +28,7 @@
 #include "femain.h"
 #include "guiboxes.h"
 #include "guitext.h"
+#include "game_options.h"
 #include "game_sprts.h"
 #include "game.h"
 #include "keyboard.h"

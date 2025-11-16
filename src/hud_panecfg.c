@@ -28,6 +28,7 @@
 
 #include "game.h"
 #include "game_data.h"
+#include "game_options.h"
 #include "game_sprts.h"
 #include "hud_panel.h"
 #include "swlog.h"

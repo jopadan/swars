@@ -66,6 +66,7 @@
 #include "engintrns.h"
 #include "enginzoom.h"
 #include "game_data.h"
+#include "game_options.h"
 #include "game_save.h"
 #include "game_sprts.h"
 #include "guiboxes.h"

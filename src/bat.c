@@ -27,6 +27,7 @@
 
 #include "display.h"
 #include "game.h"
+#include "game_options.h"
 #include "keyboard.h"
 #include "player.h"
 #include "sound.h"

@@ -25,6 +25,7 @@
 #include "bfsprite.h"
 
 #include "game_data.h"
+#include "game_options.h"
 #include "game.h"
 #include "swlog.h"
 

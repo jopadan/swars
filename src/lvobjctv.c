@@ -39,6 +39,7 @@
 #include "scandraw.h"
 #include "display.h"
 #include "game.h"
+#include "game_options.h"
 #include "game_speed.h"
 #include "vehicle.h"
 #include "wadfile.h"

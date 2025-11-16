@@ -23,6 +23,7 @@
 #include "engindrwlstm.h"
 #include "enginzoom.h"
 #include "game.h"
+#include "game_options.h"
 #include "swlog.h"
 /******************************************************************************/
 #define SCREEN_POINT_COORD_MIN (-MAX_SUPPORTED_SCREEN_WIDTH)

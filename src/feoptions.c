@@ -31,6 +31,7 @@
 #include "guiboxes.h"
 #include "guitext.h"
 #include "display.h"
+#include "game_options.h"
 #include "game_sprts.h"
 #include "game.h"
 #include "purpldrw.h"
@@ -444,6 +445,22 @@ void gfx_option_inc(int option_no)
     default:
         break;
     }
+}
+
+void update_options_gfx_state(void)
+{
+    const char *text;
+    int i;
+
+    i = ingame.PanelPermutation;
+    if (i < 0)
+        text = gui_strings[579 + abs(i)];
+    else
+        text = gui_strings[580 + i];
+    options_gfx_buttons[14].Text = text;
+
+    i = ingame.TrenchcoatPreference;
+    options_gfx_buttons[15].Text = gui_strings[583 + i];
 }
 
 ubyte show_netgame_unkn1(struct ScreenBox *p_box)
@@ -1240,22 +1257,6 @@ void skip_flashy_draw_gfx_screen_boxes(void)
 void mark_gfx_screen_boxes_redraw(void)
 {
     options_gfx_box.Flags &= ~(GBxFlg_BkgndDrawn|GBxFlg_TextRight|GBxFlg_BkCopied);
-}
-
-void update_options_gfx_state(void)
-{
-    const char *text;
-    int i;
-
-    i = ingame.PanelPermutation;
-    if (i < 0)
-        text = gui_strings[579 + abs(i)];
-    else
-        text = gui_strings[580 + i];
-    options_gfx_buttons[14].Text = text;
-
-    i = ingame.TrenchcoatPreference;
-    options_gfx_buttons[15].Text = gui_strings[583 + i];
 }
 
 void update_options_screen_state(void)

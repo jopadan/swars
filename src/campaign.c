@@ -26,6 +26,7 @@
 #include "cybmod.h"
 #include "weapon.h"
 #include "game_data.h"
+#include "game_options.h"
 #include "game.h"
 #include "lvobjctv.h"
 #include "misstat.h"

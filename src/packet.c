@@ -22,6 +22,7 @@
 
 #include "campaign.h"
 #include "game_data.h"
+#include "game_options.h"
 #include "game.h"
 #include "player.h"
 #include "swlog.h"

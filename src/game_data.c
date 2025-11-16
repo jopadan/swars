@@ -36,6 +36,7 @@
 #include "enginsngobjs.h"
 #include "enginsngtxtr.h"
 #include "bigmap.h"
+#include "game_options.h"
 #include "game.h"
 #include "lvfiles.h"
 #include "lvobjctv.h"
