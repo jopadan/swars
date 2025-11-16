@@ -331,12 +331,251 @@ TbBool input_horiz_proslider_right_arrow(struct ScreenShape *p_shp, short *p_val
     return target_affected;
 }
 
+const char *gfx_option_desc(int option_no)
+{
+    switch (option_no)
+    {
+    case 0:
+        return gui_strings[464];
+    case 1:
+        return gui_strings[469];
+    case 2:
+        return gui_strings[470];
+    case 3:
+        return gui_strings[471];
+    case 4:
+        return gui_strings[481];
+    case 5:
+        return gui_strings[480];
+    case 6:
+        return gui_strings[514];
+    case 7:
+        return gui_strings[522];
+    case 8:
+        return gui_strings[523];
+    default:
+        return "";
+    }
+}
+
+void gfx_option_dec(int option_no)
+{
+    switch (option_no)
+    {
+    case 0:
+        break;
+    case 1:
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    case 4:
+        break;
+    case 5:
+        break;
+    case 6:
+        break;
+    case 7:
+        if (ingame.PanelPermutation < 0)
+        {
+            if (ingame.PanelPermutation < -1)
+                ingame.PanelPermutation++;
+            else
+                ingame.PanelPermutation = -3;
+        }
+        else
+        {
+            if (ingame.PanelPermutation > 0)
+                ingame.PanelPermutation--;
+            else
+                ingame.PanelPermutation = 2;
+        }
+        break;
+    case 8:
+        if (ingame.TrenchcoatPreference > 0)
+            ingame.TrenchcoatPreference--;
+        else
+            ingame.TrenchcoatPreference = 5;
+    default:
+        break;
+    }
+}
+
+void gfx_option_inc(int option_no)
+{
+    switch (option_no)
+    {
+    case 0:
+        break;
+    case 1:
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    case 4:
+        break;
+    case 5:
+        break;
+    case 6:
+        break;
+    case 7:
+        if (ingame.PanelPermutation < 0)
+        {
+            if (ingame.PanelPermutation > -3)
+                ingame.PanelPermutation--;
+            else
+                ingame.PanelPermutation = -1;
+        }
+        else
+        {
+            if (ingame.PanelPermutation < 2)
+                ingame.PanelPermutation++;
+            else
+                ingame.PanelPermutation = 0;
+        }
+        break;
+    case 8:
+        if (ingame.TrenchcoatPreference < 5)
+            ingame.TrenchcoatPreference++;
+        else
+            ingame.TrenchcoatPreference = 0;
+    default:
+        break;
+    }
+}
+
 ubyte show_netgame_unkn1(struct ScreenBox *p_box)
 {
+#if 0
     ubyte ret;
     asm volatile ("call ASM_show_netgame_unkn1\n"
         : "=r" (ret) : "a" (p_box));
     return ret;
+#endif
+    int tx_height;
+    int scr_x, scr_y;
+    int i;
+
+    if ((p_box->Flags & 0x0080) != 0) {
+        p_box->Flags &= ~0x0080;
+    }
+
+    my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
+    lbFontPtr = med_font;
+    tx_height = font_height('A');
+    scr_x = 20;
+    scr_y = 20;
+
+    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(0), 0);
+    scr_y += tx_height + 8;
+
+    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(1), 0);
+    scr_y += tx_height + 8;
+
+    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(2), 0);
+    scr_y += tx_height + 8;
+
+    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(3), 0);
+    scr_y += tx_height + 8;
+
+    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(4), 0);
+    scr_y += tx_height + 8;
+
+    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(5), 0);
+    scr_y += tx_height + 8;
+
+    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(6), 0);
+    scr_y += tx_height + 8;
+    scr_y += tx_height + 8;
+    scr_y += tx_height + 8 + 2;
+
+    lbDisplay.DrawFlags |= 0x0100;
+    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(7), 0);
+    scr_y += tx_height + 8;
+    scr_y += tx_height + 8;
+    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(8), 0);
+    lbDisplay.DrawFlags &= ~0x0100;
+
+    for (i = 0; i < 16; i++)
+    {
+        //options_gfx_buttons[i].DrawFn(&options_gfx_buttons[i]); -- incompatible calling convention
+        asm volatile ("call *%1\n"
+            : : "a" (&options_gfx_buttons[i]), "g" (options_gfx_buttons[i].DrawFn));
+    }
+
+    for (i = 14; i < 16; i++)
+    {
+      scr_x = options_gfx_buttons[i].X - 19;
+      scr_y = options_gfx_buttons[i].Y + 1;
+      lbDisplay.DrawFlags = 0x8000 | 0x0004;
+
+      if (mouse_move_over_box_coords(scr_x, scr_y, scr_x + 9, scr_y + 14))
+      {
+          if (lbDisplay.MLeftButton || joy.Buttons[0])
+          {
+              lbDisplay.LeftButton = 0;
+              switch (i)
+              {
+              case 15:
+                  gfx_option_dec(8);
+                  break;
+              case 14:
+                  gfx_option_dec(7);
+                  break;
+              }
+              update_options_gfx_state();
+          }
+          lbDisplay.DrawFlags = 0x8000;
+          draw_sprite_purple_list(scr_x, scr_y, &fe_icons_sprites[108]);
+          lbDisplay.DrawFlags |= 0x0004;
+      }
+      else
+      {
+          draw_sprite_purple_list(scr_x, scr_y, &fe_icons_sprites[108]);
+      }
+      scr_x = options_gfx_buttons[i].X + options_gfx_buttons[i].Width + 10;
+
+      if (mouse_move_over_box_coords(scr_x, scr_y, scr_x + 9, scr_y + 14))
+      {
+          if ( lbDisplay.MLeftButton || joy.Buttons[0] )
+          {
+              lbDisplay.LeftButton = 0;
+              switch (i)
+              {
+              case 15:
+                  gfx_option_inc(8);
+                  break;
+              case 14:
+                  gfx_option_inc(7);
+                  break;
+              }
+              update_options_gfx_state();
+          }
+          lbDisplay.DrawFlags = 0x8000;
+      }
+      draw_sprite_purple_list(scr_x - 7, scr_y, &fe_icons_sprites[109]);
+    }
+    lbDisplay.DrawFlags = 0;
+
+    if (game_gfx_advanced_lights)
+      ingame.Flags |= 0x02;
+    else
+      ingame.Flags &= ~0x02;
+
+    if (game_billboard_movies)
+        ingame.Flags |= 0x01;
+    else
+        ingame.Flags &= ~0x01;
+
+    if (game_gfx_deep_radar)
+        ingame.Flags |= 0x0400;
+    else
+        ingame.Flags &= ~0x0400;
+
+    bang_set_detail(ingame.DetailLevel == 0);
+    return 0;
 }
 
 ubyte show_audio_volume_box(struct ScreenBox *p_box)
