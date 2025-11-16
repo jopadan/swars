@@ -30,6 +30,7 @@
 #include "guitext.h"
 #include "display.h"
 #include "game_data.h"
+#include "game_options.h"
 #include "game_speed.h"
 #include "game_sprts.h"
 #include "game.h"

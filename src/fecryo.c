@@ -1039,7 +1039,7 @@ void draw_blokey_body_mods(void)
         cryo_cyborg_part_buf_blokey_static_load_all(old_flic_mods);
 
     current_drawing_mod = new_current_drawing_mod;
-    if ((is_key_pressed(KC_SPACE, KMod_DONTCARE) || game_projector_speed) && (cryo_blokey_box.Flags & GBxFlg_RadioBtn) == 0)
+    if ((game_projector_speed || is_key_pressed(KC_SPACE, KMod_DONTCARE)) && (cryo_blokey_box.Flags & GBxFlg_RadioBtn) == 0)
     {
         clear_key_pressed(KC_SPACE);
         cryo_cyborg_part_buf_blokey_static_reload();
@@ -1764,7 +1764,7 @@ ubyte show_cryo_chamber_screen(void)
     }
     if (cryo_agent_list_box.Lines == 0)
         cryo_agent_list_box.Lines = cryo_agents.NumAgents;
-    if (((game_projector_speed != 0) && is_heading_flag01()) ||
+    if (((game_projector_speed) && is_heading_flag01()) ||
       (is_key_pressed(KC_SPACE, KMod_DONTCARE) && !edit_flag))
     {
         clear_key_pressed(KC_SPACE);

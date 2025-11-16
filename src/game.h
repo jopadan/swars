@@ -207,8 +207,6 @@ extern ubyte keyboard_mode_direct;
 extern ubyte unkn01_maskarr[28];
 extern long map_editor;
 
-extern struct InGame ingame;
-
 extern ubyte login_control__State;
 extern ulong login_control__Money;
 extern sbyte login_control__City;
@@ -347,7 +345,6 @@ extern ubyte start_into_mission;
 extern ubyte edit_flag;
 extern ubyte change_screen;
 extern ubyte restore_savegame;
-extern ubyte game_projector_speed;
 extern ubyte current_drawing_mod;
 extern ubyte mod_draw_states[4];
 extern ubyte new_current_drawing_mod;

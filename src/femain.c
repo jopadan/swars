@@ -1707,7 +1707,7 @@ void show_mission_loading_screen(void)
     {
         memcpy(lbDisplay.WScreen, back_buffer, lbDisplay.GraphicsScreenWidth * lbDisplay.GraphicsScreenHeight);
         text_buf_pos = lbDisplay.GraphicsScreenWidth * lbDisplay.GraphicsScreenHeight;
-        if ((0 != game_projector_speed && (loading_INITIATING_box.Flags & GBxFlg_Unkn0001))
+        if ((game_projector_speed && (loading_INITIATING_box.Flags & GBxFlg_Unkn0001))
           || (is_key_pressed(KC_SPACE, KMod_DONTCARE) && !edit_flag)) {
             clear_key_pressed(KC_SPACE);
             skip_flashy_draw_loading_screen_boxes();

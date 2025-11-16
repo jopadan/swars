@@ -31,6 +31,19 @@ extern "C" {
 
 #define WEP_ROCKETS_FIRED_LIMIT 15
 
+enum GameOptions {
+    GOpt_None,
+    GOpt_ProjectorSpeed,
+    GOpt_HighResolution,
+    GOpt_DetailLevel,
+    GOpt_CameraPerspective,
+    GOpt_AdvancedLights,
+    GOpt_BillboardMovies,
+    GOpt_DeepRadar,
+    GOpt_PanelPermutation,
+    GOpt_TrenchcoatPreference,
+};
+
 struct InGame {
     short GameMode;
     short DisplayMode;
@@ -94,9 +107,13 @@ struct InGame {
 
 #pragma pack()
 /******************************************************************************/
+extern struct InGame ingame;
 
+/******************************************************************************/
 
-
+const char *game_option_desc(int option_no);
+void game_option_dec(int option_no);
+void game_option_inc(int option_no);
 
 /******************************************************************************/
 #ifdef __cplusplus

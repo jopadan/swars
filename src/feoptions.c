@@ -332,121 +332,6 @@ TbBool input_horiz_proslider_right_arrow(struct ScreenShape *p_shp, short *p_val
     return target_affected;
 }
 
-const char *gfx_option_desc(int option_no)
-{
-    switch (option_no)
-    {
-    case 0:
-        return gui_strings[464];
-    case 1:
-        return gui_strings[469];
-    case 2:
-        return gui_strings[470];
-    case 3:
-        return gui_strings[471];
-    case 4:
-        return gui_strings[481];
-    case 5:
-        return gui_strings[480];
-    case 6:
-        return gui_strings[514];
-    case 7:
-        return gui_strings[522];
-    case 8:
-        return gui_strings[523];
-    default:
-        return "";
-    }
-}
-
-void gfx_option_dec(int option_no)
-{
-    switch (option_no)
-    {
-    case 0:
-        break;
-    case 1:
-        break;
-    case 2:
-        break;
-    case 3:
-        break;
-    case 4:
-        break;
-    case 5:
-        break;
-    case 6:
-        break;
-    case 7:
-        if (ingame.PanelPermutation < 0)
-        {
-            if (ingame.PanelPermutation < -1)
-                ingame.PanelPermutation++;
-            else
-                ingame.PanelPermutation = -3;
-        }
-        else
-        {
-            if (ingame.PanelPermutation > 0)
-                ingame.PanelPermutation--;
-            else
-                ingame.PanelPermutation = 2;
-        }
-        break;
-    case 8:
-        if (ingame.TrenchcoatPreference > 0)
-            ingame.TrenchcoatPreference--;
-        else
-            ingame.TrenchcoatPreference = 5;
-    default:
-        break;
-    }
-}
-
-void gfx_option_inc(int option_no)
-{
-    switch (option_no)
-    {
-    case 0:
-        break;
-    case 1:
-        break;
-    case 2:
-        break;
-    case 3:
-        break;
-    case 4:
-        break;
-    case 5:
-        break;
-    case 6:
-        break;
-    case 7:
-        if (ingame.PanelPermutation < 0)
-        {
-            if (ingame.PanelPermutation > -3)
-                ingame.PanelPermutation--;
-            else
-                ingame.PanelPermutation = -1;
-        }
-        else
-        {
-            if (ingame.PanelPermutation < 2)
-                ingame.PanelPermutation++;
-            else
-                ingame.PanelPermutation = 0;
-        }
-        break;
-    case 8:
-        if (ingame.TrenchcoatPreference < 5)
-            ingame.TrenchcoatPreference++;
-        else
-            ingame.TrenchcoatPreference = 0;
-    default:
-        break;
-    }
-}
-
 void update_options_gfx_state(void)
 {
     const char *text;
@@ -485,34 +370,34 @@ ubyte show_netgame_unkn1(struct ScreenBox *p_box)
     scr_x = 20;
     scr_y = 20;
 
-    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(0), 0);
+    draw_text_purple_list2(scr_x, scr_y, game_option_desc(GOpt_ProjectorSpeed), 0);
     scr_y += tx_height + 8;
 
-    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(1), 0);
+    draw_text_purple_list2(scr_x, scr_y, game_option_desc(GOpt_HighResolution), 0);
     scr_y += tx_height + 8;
 
-    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(2), 0);
+    draw_text_purple_list2(scr_x, scr_y, game_option_desc(GOpt_DetailLevel), 0);
     scr_y += tx_height + 8;
 
-    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(3), 0);
+    draw_text_purple_list2(scr_x, scr_y, game_option_desc(GOpt_CameraPerspective), 0);
     scr_y += tx_height + 8;
 
-    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(4), 0);
+    draw_text_purple_list2(scr_x, scr_y, game_option_desc(GOpt_AdvancedLights), 0);
     scr_y += tx_height + 8;
 
-    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(5), 0);
+    draw_text_purple_list2(scr_x, scr_y, game_option_desc(GOpt_BillboardMovies), 0);
     scr_y += tx_height + 8;
 
-    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(6), 0);
+    draw_text_purple_list2(scr_x, scr_y, game_option_desc(GOpt_DeepRadar), 0);
     scr_y += tx_height + 8;
     scr_y += tx_height + 8;
     scr_y += tx_height + 8 + 2;
 
     lbDisplay.DrawFlags |= 0x0100;
-    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(7), 0);
+    draw_text_purple_list2(scr_x, scr_y, game_option_desc(GOpt_PanelPermutation), 0);
     scr_y += tx_height + 8;
     scr_y += tx_height + 8;
-    draw_text_purple_list2(scr_x, scr_y, gfx_option_desc(8), 0);
+    draw_text_purple_list2(scr_x, scr_y, game_option_desc(GOpt_TrenchcoatPreference), 0);
     lbDisplay.DrawFlags &= ~0x0100;
 
     for (i = 0; i < 16; i++)
@@ -536,10 +421,10 @@ ubyte show_netgame_unkn1(struct ScreenBox *p_box)
               switch (i)
               {
               case 15:
-                  gfx_option_dec(8);
+                  game_option_dec(GOpt_TrenchcoatPreference);
                   break;
               case 14:
-                  gfx_option_dec(7);
+                  game_option_dec(GOpt_PanelPermutation);
                   break;
               }
               update_options_gfx_state();
@@ -562,10 +447,10 @@ ubyte show_netgame_unkn1(struct ScreenBox *p_box)
               switch (i)
               {
               case 15:
-                  gfx_option_inc(8);
+                  game_option_inc(GOpt_TrenchcoatPreference);
                   break;
               case 14:
-                  gfx_option_inc(7);
+                  game_option_inc(GOpt_PanelPermutation);
                   break;
               }
               update_options_gfx_state();
