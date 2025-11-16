@@ -64,10 +64,36 @@ ubyte ac_show_netgame_unkn1(struct ScreenBox *box);
 
 void show_audio_volume_box_func_02(short scr_x, short scr_y, short a3, short a4, TbPixel colour)
 {
+#if 0
     asm volatile (
       "push %4\n"
       "call ASM_show_audio_volume_box_func_02\n"
         : : "a" (scr_x), "d" (scr_y), "b" (a3), "c" (a4), "g" (colour));
+#endif
+    short i;
+    int cx, cy;
+
+    if (a3 == 0) {
+        return;
+    }
+
+    if (a4 <= a3)
+    {
+        cx = scr_x - a4;
+        cy = scr_y + a4;
+        draw_triangle_purple_list(scr_x, scr_y, scr_x, cy, cx, cy, colour);
+        draw_triangle_purple_list(scr_x + a3, scr_y, cx + a3, cy, cx + a3, scr_y, colour);
+        draw_box_purple_list(scr_x, scr_y, a3 - a4, a4, colour);
+    }
+    else
+    {
+        for (i = 0; i < a4; i++)
+        {
+            cy = scr_y + i;
+            cx = scr_x - i;
+            draw_line_purple_list(cx, cy, cx + a3 - 1, cy, colour);
+        }
+    }
 }
 
 void draw_horiz_proslider_main_body(struct ScreenShape *p_shp, short *p_value)
@@ -305,15 +331,15 @@ TbBool input_horiz_proslider_right_arrow(struct ScreenShape *p_shp, short *p_val
     return target_affected;
 }
 
-ubyte show_netgame_unkn1(struct ScreenBox *box)
+ubyte show_netgame_unkn1(struct ScreenBox *p_box)
 {
     ubyte ret;
     asm volatile ("call ASM_show_netgame_unkn1\n"
-        : "=r" (ret) : "a" (box));
+        : "=r" (ret) : "a" (p_box));
     return ret;
 }
 
-ubyte show_audio_volume_box(struct ScreenBox *box)
+ubyte show_audio_volume_box(struct ScreenBox *p_box)
 {
     short *target_ptr;
     char *s;
@@ -323,28 +349,28 @@ ubyte show_audio_volume_box(struct ScreenBox *box)
     ubyte text_drawn, shapes_drawn;
 
     change = false;
-    if (box->Flags & GBxFlg_Unkn0080)
+    if (p_box->Flags & GBxFlg_Unkn0080)
     {
-        box->Flags &= ~GBxFlg_Unkn0080;
+        p_box->Flags &= ~GBxFlg_Unkn0080;
         word_1C4866[0] = -5;
         word_1C4866[1] = -5;
         word_1C4866[2] = -5;
     }
-    if (box->Timer == 255)
+    if (p_box->Timer == 255)
     {
         word_1C4866[0] = 99;
         word_1C4866[1] = 99;
         word_1C4866[2] = 99;
     }
-    my_set_text_window(box->X + 4, box->Y + 4, box->Width - 6, 480);
+    my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 6, 480);
 
-    if (box == &audio_volume_boxes[0])
+    if (p_box == &audio_volume_boxes[0])
     {
         target_ptr = &startscr_samplevol;
         s = gui_strings[419];
         target_var = 0;
     }
-    else if (box == &audio_volume_boxes[1])
+    else if (p_box == &audio_volume_boxes[1])
     {
         target_ptr = &startscr_midivol;
         s = gui_strings[420];
@@ -363,7 +389,7 @@ ubyte show_audio_volume_box(struct ScreenBox *box)
     }
 
     lbFontPtr = med_font;
-    w = (box->Width - my_string_width(s)) >> 1;
+    w = (p_box->Width - my_string_width(s)) >> 1;
     text_drawn = flashy_draw_text(1 + w, 1, s, 1, 0, &word_1C4866[target_var], 0);
 
     if (audio_volume_sliders_draw_state[target_var] == 0)
@@ -399,7 +425,7 @@ ubyte show_audio_volume_box(struct ScreenBox *box)
         change |= input_horiz_proslider_right_arrow(p_shp, target_ptr);
 
         p_shp = &audio_volume_sliders[3 * target_var + 1]; // Main bar
-        draw_horiz_proslider_main_body_text(p_shp, box, target_ptr);
+        draw_horiz_proslider_main_body_text(p_shp, p_box, target_ptr);
 
         shapes_drawn = 3;
     }
@@ -419,26 +445,26 @@ ubyte show_audio_volume_box(struct ScreenBox *box)
     return 0;
 }
 
-ubyte show_audio_tracks_box(struct ScreenBox *box)
+ubyte show_audio_tracks_box(struct ScreenBox *p_box)
 {
 #if 0
     ubyte ret;
     asm volatile ("call ASM_show_audio_tracks_box\n"
-        : "=r" (ret) : "a" (box));
+        : "=r" (ret) : "a" (p_box));
     return ret;
 #endif
     int i;
     ubyte drawn1 = true;
     ubyte drawn2 = true;
 
-    if ((box->Flags & 0x0080) != 0)
+    if ((p_box->Flags & 0x0080) != 0)
     {
-        box->Flags &= ~0x0080;
+        p_box->Flags &= ~0x0080;
         for (i = 0; i < 3; i++) {
             textpos[i] = -5;
         }
     }
-    if (box->Timer == 255)
+    if (p_box->Timer == 255)
     {
         for (i = 0; i < 3; i++) {
             textpos[i] = strlen(gui_strings[528 + i]);
@@ -446,7 +472,7 @@ ubyte show_audio_tracks_box(struct ScreenBox *box)
     }
 
     lbFontPtr = med_font;
-    my_set_text_window(box->X + 4, box->Y + 4, box->Width - 8, box->Height - 8);
+    my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
 
     if (drawn1)
         drawn1 = flashy_draw_text(20, 4 + 0 * 18, gui_strings[528], 1, 0, &textpos[0], 0);
