@@ -788,7 +788,7 @@ int count_weapons_in_flags(int *p_ncarr_below, int *p_ncarr_above, ulong weapons
     ncarr_below = 0;
     wepflags = weapons_carried;
 
-    for (nwtype = 1; nwtype < WEP_TYPES_COUNT; nwtype++, wepflags >>= 1)
+    for (nwtype = WEP_NULL + 1; nwtype < WEP_TYPES_COUNT; nwtype++, wepflags >>= 1)
     {
         if (wepflags == 0)
             break;

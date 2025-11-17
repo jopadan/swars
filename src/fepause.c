@@ -638,17 +638,17 @@ TbBool pause_screen_handle(void)
 
         if (affected == &startscr_samplevol)
         {
-            SetSoundMasterVolume(127 * startscr_samplevol / STARTSCR_VOLUME_MAX);
+            sfx_apply_samplevol();
             if (!IsSamplePlaying(0, 80, 0))
-                play_sample_using_heap(0, 80, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1u);
+                play_sample_using_heap(0, 80, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
         }
         else if (affected == &startscr_midivol)
         {
-            SetMusicMasterVolume(127 * startscr_midivol / STARTSCR_VOLUME_MAX);
+            sfx_apply_midivol();
         }
         else if (affected == &startscr_cdvolume)
         {
-            SetCDVolume(70 * (127 * startscr_cdvolume / STARTSCR_VOLUME_MAX) / 100);
+            sfx_apply_cdvolume();
         }
         else if (affected == &ingame.DetailLevel)
         {

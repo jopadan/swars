@@ -35,6 +35,7 @@
 #include "guitext.h"
 #include "keyboard.h"
 #include "purpldrw.h"
+#include "player.h"
 #include "weapon.h"
 #include "research.h"
 #include "swlog.h"
@@ -89,8 +90,21 @@ TbBool research_cybmod_daily_progress(void)
  */
 void research_allow_weapons_in_cryo(void)
 {
+#if 0
     asm volatile ("call ASM_research_allow_weapons_in_cryo\n"
         :  :  : "eax" );
+#endif
+    short plagent;
+    WeaponType wtype;
+
+    for (plagent = 0; plagent < AGENTS_SQUAD_MAX_COUNT; plagent++)
+    {
+        for (wtype = WEP_NULL + 1; wtype < WEP_TYPES_COUNT; wtype++)
+        {
+            if (weapons_has_weapon(cryo_agents.Weapons[plagent], wtype) && !is_research_weapon_completed(wtype))
+                research_weapon_allow(wtype);
+        }
+    }
 }
 
 void forward_research_progress_after_mission(int num_days)
