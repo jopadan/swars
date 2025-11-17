@@ -25,6 +25,7 @@
 #include "femain.h"
 #include "game.h"
 #include "guitext.h"
+#include "sound.h"
 #include "swlog.h"
 
 /******************************************************************************/
@@ -54,7 +55,13 @@ const char *game_option_desc(int option_no)
         return gui_strings[522];
     case GOpt_TrenchcoatPreference:
         return gui_strings[523];
-    case GOpt_CDTrack:
+    case GOpt_SampleVolume:
+        return gui_strings[419];
+    case GOpt_DangerVolume:
+        return gui_strings[420];
+    case GOpt_CDAVolume:
+        return gui_strings[516];
+    case GOpt_CDATrack:
         return gui_strings[528];
     case GOpt_DangerTrack:
         return gui_strings[529];
@@ -118,6 +125,7 @@ void game_option_toggle(int option_no)
             ingame.UseMultiMedia = 1;
         break;
     default:
+        LOGERR("Option %d toggle not supported", option_no);
         break;
     }
 }
@@ -159,7 +167,25 @@ void game_option_dec(int option_no)
         else
             ingame.TrenchcoatPreference = OPT_TRENCHCOAT_PREF_MAX;
         break;
-    case GOpt_CDTrack:
+    case GOpt_SampleVolume:
+        if (startscr_samplevol > 0)
+            startscr_samplevol--;
+        else
+            startscr_samplevol = STARTSCR_VOLUME_MAX;
+        break;
+    case GOpt_DangerVolume:
+        if (startscr_midivol > 0)
+            startscr_midivol--;
+        else
+            startscr_midivol = STARTSCR_VOLUME_MAX;
+        break;
+    case GOpt_CDAVolume:
+        if (startscr_cdvolume > 0)
+            startscr_cdvolume--;
+        else
+            startscr_cdvolume = STARTSCR_VOLUME_MAX;
+        break;
+    case GOpt_CDATrack:
         if (ingame.CDTrack > OPT_CD_TRACK_MIN)
             ingame.CDTrack--;
         else
@@ -212,7 +238,25 @@ void game_option_inc(int option_no)
         else
             ingame.TrenchcoatPreference = OPT_TRENCHCOAT_PREF_MIN;
         break;
-    case GOpt_CDTrack:
+    case GOpt_SampleVolume:
+        if (startscr_samplevol < STARTSCR_VOLUME_MAX)
+            startscr_samplevol++;
+        else
+            startscr_samplevol = 0;
+        break;
+    case GOpt_DangerVolume:
+        if (startscr_midivol < STARTSCR_VOLUME_MAX)
+            startscr_midivol++;
+        else
+            startscr_midivol = 0;
+        break;
+    case GOpt_CDAVolume:
+        if (startscr_cdvolume < STARTSCR_VOLUME_MAX)
+            startscr_cdvolume++;
+        else
+            startscr_cdvolume = 0;
+        break;
+    case GOpt_CDATrack:
         if (ingame.CDTrack < OPT_CD_TRACK_MAX)
             ingame.CDTrack++;
         else

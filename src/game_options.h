@@ -59,7 +59,10 @@ enum GameOptions {
     GOpt_PanelPermutation,
     GOpt_TrenchcoatPreference,
     // Audio options
-    GOpt_CDTrack,
+    GOpt_SampleVolume,
+    GOpt_DangerVolume,
+    GOpt_CDAVolume,
+    GOpt_CDATrack,
     GOpt_DangerTrack,
     GOpt_UseMultiMedia,
 };

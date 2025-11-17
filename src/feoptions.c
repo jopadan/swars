@@ -483,7 +483,7 @@ ubyte show_netgame_unkn1(struct ScreenBox *p_box)
 ubyte show_audio_volume_box(struct ScreenBox *p_box)
 {
     short *target_ptr;
-    char *s;
+    const char *s;
     ushort w;
     ubyte target_var;
     TbBool change;
@@ -508,19 +508,19 @@ ubyte show_audio_volume_box(struct ScreenBox *p_box)
     if (p_box == &audio_volume_boxes[0])
     {
         target_ptr = &startscr_samplevol;
-        s = gui_strings[419];
+        s = game_option_desc(GOpt_SampleVolume);
         target_var = 0;
     }
     else if (p_box == &audio_volume_boxes[1])
     {
         target_ptr = &startscr_midivol;
-        s = gui_strings[420];
+        s = game_option_desc(GOpt_DangerVolume);
         target_var = 1;
     }
     else
     {
         target_ptr = &startscr_cdvolume;
-        s = gui_strings[516];
+        s = game_option_desc(GOpt_CDAVolume);
         target_var = 2;
     }
 
@@ -616,7 +616,7 @@ ubyte show_audio_tracks_box(struct ScreenBox *p_box)
     my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
 
     if (drawn1)
-        drawn1 = flashy_draw_text(20, 4 + 0 * 18, game_option_desc(GOpt_CDTrack), 1, 0, &textpos[0], 0);
+        drawn1 = flashy_draw_text(20, 4 + 0 * 18, game_option_desc(GOpt_CDATrack), 1, 0, &textpos[0], 0);
     if (drawn2)
         drawn2 = flashy_draw_text(20, 4 + 1 * 18, game_option_desc(GOpt_DangerTrack), 1, 0, &textpos[1], 0);
 #ifdef HAS_MULTIMEDIA_EXTENSIONS

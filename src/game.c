@@ -5002,7 +5002,7 @@ void do_music_user_input(void)
     if (is_gamekey_pressed(GKey_MUSIC_TRACK))
     {
         clear_key_pressed(KC_NUMPAD5);
-        game_option_inc(GOpt_CDTrack);
+        game_option_inc(GOpt_CDATrack);
     }
     if (is_gamekey_pressed(GKey_DANGR_TRACK))
     {
