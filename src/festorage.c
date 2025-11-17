@@ -324,7 +324,7 @@ void set_flag01_storage_screen_boxes(void)
 
 void skip_flashy_draw_storage_screen_boxes(void)
 {
-    storage_slots_box.Flags |= 0x0002;
+    storage_slots_box.Flags |= GBxFlg_Unkn0002;
 }
 
 void mark_storage_screen_boxes_redraw(void)

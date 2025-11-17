@@ -1509,17 +1509,17 @@ static const char *cryo_gtext_cybmod_list_item_name(ushort mtype)
     return gui_strings[mdstr_id];
 }
 
-ubyte show_cryo_cybmod_list_box(struct ScreenTextBox *box)
+ubyte show_cryo_cybmod_list_box(struct ScreenTextBox *p_box)
 {
-    struct ScreenBoxBase power_box = {box->X + 8, box->Y + 152, 192, 17};
-    struct ScreenBoxBase resil_box = {box->X + 8, box->Y + 177, 192, 17};
-    struct ScreenBoxBase addit_box = {box->X + 8, box->Y + 200, 192, 19};
+    struct ScreenBoxBase power_box = {p_box->X + 8, p_box->Y + 152, 192, 17};
+    struct ScreenBoxBase resil_box = {p_box->X + 8, p_box->Y + 177, 192, 17};
+    struct ScreenBoxBase addit_box = {p_box->X + 8, p_box->Y + 200, 192, 19};
 
-    if ((box->Flags & GBxFlg_BkgndDrawn) == 0)
+    if ((p_box->Flags & GBxFlg_BkgndDrawn) == 0)
     {
         lbDisplay.DrawFlags = Lb_SPRITE_TRANSPAR4;
         // Highlight behind both power_box and resil_box
-        draw_box_purple_list(box->X + 4, box->Y + 149, box->Width - 8, 48, 56);
+        draw_box_purple_list(p_box->X + 4, p_box->Y + 149, p_box->Width - 8, 48, 56);
         // Highlight in bottom part of additiional info box
         draw_box_purple_list(addit_box.X - 4, addit_box.Y + 10, addit_box.Width + 8, addit_box.Height - 10 + 4, 56);
 
@@ -1528,14 +1528,14 @@ ubyte show_cryo_cybmod_list_box(struct ScreenTextBox *box)
         draw_text_property_bk(&addit_box, gui_strings[434]);
 
         lbDisplay.DrawFlags = 0;
-        box->Flags |= GBxFlg_BkgndDrawn;
-        copy_box_purple_list(box->X + 4, box->Y + 4 + box->ScrollWindowOffset,
-          box->Width - 20, box->ScrollWindowHeight + 23);
+        p_box->Flags |= GBxFlg_BkgndDrawn;
+        copy_box_purple_list(p_box->X + 4, p_box->Y + 4 + p_box->ScrollWindowOffset,
+          p_box->Width - 20, p_box->ScrollWindowHeight + 23);
 
-        copy_box_purple_list(box->X + 4, box->Y + 149, box->Width - 8, box->Height - 146);
+        copy_box_purple_list(p_box->X + 4, p_box->Y + 149, p_box->Width - 8, p_box->Height - 146);
 
-        my_set_text_window(box->X + 4, box->ScrollWindowOffset + box->Y + 4,
-          box->Width - 20, box->ScrollWindowHeight + 23);
+        my_set_text_window(p_box->X + 4, p_box->ScrollWindowOffset + p_box->Y + 4,
+          p_box->Width - 20, p_box->ScrollWindowHeight + 23);
         lbFontPtr = small_med_font;
     }
 
@@ -1552,9 +1552,9 @@ ubyte show_cryo_cybmod_list_box(struct ScreenTextBox *box)
 
         cy = 3;
         text_h = font_height('A');
-        for (mtype = box->TextTopLine + 1; mtype < MOD_TYPES_COUNT; mtype++)
+        for (mtype = p_box->TextTopLine + 1; mtype < MOD_TYPES_COUNT; mtype++)
         {
-            if (text_h + cy >= box->ScrollWindowHeight + 23)
+            if (text_h + cy >= p_box->ScrollWindowHeight + 23)
                 return 0;
             if (cybmod_available_for_purchase(mtype))
             {
@@ -1586,7 +1586,7 @@ ubyte show_cryo_cybmod_list_box(struct ScreenTextBox *box)
                   draw_text_purple_list2(-1, cy + 1, text, 0);
                   lbDisplay.DrawFlags = 0;
 
-                  cy += text_h + box->LineSpacing;
+                  cy += text_h + p_box->LineSpacing;
             }
         }
     }
@@ -1602,9 +1602,9 @@ ubyte show_cryo_cybmod_list_box(struct ScreenTextBox *box)
         lbDisplay.DrawFlags = 0;
 
         // Add control hotspot for the view / description switch
-        draw_hotspot_purple_list(box->X + box->Width / 2, box->Y + 104);
-        draw_display_box_content_mod(box);
-        input_display_box_content_mod(box);
+        draw_hotspot_purple_list(p_box->X + p_box->Width / 2, p_box->Y + 104);
+        draw_display_box_content_mod(p_box);
+        input_display_box_content_mod(p_box);
 
         //equip_offer_buy_button.DrawFn(&equip_offer_buy_button); -- incompatible calling convention
         asm volatile ("call *%1\n"
