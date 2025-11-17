@@ -29,10 +29,26 @@ extern "C" {
 /******************************************************************************/
 #pragma pack(1)
 
+#define OPT_PANEL_PERMUT_ALPHA_MIN 0
+#define OPT_PANEL_PERMUT_ALPHA_MAX 2
+
+#define OPT_PANEL_PERMUT_MIN -3
+#define OPT_PANEL_PERMUT_MAX -1
+
+#define OPT_TRENCHCOAT_PREF_MIN 0
+#define OPT_TRENCHCOAT_PREF_MAX 5
+
+#define OPT_CD_TRACK_MIN 2
+#define OPT_CD_TRACK_MAX 5
+
+#define OPT_DANGER_TRACK_MIN 1
+#define OPT_DANGER_TRACK_MAX 2
+
 #define WEP_ROCKETS_FIRED_LIMIT 15
 
 enum GameOptions {
     GOpt_None,
+    // GFX options
     GOpt_ProjectorSpeed,
     GOpt_HighResolution,
     GOpt_DetailLevel,
@@ -42,6 +58,10 @@ enum GameOptions {
     GOpt_DeepRadar,
     GOpt_PanelPermutation,
     GOpt_TrenchcoatPreference,
+    // Audio options
+    GOpt_CDTrack,
+    GOpt_DangerTrack,
+    GOpt_UseMultiMedia,
 };
 
 struct InGame {
@@ -114,6 +134,11 @@ extern struct InGame ingame;
 const char *game_option_desc(int option_no);
 void game_option_dec(int option_no);
 void game_option_inc(int option_no);
+void game_option_toggle(int option_no);
+
+void set_default_gfx_settings(void);
+void set_default_visual_prefernces(void);
+void set_default_audio_tracks(void);
 
 /******************************************************************************/
 #ifdef __cplusplus

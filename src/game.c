@@ -2365,30 +2365,6 @@ void setup_host(void)
     flic_unkn03(AniSl_BILLBOARD);
 }
 
-void set_default_gfx_settings(void)
-{
-    game_gfx_advanced_lights = 1;
-    game_billboard_movies = 1;
-    game_gfx_deep_radar = 0;
-    game_high_resolution = true;
-    game_projector_speed = 0;
-    game_perspective = 5;
-}
-
-void set_default_visual_prefernces(void)
-{
-    ingame.PanelPermutation = -2;
-    ingame.TrenchcoatPreference = 0;
-    ingame.DetailLevel = 1;
-    ingame.UseMultiMedia = 0;
-}
-
-void set_default_audio_tracks(void)
-{
-    ingame.DangerTrack = 1;
-    ingame.CDTrack = 2;
-}
-
 void init_engine(void)
 {
     asm volatile ("call ASM_init_engine\n"
@@ -5026,13 +5002,12 @@ void do_music_user_input(void)
     if (is_gamekey_pressed(GKey_MUSIC_TRACK))
     {
         clear_key_pressed(KC_NUMPAD5);
-        if (++ingame.CDTrack > 4)
-            ingame.CDTrack = 2;
+        game_option_inc(GOpt_CDTrack);
     }
     if (is_gamekey_pressed(GKey_DANGR_TRACK))
     {
         clear_key_pressed(KC_NUMPAD0);
-        ingame.DangerTrack = 2 - ingame.DangerTrack + 1;
+        game_option_inc(GOpt_DangerTrack);
     }
 
 }
@@ -5157,10 +5132,7 @@ ubyte do_user_interface(void)
     if (is_key_pressed(KC_F1, KMod_CONTROL))
     {
         clear_key_pressed(KC_F1);
-        if ((ingame.Flags & GamF_BillboardMovies) != 0)
-            ingame.Flags &= ~GamF_BillboardMovies;
-        else
-            ingame.Flags |= GamF_BillboardMovies;
+        game_option_inc(GOpt_BillboardMovies);
     }
     if (is_key_pressed(KC_F2, KMod_CONTROL))
     {
@@ -5181,18 +5153,12 @@ ubyte do_user_interface(void)
     if (is_key_pressed(KC_F4, KMod_CONTROL))
     {
         clear_key_pressed(KC_F4);
-        if ((ingame.Flags & GamF_AdvLights) != 0)
-            ingame.Flags &= ~GamF_AdvLights;
-        else
-            ingame.Flags |= GamF_AdvLights;
+        game_option_inc(GOpt_AdvancedLights);
     }
     if (is_key_pressed(KC_F6, KMod_CONTROL))
     {
         clear_key_pressed(KC_F6);
-        if ((ingame.Flags & GamF_DeepRadar) != 0)
-            ingame.Flags &= ~GamF_DeepRadar;
-        else
-            ingame.Flags |= GamF_DeepRadar;
+        game_option_inc(GOpt_DeepRadar);
     }
     if (is_key_pressed(KC_F10, KMod_CONTROL))
     {

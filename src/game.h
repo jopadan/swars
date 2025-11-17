@@ -464,10 +464,6 @@ void net_unkn_func_33(void);
 void net_players_copy_equip_and_cryo(void);
 void net_players_copy_cryo(void);
 
-void set_default_gfx_settings(void);
-void set_default_visual_prefernces(void);
-void set_default_audio_tracks(void);
-
 #ifdef __cplusplus
 };
 #endif

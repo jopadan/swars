@@ -616,12 +616,12 @@ ubyte show_audio_tracks_box(struct ScreenBox *p_box)
     my_set_text_window(p_box->X + 4, p_box->Y + 4, p_box->Width - 8, p_box->Height - 8);
 
     if (drawn1)
-        drawn1 = flashy_draw_text(20, 4 + 0 * 18, gui_strings[528], 1, 0, &textpos[0], 0);
+        drawn1 = flashy_draw_text(20, 4 + 0 * 18, game_option_desc(GOpt_CDTrack), 1, 0, &textpos[0], 0);
     if (drawn2)
-        drawn2 = flashy_draw_text(20, 4 + 1 * 18, gui_strings[529], 1, 0, &textpos[1], 0);
+        drawn2 = flashy_draw_text(20, 4 + 1 * 18, game_option_desc(GOpt_DangerTrack), 1, 0, &textpos[1], 0);
 #ifdef HAS_MULTIMEDIA_EXTENSIONS
     if (drawn2)
-        drawn2 = flashy_draw_text(20, 4 + 2 * 18, gui_strings[530], 1, 0, &textpos[2], 0);
+        drawn2 = flashy_draw_text(20, 4 + 2 * 18, game_option_desc(GOpt_UseMultiMedia), 1, 0, &textpos[2], 0);
 #endif
     if (drawn1)
     {
@@ -787,19 +787,19 @@ void init_options_audio_screen_boxes(void)
     }
     init_screen_box(&audio_tracks_box, 213, h, 420, 62, 6);
 
-    init_screen_button(&options_audio_buttons[0], 393u, 289u,
+    init_screen_button(&options_audio_buttons[0], 393, 289,
       gui_strings[531], 6, med2_font, 1, 0);
-    init_screen_button(&options_audio_buttons[1], 458u, 289u,
+    init_screen_button(&options_audio_buttons[1], 458, 289,
       gui_strings[532], 6, med2_font, 1, 0);
-    init_screen_button(&options_audio_buttons[2], 523u, 289u,
+    init_screen_button(&options_audio_buttons[2], 523, 289,
       gui_strings[533], 6, med2_font, 1, 0);
-    init_screen_button(&options_audio_buttons[3], 458u, 307u,
+    init_screen_button(&options_audio_buttons[3], 458, 307,
       gui_strings[531], 6, med2_font, 1, 0);
-    init_screen_button(&options_audio_buttons[4], 523u, 307u,
+    init_screen_button(&options_audio_buttons[4], 523, 307,
       gui_strings[532], 6, med2_font, 1, 0);
-    init_screen_button(&options_audio_buttons[5], 458u, 325u,
+    init_screen_button(&options_audio_buttons[5], 458, 325,
       gui_strings[478], 6, med2_font, 1, 0);
-    init_screen_button(&options_audio_buttons[6], 523u, 325u,
+    init_screen_button(&options_audio_buttons[6], 523, 325,
       gui_strings[479], 6, med2_font, 1, 0);
 
     val = 2;

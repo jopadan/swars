@@ -54,6 +54,12 @@ const char *game_option_desc(int option_no)
         return gui_strings[522];
     case GOpt_TrenchcoatPreference:
         return gui_strings[523];
+    case GOpt_CDTrack:
+        return gui_strings[528];
+    case GOpt_DangerTrack:
+        return gui_strings[529];
+    case GOpt_UseMultiMedia:
+        return gui_strings[530];
     default:
         return "";
     }
@@ -105,6 +111,12 @@ void game_option_toggle(int option_no)
         else
             ingame.Flags &= ~GamF_DeepRadar;
         break;
+    case GOpt_UseMultiMedia:
+        if (ingame.UseMultiMedia == 1)
+            ingame.UseMultiMedia = 0;
+        else
+            ingame.UseMultiMedia = 1;
+        break;
     default:
         break;
     }
@@ -122,29 +134,43 @@ void game_option_dec(int option_no)
     case GOpt_AdvancedLights:
     case GOpt_BillboardMovies:
     case GOpt_DeepRadar:
+    case GOpt_UseMultiMedia:
         game_option_toggle(option_no);
         break;
     case GOpt_PanelPermutation:
         if (ingame.PanelPermutation < 0)
         {
-            if (ingame.PanelPermutation < -1)
+            if (ingame.PanelPermutation < OPT_PANEL_PERMUT_MAX)
                 ingame.PanelPermutation++;
             else
-                ingame.PanelPermutation = -3;
+                ingame.PanelPermutation = OPT_PANEL_PERMUT_MIN;
         }
         else
         {
-            if (ingame.PanelPermutation > 0)
+            if (ingame.PanelPermutation > OPT_PANEL_PERMUT_ALPHA_MIN)
                 ingame.PanelPermutation--;
             else
-                ingame.PanelPermutation = 2;
+                ingame.PanelPermutation = OPT_PANEL_PERMUT_ALPHA_MAX;
         }
         break;
     case GOpt_TrenchcoatPreference:
-        if (ingame.TrenchcoatPreference > 0)
+        if (ingame.TrenchcoatPreference > OPT_TRENCHCOAT_PREF_MIN)
             ingame.TrenchcoatPreference--;
         else
-            ingame.TrenchcoatPreference = 5;
+            ingame.TrenchcoatPreference = OPT_TRENCHCOAT_PREF_MAX;
+        break;
+    case GOpt_CDTrack:
+        if (ingame.CDTrack > OPT_CD_TRACK_MIN)
+            ingame.CDTrack--;
+        else
+            ingame.CDTrack = OPT_CD_TRACK_MAX;
+        break;
+    case GOpt_DangerTrack:
+        if (ingame.DangerTrack > OPT_DANGER_TRACK_MIN)
+            ingame.DangerTrack--;
+        else
+            ingame.DangerTrack = OPT_DANGER_TRACK_MAX;
+        break;
     default:
         break;
     }
@@ -161,32 +187,69 @@ void game_option_inc(int option_no)
     case GOpt_AdvancedLights:
     case GOpt_BillboardMovies:
     case GOpt_DeepRadar:
+    case GOpt_UseMultiMedia:
         game_option_toggle(option_no);
         break;
     case GOpt_PanelPermutation:
         if (ingame.PanelPermutation < 0)
         {
-            if (ingame.PanelPermutation > -3)
+            if (ingame.PanelPermutation > OPT_PANEL_PERMUT_MIN)
                 ingame.PanelPermutation--;
             else
-                ingame.PanelPermutation = -1;
+                ingame.PanelPermutation = OPT_PANEL_PERMUT_MAX;
         }
         else
         {
-            if (ingame.PanelPermutation < 2)
+            if (ingame.PanelPermutation < OPT_PANEL_PERMUT_ALPHA_MAX)
                 ingame.PanelPermutation++;
             else
-                ingame.PanelPermutation = 0;
+                ingame.PanelPermutation = OPT_PANEL_PERMUT_ALPHA_MIN;
         }
         break;
     case GOpt_TrenchcoatPreference:
-        if (ingame.TrenchcoatPreference < 5)
+        if (ingame.TrenchcoatPreference < OPT_TRENCHCOAT_PREF_MAX)
             ingame.TrenchcoatPreference++;
         else
-            ingame.TrenchcoatPreference = 0;
+            ingame.TrenchcoatPreference = OPT_TRENCHCOAT_PREF_MIN;
+        break;
+    case GOpt_CDTrack:
+        if (ingame.CDTrack < OPT_CD_TRACK_MAX)
+            ingame.CDTrack++;
+        else
+            ingame.CDTrack = OPT_CD_TRACK_MIN;
+        break;
+    case GOpt_DangerTrack:
+        if (ingame.DangerTrack < OPT_DANGER_TRACK_MAX)
+            ingame.DangerTrack++;
+        else
+            ingame.DangerTrack = OPT_DANGER_TRACK_MIN;
+        break;
     default:
         break;
     }
 }
 
+void set_default_gfx_settings(void)
+{
+    game_gfx_advanced_lights = 1;
+    game_billboard_movies = 1;
+    game_gfx_deep_radar = 0;
+    game_high_resolution = true;
+    game_projector_speed = 0;
+    game_perspective = 5;
+}
+
+void set_default_visual_prefernces(void)
+{
+    ingame.PanelPermutation = -2;
+    ingame.TrenchcoatPreference = OPT_TRENCHCOAT_PREF_MIN;
+    ingame.DetailLevel = 1;
+    ingame.UseMultiMedia = 0;
+}
+
+void set_default_audio_tracks(void)
+{
+    ingame.DangerTrack = OPT_DANGER_TRACK_MIN;
+    ingame.CDTrack = OPT_CD_TRACK_MIN;
+}
 /******************************************************************************/
