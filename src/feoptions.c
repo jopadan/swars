@@ -762,6 +762,46 @@ short horiz_proslider_prepare_right_arrow_pts(short *pts_x, short *pts_y, short 
     return 5;
 }
 
+ubyte change_panel_permutation(ubyte click)
+{
+#if 0
+    ubyte ret;
+    asm volatile ("call ASM_change_panel_permutation\n"
+        : "=r" (ret) : "a" (click));
+    return ret;
+#endif
+    if (click)
+    {
+        game_option_dec(GOpt_PanelPermutation);
+    }
+    else
+    {
+        game_option_inc(GOpt_PanelPermutation);
+    }
+    update_options_gfx_state();
+    return 1;
+}
+
+ubyte change_trenchcoat_preference(ubyte click)
+{
+#if 0
+    ubyte ret;
+    asm volatile ("call ASM_change_trenchcoat_preference\n"
+        : "=r" (ret) : "a" (click));
+    return ret;
+#endif
+    if (click)
+    {
+        game_option_dec(GOpt_TrenchcoatPreference);
+    }
+    else
+    {
+        game_option_inc(GOpt_TrenchcoatPreference);
+    }
+    update_options_gfx_state();
+    return 1;
+}
+
 void init_options_audio_screen_boxes(void)
 {
     int i, h;

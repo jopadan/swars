@@ -3687,22 +3687,6 @@ void gproc3_unknsub2(void)
     process_engine_unk1();
 }
 
-ubyte change_panel_permutation(ubyte click)
-{
-    ubyte ret;
-    asm volatile ("call ASM_change_panel_permutation\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-}
-
-ubyte change_trenchcoat_preference(ubyte click)
-{
-    ubyte ret;
-    asm volatile ("call ASM_change_trenchcoat_preference\n"
-        : "=r" (ret) : "a" (click));
-    return ret;
-}
-
 ubyte accept_mission(ubyte click)
 {
     ubyte ret;
