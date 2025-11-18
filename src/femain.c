@@ -1823,9 +1823,9 @@ TbResult load_all_sprites_purple_mode(void)
         tret = ret;
 
     dword_1C6DE4 = p_buf;
-    p_buf += 24480;
+    p_buf += 255 * 96;
     dword_1C6DE8 = p_buf;
-    p_buf += 24480;
+    p_buf += 255 * 96;
 
     ret = load_mapout(&p_buf, pinfo->directory);
     if (tret == Lb_OK)
@@ -1845,6 +1845,10 @@ TbResult load_all_sprites_purple_mode(void)
     setup_sprites_med_font();
     setup_sprites_med2_font();
     setup_sprites_big_font();
+
+    // Clear the network graphics buffers
+    LbMemorySet(dword_1C6DE4, 0, 255 * 96);
+    LbMemorySet(dword_1C6DE8, 0, 255 * 96);
 
     if (tret == Lb_FAIL) {
         LOGERR("Some files were not loaded successfully");

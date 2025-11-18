@@ -1046,6 +1046,11 @@ ubyte show_net_benefits_box(struct ScreenBox *box)
     return drawn;
 }
 
+void purple_unkn1_data_to_screen(void)
+{
+    memcpy(dword_1C6DE4, dword_1C6DE8, 255 * 96);
+}
+
 void purple_unkn3_data_to_screen(void)
 {
     LbScreenSetGraphicsWindow(net_grpaint.X + 4, net_grpaint.Y + 4,

@@ -5467,11 +5467,6 @@ void update_mission_time(char a1)
         : : "a" (a1));
 }
 
-void purple_unkn1_data_to_screen(void)
-{
-    memcpy(dword_1C6DE4, dword_1C6DE8, 24480);
-}
-
 void net_unkn_func_29(short a1, short a2, ubyte a3, sbyte a4, ubyte a5)
 {
     asm volatile (
