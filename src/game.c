@@ -5623,8 +5623,7 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
     case 2:
         login_control__State = LognCt_Unkn8;
         LbNetworkShutDownListeners();
-        LbMemorySet(unkstruct04_arr, 0, 20 * sizeof(struct TbNetworkSessionList));
-        byte_1C6D48 = 0;
+        net_service_unkstruct04_clear();
         break;
     case 3:
         draw_flic_purple_list(ac_purple_unkn1_data_to_screen);
@@ -5711,16 +5710,15 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
             {
                 net_new_game_prepare();
                 net_service_unkstruct04_clear();
+                net_unkn2_names_clear();
             }
         }
         else
         {
             net_new_game_prepare();
-            for (i = 0; i < PLAYERS_LIMIT; i++) {
-                unkn2_names[i][0] = '\0';
-            }
-            if ( byte_1C4A6F )
-              LbNetworkHangUp();
+            net_unkn2_names_clear();
+            if (byte_1C4A6F)
+                LbNetworkHangUp();
             LbNetworkReset();
             net_service_started = 0;
         }
@@ -5878,12 +5876,11 @@ void net_unkn_func_33(void)
 
 void show_menu_screen_st2(void)
 {
-    if ( in_network_game )
+    if (in_network_game)
     {
         local_player_no = 0;
         net_new_game_prepare();
-        memset(unkstruct04_arr, 0, 20 * sizeof(struct TbNetworkSessionList)); //clear 4360 bytes
-        byte_1C6D48 = 0;
+        net_service_unkstruct04_clear();
         selected_mod = -1;
         selected_weapon = -1;
         scientists_lost = 0;
@@ -6081,20 +6078,17 @@ void show_load_and_prep_mission(void)
     }
 
     // Update game progress and prepare level to play
-    if ( start_into_mission )
+    if (start_into_mission)
     {
         clear_open_mission_status();
-        if ( in_network_game )
+        if (in_network_game)
         {
             update_mission_time(1);
             gameturn = 0;
         }
         else
         {
-            int i;
-            for (i = 0; i < PLAYERS_LIMIT; i++) {
-                unkn2_names[i][0] = 0;
-            }
+            net_unkn2_names_clear();
             strncpy(unkn2_names[0], login_name, 16);
 
             update_mission_time(1);
@@ -6105,7 +6099,7 @@ void show_load_and_prep_mission(void)
     }
 
     // Set up remaining graphics data and controls
-    if ( start_into_mission )
+    if (start_into_mission)
     {
         prep_multicolor_sprites();
         LbScreenClear(0);

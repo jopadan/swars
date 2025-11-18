@@ -332,7 +332,6 @@ extern ubyte redraw_screen_flag;
 extern sbyte byte_15516C;
 extern sbyte byte_15516D;
 extern ubyte byte_1C5C28[8];
-extern ubyte byte_1C6D48;
 extern ubyte unkn_flags_08;
 extern long dword_153194;
 extern ulong starting_cash_amounts[8];

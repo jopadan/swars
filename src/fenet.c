@@ -89,6 +89,7 @@ extern ubyte byte_155170[4];
 extern char net_unkn1_text[25];
 extern char byte_1811E2[16];
 extern uint32_t sessionlist_last_update[20];
+extern ubyte byte_1C6D48;
 
 ubyte ac_do_net_protocol_option(ubyte click);
 ubyte ac_do_net_unkn40(ubyte click);
@@ -117,7 +118,7 @@ TbBool local_player_hosts_the_game(void)
 
 void net_service_unkstruct04_clear(void)
 {
-    ushort i, plyr;
+    ushort i;
 
     assert(sizeof(struct TbNetworkSession) == 40);
     assert(sizeof(struct TbNetworkPlayer) == 22);
@@ -127,7 +128,13 @@ void net_service_unkstruct04_clear(void)
         LbMemorySet(&unkstruct04_arr[i], 0, sizeof(struct TbNetworkSessionList));
 
     byte_1C6D48 = 0;
-    for (plyr = 0; plyr < 8; plyr++) {
+}
+
+void net_unkn2_names_clear(void)
+{
+    ushort plyr;
+
+    for (plyr = 0; plyr < PLAYERS_LIMIT; plyr++) {
         unkn2_names[plyr][0] = '\0';
     }
 }
@@ -162,8 +169,10 @@ void net_service_gui_switch(void)
 void net_service_switch(ushort svctp)
 {
     nsvc.I.Type = svctp;
-    if (nsvc.I.Type == NetSvc_IPX)
+    if (nsvc.I.Type == NetSvc_IPX) {
         net_service_unkstruct04_clear();
+        net_unkn2_names_clear();
+    }
     net_service_gui_switch();
 }
 
@@ -173,6 +182,7 @@ TbBool net_service_restart(void)
 {
     LOGSYNC("Restart");
     net_service_unkstruct04_clear();
+    net_unkn2_names_clear();
 
     if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
     {
@@ -1731,7 +1741,7 @@ ubyte show_net_groups_box(struct ScreenBox *p_box)
         lbFontPtr = med2_font;
         tx_height = font_height('A');
         scr_y = 1;
-        lbDisplay.DrawFlags = 0x0100;
+        lbDisplay.DrawFlags = Lb_TEXT_HALIGN_CENTER;
         text = gui_strings[390];
         draw_text_purple_list2(0, scr_y, text, 0);
         lbDisplay.DrawFlags = 0;
@@ -1740,9 +1750,9 @@ ubyte show_net_groups_box(struct ScreenBox *p_box)
         lbFontPtr = small_med_font;
         tx_height = font_height('A');
         lines_height = 8 * tx_height;
-        lbDisplay.DrawFlags = 0x0004;
+        lbDisplay.DrawFlags = Lb_SPRITE_TRANSPAR4;
         draw_box_purple_list(p_box->X + 4, p_box->Y + 4 + scr_y, p_box->Width - 8, lines_height + 34, 56);
-        lbDisplay.DrawFlags = 0x0100;
+        lbDisplay.DrawFlags = Lb_TEXT_HALIGN_CENTER;
 
         copy_box_purple_list(p_box->X - 3, p_box->Y - 3, p_box->Width + 6, p_box->Height + 6);
         p_box->Flags |= 0x1000;
@@ -1753,7 +1763,7 @@ ubyte show_net_groups_box(struct ScreenBox *p_box)
     tx_height = font_height('A');
 
     scr_y = 19;
-    lbDisplay.DrawFlags = 0x0100;
+    lbDisplay.DrawFlags = Lb_TEXT_HALIGN_CENTER;
     if (login_control__State == 5)
     {
         text = net_group_name_to_gtext(nsvc.S.Name);
@@ -1771,12 +1781,12 @@ ubyte show_net_groups_box(struct ScreenBox *p_box)
 
                 if (byte_15516C == i)
                 {
-                    lbDisplay.DrawFlags = (0x0100 | 0x0040);
+                    lbDisplay.DrawFlags = (Lb_TEXT_HALIGN_CENTER | Lb_TEXT_ONE_COLOR);
                     lbDisplay.DrawColour = 87;
                 }
                 else
                 {
-                    lbDisplay.DrawFlags = 0x0100;
+                    lbDisplay.DrawFlags = Lb_TEXT_HALIGN_CENTER;
                 }
                 text = net_group_name_to_gtext(p_nsession->Name);
                 lbDisplay.DrawFlags |= 0x8000;
@@ -1827,8 +1837,8 @@ int refresh_users_in_net_game(void)
     short plyr;
 
     n = 0;
-    ingame.InNetGame_UNSURE = (1 << 8) - 1;
-    for (plyr = 0; plyr < 8; plyr++)
+    ingame.InNetGame_UNSURE = (1 << PLAYERS_LIMIT) - 1;
+    for (plyr = 0; plyr < PLAYERS_LIMIT; plyr++)
     {
         TbResult ret;
         ret = LbNetworkPlayerName(locstr, plyr);
@@ -1899,7 +1909,7 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
     {
         refresh_users_in_net_game();
 
-        for (plyr = 0; plyr < 8; plyr++)
+        for (plyr = 0; plyr < PLAYERS_LIMIT; plyr++)
         {
             text = unkn2_names[plyr];
             if (text[0] == '\0')
@@ -1908,7 +1918,7 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
             }
             if (byte_15516D == plyr)
             {
-                lbDisplay.DrawFlags = 0x0040;
+                lbDisplay.DrawFlags = Lb_TEXT_ONE_COLOR;
                 lbDisplay.DrawColour = 87;
             }
             else
@@ -1924,7 +1934,7 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
             lbDisplay.DrawFlags &= ~0x8000;
 
             text = gui_strings[394 + group_types[plyr]];
-            scr_x = ((64 - my_string_width(text)) >> 1) + 139;
+            scr_x = 139 + ((64 - my_string_width(text)) >> 1);
             draw_text_purple_list2(scr_x, scr_y + 3, text, 0);
             if (byte_1C5C28[plyr])
             {
@@ -1987,7 +1997,8 @@ void net_sessionlist_remove(int sess_no)
         ++p_cur_nslist;
         ++p_nxt_nslist;
     }
-    LbMemorySet(&unkstruct04_arr[--byte_1C6D48], 0, sizeof(struct TbNetworkSessionList));
+    byte_1C6D48--;
+    LbMemorySet(&unkstruct04_arr[byte_1C6D48], 0, sizeof(struct TbNetworkSessionList));
     sessionlist_last_update[byte_1C6D48] = 0;
 }
 

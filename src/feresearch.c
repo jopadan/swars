@@ -124,6 +124,42 @@ void forward_research_progress_after_mission(int num_days)
     research_allow_weapons_in_cryo();
 }
 
+void switch_research_screen_boxes_weapons_mods(void)
+{
+    const char *text;
+
+    if (research_on_weapons)
+    {
+        unkn12_WEAPONS_MODS_button.Text = gui_strings[451];
+        if (research.CurrentWeapon == -1)
+        {
+            text = gui_strings[417];
+            research_submit_button.CallBackFn = ac_do_research_submit;
+        }
+        else
+        {
+            text = gui_strings[418];
+            research_submit_button.CallBackFn = ac_do_research_suspend;
+        }
+    }
+    else
+    {
+        unkn12_WEAPONS_MODS_button.Text = gui_strings[450];
+        if (research.CurrentMod == -1)
+        {
+            text = gui_strings[417];
+            research_submit_button.CallBackFn = ac_do_research_submit;
+        }
+        else
+        {
+            text = gui_strings[418];
+            research_submit_button.CallBackFn = ac_do_research_suspend;
+        }
+    }
+    research_submit_button.Text = text;
+    research_unkn21_box.Lines = 0;
+}
+
 ubyte do_research_submit(ubyte click)
 {
 #if 0
@@ -141,8 +177,7 @@ ubyte do_research_submit(ubyte click)
             research_curr_wep_date = global_date;
             research_curr_wep_date.Minute = global_date.Minute - 1;
 
-            research_submit_button.CallBackFn = ac_do_research_suspend;
-            research_submit_button.Text = gui_strings[418];
+            switch_research_screen_boxes_weapons_mods();
             return 1;
         }
     }
@@ -154,8 +189,7 @@ ubyte do_research_submit(ubyte click)
             research_curr_mod_date = global_date;
             research_curr_mod_date.Minute = global_date.Minute - 1;
 
-            research_submit_button.CallBackFn = ac_do_research_suspend;
-            research_submit_button.Text = gui_strings[418];
+            switch_research_screen_boxes_weapons_mods();
             return 1;
         }
     }
@@ -191,41 +225,10 @@ ubyte do_unkn12_WEAPONS_MODS(ubyte click)
         : "=r" (ret) : "a" (click));
     return ret;
 #endif
-    const char *text;
-
     research_on_weapons = (research_on_weapons == 0);
-    if (research_on_weapons)
-    {
-        unkn12_WEAPONS_MODS_button.Text = gui_strings[451];
-        if (research.CurrentWeapon == -1)
-        {
-            text = gui_strings[417];
-            research_submit_button.CallBackFn = ac_do_research_submit;
-        }
-        else
-        {
-            text = gui_strings[418];
-            research_submit_button.CallBackFn = ac_do_research_suspend;
-        }
-    }
-    else
-    {
-        unkn12_WEAPONS_MODS_button.Text = gui_strings[450];
-        if (research.CurrentMod == -1)
-        {
-            text = gui_strings[417];
-            research_submit_button.CallBackFn = ac_do_research_submit;
-        }
-        else
-        {
-            text = gui_strings[418];
-            research_submit_button.CallBackFn = ac_do_research_suspend;
-        }
-    }
     research_selected_mod = -1;
     research_selected_wep = -1;
-    research_submit_button.Text = text;
-    research_unkn21_box.Lines = 0;
+    switch_research_screen_boxes_weapons_mods();
     return 1;
 }
 
@@ -871,12 +874,10 @@ void init_research_screen_boxes(void)
 
 void reset_research_screen_player_state(void)
 {
-    research_selected_wep = -1;
-    research_selected_mod = -1;
     research_on_weapons = 1;
-    research_submit_button.CallBackFn = do_research_submit;
-    research_submit_button.Text = gui_strings[417];
-    unkn12_WEAPONS_MODS_button.Text = gui_strings[451];
+    research_selected_mod = -1;
+    research_selected_wep = -1;
+    switch_research_screen_boxes_weapons_mods();
 }
 
 void reset_research_screen_boxes_flags(void)
