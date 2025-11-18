@@ -1398,9 +1398,51 @@ void net_unkn_sub_332(struct TbUnknCommSt *p_a1,
     p_a1->ExchangeCb = exchange_cb;
 }
 
-void net_unkn_sub_323(struct TbUnknCommSt *p_a1, void *a2, unsigned int a3)
+void net_unkn_change_state(struct TbUnknCommSt *p_a1)
+{
+    LOGSYNC("State Change: WAITING_FOR_ACK = ", p_a1->field_2 ? "TRUE" : "FALSE");
+    LOGSYNC("  WAITING_FOR_DATA = ", p_a1->field_6 ? "TRUE" : "FALSE");
+}
+
+void net_unkn_sub_323(struct TbUnknCommSt *p_a1, void *a2, uint a3)
 {
     assert(!"Not implemented");
+}
+
+void net_unkn_sub_335(struct TbUnknCommSt *p_a1, ubyte *a2, uint a3)
+{
+    assert(!"Not implemented");
+}
+
+sbyte net_unkn_sub_324(struct TbUnknCommSt *p_a1, void *a2, intptr_t *params, int a4)
+{
+    assert(!"Not implemented");
+}
+
+void net_unkn_sub_329(struct TbUnknCommSt *p_a1)
+{
+    ubyte c;
+
+    if (p_a1->field_89 == 0) {
+        return;
+    }
+
+    c = p_a1->field_A[0];
+
+    if (c == 170)
+    {
+        net_unkn_sub_335(p_a1, p_a1->field_A, p_a1->field_A[1] + 4);
+        if (p_a1->field_1A7) {
+            LOGSYNC("Resending %d", (int)p_a1->field_A[3]);
+        }
+    }
+    else if (c == 173)
+    {
+        net_unkn_sub_335(p_a1, p_a1->field_A, 3);
+        if (p_a1->field_1A7) {
+            LOGSYNC("Resending delta %d", (int)p_a1->field_A[2]);
+        }
+    }
 }
 
 void unkn_exchange_start(struct TbUnknCommSt *p_a1, void *a2, unsigned int a3)
@@ -1412,9 +1454,89 @@ void unkn_exchange_start(struct TbUnknCommSt *p_a1, void *a2, unsigned int a3)
     p_a1->field_2 = 1;
 }
 
-int unkn_exchange(struct TbUnknCommSt *p_a1, void *a2)
+int unkn_exchange(struct TbUnknCommSt *p_a1, void *a2, intptr_t *params)
 {
-    assert(!"Not implemented");
+    sbyte ret;
+    TbBool more, done;
+    int unkmax;
+    uint num;
+
+    more = 1;
+    done = 0;
+    num = 0;
+    p_a1->field_6 = 1;
+    if (p_a1->field_1A7) {
+        net_unkn_change_state(p_a1);
+    }
+
+    while (more)
+    {
+        if (p_a1->field_2)
+            unkmax = 100;
+        else
+            unkmax = 30000;
+
+        ret = net_unkn_sub_324(p_a1, a2, params, unkmax);
+        switch (ret)
+        {
+        case 0:
+        default:
+            break;
+        case 1:
+            if (p_a1->field_2) {
+                net_unkn_sub_329(p_a1);
+                ++num;
+            } else {
+                more = 0;
+            }
+            break;
+        case 2:
+            p_a1->field_6 = 0;
+            if (p_a1->field_1A7) {
+                net_unkn_change_state(p_a1);
+            }
+            break;
+        case 3:
+            p_a1->field_2 = 0;
+            if (p_a1->field_1A7) {
+                net_unkn_change_state(p_a1);
+            }
+            p_a1->field_110 = 1;
+            break;
+        case 4:
+            if (p_a1->field_2) {
+                net_unkn_sub_329(p_a1);
+                ++num;
+            }
+            break;
+        }
+
+        if (p_a1->ExchangeCb != NULL)
+        {
+            if (p_a1->ExchangeCb() == -7) {
+                more = 0;
+            }
+        }
+
+        if (num >= 400)
+            more = 0;
+
+        if (!p_a1->field_2 && !p_a1->field_6)
+        {
+            p_a1->field_1++;
+            p_a1->field_1 &= ~0x80;
+            p_a1->field_0++;
+            p_a1->field_0 &= ~0x80;
+            more = 0;
+            done = 1;
+        }
+    }
+
+    if (p_a1->field_1A7)
+    {
+        LOGSYNC("Completed exchange - Return Code = %s", done ? "TRUE" : "FALSE");
+    }
+    return done;
 }
 
 int run_exchange_func()
@@ -1518,12 +1640,16 @@ int LbCommExchange(ushort idx, void *data, int datalen)
     return ret;
 #else
     struct TbSerialDev *p_serdev;
+    intptr_t params[2];
 
     p_serdev = com_dev[idx].serdev;
     if (p_serdev == NULL) {
         return -1;
     }
     net_unkn_sub_332(&netunkst_1E81E0, NetworkServicePtr.F.SessionExchange);
+
+    params[1] = (intptr_t)data;
+    params[0] = datalen;
 
     if (p_serdev->num_players <= 1) {
         return 1;
@@ -1533,7 +1659,7 @@ int LbCommExchange(ushort idx, void *data, int datalen)
         if (run_exchange_func() == -7)
             return -7;
         unkn_exchange_start(&netunkst_1E81E0, data, datalen);
-        if (!unkn_exchange(&netunkst_1E81E0, data + datalen))
+        if (!unkn_exchange(&netunkst_1E81E0, data + datalen, params))
             return -7;
         if (run_exchange_func() == -7)
             return -7;
@@ -1543,7 +1669,7 @@ int LbCommExchange(ushort idx, void *data, int datalen)
         if (run_exchange_func() == -7)
             return -7;
         unkn_exchange_start(&netunkst_1E81E0, data + datalen, datalen);
-        if (!unkn_exchange(&netunkst_1E81E0, data))
+        if (!unkn_exchange(&netunkst_1E81E0, data, params))
             return -7;
         if (run_exchange_func() == -7)
             return -7;
