@@ -167,7 +167,7 @@ struct TbUnknCommSt {
   int field_197;
   uint (*WriteCb)(ubyte *, uint);
   uint (*ReadCb)(ubyte *, uint, uint);
-  int field_1A3;
+  int (*ExchangeCb)();
   int field_1A7;
   int field_1AB;
   ubyte field_1AF[256];

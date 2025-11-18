@@ -29,6 +29,7 @@
 #include "bftime.h"
 
 #include "display.h"
+#include "dos.h"
 #include "keyboard.h"
 #include "swlog.h"
 /******************************************************************************/
@@ -1301,7 +1302,7 @@ void net_unkn_post_init_1(struct TbUnknCommSt *p_a1)
     p_a1->field_1 = 0;
     p_a1->WriteCb = 0;
     p_a1->ReadCb = 0;
-    p_a1->field_1A3 = 0;
+    p_a1->ExchangeCb = 0;
     p_a1->field_2 = 0;
     p_a1->field_6 = 0;
     p_a1->field_110 = 0;
@@ -1391,7 +1392,50 @@ void net_unkn_post_init_3(struct TbUnknCommSt *p_a1,
     p_a1->ReadCb = read_cb;
 }
 
-struct TbSerialDev *LbCommInit(int idx)
+void net_unkn_sub_332(struct TbUnknCommSt *p_a1,
+        int (*exchange_cb)(void))
+{
+    p_a1->ExchangeCb = exchange_cb;
+}
+
+void net_unkn_sub_323(struct TbUnknCommSt *p_a1, void *a2, unsigned int a3)
+{
+    assert(!"Not implemented");
+}
+
+void unkn_exchange_start(struct TbUnknCommSt *p_a1, void *a2, unsigned int a3)
+{
+    if (p_a1->field_1A7) {
+        LOGSYNC("Starting exchange # %d", (int)p_a1->field_0);
+    }
+    net_unkn_sub_323(p_a1, a2, a3);
+    p_a1->field_2 = 1;
+}
+
+int unkn_exchange(struct TbUnknCommSt *p_a1, void *a2)
+{
+    assert(!"Not implemented");
+}
+
+int run_exchange_func()
+{
+    static uint32_t start_time[4];
+    uint32_t end_time;
+    int idx = 0;
+
+    end_time = dos_clock();
+    if ((end_time - start_time[idx]) < 10) {
+        return 0;
+    }
+    start_time[idx] = end_time;
+
+    if (NetworkServicePtr.F.SessionExchange == NULL) {
+        return 0;
+    }
+    return NetworkServicePtr.F.SessionExchange();
+}
+
+struct TbSerialDev *LbCommInit(ushort idx)
 {
 #if 0
     struct TbSerialDev *ret;
@@ -1465,12 +1509,47 @@ TbResult LbCommSetBaud(int rate, ushort dev_id)
     return Lb_SUCCESS;
 }
 
-int LbCommExchange(int a1, void *a2, int a3)
+int LbCommExchange(ushort idx, void *data, int datalen)
 {
+#if 0
     int ret;
     asm volatile ("call ASM_LbCommExchange\n"
-        : "=r" (ret) : "a" (a1), "d" (a2), "b" (a3) );
+        : "=r" (ret) : "a" (idx), "d" (data), "b" (datalen) );
     return ret;
+#else
+    struct TbSerialDev *p_serdev;
+
+    p_serdev = com_dev[idx].serdev;
+    if (p_serdev == NULL) {
+        return -1;
+    }
+    net_unkn_sub_332(&netunkst_1E81E0, NetworkServicePtr.F.SessionExchange);
+
+    if (p_serdev->num_players <= 1) {
+        return 1;
+    }
+    if ( p_serdev->field_10A9 )
+    {
+        if (run_exchange_func() == -7)
+            return -7;
+        unkn_exchange_start(&netunkst_1E81E0, data, datalen);
+        if (!unkn_exchange(&netunkst_1E81E0, data + datalen))
+            return -7;
+        if (run_exchange_func() == -7)
+            return -7;
+    }
+    else
+    {
+        if (run_exchange_func() == -7)
+            return -7;
+        unkn_exchange_start(&netunkst_1E81E0, data + datalen, datalen);
+        if (!unkn_exchange(&netunkst_1E81E0, data))
+            return -7;
+        if (run_exchange_func() == -7)
+            return -7;
+    }
+    return 1;
+#endif
 }
 
 int LbCommStopExchange(ubyte a1)
@@ -1482,7 +1561,7 @@ int LbCommStopExchange(ubyte a1)
 int LbCommDeInit(struct TbSerialDev *serhead)
 {
 #if defined(DOS)||defined(GO32)
-    struct TbSerialDev *serdev;
+    struct TbSerialDev *p_serdev;
     struct ComHandlerInfo *cdev;
     union REGS regs;
     ubyte r, n;
@@ -1524,21 +1603,21 @@ int LbCommDeInit(struct TbSerialDev *serhead)
 
 TbResult LbModemInit(ushort dev_id)
 {
-    struct TbSerialDev *serdev;
+    struct TbSerialDev *p_serdev;
     TbResult ret;
 
     LOGDBG("Starting");
     if (dev_id > 3)
         return Lb_FAIL;
 
-    serdev = com_dev[dev_id].serdev;
+    p_serdev = com_dev[dev_id].serdev;
 
-    if (serdev == NULL)
+    if (p_serdev == NULL)
         return Lb_FAIL;
 
-    send_string(serdev, modem_cmds[0].cmd);
+    send_string(p_serdev, modem_cmds[0].cmd);
     NetworkServicePtr.F.UsedSessionInit = NetworkServicePtr.F.SessionInit;
-    ret = get_modem_response(serdev);
+    ret = get_modem_response(p_serdev);
     NetworkServicePtr.F.UsedSessionInit = NULL;
 
     return ret;
@@ -1546,7 +1625,7 @@ TbResult LbModemInit(ushort dev_id)
 
 TbResult LbModemDial(ushort dev_id, const char *distr)
 {
-    struct TbSerialDev *serdev;
+    struct TbSerialDev *p_serdev;
     char locstr[80];
     TbResult ret;
 
@@ -1554,13 +1633,13 @@ TbResult LbModemDial(ushort dev_id, const char *distr)
     if (dev_id > 3)
         return Lb_FAIL;
 
-    serdev = com_dev[dev_id].serdev;
+    p_serdev = com_dev[dev_id].serdev;
 
-    if (serdev == NULL)
+    if (p_serdev == NULL)
         return Lb_FAIL;
 
     strcpy(locstr, modem_cmds[1].cmd);
-    switch(serdev->field_10AB)
+    switch(p_serdev->field_10AB)
     {
     case 1:
         strcat(locstr, "T");
@@ -1571,9 +1650,9 @@ TbResult LbModemDial(ushort dev_id, const char *distr)
     }
     strcat(locstr, distr);
 
-    send_string(serdev, locstr);
+    send_string(p_serdev, locstr);
     NetworkServicePtr.F.UsedSessionInit = NetworkServicePtr.F.SessionDial;
-    ret = get_modem_response(serdev);
+    ret = get_modem_response(p_serdev);
     NetworkServicePtr.F.UsedSessionInit = NULL;
 
     return ret;
@@ -1581,69 +1660,69 @@ TbResult LbModemDial(ushort dev_id, const char *distr)
 
 TbResult LbModemAnswer(ushort dev_id)
 {
-    struct TbSerialDev *serdev;
+    struct TbSerialDev *p_serdev;
     TbResult ret;
 
     LOGDBG("Starting");
     if (dev_id > 3)
         return Lb_FAIL;
 
-    serdev = com_dev[dev_id].serdev;
-    if (serdev == NULL)
+    p_serdev = com_dev[dev_id].serdev;
+    if (p_serdev == NULL)
         return Lb_FAIL;
 
     NetworkServicePtr.F.UsedSessionInit = NetworkServicePtr.F.SessionAnswer;
-    send_string(serdev, modem_cmds[3].cmd);
+    send_string(p_serdev, modem_cmds[3].cmd);
     ret = 3;
     while (ret == 3 || ret == 1)
-        ret = get_modem_response(serdev);
+        ret = get_modem_response(p_serdev);
     NetworkServicePtr.F.UsedSessionInit = NULL;
     return ret;
 }
 
 TbResult LbModemHangUp(ushort dev_id)
 {
-    struct TbSerialDev *serdev;
+    struct TbSerialDev *p_serdev;
     TbResult ret;
 
     LOGDBG("Starting");
     if (dev_id > 3)
         return Lb_FAIL;
 
-    serdev = com_dev[dev_id].serdev;
-    if (serdev == NULL)
+    p_serdev = com_dev[dev_id].serdev;
+    if (p_serdev == NULL)
         return Lb_FAIL;
 
-    read_write_clear_flag(serdev, serdev->field_1096 + 4, 0x01);
+    read_write_clear_flag(p_serdev, p_serdev->field_1096 + 4, 0x01);
     wait(1250);
 
-    read_write_set_flag(serdev, serdev->field_1096 + 4, 0x01);
+    read_write_set_flag(p_serdev, p_serdev->field_1096 + 4, 0x01);
     wait(1300);
 
-    send_string(serdev, "+++");
+    send_string(p_serdev, "+++");
     wait(1300);
 
     NetworkServicePtr.F.UsedSessionInit = NetworkServicePtr.F.SessionHangUp;
-    ret = get_modem_response(serdev);
+    ret = get_modem_response(p_serdev);
     NetworkServicePtr.F.UsedSessionInit = NULL;
-    send_string(serdev, modem_cmds[2].cmd);
+    send_string(p_serdev, modem_cmds[2].cmd);
 
     return ret;
 }
 
 TbResult LbModemRingType(ushort dev_id, ubyte rtyp)
 {
-    struct TbSerialDev *serdev;
+    struct TbSerialDev *p_serdev;
 
     LOGDBG("Starting");
     if (dev_id > 3)
         return Lb_FAIL;
 
-    serdev = com_dev[dev_id].serdev;
-    if (serdev == NULL)
+    p_serdev = com_dev[dev_id].serdev;
+    if (p_serdev == NULL)
         return Lb_FAIL;
 
-    serdev->field_10AB = rtyp;
+    p_serdev->field_10AB = rtyp;
 
     return Lb_SUCCESS;
 }
