@@ -30,7 +30,7 @@
 
 .text
 
-.global EXPORT_SYMBOL(data_1e85e3)
+.global EXPORT_SYMBOL(dword_1E85E3)
 .global EXPORT_SYMBOL(g_count)
 
 /*----------------------------------------------------------------*/
@@ -138,14 +138,14 @@ GLOBAL_FUNC(ASM_LbCommInit)	/* 0x0F93BE */
 		mov    -0xc(%ebp),%eax
 		movb   $0x2,0x10ac(%eax)
 		mov    -0xc(%ebp),%eax
-		mov    %eax,EXPORT_SYMBOL(data_1e85e3)
-		mov    $EXPORT_SYMBOL(byte_1E81E0),%eax
+		mov    %eax,EXPORT_SYMBOL(dword_1E85E3)
+		mov    $EXPORT_SYMBOL(netunkst_1E81E0),%eax
 		call   ASM_net_unkn_post_init_1
 		mov    $ac_net_unkn_callback1,%edx
-		mov    $EXPORT_SYMBOL(byte_1E81E0),%eax
+		mov    $EXPORT_SYMBOL(netunkst_1E81E0),%eax
 		call   ASM_net_unkn_post_init_2
 		mov    $ASM_net_unkn_callback2,%edx
-		mov    $EXPORT_SYMBOL(byte_1E81E0),%eax
+		mov    $EXPORT_SYMBOL(netunkst_1E81E0),%eax
 		call   ASM_net_unkn_post_init_3
 		mov    -0xc(%ebp),%eax
 		mov    %eax,-0x8(%ebp)
@@ -531,7 +531,7 @@ GLOBAL_FUNC(ASM_LbCommExchange)	/* 0x0F9B18 */
 		jmp    jump_f9c40
 	jump_f9b56:
 		mov    EXPORT_SYMBOL(NetworkServicePtr)+0x14,%edx	/* NetworkServicePtr.F.SessionExchange */
-		mov    $EXPORT_SYMBOL(byte_1E81E0),%eax
+		mov    $EXPORT_SYMBOL(netunkst_1E81E0),%eax
 		call   ASM_net_unkn_sub_332
 		mov    -0x18(%ebp),%eax
 		movzbl 0x10ac(%eax),%eax
@@ -548,12 +548,12 @@ GLOBAL_FUNC(ASM_LbCommExchange)	/* 0x0F9B18 */
 	jump_f9b9b:
 		mov    -0x8(%ebp),%ebx
 		mov    -0x14(%ebp),%edx
-		mov    $EXPORT_SYMBOL(byte_1E81E0),%eax
+		mov    $EXPORT_SYMBOL(netunkst_1E81E0),%eax
 		call   ASM_unkn_exchange_start
 		lea    -0x10(%ebp),%ebx
 		mov    -0x14(%ebp),%edx
 		add    -0x8(%ebp),%edx
-		mov    $EXPORT_SYMBOL(byte_1E81E0),%eax
+		mov    $EXPORT_SYMBOL(netunkst_1E81E0),%eax
 		call   ASM_unkn_exchange
 		test   %eax,%eax
 		jne    jump_f9bce
@@ -577,11 +577,11 @@ GLOBAL_FUNC(ASM_LbCommExchange)	/* 0x0F9B18 */
 		mov    -0x8(%ebp),%ebx
 		mov    -0x14(%ebp),%edx
 		add    -0x8(%ebp),%edx
-		mov    $EXPORT_SYMBOL(byte_1E81E0),%eax
+		mov    $EXPORT_SYMBOL(netunkst_1E81E0),%eax
 		call   ASM_unkn_exchange_start
 		lea    -0x10(%ebp),%ebx
 		mov    -0x14(%ebp),%edx
-		mov    $EXPORT_SYMBOL(byte_1E81E0),%eax
+		mov    $EXPORT_SYMBOL(netunkst_1E81E0),%eax
 		call   ASM_unkn_exchange
 		test   %eax,%eax
 		jne    jump_f9c26

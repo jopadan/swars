@@ -5623,7 +5623,7 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
     case 2:
         login_control__State = LognCt_Unkn8;
         LbNetworkShutDownListeners();
-        net_service_unkstruct04_clear();
+        net_sessionlist_clear();
         break;
     case 3:
         draw_flic_purple_list(ac_purple_unkn1_data_to_screen);
@@ -5709,7 +5709,7 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
             if (plyr == netplyr || net_host_player_no == plyr)
             {
                 net_new_game_prepare();
-                net_service_unkstruct04_clear();
+                net_sessionlist_clear();
                 net_unkn2_names_clear();
             }
         }
@@ -5880,7 +5880,7 @@ void show_menu_screen_st2(void)
     {
         local_player_no = 0;
         net_new_game_prepare();
-        net_service_unkstruct04_clear();
+        net_sessionlist_clear();
         selected_mod = -1;
         selected_weapon = -1;
         scientists_lost = 0;

@@ -90,6 +90,7 @@ extern char net_unkn1_text[25];
 extern char byte_1811E2[16];
 extern uint32_t sessionlist_last_update[20];
 extern ubyte byte_1C6D48;
+extern struct TbNetworkSessionList unkstruct04_arr[20];
 
 ubyte ac_do_net_protocol_option(ubyte click);
 ubyte ac_do_net_unkn40(ubyte click);
@@ -116,7 +117,7 @@ TbBool local_player_hosts_the_game(void)
     return login_control__State == LognCt_Unkn6 || plyr == net_host_player_no;
 }
 
-void net_service_unkstruct04_clear(void)
+void net_sessionlist_clear(void)
 {
     ushort i;
 
@@ -128,6 +129,59 @@ void net_service_unkstruct04_clear(void)
         LbMemorySet(&unkstruct04_arr[i], 0, sizeof(struct TbNetworkSessionList));
 
     byte_1C6D48 = 0;
+}
+
+void net_sessionlist_remove(int sess_no)
+{
+    int nxt_sess_no;
+    struct TbNetworkSessionList *p_cur_nslist;
+    struct TbNetworkSessionList *p_nxt_nslist;
+
+    p_cur_nslist = &unkstruct04_arr[sess_no];
+    p_nxt_nslist = &unkstruct04_arr[sess_no + 1];
+    for (nxt_sess_no = sess_no + 1; nxt_sess_no < byte_1C6D48; nxt_sess_no++)
+    {
+        LbMemoryCopy(p_cur_nslist, p_nxt_nslist, sizeof(struct TbNetworkSessionList));
+        sessionlist_last_update[nxt_sess_no - 1] = sessionlist_last_update[nxt_sess_no];
+        ++p_cur_nslist;
+        ++p_nxt_nslist;
+    }
+    nxt_sess_no = --byte_1C6D48;
+    LbMemorySet(&unkstruct04_arr[nxt_sess_no], 0, sizeof(struct TbNetworkSessionList));
+    sessionlist_last_update[nxt_sess_no] = 0;
+}
+
+void net_sessionlist_update_latest_one(void)
+{
+    struct TbNetworkSessionList locsesslst;
+    struct TbNetworkSessionList *p_nslist;
+    TbBool sess_found;
+    int sess_no;
+
+    if (LbNetworkSessionList(&locsesslst, 1) != 1) {
+        LOGSYNC("No session to update");
+        return;
+    }
+
+    sess_found = false;
+
+    for (sess_no = 0; sess_no < byte_1C6D48; sess_no++)
+    {
+        p_nslist = &unkstruct04_arr[sess_no];
+        if (strcmp(p_nslist->Session.Name, locsesslst.Session.Name) == 0)
+        {
+            sess_found = 1;
+            break;
+        }
+    }
+    if (!sess_found) {
+        sess_no = byte_1C6D48;
+        byte_1C6D48++;
+    }
+    LOGSYNC("Updating session %d", sess_no);
+    p_nslist = &unkstruct04_arr[sess_no];
+    LbMemoryCopy(p_nslist, &locsesslst, sizeof(struct TbNetworkSessionList));
+    sessionlist_last_update[sess_no] = dos_clock();
 }
 
 void net_unkn2_names_clear(void)
@@ -170,7 +224,7 @@ void net_service_switch(ushort svctp)
 {
     nsvc.I.Type = svctp;
     if (nsvc.I.Type == NetSvc_IPX) {
-        net_service_unkstruct04_clear();
+        net_sessionlist_clear();
         net_unkn2_names_clear();
     }
     net_service_gui_switch();
@@ -181,7 +235,7 @@ void net_service_switch(ushort svctp)
 TbBool net_service_restart(void)
 {
     LOGSYNC("Restart");
-    net_service_unkstruct04_clear();
+    net_sessionlist_clear();
     net_unkn2_names_clear();
 
     if (LbNetworkServiceStart(&nsvc.I) != Lb_SUCCESS)
@@ -613,22 +667,33 @@ ubyte do_net_groups_LOGON(ubyte click)
         LOGWARN("Cannot abort protocol %d - not ready", (int)nsvc.I.Type);
         return 0;
     }
-      if (login_control__State == LognCt_Unkn5)
-      {
+
+    if (login_control__State == LognCt_Unkn5)
+    {
         plyr = LbNetworkPlayerNumber();
         network_players[plyr].Type = 13;
         byte_15516C = -1;
         byte_15516D = -1;
         switch_net_screen_boxes_to_initiate();
         net_unkn_func_33();
-      }
+    }
     else if (login_control__State == LognCt_Unkn6)
     {
-        if (byte_15516C != -1 || nsvc.I.Type != NetSvc_IPX)
-        {
-            struct TbNetworkSession *p_nsession;
+        struct TbNetworkSession *p_nsession;
 
-            p_nsession = &unkstruct04_arr[byte_15516C].Session;
+        p_nsession = NULL;
+        if (nsvc.I.Type == NetSvc_IPX)
+        {
+            if (byte_15516C != -1) {
+                p_nsession = &unkstruct04_arr[byte_15516C].Session;
+            }
+        }
+        else
+        {
+            p_nsession = &unkstruct04_arr[0].Session;
+        }
+        if (p_nsession != NULL)
+        {
             if (net_unkn_func_31(p_nsession))
             {
                 netgame_state_enter_5();
@@ -1870,7 +1935,6 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
     return ret;
 #endif
     const char *text;
-    struct TbNetworkPlayer *p_netplyr;
     short plyr;
     short scr_x, scr_y;
     short tx_width, tx_height;
@@ -1964,11 +2028,12 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
     }
     else if (byte_15516C != -1)
     {
-        p_netplyr = unkstruct04_arr[byte_15516C].Player;
-        for (plyr = 0; plyr < 8; plyr++)
+        struct TbNetworkPlayer *p_netplyr_lst;
+        p_netplyr_lst = unkstruct04_arr[byte_15516C].Player;
+        for (plyr = 0; plyr < PLAYERS_LIMIT; plyr++)
         {
             const char *name;
-            name = p_netplyr[plyr].Name;
+            name = p_netplyr_lst[plyr].Name;
             if (name[0] != '\0')
             {
                 tx_width = my_string_width(name);
@@ -1980,59 +2045,6 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
         }
     }
     return 0;
-}
-
-void net_sessionlist_remove(int sess_no)
-{
-    int nxt_sess_no;
-    struct TbNetworkSessionList *p_cur_nslist;
-    struct TbNetworkSessionList *p_nxt_nslist;
-
-    p_cur_nslist = &unkstruct04_arr[sess_no];
-    p_nxt_nslist = &unkstruct04_arr[sess_no + 1];
-    for (nxt_sess_no = sess_no + 1; nxt_sess_no < byte_1C6D48; nxt_sess_no++)
-    {
-        LbMemoryCopy(p_cur_nslist, p_nxt_nslist, sizeof(struct TbNetworkSessionList));
-        sessionlist_last_update[nxt_sess_no - 1] = sessionlist_last_update[nxt_sess_no];
-        ++p_cur_nslist;
-        ++p_nxt_nslist;
-    }
-    byte_1C6D48--;
-    LbMemorySet(&unkstruct04_arr[byte_1C6D48], 0, sizeof(struct TbNetworkSessionList));
-    sessionlist_last_update[byte_1C6D48] = 0;
-}
-
-void net_sessionlist_update_latest_one(void)
-{
-    struct TbNetworkSessionList locsesslst;
-    struct TbNetworkSessionList *p_nslist;
-    TbBool sess_found;
-    int sess_no;
-
-    if (LbNetworkSessionList(&locsesslst, 1) != 1) {
-        LOGSYNC("No session to update");
-        return;
-    }
-
-    sess_found = false;
-
-    for (sess_no = 0; sess_no < byte_1C6D48; sess_no++)
-    {
-        p_nslist = &unkstruct04_arr[sess_no];
-        if (strcmp(p_nslist->Session.Name, locsesslst.Session.Name) == 0)
-        {
-            sess_found = 1;
-            break;
-        }
-    }
-    if (!sess_found) {
-        sess_no = byte_1C6D48;
-        byte_1C6D48++;
-    }
-    LOGSYNC("Updating session %d", sess_no);
-    p_nslist = &unkstruct04_arr[sess_no];
-    LbMemoryCopy(p_nslist, &locsesslst, sizeof(struct TbNetworkSessionList));
-    sessionlist_last_update[sess_no] = dos_clock();
 }
 
 void net_sessionlist_remove_old(void)

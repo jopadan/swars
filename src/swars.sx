@@ -179842,7 +179842,7 @@ GLOBAL_FUNC(ASM_net_unkn_func_02)	/* 0x0FA945 */
 		mov    %eax,-0x18(%ebp)
 		movl   $0x1,-0x14(%ebp)
 		movl   $0x0,-0x10(%ebp)
-		mov    EXPORT_SYMBOL(data_1e85e3),%eax
+		mov    EXPORT_SYMBOL(dword_1E85E3),%eax
 		mov    %eax,-0x1c(%ebp)
 	jump_fa971:
 		cmpl   $0x1,-0x14(%ebp)
@@ -186174,9 +186174,9 @@ run_exchange_func__end_time:	/* 0x1E812C */
 		.fill   0x10
 GLOBAL (g_count)	/* 0x1E81DC */
 		.long	0x0
-GLOBAL (byte_1E81E0)	/* 0x1E81E0 */
+GLOBAL (netunkst_1E81E0)	/* 0x1E81E0 */
 		.fill   0x403
-GLOBAL (data_1e85e3)	/* 0x1e85e3 */
+GLOBAL (dword_1E85E3)	/* 0x1e85e3 */
 		.fill   0x5
 
 

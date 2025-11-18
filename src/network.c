@@ -25,6 +25,7 @@
 
 #include "bfdos.h"
 #include "bfmemory.h"
+#include "bfmemut.h"
 #include "bftime.h"
 
 #include "display.h"
@@ -71,7 +72,9 @@ extern struct TbIPXPlayer IPXPlayer;
 
 char ModemResponseString[80];
 char ModemRequestString[80];
-extern ubyte byte_1E81E0[1027];
+extern struct TbUnknCommSt netunkst_1E81E0;
+
+extern struct TbSerialDev *dword_1E85E3;
 
 extern ulong ipx_send_packet_count[8][8];
 extern ulong ipx_got_player_send_packet_count[8];
@@ -84,8 +87,6 @@ extern struct ComHandlerInfo com_dev[4];
 extern struct IPXDatagramBackup datagram_backup[8];
 
 struct TbNetworkService NetworkServicePtr;
-
-extern struct TbSerialDev *data_1e85e3;
 
 const struct ModemResponse modem_response[] = {
     {"OK", 1},
@@ -876,12 +877,12 @@ int net_unkn_func_352(void)
     return ret;
 }
 
-int net_unkn_func_338(void *a1)
+int net_unkn_func_338(struct TbUnknCommSt *p_a1)
 {
     int ret;
     LOGDBG("Starting");
     asm volatile ("call ASM_net_unkn_func_338\n"
-        : "=r" (ret) : "a" (a1) );
+        : "=r" (ret) : "a" (p_a1) );
     return ret;
 }
 
@@ -941,7 +942,7 @@ int radica_shutdown(void)
     return net_unkn_func_352();
 }
 
-int SetBps(struct TbSerialDev *serdev, int rate)
+int SetBps(struct TbSerialDev *p_serdev, int rate)
 {
     if (rate < 300)
         rate = 300;
@@ -950,10 +951,10 @@ int SetBps(struct TbSerialDev *serdev, int rate)
 
 #if defined(DOS)||defined(GO32)
     cli();
-    outp(serdev->field_1096 + 3, 131);
-    outp(serdev->field_1096 + 1, 115200 / rate >> 8);
-    outp(serdev->field_1096 + 0, (115200 / rate));
-    outp(serdev->field_1096 + 3, 3);
+    outp(p_serdev->field_1096 + 3, 131);
+    outp(p_serdev->field_1096 + 1, 115200 / rate >> 8);
+    outp(p_serdev->field_1096 + 0, (115200 / rate));
+    outp(p_serdev->field_1096 + 3, 3);
     sti();
 #endif
     return 115200 / (115200 / rate);
@@ -961,23 +962,23 @@ int SetBps(struct TbSerialDev *serdev, int rate)
 
 #if defined(DOS)||defined(GO32)
 
-void write_char_no_buff(struct TbSerialDev *serdev, ubyte c)
+void write_char_no_buff(struct TbSerialDev *p_serdev, ubyte c)
 {
-    while ( !(inp(serdev->field_1096 + 5) & 0x20) )
+    while ( !(inp(p_serdev->field_1096 + 5) & 0x20) )
         ;
     cli();
-    outp(serdev->field_1096, c);
+    outp(p_serdev->field_1096, c);
     sti();
 }
 
-void write_char(struct TbSerialDev *serdev, ubyte c)
+void write_char(struct TbSerialDev *p_serdev, ubyte c)
 {
-    write_char_no_buff(serdev, c);
+    write_char_no_buff(p_serdev, c);
 }
 
 #endif
 
-void write_string(struct TbSerialDev *serdev, const char *str)
+void write_string(struct TbSerialDev *p_serdev, const char *str)
 {
 #if defined(DOS)||defined(GO32)
     uint i;
@@ -986,7 +987,7 @@ void write_string(struct TbSerialDev *serdev, const char *str)
     for (i = 0; i < strlen(str); i++)
     {
         c = str[i];
-        write_char(serdev, c);
+        write_char(p_serdev, c);
     }
 #else
     // On Windows, WriteFile() should be used
@@ -995,7 +996,7 @@ void write_string(struct TbSerialDev *serdev, const char *str)
 #endif
 }
 
-void write_buffer(struct TbSerialDev *serdev, const ubyte *buf, uint buflen)
+void write_buffer(struct TbSerialDev *p_serdev, const ubyte *buf, uint buflen)
 {
 #if defined(DOS)||defined(GO32)
     uint i;
@@ -1004,7 +1005,7 @@ void write_buffer(struct TbSerialDev *serdev, const ubyte *buf, uint buflen)
     for (i = 0; i < buflen; i++)
     {
         c = buf[i];
-        write_char(serdev, c);
+        write_char(p_serdev, c);
     }
 #else
     // On Windows, WriteFile() should be used
@@ -1013,7 +1014,25 @@ void write_buffer(struct TbSerialDev *serdev, const ubyte *buf, uint buflen)
 #endif
 }
 
-void read_write_clear_flag(struct TbSerialDev *serdev, ushort port, ubyte c)
+uint read_buffer(struct TbSerialDev *p_serdev, const ubyte *buf, uint buflen, uint a3)
+{
+#if defined(DOS)||defined(GO32)
+    uint i;
+
+    for (i = 0; i < buflen; i++)
+    {
+        if (!net_unkn_func_02(&buf[i], a3))
+            break;
+    }
+    return i;
+#else
+    // On Windows, WriteFile() should be used
+    // On Linux, write the device file with standard file ops
+    assert(!"not implemented");
+#endif
+}
+
+void read_write_clear_flag(struct TbSerialDev *p_serdev, ushort port, ubyte c)
 {
 #if defined(DOS)||defined(GO32)
     ubyte val;
@@ -1024,7 +1043,7 @@ void read_write_clear_flag(struct TbSerialDev *serdev, ushort port, ubyte c)
 #endif
 }
 
-void read_write_set_flag(struct TbSerialDev *serdev, ushort port, ubyte c)
+void read_write_set_flag(struct TbSerialDev *p_serdev, ushort port, ubyte c)
 {
 #if defined(DOS)||defined(GO32)
     ubyte val;
@@ -1044,41 +1063,48 @@ void wait(ulong msec)
 #endif
 }
 
-void send_string(struct TbSerialDev *serdev, const char *str)
+void send_string(struct TbSerialDev *p_serdev, const char *str)
 {
     char locstr[80];
 
     strcpy(locstr, str);
     strcat(locstr, "\r");
-    write_string(serdev, locstr);
+    write_string(p_serdev, locstr);
     strcpy(ModemRequestString, locstr);
 }
 
 uint net_unkn_callback1(ubyte *data, uint datalen)
 {
-    write_buffer(data_1e85e3, data, datalen);
+    write_buffer(dword_1E85E3, data, datalen);
     return datalen;
 }
 
-void inbuf_pos_inc(struct TbSerialDev *serdev)
+uint net_unkn_callback2(ubyte *data, uint datalen, uint a3)
 {
-    int pos;
-    pos = ++serdev->inbuf_pos;
-    if (pos > 2047)
-        serdev->inbuf_pos = 0;
+    uint len;
+    len = read_buffer(dword_1E85E3, data, datalen, a3);
+    return len;
 }
 
-int read_char(struct TbSerialDev *serdev)
+void inbuf_pos_inc(struct TbSerialDev *p_serdev)
+{
+    int pos;
+    pos = ++p_serdev->inbuf_pos;
+    if (pos > 2047)
+        p_serdev->inbuf_pos = 0;
+}
+
+int read_char(struct TbSerialDev *p_serdev)
 {
     ubyte chr;
-    if (serdev->inbuf_pos == serdev->field_109E)
+    if (p_serdev->inbuf_pos == p_serdev->field_109E)
         return -1;
-    chr = serdev->inbuf[serdev->inbuf_pos];
-    inbuf_pos_inc(serdev);
+    chr = p_serdev->inbuf[p_serdev->inbuf_pos];
+    inbuf_pos_inc(p_serdev);
     return chr;
 }
 
-int get_modem_response(struct TbSerialDev *serdev)
+int get_modem_response(struct TbSerialDev *p_serdev)
 {
     const struct ModemResponse *resp;
     char locstr[80];
@@ -1098,7 +1124,7 @@ int get_modem_response(struct TbSerialDev *serdev)
     {
         if (LbTimerClock() - start_time > 4000)
             return -1;
-        chr = read_char(serdev);
+        chr = read_char(p_serdev);
         if (mrpos >= strlen(ModemRequestString)) {
             mrpos = 0;
         } else if (chr == ModemRequestString[mrpos]) {
@@ -1147,13 +1173,280 @@ int get_modem_response(struct TbSerialDev *serdev)
     return ret;
 }
 
+#if defined(DOS)||defined(GO32)
+
+void backup_serial_int_vectors(struct TbSerialDev *p_serdev)
+{
+    union REGS regs;
+
+    memset(&regs, 0, sizeof(regs));
+    regs.x.eax = 0x200; // Get Real Mode Interrupt Vector
+    regs.h.cl = p_serdev->field_1098;
+    int386(49, &regs, &regs);
+    // CX:DX = Selector:Offset of exception handler
+    com_dev[p_serdev->comdev_id].field_18 = regs.x.cx;
+    com_dev[p_serdev->comdev_id].field_1A = regs.x.dx;
+
+    memset(&regs, 0, sizeof(regs));
+    regs.x.eax = 0x204; // Get Protected Mode Interrupt Vector
+    regs.h.cl = p_serdev->field_1098;
+    int386(49, &regs, &regs);
+    // CX:(E)DX = Selector:Offset of exception handler
+    com_dev[p_serdev->comdev_id].field_16 = regs.x.cx;
+    com_dev[p_serdev->comdev_id].field_12 = regs.x.edx;
+}
+
+void setup_serial_int_vectors(struct TbSerialDev *p_serdev)
+{
+    union REGS regs;
+    void (*handler_real)();
+    void (*handler_prot)();
+    ushort handler_real_seg;
+    int lock_len;
+    ubyte comdev_id;
+
+    comdev_id = p_serdev->comdev_id;
+    switch (comdev_id)
+    {
+    case 0:
+        handler_real_seg = __CS__;
+        handler_real = com_handler0;
+        handler_prot = com_handler0;
+        break;
+    case 1:
+        handler_real_seg = __CS__;
+        handler_real = com_handler1;
+        handler_prot = com_handler1;
+        break;
+    case 2:
+        handler_real_seg = __CS__;
+        handler_real = com_handler2;
+        handler_prot = com_handler2;
+        break;
+    case 3:
+        handler_real_seg = __CS__;
+        handler_real = com_handler3;
+        handler_prot = com_handler3;
+        break;
+    }
+
+    memset(&regs, 0, sizeof(regs));
+    regs.x.eax = 0x205;
+    regs.x.ebx = p_serdev->field_1098;
+    regs.x.ecx = handler_real_seg;
+    regs.x.edx = handler_real;
+    int386(49, &regs, &regs);
+
+    memset(&regs, 0, sizeof(regs));
+    regs.x.eax = 0x201;
+    regs.x.ebx = p_serdev->field_1098;
+    regs.x.ecx = (((uintptr_t)p_serdev) >> 4);
+    regs.x.edx = (((uintptr_t)p_serdev) - regs.x.ecx);
+    int386(49, &regs, &regs);
+
+    lock_len = ((uintptr_t)lock_code_end - (uintptr_t)lock_code_start);
+    memset(&regs, 0, sizeof(regs));
+    regs.x.eax = 0x600;
+    regs.x.ebx = lock_code_start >> 16;
+    regs.x.ecx = lock_code_start & 0xFFFF;
+    regs.x.esi = 0;
+    regs.x.edi = lock_len;
+    int386(49, &regs, &regs);
+}
+
+void init_com_port(struct TbSerialDev *p_serdev)
+{
+  ushort btmask;
+  ushort ival;
+
+  btmask = 1 << p_serdev->field_109A;
+  ival = inp(0x21u);
+  outp(33, ival | btmask);
+
+  outp(p_serdev->field_1096 + 4, 0);
+  outp(p_serdev->field_1096 + 1, 0);
+  outp(p_serdev->field_1096 + 2, 0);
+  outp(p_serdev->field_1096 + 1, 1);
+  outp(p_serdev->field_1096 + 4, 11);
+
+  btmask = ~(1 << p_serdev->field_109A);
+  ival = inp(0x21u);
+  outp(33, ival & btmask);
+
+  inp(p_serdev->field_1096 + 2);
+  inp(p_serdev->field_1096 + 0);
+  inp(p_serdev->field_1096 + 5);
+
+  ival = inp(p_serdev->field_1096 + 6);
+  sti(ival);
+  SetRts(p_serdev, 1);
+  SetDtr(p_serdev, 1);
+  SetBps(p_serdev, 9600);
+}
+
+#else
+
+void init_com_port(struct TbSerialDev *p_serdev)
+{
+    //TODO implement port init for non-DOS platforms
+}
+
+#endif
+
+void net_unkn_post_init_1(struct TbUnknCommSt *p_a1)
+{
+    int i;
+
+    p_a1->field_0 = 0;
+    p_a1->field_1 = 0;
+    p_a1->WriteCb = 0;
+    p_a1->ReadCb = 0;
+    p_a1->field_1A3 = 0;
+    p_a1->field_2 = 0;
+    p_a1->field_6 = 0;
+    p_a1->field_110 = 0;
+    p_a1->field_197 = 0;
+    p_a1->field_89 = 0;
+    p_a1->field_1A7 = 0;
+    p_a1->field_1AB = 0;
+    p_a1->field_2B7 = 0;
+    p_a1->field_2AF = 0;
+    p_a1->field_2B3 = 0;
+
+    for (i = 0; i < 256; i++)
+    {
+        ubyte bt[4];
+
+        bt[0] = 0;
+        bt[1] = 0;
+        bt[2] = 0;
+        bt[3] = 0;
+        if ((i & 1) != 0) {
+            bt[3]++;
+        }
+        if ((i & 2) != 0) {
+            bt[2]++;
+            bt[3]++;
+        }
+        if ((i & 4) != 0) {
+            bt[1]++;
+            bt[3]++;
+        }
+        if ((i & 8) != 0) {
+            bt[1]++;
+            bt[2]++;
+            bt[3]++;
+        }
+        if ((i & 0x10) != 0) {
+            bt[0]++;
+            bt[3]++;
+        }
+        if ((i & 0x20) != 0) {
+            bt[0]++;
+            bt[2]++;
+            bt[3]++;
+        }
+        if ((i & 0x40) != 0) {
+            bt[0]++;
+            bt[1]++;
+            bt[3]++;
+        }
+        if ((i & 0x80) != 0) {
+            bt[0]++;
+            bt[1]++;
+            bt[2]++;
+            bt[3]++;
+        }
+        p_a1->field_2BB[i] = (1 * (bt[0] & 1)) | (2 * (bt[1] & 1)) | (4 * (bt[2] & 1)) | (8 * (bt[3] & 1));
+    }
+    p_a1->field_3BB = 0;
+    p_a1->field_3BC = 17;
+    p_a1->field_3BD = 25;
+    p_a1->field_3BE = 8;
+    p_a1->field_3BF = 21;
+    p_a1->field_3C0 = 4;
+    p_a1->field_3C1 = 12;
+    p_a1->field_3C2 = 29;
+
+    for (i = 0; i < 32; i++)
+    {
+        p_a1->field_3C3[i] = (8 * (i & 1)) | (4 * (i & 4)) | (4 * (i & 8)) | (4 * (i & 0x10)) | ((i & 2) << 6);
+    }
+
+    for (i = 0; i < 32; i++)
+    {
+        p_a1->field_3E3[i] = (2 * (i & 2)) | (2 * (i & 4)) | (2 * (i & 8)) | ((i & 0x10) >> 3) | (i & 1);
+    }
+}
+
+void net_unkn_post_init_2(struct TbUnknCommSt *p_a1,
+        uint (*write_cb)(ubyte *, uint))
+{
+    p_a1->WriteCb = write_cb;
+}
+
+void net_unkn_post_init_3(struct TbUnknCommSt *p_a1,
+        uint (*read_cb)(ubyte *, uint, uint))
+{
+    p_a1->ReadCb = read_cb;
+}
+
 struct TbSerialDev *LbCommInit(int idx)
 {
+#if 0
     struct TbSerialDev *ret;
     LOGDBG("Starting");
     asm volatile ("call ASM_LbCommInit\n"
         : "=r" (ret) : "a" (idx) );
     return ret;
+#else
+    struct TbSerialDev *p_serdev;
+
+    assert(sizeof(struct TbSerialDev) == 4301);
+
+    if (idx > 3)
+        return 0;
+
+    if ((com_dev[idx].field_A[0] & 1) != 0)
+        p_serdev = com_dev[idx].serdev;
+    else
+        p_serdev = (struct TbSerialDev *)LbMemoryAllocLow(sizeof(struct TbSerialDev));
+
+    if (p_serdev == NULL)
+        return 0;
+
+    //memcpy(p_serdev, ser_start, 150); -- makes little sense
+    LbMemorySet(p_serdev, 0, sizeof(struct TbSerialDev));
+    p_serdev->field_2 = com_dev[idx].field_4;
+    p_serdev->comdev_id = idx;
+    p_serdev->field_1096 = com_dev[p_serdev->comdev_id].field_4;
+    p_serdev->field_1098 = com_dev[p_serdev->comdev_id].field_6;
+    p_serdev->field_109A = com_dev[p_serdev->comdev_id].field_8;
+    p_serdev->field_10A0 = 0;
+    p_serdev->field_10A2 = 0;
+    p_serdev->inbuf_pos = 0;
+    p_serdev->field_109E = 0;
+    p_serdev->field_10AB = 1;
+
+    com_dev[p_serdev->comdev_id].serdev = p_serdev;
+    com_dev[p_serdev->comdev_id].field_A[0] = 1;
+#if defined(DOS)||defined(GO32)
+    backup_serial_int_vectors(p_serdev);
+    setup_serial_int_vectors(p_serdev);
+#else
+#endif
+    init_com_port(p_serdev);
+
+    p_serdev->baudrate = 9600;
+    p_serdev->num_players = 2;
+    dword_1E85E3 = p_serdev;
+
+    net_unkn_post_init_1(&netunkst_1E81E0);
+    net_unkn_post_init_2(&netunkst_1E81E0, net_unkn_callback1);
+    net_unkn_post_init_3(&netunkst_1E81E0, net_unkn_callback2);
+
+    return p_serdev;
+#endif
 }
 
 TbResult LbCommSetBaud(int rate, ushort dev_id)
@@ -1182,7 +1475,7 @@ int LbCommExchange(int a1, void *a2, int a3)
 
 int LbCommStopExchange(ubyte a1)
 {
-    net_unkn_func_338(byte_1E81E0);
+    net_unkn_func_338(&netunkst_1E81E0);
     return Lb_SUCCESS;
 }
 

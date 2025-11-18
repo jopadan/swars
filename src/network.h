@@ -154,8 +154,43 @@ struct ModemCommand {
   char cmd[80];
 };
 
+struct TbUnknCommSt {
+  ubyte field_0;
+  ubyte field_1;
+  int  field_2;
+  int field_6;
+  ubyte field_A[127];
+  int field_89;
+  ubyte field_8D[131];
+  int field_110;
+  ubyte field_114[131];
+  int field_197;
+  uint (*WriteCb)(ubyte *, uint);
+  uint (*ReadCb)(ubyte *, uint, uint);
+  int field_1A3;
+  int field_1A7;
+  int field_1AB;
+  ubyte field_1AF[256];
+  int field_2AF;
+  int field_2B3;
+  int field_2B7;
+  ubyte field_2BB[256];
+  ubyte field_3BB;
+  ubyte field_3BC;
+  ubyte field_3BD;
+  ubyte field_3BE;
+  ubyte field_3BF;
+  ubyte field_3C0;
+  ubyte field_3C1;
+  ubyte field_3C2;
+  ubyte field_3C3[32];
+  ubyte field_3E3[32];
+};
+
 struct TbSerialDev { // sizeof=4301
-  ubyte field_0[2198];
+  ubyte field_0[2];
+  ushort field_2;
+  ubyte field_4[2194];
   ubyte inbuf[2048];
   ushort field_1096;
   ushort field_1098;
@@ -305,7 +340,6 @@ extern struct TbNetworkService NetworkServicePtr;
 extern ulong NetTimeoutTicks;
 extern struct NetworkPlayer network_players[8];
 extern struct NetPlayer2 net_players[5];
-extern struct TbNetworkSessionList unkstruct04_arr[20];
 // Application-accessible copy of the service structure?
 extern struct TbNetworkService nsvc;
 
