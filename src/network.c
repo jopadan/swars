@@ -1404,7 +1404,7 @@ void net_unkn_change_state(struct TbUnknCommSt *p_a1)
     LOGSYNC("  WAITING_FOR_DATA = ", p_a1->field_6 ? "TRUE" : "FALSE");
 }
 
-void net_unkn_sub_323(struct TbUnknCommSt *p_a1, void *a2, uint a3)
+void net_unkn_sub_323(struct TbUnknCommSt *p_a1, ubyte *a2, uint a3)
 {
     assert(!"Not implemented");
 }
