@@ -1728,19 +1728,6 @@ void show_mission_loading_screen(void)
     wait_for_sound_sample_finish(118);
 }
 
-TbResult load_small_font_for_current_purple_mode(void)
-{
-    PathInfo *pinfo;
-    short max_detail;
-    TbResult ret;
-
-    max_detail = 0;//UNKN_sprites_scale / 2;
-    pinfo = &game_dirs[DirPlace_Data];
-    ret = load_sprites_small_font_up_to(pinfo->directory, max_detail);
-    setup_sprites_small_font();
-    return ret;
-}
-
 TbResult load_mapout(ubyte **pp_buf, const char *dir)
 {
     char locstr[52];
@@ -1780,18 +1767,20 @@ TbResult load_mapout(ubyte **pp_buf, const char *dir)
     return ret;
 }
 
-TbResult init_read_all_sprite_files(void)
+TbResult load_all_sprites_purple_mode(void)
 {
     PathInfo *pinfo;
     ubyte *p_buf;
     TbResult tret, ret;
+    short max_detail;
 
+    max_detail = 0;//UNKN_sprites_scale / 2;
     p_buf = (ubyte *)&purple_draw_list[750];
     tret = Lb_OK;
 
     pinfo = &game_dirs[DirPlace_LangData];
 
-    ret = load_sprites_fe_icons(&p_buf, pinfo->directory, 0, 1);
+    ret = load_sprites_fe_icons(&p_buf, pinfo->directory, 0, max_detail + 1);
     if (tret == Lb_OK)
         tret = ret;
 
@@ -1801,31 +1790,35 @@ TbResult init_read_all_sprite_files(void)
     if (tret == Lb_OK)
         tret = ret;
 
-    ret = load_sprites_fepanel(&p_buf, pinfo->directory, 0, 0);
+    ret = load_sprites_fepanel(&p_buf, pinfo->directory, 0, max_detail + 0);
     if (tret == Lb_OK)
         tret = ret;
 
-    ret = load_sprites_fe_mouse_pointers(&p_buf, pinfo->directory, 0, 1);
+    ret = load_sprites_fe_mouse_pointers(&p_buf, pinfo->directory, 0, max_detail + 1);
     if (tret == Lb_OK)
         tret = ret;
 
-    ret = load_sprites_med_font(&p_buf, pinfo->directory, 0, 1);
+    ret = load_sprites_med_font(&p_buf, pinfo->directory, 0, max_detail + 1);
     if (tret == Lb_OK)
         tret = ret;
 
-    ret = load_sprites_big_font(&p_buf, pinfo->directory, 1, 2);
+    ret = load_sprites_big_font(&p_buf, pinfo->directory, 1, max_detail + 2);
     if (tret == Lb_OK)
         tret = ret;
 
-    ret = load_sprites_small_med_font(&p_buf, pinfo->directory, 1, 0);
+    ret = load_sprites_small_med_font(&p_buf, pinfo->directory, 1, max_detail + 0);
     if (tret == Lb_OK)
         tret = ret;
 
-    ret = load_sprites_med2_font(&p_buf, pinfo->directory, 2, 1);
+    ret = load_sprites_med2_font(&p_buf, pinfo->directory, 2, max_detail + 1);
     if (tret == Lb_OK)
         tret = ret;
 
-    ret = load_sprites_small2_font(&p_buf, pinfo->directory, 2, 0);
+    ret = load_sprites_small2_font(&p_buf, pinfo->directory, 2, max_detail + 0);
+    if (tret == Lb_OK)
+        tret = ret;
+
+    ret = load_sprites_small_font_up_to(pinfo->directory, max_detail + 0);
     if (tret == Lb_OK)
         tret = ret;
 
@@ -1871,9 +1864,11 @@ void reset_app_bar_player_state(void)
     open_brief = 0;
 }
 
-void init_menu_screen_colors_and_sprites(void)
+void init_purple_mode_colors_and_sprites(void)
 {
-    init_read_all_sprite_files();
+    LOGSYNC("Start");
+
+    load_all_sprites_purple_mode();
     LbMouseChangeSpriteOffset(0, 0);
     LbFileLoadAt("data/s-proj.pal", display_palette);
     // Colour tables should be loaded when we can provide palette data
@@ -1888,6 +1883,8 @@ void init_menu_screen_colors_and_sprites(void)
     LbPaletteSet(display_palette);
     show_black_screen();
     reload_background();
+
+    LOGSYNC("Done");
 }
 
 /******************************************************************************/

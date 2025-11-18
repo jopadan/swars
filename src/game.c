@@ -5390,6 +5390,8 @@ ubyte do_user_interface(void)
 
 void show_menu_screen_st0(void)
 {
+    LOGSYNC("Init main menu, %s game", in_network_game ? "MP" : "SP");
+
     debug_trace_place(16);
 
     lbInkeyToAscii[KC_OEM_102] = '\\';
@@ -5426,22 +5428,23 @@ void show_menu_screen_st0(void)
     global_date.Month = 6;
     global_date.Year = 74;
 
-    debug_trace_place(17);
-    init_menu_screen_colors_and_sprites();
-
-    debug_trace_place(18);
-    init_screen_boxes();
-
     load_city_data(0);
     load_city_txt();
     player_mission_agents_reset(local_player_no);
 
-    debug_trace_place(19);
+    debug_trace_place(17);
+    // Need to set screen type before gfx background is reloaded
     if (in_network_game)
         screentype = SCRT_LOGIN;
     else
         screentype = SCRT_MAINMENU;
-    data_1c498d = 1;
+
+    debug_trace_place(18);
+    reload_menu_flag = 0;
+    init_purple_mode_colors_and_sprites();
+
+    debug_trace_place(19);
+    init_screen_boxes();
 
     init_brief_screen_scanner();
 
@@ -5876,6 +5879,8 @@ void net_unkn_func_33(void)
 
 void show_menu_screen_st2(void)
 {
+    LOGSYNC("Init debrief, %s game", in_network_game ? "MP" : "SP");
+
     if (in_network_game)
     {
         local_player_no = 0;
@@ -5935,9 +5940,8 @@ void show_menu_screen_st2(void)
     init_weapon_text();
     load_city_txt();
 
-    init_menu_screen_colors_and_sprites();
-
-    data_1c498d = 1;
+    reload_menu_flag = 0;
+    init_purple_mode_colors_and_sprites();
 
     update_options_screen_state();
     init_brief_screen_scanner();
@@ -6062,7 +6066,6 @@ void show_load_and_prep_mission(void)
         ingame.DisplayMode = DpM_UNKN_1;
     }
 
-    data_1c498d = 2;
     reload_background_flag = 1;
     // Setup screen, palette and colour tables
     debug_trace_place(13);
@@ -6157,12 +6160,6 @@ void net_players_copy_equip_and_cryo_now(void)
     net_unkn_func_33();
     network_players[local_player_no].Type = 15;
     net_unkn_func_33();
-}
-
-void menu_screen_reload(void)
-{
-    load_small_font_for_current_purple_mode();
-    reload_background();
 }
 
 void menu_screen_redraw(void)
@@ -6281,10 +6278,12 @@ void show_menu_screen(void)
     switch (data_1c498d)
     {
     case 2:
+        data_1c498d = 1;
         show_menu_screen_st2();
         play_sample_using_heap(0, 122, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
         break;
     case 0:
+        data_1c498d = 1;
         show_menu_screen_st0();
         play_sample_using_heap(0, 122, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
         break;
@@ -6303,7 +6302,7 @@ void show_menu_screen(void)
     if (reload_menu_flag)
     {
         reload_menu_flag = 0;
-        menu_screen_reload();
+        init_purple_mode_colors_and_sprites();
         my_set_text_window(0, 0, lbDisplay.GraphicsScreenWidth, lbDisplay.GraphicsScreenHeight);
     }
 
@@ -6511,6 +6510,7 @@ void show_menu_screen(void)
     if ( start_into_mission || map_editor )
     {
         show_load_and_prep_mission();
+        data_1c498d = 2;
     }
     else if (reload_background_flag)
     {
