@@ -437,6 +437,137 @@ ulong load_level_pc_handle(TbFileHandle lev_fh)
     return fmtver;
 }
 
+TbBool is_level_stored_thing(struct Thing *p_thing)
+{
+    switch (p_thing->Type)
+    {
+    case TT_VEHICLE:
+    case TT_PERSON:
+       return true;
+    }
+    return false;
+}
+
+TbBool is_level_stored_sthing(struct SimpleThing *p_sthing)
+{
+    switch (p_sthing->Type)
+    {
+    case SmTT_STATIC:
+    case SmTT_DROPPED_ITEM:
+       return true;
+    }
+    return false;
+}
+
+void save_level_pc_handle(TbFileHandle lev_fh)
+{
+    ulong fmtver;
+    ushort count;
+    int i, k;
+
+    assert(sizeof(struct Thing) == 168);
+    assert(sizeof(struct Command) == 32);
+    assert(sizeof(struct Objective) == 32);
+    assert(sizeof(struct LevelMisc) == 22);
+
+    fmtver = 21;
+    LbFileWrite(lev_fh, &fmtver, 4);
+
+    {// Things are partially stored in map, partially in level file
+        struct Thing *p_thing;
+        ThingIdx thing;
+
+        i = 0;
+        for (thing = things_used_head; thing > 0; thing = p_thing->LinkChild)
+        {
+            p_thing = &things[thing];
+            // Per thing code start
+            if (!is_level_stored_thing(p_thing))
+                continue;
+            i++;
+            // Per thing code end
+        }
+        count = i;
+        LbFileWrite(lev_fh, &count, 2);
+
+        LOGSYNC("Level fmtver=%lu n_things=%hd", fmtver, count);
+        for (thing = things_used_head; thing > 0; thing = p_thing->LinkChild)
+        {
+            p_thing = &things[thing];
+            // Per thing code start
+            if (!is_level_stored_thing(p_thing))
+                continue;
+            i++;
+            LbFileWrite(lev_fh, p_thing, sizeof(struct Thing));
+            if (p_thing->Type == TT_VEHICLE)
+            {
+                k = p_thing->U.UVehicle.MatrixIndex;
+                LbFileWrite(lev_fh, &local_mats[k], 36);
+
+            }
+            // Per thing code end
+        }
+    }
+    assert(count == i);
+
+    LbFileWrite(lev_fh, &next_command, sizeof(ushort));
+    LbFileWrite(lev_fh, game_commands, sizeof(struct Command) * next_command);
+
+    LbFileWrite(lev_fh, &level_def, 44);
+
+    LbFileWrite(lev_fh, engine_mem_alloc_ptr + engine_mem_alloc_size - 1320 - 33, 1320);
+    LbFileWrite(lev_fh, war_flags, 32 * sizeof(struct WarFlag));
+
+    LbFileWrite(lev_fh, &word_1531E0, sizeof(ushort));
+    LbFileWrite(lev_fh, engine_mem_alloc_ptr + engine_mem_alloc_size - 32000, 15 * word_1531E0);
+    LbFileWrite(lev_fh, &unkn3de_len, sizeof(ushort));
+    LbFileWrite(lev_fh, engine_mem_alloc_ptr + engine_mem_alloc_size - 32000, unkn3de_len);
+
+    {// SimpleThings are partially stored in map, partially in level file
+        struct SimpleThing *p_sthing;
+        ThingIdx thing;
+
+        i = 0;
+        for (thing = sthings_used_head; thing < 0; thing = p_sthing->LinkChild)
+        {
+            p_sthing = &sthings[thing];
+            // Per thing code start
+            if (!is_level_stored_sthing(p_sthing))
+                continue;
+            i++;
+            // Per thing code end
+        }
+        count = i;
+        LbFileWrite(lev_fh, &count, 2);
+
+        LOGSYNC("Level fmtver=%lu n_sthings=%hd", fmtver, count);
+        for (thing = sthings_used_head; thing < 0; thing = p_sthing->LinkChild)
+        {
+            p_sthing = &sthings[thing];
+            // Per thing code start
+            if (!is_level_stored_sthing(p_sthing))
+                continue;
+            i++;
+            LbFileWrite(lev_fh, p_sthing, sizeof(struct SimpleThing));
+            // Per thing code end
+        }
+    }
+    assert(count == i);
+
+    LbFileWrite(lev_fh, &game_level_unique_id, 2);
+
+    LbFileWrite(lev_fh, &next_used_lvl_objective, sizeof(ushort));
+    LbFileWrite(lev_fh, game_used_lvl_objectives, sizeof(struct Objective) * next_used_lvl_objective);
+
+    LbFileWrite(lev_fh, game_level_unkn1, 40);
+    LbFileWrite(lev_fh, game_level_unkn2, 40);
+
+    LbFileWrite(lev_fh, game_level_miscs, sizeof(struct LevelMisc) * 200);
+
+    LbFileWrite(lev_fh, &engn_anglexz, 4);
+}
+
+
 short find_group_which_looks_like_human_player(TbBool strict)
 {
     short group;
