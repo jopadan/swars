@@ -27,6 +27,10 @@ extern "C" {
 /******************************************************************************/
 #pragma pack(1)
 
+#define LEVEL_NUM_STRAIN(lv) ( ((lv) < 15) ? (lv) : ((lv) - 1) % 15 + 1 )
+#define LEVEL_NUM_VARIANT(lv) ( ((lv) < 15) ? 0 : ((lv) - 1) / 15 )
+#define LEVEL_NUM(lv_strain, lv_variant) (((lv_variant) * 15 + (lv_strain) - 1) + 1)
+
 struct Objective;
 
 struct QuickLoad {

@@ -747,6 +747,8 @@ void fix_level_indexes(short missi, ulong fmtver, ubyte reload, TbBool deep)
     ushort objectv;
     ThingIdx thing;
 
+    LOGSYNC("Fixing mission %d fmtver %d reload %d deep %d",
+      (int)missi, (int)fmtver, (int)reload, (int)deep);
     fix_thing_commands_indexes(deep);
 
     for (objectv = 1; objectv < next_used_lvl_objective; objectv++)
@@ -754,7 +756,7 @@ void fix_level_indexes(short missi, ulong fmtver, ubyte reload, TbBool deep)
         struct Objective *p_objectv;
 
         p_objectv = &game_used_lvl_objectives[objectv];
-        p_objectv->Level = (current_level - 1) % 15 + 1;
+        p_objectv->Level = LEVEL_NUM_STRAIN(current_level);
         p_objectv->Map = current_map;
         fix_single_objective(p_objectv, objectv, "UL");
     }
@@ -942,7 +944,7 @@ void load_level_pc(short level, short missi, ubyte reload)
                 current_map, next_level);
         else
             sprintf(lev_fname, "%s/c%03dl%03d.d%d", game_dirs[DirPlace_Levels].directory,
-               current_map, (next_level - 1) % 15 + 1, (next_level - 1) / 15);
+               current_map, LEVEL_NUM_STRAIN(next_level), LEVEL_NUM_VARIANT(next_level));
         if (next_level > 0)
             current_level = next_level;
     }

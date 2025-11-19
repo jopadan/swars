@@ -271,7 +271,7 @@ int add_used_objective(long mapno, long levelno)
     p_objectv->Type = 0;
     p_objectv->Pri = 0;
     p_objectv->Map = mapno;
-    p_objectv->Level = (levelno - 1) % 15 + 1;
+    p_objectv->Level = LEVEL_NUM_STRAIN(levelno);
     p_objectv->Status = ObvStatu_UNDECIDED;
 
     return objectv;
@@ -882,7 +882,7 @@ ubyte fix_single_objective(struct Objective *p_objectv, ushort objectv, const ch
     ubyte ret;
 
     // Skip objectives for other levels
-    if (p_objectv->Level != (current_level - 1) % 15 + 1)
+    if (p_objectv->Level != LEVEL_NUM_STRAIN(current_level))
         return 1;
     if (p_objectv->Map != current_map)
         return 1;
