@@ -3456,11 +3456,40 @@ void person_enter_vehicle(struct Thing *p_person, struct Thing *p_vehicle)
 
 void person_go_sleep(struct Thing *p_person)
 {
-#if 1
+#if 0
     asm volatile ("call ASM_person_go_sleep\n"
         : : "a" (p_person));
     return;
 #endif
+    if (p_person->State == PerSt_PERSON_BURNING) {
+        return;
+    }
+    if (((p_person->Flag & TngF_Destroyed) != 0) ||
+      (p_person->State == PerSt_DIEING)) {
+        return;
+    }
+    if ((p_person->Flag2 & TgF2_KnockedOut) != 0)
+    {
+        p_person->U.UPerson.BumpCount = 150;
+    }
+    else
+    {
+        ubyte PrevAnimMode;
+        p_person->Flag |= 0x0001;
+
+        PrevAnimMode = p_person->U.UPerson.AnimMode;
+        if (PrevAnimMode != 16) // Pushed back
+            p_person->U.UPerson.OldAnimMode = PrevAnimMode;
+        p_person->U.UPerson.AnimMode = 11;
+        reset_person_frame(p_person);
+
+        p_person->U.UPerson.RecoilTimer = 0;
+        p_person->Timer1 = 48;
+        p_person->StartTimer1 = 48;
+        p_person->U.UPerson.BumpCount = 150;
+        p_person->Flag &= ~(TngF_Unkn0800|TngF_WepRecoil);
+        p_person->Flag2 |= TgF2_KnockedOut;
+    }
 }
 
 ubyte get_my_texture_bits(short tex)
