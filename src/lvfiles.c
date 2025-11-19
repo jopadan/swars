@@ -163,6 +163,29 @@ void global_3d_store(int action)
     }
 }
 
+TbBool is_level_stored_thing(struct Thing *p_thing)
+{
+    switch (p_thing->Type)
+    {
+    case TT_VEHICLE:
+    case TT_PERSON:
+    case TT_UNKN35:
+       return true;
+    }
+    return false;
+}
+
+TbBool is_level_stored_sthing(struct SimpleThing *p_sthing)
+{
+    switch (p_sthing->Type)
+    {
+    case SmTT_CARRIED_ITEM:
+    case SmTT_DROPPED_ITEM:
+       return true;
+    }
+    return false;
+}
+
 ulong load_level_pc_handle(TbFileHandle lev_fh)
 {
     ulong fmtver;
@@ -201,13 +224,27 @@ ulong load_level_pc_handle(TbFileHandle lev_fh)
                 LbFileRead(lev_fh, &s_oldthing, sizeof(s_oldthing));
                 refresh_old_thing_format(p_thing, &s_oldthing, fmtver);
             }
-            LOGNO("Thing(%hd,%hd) group %hd at (%d,%d,%d) type=%d,%d",
-              p_thing->ThingOffset, p_thing->U.UPerson.UniqueID,
-              p_thing->U.UPerson.Group,
-              PRCCOORD_TO_MAPCOORD(p_thing->X),
-              PRCCOORD_TO_MAPCOORD(p_thing->Y),
-              PRCCOORD_TO_MAPCOORD(p_thing->Z),
-              (int)p_thing->Type, (int)p_thing->SubType);
+
+            if (!is_level_stored_thing(p_thing))
+            {
+                LOGWARN("Thing(%hd,%hd) group %hd at (%d,%d,%d) type=%d,%d",
+                  p_thing->ThingOffset, p_thing->U.UPerson.UniqueID,
+                  p_thing->U.UPerson.Group,
+                  PRCCOORD_TO_MAPCOORD(p_thing->X),
+                  PRCCOORD_TO_MAPCOORD(p_thing->Y),
+                  PRCCOORD_TO_MAPCOORD(p_thing->Z),
+                  (int)p_thing->Type, (int)p_thing->SubType);
+            }
+            else
+            {
+                LOGNO("Thing(%hd,%hd) group %hd at (%d,%d,%d) type=%d,%d",
+                  p_thing->ThingOffset, p_thing->U.UPerson.UniqueID,
+                  p_thing->U.UPerson.Group,
+                  PRCCOORD_TO_MAPCOORD(p_thing->X),
+                  PRCCOORD_TO_MAPCOORD(p_thing->Y),
+                  PRCCOORD_TO_MAPCOORD(p_thing->Z),
+                  (int)p_thing->Type, (int)p_thing->SubType);
+            }
 
             if ((p_thing->Z >> 8) < 256)
                 p_thing->Z += (256 << 8);
@@ -252,6 +289,7 @@ ulong load_level_pc_handle(TbFileHandle lev_fh)
 
             if (p_thing->Type == SmTT_DROPPED_ITEM)
             {
+                // SimpleThings should not be on this list. But many level do have them.
                 p_thing->Frame = nstart_ani[p_thing->StartFrame + 1];
             }
 
@@ -370,6 +408,35 @@ ulong load_level_pc_handle(TbFileHandle lev_fh)
             p_thing = &sthings[thing];
             memcpy(&loc_thing, p_thing, 60);
             LbFileRead(lev_fh, p_thing, 60);
+
+            if (!is_level_stored_sthing(p_thing))
+            {
+                LOGWARN("SThing(%hd,%hd) at (%d,%d,%d) type=%d,%d",
+                  p_thing->ThingOffset, p_thing->UniqueID,
+                  PRCCOORD_TO_MAPCOORD(p_thing->X),
+                  PRCCOORD_TO_MAPCOORD(p_thing->Y),
+                  PRCCOORD_TO_MAPCOORD(p_thing->Z),
+                  (int)p_thing->Type, (int)p_thing->SubType);
+            }
+            else
+            {
+                LOGNO("SThing(%hd,%hd) at (%d,%d,%d) type=%d,%d",
+                  p_thing->ThingOffset, p_thing->UniqueID,
+                  PRCCOORD_TO_MAPCOORD(p_thing->X),
+                  PRCCOORD_TO_MAPCOORD(p_thing->Y),
+                  PRCCOORD_TO_MAPCOORD(p_thing->Z),
+                  (int)p_thing->Type, (int)p_thing->SubType);
+            }
+
+            if (fmtver <= 17)
+            {
+                if (p_thing->Type == 0)
+                {
+                    p_thing->Type = SmTT_DROPPED_ITEM;
+                    p_thing->SubType &= 3;
+                }
+            }
+
             if (p_thing->Type == SmTT_CARRIED_ITEM)
             {
                 p_thing->LinkParent = loc_thing.LinkParent;
@@ -386,12 +453,6 @@ ulong load_level_pc_handle(TbFileHandle lev_fh)
               if (thing != 0)
                   add_node_sthing(thing);
             }
-            LOGNO("Thing(%hd,%hd) at (%d,%d,%d) type=%d,%d",
-              p_thing->ThingOffset, p_thing->UniqueID,
-              PRCCOORD_TO_MAPCOORD(p_thing->X),
-              PRCCOORD_TO_MAPCOORD(p_thing->Y),
-              PRCCOORD_TO_MAPCOORD(p_thing->Z),
-              (int)p_thing->Type, (int)p_thing->SubType);
         }
     }
 
@@ -437,28 +498,6 @@ ulong load_level_pc_handle(TbFileHandle lev_fh)
     return fmtver;
 }
 
-TbBool is_level_stored_thing(struct Thing *p_thing)
-{
-    switch (p_thing->Type)
-    {
-    case TT_VEHICLE:
-    case TT_PERSON:
-    case TT_UNKN35:
-       return true;
-    }
-    return false;
-}
-
-TbBool is_level_stored_sthing(struct SimpleThing *p_sthing)
-{
-    switch (p_sthing->Type)
-    {
-    case SmTT_DROPPED_ITEM:
-       return true;
-    }
-    return false;
-}
-
 void save_level_pc_handle(TbFileHandle lev_fh)
 {
     ulong fmtver;
@@ -470,7 +509,7 @@ void save_level_pc_handle(TbFileHandle lev_fh)
     assert(sizeof(struct Objective) == 32);
     assert(sizeof(struct LevelMisc) == 22);
 
-    fmtver = 21;
+    fmtver = 18;
     LbFileWrite(lev_fh, &fmtver, 4);
 
     {// Things are partially stored in map, partially in level file
