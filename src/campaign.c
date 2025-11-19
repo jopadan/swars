@@ -28,6 +28,7 @@
 #include "game_data.h"
 #include "game_options.h"
 #include "game.h"
+#include "lvfiles.h"
 #include "lvobjctv.h"
 #include "misstat.h"
 #include "wadfile.h"
@@ -550,7 +551,8 @@ void read_mission_netscan_objectives_bin(void)
 void save_mission_single_conf(TbFileHandle fh, struct Mission *p_missi, char *buf)
 {
     if (p_missi->TextName == NULL) {
-        sprintf(buf, "Name = MAP%03d - LEVEL%03d\n", (int)p_missi->MapNo, (int)p_missi->LevelNo);
+        sprintf(buf, "Name = MAP%03d - LEVEL%03d.%d\n", (int)p_missi->MapNo,
+          LEVEL_NUM_STRAIN(p_missi->LevelNo), LEVEL_NUM_VARIANT(p_missi->LevelNo));
     } else {
         sprintf(buf, "Name = %s\n", p_missi->TextName);
     }
@@ -636,7 +638,8 @@ void save_mission_single_conf(TbFileHandle fh, struct Mission *p_missi, char *bu
         LbFileWrite(fh, buf, strlen(buf));
     }
     {
-        sprintf(buf, "LevelNo = %d\n", (int)p_missi->LevelNo);
+        sprintf(buf, "LevelNo = %d.%d\n", LEVEL_NUM_STRAIN(p_missi->LevelNo),
+          LEVEL_NUM_VARIANT(p_missi->LevelNo));
         LbFileWrite(fh, buf, strlen(buf));
     }
     if (p_missi->BankTestFail != 0) {
@@ -654,7 +657,8 @@ void save_mission_single_conf(TbFileHandle fh, struct Mission *p_missi, char *bu
         LbFileWrite(fh, buf, strlen(buf));
     }
     if (p_missi->ReLevelNo != 0) {
-        sprintf(buf, "ReLevelNo = %d\n", (int)p_missi->ReLevelNo);
+        sprintf(buf, "ReLevelNo = %d.%d\n", LEVEL_NUM_STRAIN(p_missi->ReLevelNo),
+          LEVEL_NUM_VARIANT(p_missi->ReLevelNo));
         LbFileWrite(fh, buf, strlen(buf));
     }
     if (p_missi->CashReward != 0) {
@@ -971,6 +975,22 @@ TbBool read_missions_conf_info(int num)
     return true;
 }
 
+int ApIniValueGetIntDotInt(struct TbIniParser *parser, long *dst1, long *dst2)
+{
+    char buf[64];
+    char *bend;
+    int i;
+    i = LbIniValueGetStrWord(parser, buf, sizeof(buf));
+    if (i < 1)
+        return i;
+    *dst1 = strtol(buf,&bend,0);
+    if (*bend != '.')
+        return 0;
+    bend++; // Skip the dot
+    *dst2 = strtol(bend,&bend,0);
+    return (int)(bend - buf);
+}
+
 /** Reads missions file, with information on all missions included.
  */
 void read_missions_conf_file(int num)
@@ -978,7 +998,7 @@ void read_missions_conf_file(int num)
     TbFileHandle conf_fh;
     TbBool done;
     int i, n;
-    long k;
+    long k, l;
     char *conf_buf;
     struct TbIniParser parser;
     struct Campaign *p_campgn;
@@ -1386,13 +1406,14 @@ void read_missions_conf_file(int num)
                 CONFDBGLOG("%s %d", COMMAND_TEXT(cmd_num), (int)p_missi->MapNo);
                 break;
             case MissL_LevelNo:
-                i = LbIniValueGetLongInt(&parser, &k);
+                i = ApIniValueGetIntDotInt(&parser, &k, &l);
                 if (i <= 0) {
                     CONFWRNLOG("Could not read \"%s\" command parameter.", COMMAND_TEXT(cmd_num));
                     break;
                 }
-                p_missi->LevelNo = k;
-                CONFDBGLOG("%s %d", COMMAND_TEXT(cmd_num), (int)p_missi->LevelNo);
+                p_missi->LevelNo = LEVEL_NUM(k,l);
+                CONFDBGLOG("%s %d.%d", COMMAND_TEXT(cmd_num), LEVEL_NUM_STRAIN(p_missi->LevelNo),
+                  LEVEL_NUM_VARIANT(p_missi->LevelNo));
                 break;
             case MissL_BankTestFail:
                 i = LbIniValueGetLongInt(&parser, &k);
@@ -1427,13 +1448,14 @@ void read_missions_conf_file(int num)
                   (int)p_missi->MissionCond[3], (int)p_missi->MissionCond[4]);
                 break;
             case MissL_ReLevelNo:
-                i = LbIniValueGetLongInt(&parser, &k);
+                i = ApIniValueGetIntDotInt(&parser, &k, &l);
                 if (i <= 0) {
                     CONFWRNLOG("Could not read \"%s\" command parameter.", COMMAND_TEXT(cmd_num));
                     break;
                 }
-                p_missi->ReLevelNo = k;
-                CONFDBGLOG("%s %d", COMMAND_TEXT(cmd_num), (int)p_missi->ReLevelNo);
+                p_missi->ReLevelNo = LEVEL_NUM(k,l);
+                CONFDBGLOG("%s %d.%d", COMMAND_TEXT(cmd_num), LEVEL_NUM_STRAIN(p_missi->ReLevelNo),
+                  LEVEL_NUM_VARIANT(p_missi->ReLevelNo));
                 break;
             case MissL_CashReward:
                 i = LbIniValueGetLongInt(&parser, &k);
@@ -1545,6 +1567,10 @@ void read_missions_conf_file(int num)
         }
 #undef COMMAND_TEXT
 
+        if ((p_missi->ReLevelNo != 0) &&
+          (LEVEL_NUM_STRAIN(p_missi->LevelNo) != LEVEL_NUM_STRAIN(p_missi->ReLevelNo))) {
+            CONFWRNLOG("ReLevelNo of different strain than LevelNo in \"%s\" section.", sect_name);
+        }
         // Parse the [missuccessN] sections of loaded file
         done = false;
         sprintf(sect_name, "missuccess%d", missi);
