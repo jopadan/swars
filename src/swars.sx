@@ -49017,7 +49017,7 @@ GLOBAL_FUNC (ASM_process_things)	/* 0x572F8 */
 		cmp    $0xd,%eax
 		jne    jump_57821
 		mov    %esi,%eax
-		call   ac_process_unkn35
+		call   ac_process_unkn35_crashing
 		mov    %ebx,%edi
 		jmp    jump_575fa
 	jump_576cd:
@@ -146967,7 +146967,7 @@ GLOBAL_FUNC(ASM_init_mech_explode)	/* 0x0BEE30 */
 
 
 /*----------------------------------------------------------------*/
-GLOBAL_FUNC(ASM_process_unkn35)	/* 0x0BEF90 */
+GLOBAL_FUNC(ASM_process_unkn35_crashing)	/* 0x0BEF90 */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx

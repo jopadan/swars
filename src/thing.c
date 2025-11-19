@@ -389,14 +389,15 @@ void process_air_strike(struct Thing *p_thing)
         : : "a" (p_thing));
 }
 
-void process_unkn35(struct Thing *p_thing)
+void process_unkn35_crashing(struct Thing *p_thing)
 {
 #if 0
     asm volatile (
-      "call ASM_process_unkn35\n"
+      "call ASM_process_unkn35_crashing\n"
         : : "a" (p_thing));
 #endif
     ushort rnd;
+    int alt_under;
 
     LOGNO("Thing (%d,%d,%d)", (int)p_thing->X, (int)p_thing->Y, (int)p_thing->Z);
     move_mapwho(p_thing, p_thing->X + p_thing->VX, p_thing->Y + p_thing->VY, p_thing->Z + p_thing->VZ);
@@ -406,12 +407,22 @@ void process_unkn35(struct Thing *p_thing)
     p_thing->VZ -= p_thing->VZ >> 4;
     p_thing->VY -= ((rnd & 0x7F) + 0x200);
 
-    if (alt_at_point(p_thing->X >> 8, p_thing->Z >> 8) > p_thing->Y)
+    alt_under = alt_at_point(PRCCOORD_TO_MAPCOORD(p_thing->X), PRCCOORD_TO_MAPCOORD(p_thing->Z));
+    if (alt_under > p_thing->Y)
     {
         bang_new4(p_thing->X, p_thing->Y, p_thing->Z, 80);
         remove_thing(p_thing->ThingOffset);
         delete_node(p_thing);
     }
+}
+
+void process_unkn35(struct Thing *p_thing)
+{
+    if (p_thing->State == 13) {
+        process_unkn35_crashing(p_thing);
+        return;
+    }
+    //TODO implement the rest of the state update
 }
 
 void process_laser(struct Thing *p_laser)
@@ -592,8 +603,6 @@ void process_thing(struct Thing *p_thing, ThingIdx thing)
         process_air_strike(p_thing);
         break;
     case TT_UNKN35:
-        if (p_thing->State != 13)
-            break;
         process_unkn35(p_thing);
         break;
     case TT_LASER11:
