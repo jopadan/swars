@@ -1530,6 +1530,16 @@ void init_clone_disguise(struct Thing *p_person)
     p_person->Flag2 |= TgF2_Unkn00400000;
 }
 
+void reset_clone_disguise(struct Thing *p_person)
+{
+    if ((p_person->Flag2 & TgF2_Unkn00400000) == 0)
+        return;
+
+    p_person->Flag2 &= ~TgF2_Unkn00400000;
+    p_person->SubType = p_person->U.UPerson.OldSubType;
+    reset_person_frame(p_person);
+}
+
 int gun_out_anim(struct Thing *p_person, ubyte shoot_flag)
 {
 #if 0
@@ -2116,9 +2126,7 @@ void process_clone_disguise(struct Thing *p_person)
 
     if (p_person->U.UPerson.CurrentWeapon != WEP_CLONESHLD)
     {
-        p_person->Flag2 &= ~TgF2_Unkn00400000;
-        p_person->SubType = p_person->U.UPerson.OldSubType;
-        reset_person_frame(p_person);
+        reset_clone_disguise(p_person);
     }
 }
 

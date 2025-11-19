@@ -490,6 +490,7 @@ void save_level_pc_handle(TbFileHandle lev_fh)
         count = i;
         LbFileWrite(lev_fh, &count, 2);
 
+        i = 0;
         LOGSYNC("Level fmtver=%lu n_things=%hd", fmtver, count);
         for (thing = things_used_head; thing > 0; thing = p_thing->LinkChild)
         {
@@ -540,6 +541,7 @@ void save_level_pc_handle(TbFileHandle lev_fh)
         count = i;
         LbFileWrite(lev_fh, &count, 2);
 
+        i = 0;
         LOGSYNC("Level fmtver=%lu n_sthings=%hd", fmtver, count);
         for (thing = sthings_used_head; thing < 0; thing = p_sthing->LinkChild)
         {

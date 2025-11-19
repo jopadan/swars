@@ -1185,9 +1185,9 @@ ubyte show_net_comms_box(struct ScreenBox *p_box)
     else
     {
         lbFontPtr = med2_font;
-        lbDisplay.DrawFlags = 0x0100;
+        lbDisplay.DrawFlags = Lb_TEXT_HALIGN_CENTER;
         draw_text_purple_list2(0, 0, gui_strings[393], 0);
-        lbDisplay.DrawFlags = 0x0004;
+        lbDisplay.DrawFlags = Lb_SPRITE_TRANSPAR4;
         draw_box_purple_list(p_box->X + 4, p_box->Y + 18, p_box->Width - 8, 61, 56);
         lbFontPtr = small_med_font;
         tx_height = font_height('A');

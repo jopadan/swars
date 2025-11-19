@@ -3940,6 +3940,30 @@ void research_unkn_func_006(ushort missi)
     }
 }
 
+void hide_weapons_for_agents_from_player(PlayerInfo *p_locplayer)
+{
+    struct Thing *p_agent;
+    short i;
+    for (i = 0; i < playable_agents; i++)
+    {
+        p_agent = p_locplayer->MyAgent[i];
+
+        if (p_agent->Type != TT_PERSON) continue;
+        if ((p_agent->Flag & TngF_Destroyed) != 0) continue;
+
+        p_agent->U.UPerson.CurrentWeapon = WEP_NULL;
+        process_clone_disguise(p_agent);
+    }
+}
+
+void mission_over_prepare_agents(void)
+{
+    PlayerInfo *p_locplayer;
+
+    p_locplayer = &players[local_player_no];
+    hide_weapons_for_agents_from_player(p_locplayer);
+}
+
 void mission_over_update_players(void)
 {
     PlayerInfo *p_locplayer;
@@ -4460,6 +4484,9 @@ ubyte check_delete_open_mission(ushort missi, sbyte state)
 void mission_over(void)
 {
     ubyte misend;
+
+    // Hide weapon to cancel any effects
+    mission_over_prepare_agents();
 
     ingame.DisplayMode = DpM_PURPLEMNU;
     reload_menu_flag = true;
