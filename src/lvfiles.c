@@ -443,6 +443,7 @@ TbBool is_level_stored_thing(struct Thing *p_thing)
     {
     case TT_VEHICLE:
     case TT_PERSON:
+    case TT_UNKN35:
        return true;
     }
     return false;
@@ -452,7 +453,6 @@ TbBool is_level_stored_sthing(struct SimpleThing *p_sthing)
 {
     switch (p_sthing->Type)
     {
-    case SmTT_STATIC:
     case SmTT_DROPPED_ITEM:
        return true;
     }
