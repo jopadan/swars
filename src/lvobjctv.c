@@ -2051,6 +2051,9 @@ void load_netscan_objectives(ubyte mapno, ubyte level)
     int remain;
 
     missi = find_mission_with_map_and_level(mapno, level);
+    if (missi == 0) {
+        LOGERR("Unable to map map and level to mission.");
+    }
     p_missi = &mission_list[missi];
     LbMemoryCopy(netscan_objectives, &mission_netscan_objectives[p_missi->NetscanObvIndex],
       sizeof(struct NetscanObjective) * p_missi->NetscanObvCount);

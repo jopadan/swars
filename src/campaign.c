@@ -330,6 +330,8 @@ ushort find_mission_with_map_and_level(ushort mapno, ushort level)
         p_missi = &mission_list[missi];
         if ((p_missi->MapNo == mapno) && (p_missi->LevelNo == level))
             return missi;
+        if ((p_missi->MapNo == mapno) && (p_missi->ReLevelNo == level))
+            return missi;
     }
     return 0;
 }

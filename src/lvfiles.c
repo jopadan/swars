@@ -769,7 +769,9 @@ void fix_level_indexes(short missi, ulong fmtver, ubyte reload, TbBool deep)
 
     // Used objectives are not part of the level file, but part of
     // the mission file. If restarting level, leave these intact,
-    // as fixups were already applied on first load.
+    // as fixups were already applied on first load. Though loading
+    // a different level as part of the same mission needs to be
+    // taken into account when setting the 'reload' parameter.
     if (!reload)
     {
         fix_mission_used_objectives(missi);
