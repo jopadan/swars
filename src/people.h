@@ -147,7 +147,7 @@ enum PersonFrames {
     FRAME_PERS_Unkn17  = 17,
     FRAME_PERS_Unkn18  = 18,
     FRAME_PERS_Unkn19  = 19,
-    FRAME_PERS_Unkn20  = 20,
+    FRAME_PERS_DEAD_BODY  = 20,
     FRAME_PERS_Unkn21  = 21,
     FRAME_PERS_TOTAL_COUNT,
 };

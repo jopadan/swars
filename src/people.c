@@ -983,7 +983,7 @@ void init_person_thing(struct Thing *p_person)
 
     if ((p_person->Flag & TngF_Destroyed) != 0)
     {
-        p_person->U.UPerson.AnimMode = FRAME_PERS_Unkn20;
+        p_person->U.UPerson.AnimMode = FRAME_PERS_DEAD_BODY;
         p_person->State = PerSt_DEAD;
         p_person->U.UPerson.FrameId.Version[3] = 1;
         p_person->U.UPerson.FrameId.Version[4] = 0;
@@ -3156,6 +3156,39 @@ int mods_affect_hit_points(struct Thing *p_thing, ushort type, int hp)
     return hp;
 }
 
+int dead_person_hit_by_bullet(struct Thing *p_thing, short hp,
+  int vx, int vy, int vz, struct Thing *p_attacker, ushort type)
+{
+    if (p_thing->U.UPerson.AnimMode == FRAME_PERS_DEAD_BODY)
+    {
+        if (type == DMG_RAP)
+        {
+            p_thing->Timer1 = 16;
+            p_thing->StartTimer1 = 16;
+            p_thing->SubState = 26;
+            p_thing->U.UPerson.FrameId.Version[4] = 0;
+            p_thing->U.UPerson.FrameId.Version[3] = 0;
+            p_thing->U.UPerson.AnimMode = FRAME_PERS_Unkn10;
+            reset_person_frame(p_thing);
+            return 1;
+        }
+        if (type == DMG_UZI || type == DMG_MINIGUN || type == DMG_LONGRANGE || type == DMG_UNKN9)
+        {
+            p_thing->Frame = frame[p_thing->Frame].Next;
+            return 1;
+        }
+        p_thing->Timer1 = 16;
+        p_thing->StartTimer1 = 16;
+        p_thing->SubState = 26;
+        p_thing->U.UPerson.FrameId.Version[4] = 0;
+        p_thing->U.UPerson.FrameId.Version[3] = 0;
+        p_thing->U.UPerson.AnimMode = FRAME_PERS_Unkn12;
+        set_person_frame_noangle(p_thing, 1067);
+        play_dist_sample(p_thing, 57, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 3);
+    }
+    return 1;
+}
+
 int person_hit_by_bullet(struct Thing *p_thing, short hp,
   int vx, int vy, int vz, struct Thing *p_attacker, ushort type)
 {
@@ -3188,36 +3221,9 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
             if (p_thing->Type != TT_VEHICLE)
                 return 0;
         }
-        if (p_thing->State == 13)
+        if (p_thing->State == PerSt_DEAD)
         {
-            if (p_thing->U.UPerson.AnimMode == FRAME_PERS_Unkn20)
-            {
-              if (type == DMG_RAP)
-              {
-                p_thing->Timer1 = 16;
-                p_thing->StartTimer1 = 16;
-                p_thing->SubState = 26;
-                p_thing->U.UPerson.FrameId.Version[4] = 0;
-                p_thing->U.UPerson.FrameId.Version[3] = 0;
-                p_thing->U.UPerson.AnimMode = FRAME_PERS_Unkn10;
-                reset_person_frame(p_thing);
-                return 1;
-              }
-              if (type == DMG_UZI || type == DMG_MINIGUN || type == DMG_LONGRANGE || type == DMG_UNKN9)
-              {
-                  p_thing->Frame = frame[p_thing->Frame].Next;
-                  return 1;
-              }
-              p_thing->Timer1 = 16;
-              p_thing->StartTimer1 = 16;
-              p_thing->SubState = 26;
-              p_thing->U.UPerson.FrameId.Version[4] = 0;
-              p_thing->U.UPerson.FrameId.Version[3] = 0;
-              p_thing->U.UPerson.AnimMode = FRAME_PERS_Unkn12;
-              set_person_frame_noangle(p_thing, 1067);
-              play_dist_sample(p_thing, 57, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 3);
-            }
-            return 1;
+            return dead_person_hit_by_bullet(p_thing, hp, vx, vy, vz, p_attacker, type);
         }
         if ((p_thing->Flag & TngF_Destroyed) != 0)
             return 1;
