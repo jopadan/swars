@@ -3499,7 +3499,10 @@ void person_go_sleep(struct Thing *p_person)
         PrevAnimMode = p_person->U.UPerson.AnimMode;
         if (PrevAnimMode != FRAME_PERS_PUSH_BACK)
             p_person->U.UPerson.OldAnimMode = PrevAnimMode;
-        p_person->U.UPerson.AnimMode = FRAME_PERS_Unkn11;
+        p_person->U.UPerson.AnimMode = FRAME_PERS_LAY_ASLEEP;
+         // make sure to draw without blood
+        p_person->U.UPerson.FrameId.Version[4] = 0;
+        p_person->U.UPerson.FrameId.Version[3] = 0;
         reset_person_frame(p_person);
 
         p_person->U.UPerson.RecoilTimer = 0;
