@@ -1934,7 +1934,7 @@ void draw_sort_sprite1b(int sspr)
         }
     }
     bright += br_inc;
-    if ((p_thing->U.UPerson.AnimMode == FRAME_PERS_Unkn12) || ((ingame.Flags & GamF_ThermalView) != 0))
+    if ((p_thing->U.UPerson.AnimMode == ANIM_PERS_Unkn12) || ((ingame.Flags & GamF_ThermalView) != 0))
         bright = 32;
 
     word_1A5834 = 120;

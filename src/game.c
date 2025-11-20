@@ -2535,9 +2535,9 @@ void init_level_unknsub01_person(struct Thing *p_person)
     if ((p_person->Flag & TngF_Destroyed) == 0)
     {
         if (p_person->U.UPerson.CurrentWeapon != 0)
-            switch_person_anim_mode(p_person, FRAME_PERS_WEPLIGHT_IDLE);
+            switch_person_anim_mode(p_person, ANIM_PERS_WEPLIGHT_IDLE);
         else
-            switch_person_anim_mode(p_person, FRAME_PERS_IDLE);
+            switch_person_anim_mode(p_person, ANIM_PERS_IDLE);
     }
 }
 
@@ -3026,7 +3026,7 @@ ushort make_group_into_players(ushort group, ushort plyr, ushort max_agent, shor
         p_person->U.UPerson.FrameId.Version[0] = 0;
         if (p_person->U.UPerson.CurrentWeapon == 0)
         {
-            switch_person_anim_mode(p_person, FRAME_PERS_IDLE);
+            switch_person_anim_mode(p_person, ANIM_PERS_IDLE);
         }
 
         if ((p_person->SubType == SubTT_PERS_AGENT) || (p_person->SubType == SubTT_PERS_ZEALOT))

@@ -1507,7 +1507,7 @@ void init_clone_disguise(struct Thing *p_person)
     if ((p_person->Flag2 & TgF2_Unkn00400000) != 0)
         return;
 
-    p_person->U.UPerson.AnimMode = FRAME_PERS_IDLE;
+    p_person->U.UPerson.AnimMode = ANIM_PERS_IDLE;
     p_person->U.UPerson.OldSubType = p_person->SubType;
     switch (LbRandomAnyShort() & 3)
     {
@@ -1564,10 +1564,10 @@ int gun_out_anim(struct Thing *p_person, ubyte shoot_flag)
         if (p_person->SubType == SubTT_PERS_AGENT)
             p_person->U.UPerson.FrameId.Version[3] = 1;
         if (shoot_flag == 2)
-            return FRAME_PERS_WEPHEAVY_Unkn07;
+            return ANIM_PERS_WEPHEAVY_Unkn07;
         if (shoot_flag == 1)
-            return FRAME_PERS_WEPHEAVY_Unkn15;
-        return FRAME_PERS_WEPHEAVY_IDLE;
+            return ANIM_PERS_WEPHEAVY_Unkn15;
+        return ANIM_PERS_WEPHEAVY_IDLE;
 
     default:
     case WEP_NULL:
@@ -1591,8 +1591,8 @@ int gun_out_anim(struct Thing *p_person, ubyte shoot_flag)
         if (p_person->SubType == SubTT_PERS_AGENT)
             p_person->U.UPerson.FrameId.Version[3] = 0;
         if (p_person->State == PerSt_WAIT)
-            return FRAME_PERS_Unkn21;
-        return FRAME_PERS_IDLE;
+            return ANIM_PERS_Unkn21;
+        return ANIM_PERS_IDLE;
 
     case WEP_UZI:
     case WEP_RAP:
@@ -1604,10 +1604,10 @@ int gun_out_anim(struct Thing *p_person, ubyte shoot_flag)
         if (p_person->SubType == SubTT_PERS_AGENT)
             p_person->U.UPerson.FrameId.Version[3] = 0;
         if (shoot_flag == 2)
-            return FRAME_PERS_Unkn06;
+            return ANIM_PERS_Unkn06;
         if (shoot_flag == 1)
-            return FRAME_PERS_Unkn14;
-        return FRAME_PERS_WEPLIGHT_IDLE;
+            return ANIM_PERS_Unkn14;
+        return ANIM_PERS_WEPLIGHT_IDLE;
     }
 }
 
@@ -2329,7 +2329,7 @@ void process_weapon_continuous_fire(struct Thing *p_person)
             int animMode;
 
             animMode = p_person->U.UPerson.AnimMode;
-            if ((animMode == FRAME_PERS_Unkn14 || animMode == FRAME_PERS_WEPHEAVY_Unkn15)
+            if ((animMode == ANIM_PERS_Unkn14 || animMode == ANIM_PERS_WEPHEAVY_Unkn15)
               && p_person->Type != TT_MINE)
             {
                 p_person->U.UPerson.AnimMode = gun_out_anim(p_person, 0);
