@@ -752,7 +752,7 @@ void func_2e440(void)
 }
 
 #define SUPER_QUICK_RADIUS 5
-void apply_super_quick_light(short lx, short lz, ushort b, ubyte *mapwho_lights)
+void apply_super_quick_light(short lx, short lz, ushort b)
 {
     short tile_x_beg, tile_x_end;
     short tile_z_beg, tile_z_end;
