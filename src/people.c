@@ -5364,6 +5364,8 @@ void person_burning(struct Thing *p_person)
 
     if (p_person->U.UPerson.RecoilTimer != 0)
     {
+        process_weapon_wind_down(p_person);
+
         p_person->VX = angle_direction[p_person->U.UPerson.Angle].DiX;
         p_person->VZ = angle_direction[p_person->U.UPerson.Angle].DiY;
 
