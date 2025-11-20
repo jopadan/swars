@@ -73,7 +73,7 @@ struct PeepStat peep_type_stats[] = {
     {   0,    0,    0,    0,   0, 0,   0, 0, 0, 0},
 };
 
-ushort people_frames[SubTT_PERS_COUNT][22] = {
+ushort people_frames[SubTT_PERS_COUNT][FRAME_PERS_TOTAL_COUNT] = {
   {   1,   33,   33,    1,   40,   40,   33,   33,   33,   33,   73,   65,    9,   41,   25,   25,   57, 1010, 1018,   17, 1200,   49,},
   {   1,   33,   33,    1,   40,   40,   33,   33,   33,   33,   73,   65,    9,   41,   25,   25,   57, 1010, 1018,   17, 1200,   49,},
   { 113,  113,  113,   81,  113,  113,  113,  113,  113,  113,  153,  145,   89,  121,  105,  105,  137, 1010, 1018,   97, 1212,  129,},
@@ -866,7 +866,7 @@ void person_resurrect(struct Thing *p_person)
     p_person->State = PerSt_WAIT;
     remove_path(p_person);
     p_person->Health = p_person->U.UPerson.MaxHealth * 3 / 4;
-    set_person_anim_mode(p_person, 1);
+    set_person_anim_mode(p_person, FRAME_PERS_WEPLIGHT_IDLE);
 }
 
 void person_set_persuade_power__to_allow_all(struct Thing *p_person)
@@ -983,14 +983,14 @@ void init_person_thing(struct Thing *p_person)
 
     if ((p_person->Flag & TngF_Destroyed) != 0)
     {
-        p_person->U.UPerson.AnimMode = 20;
+        p_person->U.UPerson.AnimMode = FRAME_PERS_Unkn20;
         p_person->State = PerSt_DEAD;
         p_person->U.UPerson.FrameId.Version[3] = 1;
         p_person->U.UPerson.FrameId.Version[4] = 0;
     }
     else
     {
-        switch_person_anim_mode(p_person, 0);
+        switch_person_anim_mode(p_person, FRAME_PERS_IDLE);
     }
 }
 
@@ -1222,7 +1222,7 @@ struct Thing *new_sim_person(int x, int y, int z, ubyte subtype)
     ry = alt_at_point(x, z);
     p_person->Speed = 512;
     p_person->U.UPerson.Angle = (rnd >> 1) % 8;
-    p_person->U.UPerson.AnimMode = 0;
+    p_person->U.UPerson.AnimMode = FRAME_PERS_IDLE;
     p_person->StartTimer1 = 48;
     p_person->Timer1 = 48;
     p_person->Y = ry;
@@ -1269,7 +1269,7 @@ struct Thing *new_sim_person(int x, int y, int z, ubyte subtype)
     p_person->SubType = ptype;
     p_person->U.UPerson.Group = ptype + 4;
     p_person->U.UPerson.EffectiveGroup = p_person->U.UPerson.Group;
-    p_person->U.UPerson.AnimMode = (p_person->U.UPerson.CurrentWeapon != WEP_NULL) ? 1 : 0;
+    p_person->U.UPerson.AnimMode = (p_person->U.UPerson.CurrentWeapon != WEP_NULL) ? FRAME_PERS_WEPLIGHT_IDLE : FRAME_PERS_IDLE;
     reset_person_frame(p_person);
     init_person_thing(p_person);
     p_person->U.UPerson.WeaponsCarried = 0;
@@ -3190,7 +3190,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
         }
         if (p_thing->State == 13)
         {
-            if (p_thing->U.UPerson.AnimMode == 20)
+            if (p_thing->U.UPerson.AnimMode == FRAME_PERS_Unkn20)
             {
               if (type == DMG_RAP)
               {
@@ -3199,7 +3199,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
                 p_thing->SubState = 26;
                 p_thing->U.UPerson.FrameId.Version[4] = 0;
                 p_thing->U.UPerson.FrameId.Version[3] = 0;
-                p_thing->U.UPerson.AnimMode = 10;
+                p_thing->U.UPerson.AnimMode = FRAME_PERS_Unkn10;
                 reset_person_frame(p_thing);
                 return 1;
               }
@@ -3213,7 +3213,7 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               p_thing->SubState = 26;
               p_thing->U.UPerson.FrameId.Version[4] = 0;
               p_thing->U.UPerson.FrameId.Version[3] = 0;
-              p_thing->U.UPerson.AnimMode = 12;
+              p_thing->U.UPerson.AnimMode = FRAME_PERS_Unkn12;
               set_person_frame_noangle(p_thing, 1067);
               play_dist_sample(p_thing, 57, FULL_VOL, EQUL_PAN, NORM_PTCH, 0, 3);
             }
@@ -3478,9 +3478,9 @@ void person_go_sleep(struct Thing *p_person)
         p_person->Flag |= 0x0001;
 
         PrevAnimMode = p_person->U.UPerson.AnimMode;
-        if (PrevAnimMode != 16) // Pushed back
+        if (PrevAnimMode != FRAME_PERS_Unkn16) // Pushed back
             p_person->U.UPerson.OldAnimMode = PrevAnimMode;
-        p_person->U.UPerson.AnimMode = 11;
+        p_person->U.UPerson.AnimMode = FRAME_PERS_Unkn11;
         reset_person_frame(p_person);
 
         p_person->U.UPerson.RecoilTimer = 0;
@@ -4157,7 +4157,7 @@ ubyte thing_select_specific_weapon(struct Thing *p_person, WeaponType wtype, uby
         }
         p_person->U.UPerson.CurrentWeapon = WEP_NULL;
 
-        animode = 0;
+        animode = FRAME_PERS_IDLE;
     }
     else
     {
@@ -4442,15 +4442,15 @@ void person_wait(struct Thing *p_person)
         p_person->Flag2 &= ~TgF2_Unkn00080000;
         p_person->Speed = calc_person_speed(p_person);
     }
-    if ((p_person->U.UPerson.AnimMode != 21) && (p_person->U.UPerson.CurrentWeapon == 0))
+    if ((p_person->U.UPerson.AnimMode != FRAME_PERS_Unkn21) && (p_person->U.UPerson.CurrentWeapon == WEP_NULL))
     {
-        p_person->U.UPerson.AnimMode = 21;
+        p_person->U.UPerson.AnimMode = FRAME_PERS_Unkn21;
         reset_person_frame(p_person);
     }
     p_person->Flag &= ~TngF_Unkn0001;
     if (((p_person->Flag & TngF_WepCharging) != 0) || (p_person->U.UPerson.WeaponTurn != 0))
     {
-        if (p_person->U.UPerson.AnimMode == 14 || p_person->U.UPerson.AnimMode == 15)
+        if (p_person->U.UPerson.AnimMode == FRAME_PERS_Unkn14 || p_person->U.UPerson.AnimMode == FRAME_PERS_Unkn15)
         {
             p_person->Timer1 -= fifties_per_gameturn;
             if (p_person->Timer1 < 0) {
@@ -4995,8 +4995,8 @@ short person_move(struct Thing *p_person)
     if ((p_person->SubType == SubTT_PERS_MECH_SPIDER) && !IsSamplePlaying(p_person->ThingOffset, 79, 0)) {
         play_dist_sample(p_person, 79, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 3);
     }
-    if (p_person->U.UPerson.AnimMode == 21) {
-        p_person->U.UPerson.AnimMode = 0;
+    if (p_person->U.UPerson.AnimMode == FRAME_PERS_Unkn21) {
+        p_person->U.UPerson.AnimMode = FRAME_PERS_IDLE;
         reset_person_frame(p_person);
     }
     if ((p_person->Flag & (TngF_InVehicle|TngF_Unkn4000)) != 0) {

@@ -147,7 +147,7 @@ void build_person(struct Thing *p_thing)
         frame = p_thing->Frame;
         bri = 32;
     }
-    else if (p_thing->U.UPerson.AnimMode == 20)
+    else if (p_thing->U.UPerson.AnimMode == FRAME_PERS_Unkn20)
     {
         ushort stframe_old, stframe_new;
 

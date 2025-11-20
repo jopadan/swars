@@ -126,6 +126,32 @@ enum PersonFlags3 {
     PrsF3_Unkn80     = 0x80,
 };
 
+enum PersonFrames {
+    FRAME_PERS_IDLE  = 0,
+    FRAME_PERS_WEPLIGHT_IDLE = 1,
+    FRAME_PERS_WEPHEAVY_IDLE = 2,
+    FRAME_PERS_Unkn03  = 3,
+    FRAME_PERS_Unkn04  = 4,
+    FRAME_PERS_Unkn05  = 5,
+    FRAME_PERS_Unkn06  = 6,
+    FRAME_PERS_Unkn07  = 7,
+    FRAME_PERS_Unkn08  = 8,
+    FRAME_PERS_Unkn09  = 9,
+    FRAME_PERS_Unkn10  = 10,
+    FRAME_PERS_Unkn11  = 11,
+    FRAME_PERS_Unkn12  = 12,
+    FRAME_PERS_Unkn13  = 13,
+    FRAME_PERS_Unkn14  = 14,
+    FRAME_PERS_Unkn15  = 15,
+    FRAME_PERS_Unkn16  = 16,
+    FRAME_PERS_Unkn17  = 17,
+    FRAME_PERS_Unkn18  = 18,
+    FRAME_PERS_Unkn19  = 19,
+    FRAME_PERS_Unkn20  = 20,
+    FRAME_PERS_Unkn21  = 21,
+    FRAME_PERS_TOTAL_COUNT,
+};
+
 /** Max health of a person; cannot safely go beyond that.
  */
 #define PERSON_MAX_HEALTH_LIMIT 16383

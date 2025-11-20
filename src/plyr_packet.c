@@ -182,7 +182,7 @@ void player_agent_weapon_switch(PlayerIdx plyr, ThingIdx person, short shift)
 void player_agent_init_drop_item(PlayerIdx plyr, struct Thing *p_person, ushort weapon)
 {
     if ((weapon == 0) || (weapon == p_person->U.UPerson.CurrentWeapon)) {
-        p_person->U.UPerson.AnimMode = 0;
+        p_person->U.UPerson.AnimMode = FRAME_PERS_IDLE;
         reset_person_frame(p_person);
     }
     if (p_person->State == PerSt_PROTECT_PERSON)
