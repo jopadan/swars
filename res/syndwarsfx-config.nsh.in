@@ -4,9 +4,9 @@
 !define PRODUCT_VERSION "@VERSION@"
 
 ; Version number and file name for levels package
-!define LEVELS_VERSION "1.0.1.31"
-!define LEVELS_PACKAGE "swars-levels-1_0_1_31"
-!define LEVELS_PKG_MD5 "57ca7bf586aa7d75f94808dde6f525c7"
+!define LEVELS_VERSION "1.0.1.38"
+!define LEVELS_PACKAGE "syndwarsfx-levels-1_0_1_38"
+!define LEVELS_PKG_MD5 "b42d1ed90a2de7f758f00e834449c56e"
 
 ; Version number and file name for gfx package
 !define GFX_VERSION "1.0.3.218"
