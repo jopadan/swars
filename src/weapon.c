@@ -1564,9 +1564,9 @@ int gun_out_anim(struct Thing *p_person, ubyte shoot_flag)
         if (p_person->SubType == SubTT_PERS_AGENT)
             p_person->U.UPerson.FrameId.Version[3] = 1;
         if (shoot_flag == 2)
-            return FRAME_PERS_Unkn07;
+            return FRAME_PERS_WEPHEAVY_Unkn07;
         if (shoot_flag == 1)
-            return FRAME_PERS_Unkn15;
+            return FRAME_PERS_WEPHEAVY_Unkn15;
         return FRAME_PERS_WEPHEAVY_IDLE;
 
     default:
@@ -2329,7 +2329,7 @@ void process_weapon_continuous_fire(struct Thing *p_person)
             int animMode;
 
             animMode = p_person->U.UPerson.AnimMode;
-            if ((animMode == FRAME_PERS_Unkn14 || animMode == FRAME_PERS_Unkn15)
+            if ((animMode == FRAME_PERS_Unkn14 || animMode == FRAME_PERS_WEPHEAVY_Unkn15)
               && p_person->Type != TT_MINE)
             {
                 p_person->U.UPerson.AnimMode = gun_out_anim(p_person, 0);

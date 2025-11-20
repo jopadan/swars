@@ -1039,8 +1039,21 @@ void remove_path(struct Thing *p_thing)
 
 void set_person_animmode_walk(struct Thing *p_person)
 {
+#if 0
     asm volatile ("call ASM_set_person_animmode_walk\n"
         : : "a" (p_person));
+#endif
+    if (p_person->State == PerSt_PERSON_BURNING)
+        return;
+    if ((p_person->Flag & TngF_Destroyed) != 0)
+        return;
+
+    p_person->U.UPerson.AnimMode = gun_out_anim(p_person, 0);
+    reset_person_frame(p_person);
+    p_person->Timer1 = 48;
+    p_person->StartTimer1 = 48;
+    p_person->Flag2 &= ~(0x80000000|TngF_Persuaded);
+    p_person->Speed = calc_person_speed(p_person);
 }
 
 int can_i_see_thing(struct Thing *p_me, struct Thing *p_him, int max_dist, ushort flags)
@@ -3484,7 +3497,7 @@ void person_go_sleep(struct Thing *p_person)
         p_person->Flag |= 0x0001;
 
         PrevAnimMode = p_person->U.UPerson.AnimMode;
-        if (PrevAnimMode != FRAME_PERS_Unkn16) // Pushed back
+        if (PrevAnimMode != FRAME_PERS_PUSH_BACK)
             p_person->U.UPerson.OldAnimMode = PrevAnimMode;
         p_person->U.UPerson.AnimMode = FRAME_PERS_Unkn11;
         reset_person_frame(p_person);
@@ -4456,7 +4469,7 @@ void person_wait(struct Thing *p_person)
     p_person->Flag &= ~TngF_Unkn0001;
     if (((p_person->Flag & TngF_WepCharging) != 0) || (p_person->U.UPerson.WeaponTurn != 0))
     {
-        if (p_person->U.UPerson.AnimMode == FRAME_PERS_Unkn14 || p_person->U.UPerson.AnimMode == FRAME_PERS_Unkn15)
+        if (p_person->U.UPerson.AnimMode == FRAME_PERS_Unkn14 || p_person->U.UPerson.AnimMode == FRAME_PERS_WEPHEAVY_Unkn15)
         {
             p_person->Timer1 -= fifties_per_gameturn;
             if (p_person->Timer1 < 0) {
