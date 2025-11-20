@@ -44209,7 +44209,7 @@ GLOBAL_FUNC(ASM_person_burning)	/* 0x053D8C */
 		push   %esi
 		sub    $0x4,%esp
 		mov    %eax,%esi
-		mov    data_154f6c,%eax
+		mov    EXPORT_SYMBOL(byte_154F6C),%eax
 		mov    %eax,(%esp)
 		movb   $0x20,0x5a(%esi)
 		call   ac_LbRandomAnyShort
@@ -182577,7 +182577,7 @@ GLOBAL (word_154F4C)
 		.ascii  "\x11\x01\xa1\x00\xc1\x00\xd1\x02"
 		.ascii  "\xf1\x02\x41\x01\x91\x01\xb1\x01"
 		.ascii  "\x21\x00\x00\x00"
-data_154f6c:
+GLOBAL(byte_154F6C)
 		.ascii  "\x00\x00\x01\x00\x01\x00\x00\x00"
 GLOBAL (dont_bother_with_explode_faces)	/* 0x154F74 */
 		.ascii  "\x01\x00\x00\x00"

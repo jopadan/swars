@@ -39,6 +39,7 @@
 #include "game_options.h"
 #include "game_speed.h"
 #include "game_sprani.h"
+#include "lvdraw3d.h"
 #include "lvobjctv.h"
 #include "misstat.h"
 #include "pepgroup.h"
@@ -216,6 +217,7 @@ ubyte sfx_woman_shot[] = {
 };
 
 extern ushort female_peep;
+extern sbyte byte_154F6C[8];
 extern short word_1AA38E;
 extern short word_1AA390;
 extern short word_1AA392;
@@ -3089,17 +3091,17 @@ void person_start_dying(struct Thing *p_person, int hp, ushort type)
     case DMG_BEAM:
     case DMG_LASER:
     case DMG_ELSTRAND:
-        set_person_dead(p_person, 12);
+        set_person_dead(p_person, FRAME_PERS_Unkn12);
         break;
     default:
     case DMG_UNKN5:
     case DMG_MINIGUN:
     case DMG_UNKN9:
-        set_person_dead(p_person, 11);
+        set_person_dead(p_person, FRAME_PERS_LAY_DOWN);
         break;
     case DMG_RAP:
     case DMG_LONGRANGE:
-        set_person_dead(p_person, 10);
+        set_person_dead(p_person, FRAME_PERS_Unkn10);
         break;
     }
 }
@@ -3509,7 +3511,7 @@ void person_go_sleep(struct Thing *p_person)
         PrevAnimMode = p_person->U.UPerson.AnimMode;
         if (PrevAnimMode != FRAME_PERS_PUSH_BACK)
             p_person->U.UPerson.OldAnimMode = PrevAnimMode;
-        p_person->U.UPerson.AnimMode = FRAME_PERS_LAY_ASLEEP;
+        p_person->U.UPerson.AnimMode = FRAME_PERS_LAY_DOWN;
          // make sure to draw without blood
         p_person->U.UPerson.FrameId.Version[4] = 0;
         p_person->U.UPerson.FrameId.Version[3] = 0;
@@ -3795,13 +3797,13 @@ ubyte person_leave_vehicle(struct Thing *p_person, struct Thing *p_vehicle)
           // SP stats are updated inside set_person_dead(), but MP stats not? maybe add a wrapper to include both?
           if (in_network_game)
               stats_mp_add_person_kills_person(p_vehicle->OldTarget, p_person->ThingOffset);
-          set_person_dead(p_person, 10);
+          set_person_dead(p_person, FRAME_PERS_Unkn10);
           return 0;
         }
         p_person->Health -= 800;
         if (p_person->Health <= 0)
         {
-            set_person_dead(p_person, 10);
+            set_person_dead(p_person, FRAME_PERS_Unkn10);
             return 0;
         }
         if ((p_person->Flag & TngF_PlayerAgent) == 0)
@@ -4566,12 +4568,6 @@ void person_run_away(struct Thing *p_person)
         : : "a" (p_person));
 }
 
-void person_burning(struct Thing *p_person)
-{
-    asm volatile ("call ASM_person_burning\n"
-        : : "a" (p_person));
-}
-
 void person_becomes_persuaded(struct Thing *p_person, ushort energy)
 {
     asm volatile ("call ASM_person_becomes_persuaded\n"
@@ -5329,6 +5325,80 @@ void process_avoid_group(struct Thing *p_person)
         rnd = LbRandomAnyShort();
         p_person->U.UPerson.Timer2 = p_person->U.UPerson.StartTimer2 + ((rnd & 0xF) >> 1);
         set_angle_to_avoid_group(p_person);
+    }
+}
+
+void person_burning(struct Thing *p_person)
+{
+#if 0
+    asm volatile ("call ASM_person_burning\n"
+        : : "a" (p_person));
+    return;
+#endif
+    p_person->U.UPerson.Brightness = 32;
+    apply_super_quick_light(p_person->X >> 8, p_person->Z >> 8, 16 + (LbRandomAnyShort() & 0xF));
+
+    if (((gameturn + p_person->ThingOffset) & 0xF) == 0)
+    {
+        ushort smpl_no;
+
+        switch (person_sex(p_person))
+        {
+        case PERSON_FEMALE:
+            smpl_no = 2;
+            break;
+        case PERSON_MALE:
+        default:
+            smpl_no = 1;
+            break;
+        }
+        play_dist_speech(p_person, smpl_no, 0x7Fu, 0x40u, 100, 0, 2);
+    }
+
+    if (p_person->U.UPerson.RecoilTimer > 95)
+        p_person->U.UPerson.RecoilTimer = 94;
+    if ((p_person->Flag & TngF_PlayerAgent) != 0)
+        p_person->U.UPerson.RecoilTimer--;
+    else
+        p_person->U.UPerson.RecoilTimer -= byte_154F6C[LbRandomAnyShort() & 3];
+
+    if (p_person->U.UPerson.RecoilTimer != 0)
+    {
+        p_person->VX = angle_direction[p_person->U.UPerson.Angle].DiX;
+        p_person->VZ = angle_direction[p_person->U.UPerson.Angle].DiY;
+
+        if (person_move(p_person))
+            p_person->U.UPerson.Timer2 = -1;
+
+        if ((p_person->Flag & TngF_Destroyed) == 0)
+        {
+            p_person->Timer1 -= fifties_per_gameturn;
+            if (p_person->Timer1 < 0)
+            {
+                p_person->Timer1 = p_person->StartTimer1;
+                p_person->Frame = frame[p_person->Frame].Next;
+            }
+
+            p_person->U.UPerson.Timer2--;
+            if (p_person->U.UPerson.Timer2 < 0)
+            {
+                ushort angle;
+
+                p_person->U.UPerson.Timer2 = (LbRandomAnyShort() & 7) + p_person->U.UPerson.StartTimer2;
+                angle = p_person->U.UPerson.Angle;
+                if ((p_person->U.UPerson.Timer2 & 1) != 0)
+                    angle++;
+                else
+                    angle--;
+                angle = (angle + 8) & 7;
+                change_player_angle(p_person,angle);
+            }
+        }
+    }
+    else
+    {
+        stop_sample_using_heap(p_person->ThingOffset, 29);
+        set_person_dead(p_person, FRAME_PERS_Unkn18);
     }
 }
 

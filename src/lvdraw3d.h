@@ -33,6 +33,7 @@ extern "C" {
 extern ubyte byte_1C8444;
 
 void clear_super_quick_lights(void);
+void apply_super_quick_light(short lx, short lz, ushort b);
 
 void lvdraw_do_floor(void);
 void func_2e440(void);

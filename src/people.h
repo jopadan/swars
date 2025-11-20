@@ -138,7 +138,7 @@ enum PersonFrames {
     FRAME_PERS_Unkn08  = 8,
     FRAME_PERS_Unkn09  = 9,
     FRAME_PERS_Unkn10  = 10,
-    FRAME_PERS_LAY_ASLEEP = 11,
+    FRAME_PERS_LAY_DOWN = 11,
     FRAME_PERS_Unkn12  = 12,
     FRAME_PERS_Unkn13  = 13,
     FRAME_PERS_Unkn14  = 14,
