@@ -645,8 +645,8 @@ retry_level_download:
 extract_level_files:
  DetailPrint "Extracting updated game levels..."
  nsisunz::Unzip  "$PLUGINSDIR\${LEVELS_PACKAGE}.zip" "$PLUGINSDIR\"
- CopyFiles /SILENT $PLUGINSDIR\SWARS\levels\* $INSTDIR\levels
- CopyFiles /SILENT $PLUGINSDIR\SWARS\maps\* $INSTDIR\maps
+ CopyFiles /SILENT $PLUGINSDIR\syndwarsfx\levels\* $INSTDIR\levels
+ CopyFiles /SILENT $PLUGINSDIR\syndwarsfx\maps\* $INSTDIR\maps
 
   ;Update graphics files from syndwarsfx-gfx repository
 
@@ -677,9 +677,9 @@ retry_gfx_download:
 extract_gfx_files:
  DetailPrint "Extracting updated graphics files..."
  nsisunz::Unzip  "$PLUGINSDIR\${GFX_PACKAGE}.zip" "$PLUGINSDIR\"
- CopyFiles /SILENT $PLUGINSDIR\SWARS\data\* $INSTDIR\data
- CopyFiles /SILENT $PLUGINSDIR\SWARS\qdata\* $INSTDIR\qdata
- CopyFiles /SILENT $PLUGINSDIR\SWARS\language\* $INSTDIR\language
+ CopyFiles /SILENT $PLUGINSDIR\syndwarsfx\data\* $INSTDIR\data
+ CopyFiles /SILENT $PLUGINSDIR\syndwarsfx\qdata\* $INSTDIR\qdata
+ CopyFiles /SILENT $PLUGINSDIR\syndwarsfx\language\* $INSTDIR\language
 
     ;Update sound files from syndwarsfx-sfx repository
 
@@ -710,7 +710,7 @@ retry_sfx_download:
 extract_sfx_files:
  DetailPrint "Extracting updated sound files..."
  nsisunz::Unzip  "$PLUGINSDIR\${SFX_PACKAGE}.zip" "$PLUGINSDIR\"
- CopyFiles /SILENT $PLUGINSDIR\SWARS\sound\* $INSTDIR\sound
+ CopyFiles /SILENT $PLUGINSDIR\syndwarsfx\sound\* $INSTDIR\sound
  Return
 
 copy_files_fail:
