@@ -152,6 +152,11 @@ enum PersonFrames {
     FRAME_PERS_TOTAL_COUNT,
 };
 
+enum PersonSex {
+    PERSON_MALE  = 0,
+    PERSON_FEMALE,
+};
+
 /** Max health of a person; cannot safely go beyond that.
  */
 #define PERSON_MAX_HEALTH_LIMIT 16383
@@ -265,6 +270,10 @@ TbBool person_can_accept_control(ThingIdx person);
 /** Returns slot at which given person is in given players agents, or -1.
  */
 short person_slot_as_player_agent(struct Thing *p_person, ushort plyr);
+
+/** Returns sex of a person, either PERSON_MALE or PERSON_FEMALE.
+ */
+ubyte person_sex(struct Thing *p_person);
 
 void set_person_stats_type(struct Thing *p_person, ushort type);
 void set_person_health_shield_type(struct Thing *p_person, ushort stype);

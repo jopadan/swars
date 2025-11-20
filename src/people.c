@@ -825,6 +825,11 @@ TbBool person_is_player_agent_in_slot(struct Thing *p_person, ushort plyr, short
     return (p_person->ThingOffset == p_agent->ThingOffset);
 }
 
+ubyte person_sex(struct Thing *p_person)
+{
+    return (((1 << p_person->SubType) & female_peep) != 0) ? PERSON_FEMALE : PERSON_MALE;
+}
+
 void set_peep_comcur(struct Thing *p_person)
 {
 #if 0
@@ -3305,10 +3310,15 @@ int person_hit_by_bullet(struct Thing *p_thing, short hp,
               {
                   ushort smpl_no;
 
-                  if (((1 << p_thing->SubType) & female_peep) != 0) {
+                  switch (person_sex(p_thing))
+                  {
+                  case PERSON_FEMALE:
                       smpl_no = sfx_woman_shot[(gameturn + p_thing->ThingOffset) & 1];
-                  } else {
+                      break;
+                  case PERSON_MALE:
+                  default:
                       smpl_no = sfx_man_shot[(gameturn + p_thing->ThingOffset) & 7];
+                      break;
                   }
                   play_dist_sample(p_thing, smpl_no, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
               }
