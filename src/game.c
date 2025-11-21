@@ -5158,6 +5158,7 @@ ubyte do_user_interface(void)
     }
     if (is_key_pressed(KC_F11, KMod_NONE))
     {
+        clear_key_pressed(KC_F11);
         change_brightness(1);
         brightness++;
         ret |= GINPUT_DIRECT;
@@ -5212,7 +5213,7 @@ ubyte do_user_interface(void)
     // Game Speed control
     if (!in_network_game)
     {
-        get_speed_control_inputs();
+        ret |= get_speed_control_inputs();
     }
 
     // Toggle Scanner beep
@@ -6727,8 +6728,8 @@ void do_agent_track_only(void)
             struct Thing *p_agent;
 
             p_agent = p_locplayer->MyAgent[n];
-            ingame.TrackX = p_agent->X >> 8;
-            ingame.TrackZ = p_agent->Z >> 8;
+            ingame.TrackX = PRCCOORD_TO_MAPCOORD(p_agent->X);
+            ingame.TrackZ = PRCCOORD_TO_MAPCOORD(p_agent->Z);
             engn_xc = ingame.TrackX;
             engn_zc = ingame.TrackZ;
         }
@@ -6758,15 +6759,18 @@ void input_packet_playback(void)
 
 void input_mission_cheats(void)
 {
-    if ((ingame.UserFlags & UsrF_Cheats) != 0 && is_key_pressed(KC_C, KMod_ALT))
+    if ((ingame.UserFlags & UsrF_Cheats) != 0)
     {
-        clear_key_pressed(KC_C);
-        mission_result = 1;
-    }
-    if ((ingame.UserFlags & UsrF_Cheats) != 0 && is_key_pressed(KC_F, KMod_ALT))
-    {
-        clear_key_pressed(KC_F);
-        mission_result = -1;
+        if (is_key_pressed(KC_C, KMod_ALT))
+        {
+            clear_key_pressed(KC_C);
+            mission_result = 1;
+        }
+        if (is_key_pressed(KC_F, KMod_ALT))
+        {
+            clear_key_pressed(KC_F);
+            mission_result = -1;
+        }
     }
 }
 

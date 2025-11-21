@@ -38,6 +38,11 @@
 #include "swlog.h"
 /******************************************************************************/
 
+enum ScannerArrowModes {
+    SCANNER_ARROW_NEAREST_TARGET = 0,
+    SCANNER_ARROW_ORIENTATION,
+};
+
 struct scanstr1 {
     long u;
     long v;
@@ -61,10 +66,10 @@ struct NearestPos {
     short y;
 };
 
-/** String of keycodes for special input.
+/** String of keycodes for changing arrow mode.
  * Cannot be of type TbKeyCode as contains plain numeric value as well.
  */
-const int scanner_keys[] = {
+const int scanner_arrow_mode_code_keys[] = {
     KC_NUMPAD3, KC_DECIMAL, KC_NUMPAD1, KC_NUMPAD4,
     KC_NUMPAD1, KC_NUMPAD5, KC_NUMPAD9, KC_NUMPAD2,
     KC_NUMPAD6, KC_NUMPAD5, KC_NUMPAD3, KC_NUMPAD5,
@@ -409,7 +414,7 @@ extern long dword_1DBB64[];
 extern long dword_1DBB6C[512];
 extern TbPixel *SCANNER_screenptr;
 extern ulong SCANNER_keep_arcs;
-extern long scanner_blink; // = 1;
+extern long scanner_arrow_mode; // = 1;
 
 extern struct scanstr3 SCANNER_arcpoint[20];
 
@@ -417,15 +422,15 @@ void SCANNER_process_special_input(void)
 {
     ushort sckey, nxkey;
 
-    sckey = scanner_keys[scanner_next_key_no];
+    sckey = scanner_arrow_mode_code_keys[scanner_next_key_no];
     if (is_key_pressed(sckey, KMod_DONTCARE))
     {
         clear_key_pressed(sckey);
-        nxkey = scanner_keys[++scanner_next_key_no];
+        nxkey = scanner_arrow_mode_code_keys[++scanner_next_key_no];
         if (nxkey == 9999)
         {
             scanner_next_key_no = 0;
-            scanner_blink = scanner_blink ^ 1;
+            scanner_arrow_mode = scanner_arrow_mode ^ 1;
         }
     }
 }
@@ -1523,7 +1528,7 @@ void SCANNER_check_nearest(struct Thing *p_thing, struct NearestPos *p_nearest, 
 {
     sbyte group_col;
 
-    if (scanner_blink)
+    if (scanner_arrow_mode != SCANNER_ARROW_NEAREST_TARGET)
         return;
 
     int dist_x, dist_y;
@@ -1721,15 +1726,19 @@ void SCANNER_draw_things_dots(int pos_mx, int pos_mz, int sh_x, int sh_y, int po
         SCANNER_draw_sthing(p_sthing, pos_mx, pos_mz, sh_x, sh_y);
     }
 
-    if (scanner_blink)
+    switch (scanner_arrow_mode)
     {
+    case SCANNER_ARROW_ORIENTATION:
         SCANNER_draw_orientation_arrow(pos_x1, pos_y1, range, ingame.Scanner.Angle);
-    }
-    else if ((nearest.dist > range * range) && (nearest.dist != 0x7FFFFFFF))
-    {
-        long angle;
-        angle = arctan(nearest.x, nearest.y);
-        SCANNER_draw_orientation_arrow(pos_x1, pos_y1, range, angle);
+        break;
+    case SCANNER_ARROW_NEAREST_TARGET:
+        if ((nearest.dist > range * range) && (nearest.dist != 0x7FFFFFFF))
+        {
+            long angle;
+            angle = arctan(nearest.x, nearest.y);
+            SCANNER_draw_orientation_arrow(pos_x1, pos_y1, range, angle);
+        }
+        break;
     }
 }
 

@@ -103,40 +103,50 @@ void do_user_input_bits_actions_from_joy(struct SpecialUserInput *p_usrinp, ubyt
     }
 }
 
-/** Input function for a single user controlling the cyborgs via both keyboard and one joystick.
- */
-void do_user_input_bits_actions_from_joy_and_kbd(struct SpecialUserInput *p_usrinp)
+ubyte do_user_input_bits_actions_from_joy_and_kbd(struct SpecialUserInput *p_usrinp)
 {
+    ubyte ret;
+
+    ret = GINPUT_NONE;
     if (is_gamekey_pressed(GKey_FIRE)) {
         p_usrinp->Bits |= SpUIn_DoTrigger;
+        ret |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_CHANGE_MD_WP)) {
         p_usrinp->Bits |= SpUIn_ChangeMoodOrWep;
+        ret |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_CHANGE_AGENT)) {
         p_usrinp->Bits |= SpUIn_ChangeAgent;
+        ret |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_GOTO_POINT)) {
         clear_gamekey_pressed(GKey_GOTO_POINT);
         p_usrinp->Bits |= SpUIn_GotoPoint;
+        ret |= GINPUT_DIRECT;
     }
     // TODO remove hard-coded BACKSLASH and make sure GKey_GROUP works for all keyboard layouts
     if (is_key_pressed(KC_BACKSLASH, KMod_DONTCARE)) {
         clear_key_pressed(KC_BACKSLASH);
         p_usrinp->Bits |= SpUIn_GroupingInc;
+        ret |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_GROUP)) {
         clear_gamekey_pressed(GKey_GROUP);
         p_usrinp->Bits |= SpUIn_GroupingInc;
+        ret |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_DROP_WEAPON)) {
         clear_gamekey_pressed(GKey_DROP_WEAPON);
         p_usrinp->Bits |= SpUIn_DoDropOrGoOut;
+        ret |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_SELF_DESTRUCT)) {
         clear_gamekey_pressed(GKey_SELF_DESTRUCT);
         p_usrinp->Bits |= SpUIn_SelfDestruct;
+        ret |= GINPUT_DIRECT;
     }
+    return ret;
 }
 
 short get_agent_move_direction_delta_x(const struct SpecialUserInput *p_usrinp)

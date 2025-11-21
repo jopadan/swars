@@ -130812,11 +130812,11 @@ GLOBAL_FUNC(ASM_SCANNER_draw_new_transparent_map)	/* 0x0ADF44 */
 		mov    %ebx,EXPORT_SYMBOL(scanner_next_key_no)
 		cmp    $0x270f,%ecx
 		jne    jump_adfa9
-		mov    EXPORT_SYMBOL(scanner_blink),%bl
+		mov    EXPORT_SYMBOL(scanner_arrow_mode),%bl
 		xor    %esi,%esi
 		xor    $0x1,%bl
 		mov    %esi,EXPORT_SYMBOL(scanner_next_key_no)
-		mov    %bl,EXPORT_SYMBOL(scanner_blink)
+		mov    %bl,EXPORT_SYMBOL(scanner_arrow_mode)
 	jump_adfa9:
 		call   ac_SCANNER_process_bbpoints
 		mov    EXPORT_SYMBOL(ingame)+0x028,%edi # ingame.Scanner.Angle
@@ -132162,7 +132162,7 @@ SCANNER_draw_new_transparent_sub3:	/* 0xAEFFD */
 		sar    $0x10,%edx
 		sar    $0x10,%eax
 		mov    %edx,0xec(%esp)
-		mov    EXPORT_SYMBOL(scanner_blink),%edx
+		mov    EXPORT_SYMBOL(scanner_arrow_mode),%edx
 		mov    %eax,0xe8(%esp)
 		test   %edx,%edx
 		jne    jump_af71d
@@ -132522,7 +132522,7 @@ SCANNER_draw_new_transparent_sub9:	/* 0xAFAF3 */
 		   0x74(%esp) - set at sub1 start
            conclusion: the chunk below cannot be easily separated as a function
 		 */
-		cmpl   $0x0,EXPORT_SYMBOL(scanner_blink)
+		cmpl   $0x0,EXPORT_SYMBOL(scanner_arrow_mode)
 		je     jump_afb56
 		mov    EXPORT_SYMBOL(ingame)+0x028,%eax # ingame.Scanner.Angle
 		mov    0x70(%esp),%edi
@@ -182813,7 +182813,7 @@ GLOBAL (turn_last)	/* 0x155300 */
 		.ascii  "\xe7\x03\x00\x00"
 rand_c:	/* 0x155304 */
 		.ascii  "\x93\xa0\x69\x3f"
-GLOBAL (scanner_blink)	/* 0x155308 */
+GLOBAL (scanner_arrow_mode)	/* 0x155308 */
 		.ascii  "\x01\x00\x00\x00"
 scanner_keys:	/* 0x15530C */
 		.ascii  "\x51\x00\x00\x00\x53\x00\x00\x00"

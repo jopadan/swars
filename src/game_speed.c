@@ -68,23 +68,24 @@ void frameskip_decrease(void)
     //show_onscreen_msg(game_num_fps+frameskip, "Frame skip %d",frameskip);
 }
 
-/**
- * Handles game speed control inputs.
- * @return Returns true if packet was created, false otherwise.
- */
-TbBool get_speed_control_inputs(void)
+ubyte get_speed_control_inputs(void)
 {
+    ubyte ret;
+
+    ret = GINPUT_NONE;
     if (is_gamekey_pressed(GKey_GAMESPEED_INC))
     {
         clear_gamekey_pressed(GKey_GAMESPEED_INC);
         frameskip_increase();
+        ret |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_GAMESPEED_DEC))
     {
         clear_gamekey_pressed(GKey_GAMESPEED_DEC);
         frameskip_decrease();
+        ret |= GINPUT_DIRECT;
     }
-    return false;
+    return ret;
 }
 
 void wait_next_gameturn(void)

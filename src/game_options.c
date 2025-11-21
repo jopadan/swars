@@ -308,6 +308,8 @@ void set_default_gfx_settings(void)
     game_high_resolution = true;
     game_projector_speed = 0;
     game_perspective = 5;
+    deep_radar_surface_col = 216;
+    deep_radar_line_col = 100;
 }
 
 void set_default_visual_prefernces(void)

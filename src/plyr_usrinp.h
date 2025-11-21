@@ -103,7 +103,10 @@ void update_agent_move_direction_deltas(struct SpecialUserInput *p_usrinp);
 
 void do_user_input_bits_actions_from_kbd(struct SpecialUserInput *p_usrinp);
 void do_user_input_bits_actions_from_joy(struct SpecialUserInput *p_usrinp, ubyte channel);
-void do_user_input_bits_actions_from_joy_and_kbd(struct SpecialUserInput *p_usrinp);
+
+/** Input function for a single user controlling the cyborgs via both keyboard and one joystick.
+ */
+ubyte do_user_input_bits_actions_from_joy_and_kbd(struct SpecialUserInput *p_usrinp);
 
 void input_user_control_agent(ushort plyr, short dmuser);
 

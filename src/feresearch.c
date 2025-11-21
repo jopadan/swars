@@ -642,25 +642,28 @@ void show_research_screen(void)
             : "=r" (drawn) : "a" (&research_unkn21_box), "g" (research_unkn21_box.DrawFn));
     }
 
-    if ((ingame.UserFlags & UsrF_Cheats) != 0 && is_key_pressed(KC_U, KMod_DONTCARE))
+    if ((ingame.UserFlags & UsrF_Cheats) != 0)
     {
-        clear_key_pressed(KC_U);
-        research_daily_progress_for_type(0);
-        research_daily_progress_for_type(1);
-    }
-    if ((ingame.UserFlags & UsrF_Cheats) != 0 && is_key_pressed(KC_0, KMod_DONTCARE))
-    {
-        clear_key_pressed(KC_0);
-        if (research_completed + 1 < MOD_TYPES_COUNT)
+        if (is_key_pressed(KC_U, KMod_DONTCARE))
         {
-            refresh_equip_list = 1;
-            research_cymod_allow(research_completed + 1);
+            clear_key_pressed(KC_U);
+            research_daily_progress_for_type(0);
+            research_daily_progress_for_type(1);
         }
-        if (research_completed + 1 < WEP_TYPES_COUNT)
+        if (is_key_pressed(KC_0, KMod_DONTCARE))
         {
-            refresh_equip_list = 1;
-            research_weapon_allow(research_completed + 1);
-            research_completed++;
+            clear_key_pressed(KC_0);
+            if (research_completed + 1 < MOD_TYPES_COUNT)
+            {
+                refresh_equip_list = 1;
+                research_cymod_allow(research_completed + 1);
+            }
+            if (research_completed + 1 < WEP_TYPES_COUNT)
+            {
+                refresh_equip_list = 1;
+                research_weapon_allow(research_completed + 1);
+                research_completed++;
+            }
         }
     }
 }

@@ -1131,11 +1131,16 @@ short test_objective(ushort objectv, ushort show_obj)
     if (show_obj == 2)
     {
         p_objectv = &game_used_lvl_objectives[objectv];
-        if (((ingame.UserFlags & UsrF_Cheats) != 0) &&
-          (p_objectv->Status != ObvStatu_FAILED) && is_key_pressed(KC_SLASH, KMod_ALT))
+        if ((ingame.UserFlags & UsrF_Cheats) != 0)
         {
-            clear_key_pressed(KC_SLASH);
-            p_objectv->Status = ObvStatu_FAILED;
+            if (is_key_pressed(KC_SLASH, KMod_ALT))
+            {
+                if (p_objectv->Status != ObvStatu_FAILED)
+                {
+                    clear_key_pressed(KC_SLASH);
+                    p_objectv->Status = ObvStatu_FAILED;
+                }
+            }
         }
         if (p_objectv->Status == ObvStatu_FAILED)
             return 1;
@@ -1145,11 +1150,16 @@ short test_objective(ushort objectv, ushort show_obj)
     else
     {
         p_objectv = &game_used_objectives[objectv];
-        if (((ingame.UserFlags & UsrF_Cheats) != 0) &&
-          (p_objectv->Status != ObvStatu_FAILED) && is_key_pressed(KC_SLASH, KMod_ALT))
+        if ((ingame.UserFlags & UsrF_Cheats) != 0)
         {
-            clear_key_pressed(KC_SLASH);
-            p_objectv->Status = ObvStatu_FAILED;
+            if (is_key_pressed(KC_SLASH, KMod_ALT))
+            {
+                if (p_objectv->Status != ObvStatu_FAILED)
+                {
+                    clear_key_pressed(KC_SLASH);
+                    p_objectv->Status = ObvStatu_FAILED;
+                }
+            }
         }
         if (p_objectv->Status == ObvStatu_FAILED)
             return 1;
