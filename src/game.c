@@ -1977,18 +1977,29 @@ void srm_scanner_size_update(void)
     srm_scanner_set_size_at_bottom_left(margin, width, height);
 }
 
-void init_scanner(void)
+void init_scanner_colour(void)
 {
+    sbyte panperm;
     ubyte col;
 
-    if (ingame.PanelPermutation != 2 && ingame.PanelPermutation != -3)
-        col = 2;
-    else
+    panperm = ingame.PanelPermutation;
+    if ((panperm == 2) || (panperm == -3)) {
         col = 1;
+    } else
+    if ((panperm == 0) || (panperm == -1)) {
+        col = 2;
+    } else {
+        col = 2;
+    }
     SCANNER_set_colour(col);
+    SCANNER_fill_in();
+}
+
+void init_scanner(void)
+{
+    init_scanner_colour();
     dword_1AA5C4 = 0;
     dword_1AA5C8 = 0;
-    SCANNER_fill_in();
     ingame.Scanner.Brightness = 8;
     ingame.Scanner.Contrast = 5;
     SCANNER_width = ingame.Scanner.Width;
@@ -5032,13 +5043,13 @@ ubyte do_music_user_input(void)
     // Music track control
     if (is_gamekey_pressed(GKey_MUSIC_TRACK))
     {
-        clear_key_pressed(KC_NUMPAD5);
+        clear_gamekey_pressed(GKey_MUSIC_TRACK);
         game_option_inc(GOpt_CDATrack);
         ret |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_DANGR_TRACK))
     {
-        clear_key_pressed(KC_NUMPAD0);
+        clear_gamekey_pressed(GKey_DANGR_TRACK);
         game_option_inc(GOpt_DangerTrack);
         ret |= GINPUT_DIRECT;
     }
@@ -5111,23 +5122,10 @@ ubyte do_user_interface(void)
     // change panel style
     if (is_key_pressed(KC_F9, KMod_NONE))
     {
-        sbyte panperm;
-
         clear_key_pressed(KC_F9);
         StopCD();
         game_option_inc(GOpt_PanelPermutation);
-
-        panperm = ingame.PanelPermutation;
-        if ((panperm == 2) || (panperm == -3))
-        {
-            SCANNER_set_colour(1);
-            SCANNER_fill_in();
-        } else
-        if ((panperm == 0) || (panperm == -1))
-        {
-            SCANNER_set_colour(2);
-            SCANNER_fill_in();
-        }
+        init_scanner_colour();
         load_pop_sprites_for_current_mode();
         ret |= GINPUT_DIRECT;
     }
