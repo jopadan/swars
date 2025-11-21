@@ -76,6 +76,10 @@ enum GameKeys
   GKey_SEL_WEP_5 = 47,
   GKey_SEL_WEP_6 = 48,
   GKey_USE_MEDIKIT = 49,
+#ifdef MORE_GAME_KEYS
+  GKey_SUPERSHIELD = 50,
+  GKey_VIEW_THERMAL = 51,
+#endif
   GKey_KEYS_COUNT,
 };
 
@@ -107,6 +111,18 @@ enum JoystickType
   JTyp_ANALG_2JSTCKS,
   JTyp_DIGTL_2JSTCKS,
   JTyp_TYPES_COUNT,
+};
+
+enum GameInputResult
+{
+  /** Value if input function found no keys activated. */
+  GINPUT_NONE = 0,
+  /** Flag set if input function reacted to keys and applied changes directly.
+   * Currently 0 as some original input functions do not treat this as distinct value. */
+  GINPUT_DIRECT = 0,
+  /** Flag set if input function reacted to keys and generated a packet.
+   * Currently 1 as some original input functions require that. */
+  GINPUT_PACKET = 1,
 };
 
 /******************************************************************************/
