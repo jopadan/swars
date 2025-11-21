@@ -16800,7 +16800,7 @@ GLOBAL_FUNC(ASM_set_default_brightness)	/* 0x03D6EC */
 
 
 /*----------------------------------------------------------------*/
-GLOBAL_FUNC (ASM_read_palette_file)	/* 0x03D700 */
+GLOBAL_FUNC (ASM_reset_brightness)	/* 0x03D700 */
 /*----------------------------------------------------------------*/
 		push   %edx
 		sub    $0x64,%esp

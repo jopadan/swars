@@ -4960,12 +4960,17 @@ void do_rotate_map(void)
         :  :  : "eax" );
 }
 
-TbResult read_palette_file(void)
+void reset_brightness(void)
 {
+#if 0
     TbResult ret;
-    asm volatile ("call ASM_read_palette_file\n"
+    asm volatile ("call ASM_reset_brightness\n"
         : "=r" (ret) : );
     return ret;
+#endif
+    ingame_palette_reload();
+    brightness = 0;
+    set_default_brightness();
 }
 
 ubyte do_music_user_input(void)
@@ -5150,7 +5155,7 @@ ubyte do_user_interface(void)
     if (is_key_pressed(KC_F11, KMod_CONTROL))
     {
         clear_key_pressed(KC_F11);
-        read_palette_file();
+        reset_brightness();
         ret |= GINPUT_DIRECT;
     }
     if (is_key_pressed(KC_F11, KMod_SHIFT))
