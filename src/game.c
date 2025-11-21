@@ -1675,8 +1675,6 @@ ubyte get_engine_inputs(void)
     }
     if (is_gamekey_pressed(GKey_TRANS_OBJ_LINE_COL))
     {
-        short i;
-
         if (lbShift & KMod_SHIFT)
             game_option_inc(GOpt_TranspObjLineColr);
         else
@@ -2225,10 +2223,7 @@ ubyte game_graphics_inputs(void)
     if (is_gamekey_pressed(GKey_CAMERA_PERSPECTV))
     {
         clear_gamekey_pressed(GKey_CAMERA_PERSPECTV);
-        if (game_perspective == 5)
-            game_perspective = 0;
-        else
-            game_perspective = 5;
+        game_option_inc(GOpt_CameraPerspective);
         ret |= GINPUT_DIRECT;
     }
 

@@ -162,6 +162,14 @@ void init_weapon_text(void);
  */
 const char *weapon_codename(WeaponType wtype);
 
+/** Returns if the weapon should be used by throwing.
+ */
+TbBool weapon_is_for_throwing(WeaponType wtype);
+
+/** Returns if the weapon should be used by placing activated on the ground.
+ */
+TbBool weapon_is_for_planting(WeaponType wtype);
+
 /** Returns if the weapon activates at the location of the wielding person.
  */
 TbBool weapon_is_deployed_at_wielder_pos(WeaponType wtype);

@@ -4391,7 +4391,15 @@ void person_go_plant_mine(struct Thing *p_person)
     person_goto_point(p_person);
     if (p_person->State == PerSt_NONE)
     {
-        person_init_drop(p_person, p_person->U.UPerson.CurrentWeapon);
+        WeaponType wtype;
+
+        wtype = p_person->U.UPerson.CurrentWeapon;
+        if (weapon_is_for_planting(wtype)) {
+            person_init_drop(p_person, wtype);
+        } else {
+            LOGWARN("Weapon %s is not desgined for planting",
+              weapon_codename(wtype));
+        }
     }
 }
 

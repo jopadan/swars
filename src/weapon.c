@@ -568,6 +568,11 @@ TbBool weapon_is_for_throwing(WeaponType wtype)
     return (wtype == WEP_NUCLGREN) || (wtype == WEP_CRAZYGAS) || (wtype == WEP_KOGAS);
 }
 
+TbBool weapon_is_for_planting(WeaponType wtype)
+{
+    return (wtype == WEP_ELEMINE) || (wtype == WEP_EXPLMINE);
+}
+
 TbBool weapon_is_breaking_will(WeaponType wtype)
 {
     return (wtype == WEP_PERSUADRTRN) || (wtype == WEP_PERSUADER2);
