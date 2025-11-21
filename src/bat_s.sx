@@ -895,7 +895,7 @@ GLOBAL_FUNC (ASM_BAT_unknsub_20)	/* 0xDDB64 */
 		push   %esi
 		push   %edi
 		push   %ebp
-		mov    %eax,data_1e26d4
+		mov    %eax,EXPORT_SYMBOL(bat_unknvalA_min)
 		mov    EXPORT_SYMBOL(colour_lookup)+2,%al
 		mov    %al,data_1e2710
 		mov    EXPORT_SYMBOL(colour_lookup)+3,%al
@@ -908,13 +908,13 @@ GLOBAL_FUNC (ASM_BAT_unknsub_20)	/* 0xDDB64 */
 		mov    EXPORT_SYMBOL(vec_tmap)+16,%edi
 		mov    %al,data_1e2714
 		mov    EXPORT_SYMBOL(colour_lookup)+0x05,%al
-		mov    %edx,data_1e26d8
+		mov    %edx,EXPORT_SYMBOL(bat_unknvalB_min)
 		mov    %al,data_1e2715
 		mov    EXPORT_SYMBOL(colour_lookup)+0x08,%al
-		mov    %ebx,data_1e26dc
+		mov    %ebx,EXPORT_SYMBOL(bat_unknvalA_max)
 		mov    %al,data_1e2716
 		mov    EXPORT_SYMBOL(colour_lookup)+7,%al
-		mov    %ecx,data_1e26e0
+		mov    %ecx,EXPORT_SYMBOL(bat_unknvalB_max)
 		mov    %al,data_1e2717
 		mov    EXPORT_SYMBOL(colour_lookup)+0x0A,%al
 		add    $0xa040,%edi
@@ -1861,8 +1861,8 @@ GLOBAL_FUNC(ASM_BAT_unknsub_27)	/* 0x0DE7C0 */
 		sub    $0x10,%esp
 		mov    EXPORT_SYMBOL(things),%ecx
 		mov    EXPORT_SYMBOL(sthings),%esi
-		mov    data_1e26d4,%eax
-		mov    data_1e26dc,%edx
+		mov    EXPORT_SYMBOL(bat_unknvalA_min),%eax
+		mov    EXPORT_SYMBOL(bat_unknvalA_max),%edx
 		mov    %eax,(%esp)
 		cmp    %edx,%eax
 		jle    jump_de7eb
@@ -1874,8 +1874,8 @@ GLOBAL_FUNC(ASM_BAT_unknsub_27)	/* 0x0DE7C0 */
 		add    %eax,%eax
 		mov    %eax,0x4(%esp)
 	jump_de7f8:
-		mov    data_1e26d8,%eax
-		mov    data_1e26e0,%ebx
+		mov    EXPORT_SYMBOL(bat_unknvalB_min),%eax
+		mov    EXPORT_SYMBOL(bat_unknvalB_max),%ebx
 		mov    %eax,0xc(%esp)
 		cmp    %ebx,%eax
 		jle    jump_de810
@@ -1933,7 +1933,7 @@ GLOBAL_FUNC(ASM_BAT_unknsub_27)	/* 0x0DE7C0 */
 	jump_de8a5:
 		mov    0x4(%esp),%ebx
 		mov    (%esp),%edi
-		mov    data_1e26dc,%edx
+		mov    EXPORT_SYMBOL(bat_unknvalA_max),%edx
 		add    $0x12,%ebx
 		inc    %edi
 		mov    %ebx,0x4(%esp)
@@ -3490,13 +3490,13 @@ GLOBAL (_IsTable)
 /*----------------------------------------------------------------*/
 .data
 
-data_1e26d4:
+GLOBAL (bat_unknvalA_min)	/* 0x1e26d4 */
 		.long	0x0
-data_1e26d8:
+GLOBAL (bat_unknvalB_min)	/* 0x1e26d8 */
 		.long	0x0
-data_1e26dc:
+GLOBAL (bat_unknvalA_max)	/* 0x1e26dc */
 		.long	0x0
-data_1e26e0:
+GLOBAL (bat_unknvalB_max)	/* 0x1e26e0 */
 		.long	0x0
 GLOBAL (BAT_screen)	/* 0x1e26e4 */
 		.long	0x0

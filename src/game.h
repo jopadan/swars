@@ -46,7 +46,7 @@ enum GameFlags {
     GamF_SkipIntro    = 0x00080000,
     GamF_Unkn00100000 = 0x00100000,
     GamF_NoScannerBeep = 0x00200000,
-    GamF_Unkn00400000 = 0x00400000,
+    GamF_BillboardBAT = 0x00400000,
     GamF_Unkn00800000 = 0x00800000,
     GamF_Unkn01000000 = 0x01000000,
     GamF_Unkn02000000 = 0x02000000,

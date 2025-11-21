@@ -1703,7 +1703,7 @@ void process_engine_unk3(void)
     process_map_craters();
     func_13A78();
 
-    if (((ingame.Flags & GamF_Unkn00400000) == 0) &&
+    if (((ingame.Flags & GamF_BillboardBAT) == 0) &&
       ((ingame.Flags & GamF_BillboardMovies) != 0))
     {
         dword_176CBC += fifties_per_gameturn;

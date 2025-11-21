@@ -25,6 +25,7 @@
 #include "bfscreen.h"
 #include "ssampply.h"
 
+#include "bigmap.h"
 #include "display.h"
 #include "game.h"
 #include "game_options.h"
@@ -32,6 +33,7 @@
 #include "player.h"
 #include "sound.h"
 #include "swlog.h"
+#include "thing.h"
 /******************************************************************************/
 
 #pragma pack(1)
@@ -95,6 +97,10 @@ enum BATStates {
 
 #pragma pack()
 
+extern int bat_unknvalA_min;
+extern int bat_unknvalB_min;
+extern int bat_unknvalA_max;
+extern int bat_unknvalB_max;
 extern int BAT_data_1e26e8;
 extern int BAT_game_won_timer;
 extern int BAT_level_intro_timer;
@@ -391,11 +397,53 @@ static void BAT_create_starting_ball(void)
 
 int BAT_unknsub_27(void)
 {
+#if 0
     int ret;
     asm volatile (
       "call ASM_BAT_unknsub_27\n"
         : "=r" (ret) : );
     return ret;
+#endif
+    int tile_x, tile_z;
+
+    for (tile_x = bat_unknvalA_min; tile_x <= bat_unknvalA_max; tile_x++)
+    {
+        for (tile_z = bat_unknvalB_min; tile_z <= bat_unknvalB_max; tile_z++)
+        {
+            struct MyMapElement *p_mapel;
+            short thing;
+
+            p_mapel = &game_my_big_map[MAP_TILE_WIDTH * tile_z + tile_x];
+            thing = p_mapel->Child;
+
+            while (thing != 0)
+            {
+                if (thing <= 0)
+                {
+                    struct SimpleThing *p_sthing;
+                    p_sthing = &sthings[thing];
+                    thing = p_sthing->Next;
+                }
+                else
+                {
+                    struct Thing *p_thing;
+                    p_thing = &things[thing];
+                    thing = p_thing->Next;
+
+                    if ((p_thing->Type == TT_PERSON)
+                      && ((p_thing->Flag & TngF_PlayerAgent) != 0)
+                      && ((p_thing->Flag & TngF_Destroyed) == 0)
+                      && (p_thing->U.UPerson.CurrentWeapon == WEP_PERSUADRTRN))
+                    {
+                        ingame.Flags |= GamF_BillboardBAT;
+                        return 1;
+                    }
+                }
+            }
+        }
+    }
+    ingame.Flags &= ~GamF_BillboardBAT;
+    return 0;
 }
 
 void BAT_unknsub_21(void)
