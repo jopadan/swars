@@ -65,6 +65,9 @@ enum GameOptions {
     GOpt_CDATrack,
     GOpt_DangerTrack,
     GOpt_UseMultiMedia,
+    GOpt_ScannerPulse,
+    GOpt_TranspObjSurfaceColr,
+    GOpt_TranspObjLineColr,
 };
 
 struct InGame {

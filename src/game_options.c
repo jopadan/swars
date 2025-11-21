@@ -22,6 +22,7 @@
 
 #include "display.h"
 #include "engindrwlstm.h"
+#include "engindrwlstx.h"
 #include "femain.h"
 #include "game.h"
 #include "guitext.h"
@@ -67,6 +68,12 @@ const char *game_option_desc(int option_no)
         return gui_strings[529];
     case GOpt_UseMultiMedia:
         return gui_strings[530];
+    case GOpt_ScannerPulse:
+        return gui_strings[823];
+    case GOpt_TranspObjSurfaceColr:
+        return gui_strings[824];
+    case GOpt_TranspObjLineColr:
+        return gui_strings[825];
     default:
         return "";
     }
@@ -124,6 +131,12 @@ void game_option_toggle(int option_no)
         else
             ingame.UseMultiMedia = 1;
         break;
+    case GOpt_ScannerPulse:
+        if ((ingame.Flags & GamF_NoScannerBeep) == 0)
+            ingame.Flags |= GamF_NoScannerBeep;
+        else
+            ingame.Flags &= ~GamF_NoScannerBeep;
+        break;
     default:
         LOGERR("Option %d toggle not supported", option_no);
         break;
@@ -143,6 +156,7 @@ void game_option_dec(int option_no)
     case GOpt_BillboardMovies:
     case GOpt_DeepRadar:
     case GOpt_UseMultiMedia:
+    case GOpt_ScannerPulse:
         game_option_toggle(option_no);
         break;
     case GOpt_PanelPermutation:
@@ -197,6 +211,12 @@ void game_option_dec(int option_no)
         else
             ingame.DangerTrack = OPT_DANGER_TRACK_MAX;
         break;
+    case GOpt_TranspObjSurfaceColr:
+        deep_radar_surface_col--;
+        break;
+    case GOpt_TranspObjLineColr:
+        deep_radar_line_col--;
+        break;
     default:
         break;
     }
@@ -214,6 +234,7 @@ void game_option_inc(int option_no)
     case GOpt_BillboardMovies:
     case GOpt_DeepRadar:
     case GOpt_UseMultiMedia:
+    case GOpt_ScannerPulse:
         game_option_toggle(option_no);
         break;
     case GOpt_PanelPermutation:
@@ -267,6 +288,12 @@ void game_option_inc(int option_no)
             ingame.DangerTrack++;
         else
             ingame.DangerTrack = OPT_DANGER_TRACK_MIN;
+        break;
+    case GOpt_TranspObjSurfaceColr:
+        deep_radar_surface_col++;
+        break;
+    case GOpt_TranspObjLineColr:
+        deep_radar_line_col++;
         break;
     default:
         break;

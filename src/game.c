@@ -1666,14 +1666,11 @@ ubyte get_engine_inputs(void)
     ret = GINPUT_NONE;
     if (is_gamekey_pressed(GKey_TRANS_OBJ_SURF_COL))
     {
-        short i;
-
         if (lbShift & KMod_SHIFT)
-            i = 1;
+            game_option_inc(GOpt_TranspObjSurfaceColr);
         else
-            i = -1;
+            game_option_dec(GOpt_TranspObjSurfaceColr);
         clear_gamekey_pressed(GKey_TRANS_OBJ_SURF_COL);
-        deep_radar_surface_col += i;
         ret |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_TRANS_OBJ_LINE_COL))
@@ -1681,11 +1678,10 @@ ubyte get_engine_inputs(void)
         short i;
 
         if (lbShift & KMod_SHIFT)
-            i = 1;
+            game_option_inc(GOpt_TranspObjLineColr);
         else
-            i = -1;
+            game_option_dec(GOpt_TranspObjLineColr);
         clear_gamekey_pressed(GKey_TRANS_OBJ_LINE_COL);
-        deep_radar_line_col += i;
         ret |= GINPUT_DIRECT;
     }
     return ret;
@@ -5228,10 +5224,7 @@ ubyte do_user_interface(void)
     if (is_gamekey_pressed(GKey_SCANNER_PULSE))
     {
         clear_gamekey_pressed(GKey_SCANNER_PULSE);
-        if (ingame.Flags & GamF_NoScannerBeep)
-            ingame.Flags &= ~GamF_NoScannerBeep;
-        else
-            ingame.Flags |= GamF_NoScannerBeep;
+        game_option_inc(GOpt_ScannerPulse);
         ret |= GINPUT_DIRECT;
     }
 
