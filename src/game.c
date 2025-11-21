@@ -5051,6 +5051,7 @@ ubyte do_music_user_input(void)
     {
         clear_gamekey_pressed(GKey_DANGR_TRACK);
         game_option_inc(GOpt_DangerTrack);
+        StartMusic(ingame.DangerTrack, 0);
         ret |= GINPUT_DIRECT;
     }
 
