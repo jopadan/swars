@@ -4405,8 +4405,34 @@ void person_go_plant_mine(struct Thing *p_person)
 
 void process_knocked_out(struct Thing *p_person)
 {
+#if 0
     asm volatile ("call ASM_process_knocked_out\n"
         : : "a" (p_person));
+#endif
+    ushort nxframe;
+
+    p_person->Timer1 -= fifties_per_gameturn;
+    if (p_person->Timer1 < 0)
+    {
+        nxframe = frame[p_person->Frame].Next;
+        if ((frame[nxframe].Flags & 0x01) != 0) {
+            p_person->Timer1 = 0;
+        } else {
+            p_person->Timer1 = p_person->StartTimer1;
+            p_person->Frame = nxframe;
+        }
+    }
+
+    p_person->U.UPerson.BumpCount--;
+    if (p_person->U.UPerson.BumpCount == 0)
+    {
+        p_person->U.UPerson.AnimMode = p_person->U.UPerson.OldAnimMode;
+        reset_person_frame(p_person);
+
+        p_person->Flag2 &= ~TgF2_KnockedOut;
+        p_person->Timer1 = 48;
+        p_person->Flag &= ~TngF_Unkn01000000;
+    }
 }
 
 void process_tasered_person(struct Thing *p_person)
