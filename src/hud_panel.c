@@ -2369,7 +2369,9 @@ TbBool process_panel_state_one_agent_mood(ushort main_panel, ushort agent)
 {
     PlayerInfo *p_locplayer;
     struct Packet *p_pckt;
+    ubyte ret;
 
+    ret = GINPUT_NONE;
     p_locplayer = &players[local_player_no];
     p_pckt = &packets[local_player_no];
 
@@ -2377,7 +2379,7 @@ TbBool process_panel_state_one_agent_mood(ushort main_panel, ushort agent)
     {
         // Left button hold mood control
         struct Thing *p_agent;
-        short dcthing;
+        ThingIdx dcthing;
         short mood;
         TbBool can_control;
 
@@ -2386,12 +2388,19 @@ TbBool process_panel_state_one_agent_mood(ushort main_panel, ushort agent)
         dcthing = p_locplayer->DirectControl[mouser];
         can_control = person_can_accept_control(dcthing);
 
-        if ((p_agent->Type == TT_PERSON) && (can_control))
+        if ((p_agent->Type == TT_PERSON) && (can_control) &&
+          (p_agent->U.UPerson.Mood != limit_mood(p_agent, mood))) {
             build_packet(p_pckt, PAct_AGENT_SET_MOOD, p_agent->ThingOffset, mood, 0, 0);
-        return true;
+            ret |= GINPUT_PACKET;
+            return ret;
+        }
     }
-    p_locplayer->PanelState[mouser] = PANEL_STATE_NORMAL;
-    return false;
+    else if (p_locplayer->PanelState[mouser] != PANEL_STATE_NORMAL)
+    {
+        p_locplayer->PanelState[mouser] = PANEL_STATE_NORMAL;
+        ret |= GINPUT_DIRECT;
+    }
+    return ret;
 }
 
 TbBool process_panel_state_grp_agents_mood(ushort main_panel, ushort agent)
@@ -2481,11 +2490,13 @@ TbBool process_panel_state(void)
     return 0;
 }
 
-TbBool check_panel_input(short panel)
+ubyte check_panel_input(short panel)
 {
     PlayerInfo *p_locplayer;
     int i;
+    ubyte ret;
 
+    ret = GINPUT_NONE;
     p_locplayer = &players[local_player_no];
 
     if (lbDisplay.LeftButton)
@@ -2506,66 +2517,81 @@ TbBool check_panel_input(short panel)
         case PanT_AgentEnergy:
             // Select controlled agent
             p_agent = p_locplayer->MyAgent[p_panel->ID];
-            if ((p_agent->Type != TT_PERSON) || ((p_agent->Flag & TngF_Destroyed) != 0) || ((p_agent->Flag2 & TgF2_KnockedOut) != 0))
-                return 0;
+            if ((p_agent->Type != TT_PERSON) || ((p_agent->Flag & TngF_Destroyed) != 0)
+              || ((p_agent->Flag2 & TgF2_KnockedOut) != 0)) {
+                break;
+            }
             if (p_locplayer->DoubleMode) {
                 byte_153198 = p_panel->ID + 1;
-            } else {
-                dcthing = p_locplayer->DirectControl[0];
-                build_packet(p_pckt, PAct_SELECT_AGENT, dcthing, p_agent->ThingOffset, 0, 0);
-                p_locplayer->UserInput[0].ControlMode |= UInpCtrF_Unkn8000;
+                ret |= GINPUT_DIRECT;
+                break;
             }
-            return 1;
+            dcthing = p_locplayer->DirectControl[0];
+            build_packet(p_pckt, PAct_SELECT_AGENT, dcthing, p_agent->ThingOffset, 0, 0);
+            p_locplayer->UserInput[0].ControlMode |= UInpCtrF_Unkn8000;
+            ret |= GINPUT_PACKET;
+            return ret;
         case PanT_AgentMood:
             // Change mood / drugs level
             p_agent = p_locplayer->MyAgent[p_panel->ID];
-            if ((p_agent->Type == TT_PERSON) && (p_agent->State != PerSt_DEAD))
-            {
-                p_locplayer->UserInput[mouser].ControlMode |= UInpCtrF_Unkn8000;
-                i = panel_mouse_move_mood_value(panel);
-                if (panel_active_based_on_target(panel))
-                    my_build_packet(p_pckt, PAct_AGENT_SET_MOOD, p_agent->ThingOffset, i, 0, 0);
-                p_locplayer->PanelState[mouser] = PANEL_STATE_MOOD_SET_ONE + p_panel->ID;
-                if (!IsSamplePlaying(0, 21, 0))
-                    play_sample_using_heap(0, 21, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 1u);
-                ingame.Flags |= GamF_Unkn00100000;
-                return 1;
+            if ((p_agent->Type != TT_PERSON) || (p_agent->State == PerSt_DEAD)) {
+                break;
             }
-            break;
+            p_locplayer->UserInput[mouser].ControlMode |= UInpCtrF_Unkn8000;
+            i = panel_mouse_move_mood_value(panel);
+            if (panel_active_based_on_target(panel) &&
+              (p_agent->U.UPerson.Mood != limit_mood(p_agent, i))) {
+                my_build_packet(p_pckt, PAct_AGENT_SET_MOOD, p_agent->ThingOffset, i, 0, 0);
+                ret |= GINPUT_PACKET;
+            }
+            p_locplayer->PanelState[mouser] = PANEL_STATE_MOOD_SET_ONE + p_panel->ID;
+            if (!IsSamplePlaying(0, 21, 0))
+                play_sample_using_heap(0, 21, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 1u);
+            ingame.Flags |= GamF_Unkn00100000;
+            if ((ret & GINPUT_PACKET) == 0) {
+                ret |= GINPUT_DIRECT;
+                break;
+            }
+            return ret;
         case PanT_AgentWeapon:
             // Weapon selection for single agent
             p_agent = p_locplayer->MyAgent[p_panel->ID];
-            if ((p_agent->Type == TT_PERSON) && person_can_accept_control(p_agent->ThingOffset))
-            {
-                p_locplayer->UserInput[mouser].ControlMode |= UInpCtrF_Unkn8000;
-                p_locplayer->PanelState[mouser] = PANEL_STATE_WEP_SEL_ONE + p_panel->ID;
-                return 1;
+            if ((p_agent->Type != TT_PERSON) || !person_can_accept_control(p_agent->ThingOffset)) {
+                break;
             }
+            p_locplayer->UserInput[mouser].ControlMode |= UInpCtrF_Unkn8000;
+            p_locplayer->PanelState[mouser] = PANEL_STATE_WEP_SEL_ONE + p_panel->ID;
+            ret |= GINPUT_DIRECT;
             break;
         case PanT_AgentMedi:
             // Use medikit
             p_agent = p_locplayer->MyAgent[p_panel->ID];
-            if ((p_agent->Type == TT_PERSON) && person_carries_any_medikit(p_agent->ThingOffset))
-            {
-                my_build_packet(p_pckt, PAct_AGENT_USE_MEDIKIT, p_agent->ThingOffset, 0, 0, 0);
-                return 1;
+            if ((p_agent->Type != TT_PERSON) || !person_carries_any_medikit(p_agent->ThingOffset)) {
+                break;
             }
+            my_build_packet(p_pckt, PAct_AGENT_USE_MEDIKIT, p_agent->ThingOffset, 0, 0, 0);
+            ret |= GINPUT_DIRECT;
             break;
         case PanT_WeaponEnergy:
             // Enable supershield
-            if (p_locplayer->DoubleMode && byte_153198 - 1 != mouser)
+            if (p_locplayer->DoubleMode && byte_153198 - 1 != mouser) {
                 break;
-            if (p_locplayer->DoubleMode)
+            }
+            if (p_locplayer->DoubleMode) {
                 break;
+            }
             dcthing = p_locplayer->DirectControl[mouser];
-            if ((things[dcthing].Flag & TngF_Destroyed) != 0)
+            if ((things[dcthing].Flag & TngF_Destroyed) != 0) {
                 break;
+            }
             p_agent = p_locplayer->MyAgent[p_panel->ID];
-            if (p_agent->Type != TT_PERSON)
+            if (p_agent->Type != TT_PERSON) {
                 break;
+            }
             build_packet(p_pckt, PAct_SHIELD_TOGGLE, dcthing, p_agent->ThingOffset, 0, 0);
             p_locplayer->UserInput[mouser].ControlMode |= UInpCtrF_Unkn8000;
-            return 1;
+            ret |= GINPUT_PACKET;
+            return ret;
         case PanT_Grouping:
             if (mouse_over_infrared_slant_box(panel))
             {
@@ -2578,12 +2604,14 @@ TbBool check_panel_input(short panel)
                         ingame.Flags |= GamF_ThermalView;
                         play_sample_using_heap(0, 35, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
                         ingame_palette_reload();
+                        ret |= GINPUT_DIRECT;
                     }
                 }
                 else
                 {
                     ingame.Flags &= ~GamF_ThermalView;
                     change_brightness(0);
+                    ret |= GINPUT_DIRECT;
                 }
             }
             else
@@ -2593,8 +2621,10 @@ TbBool check_panel_input(short panel)
                 p_locplayer->UserInput[mouser].ControlMode |= UInpCtrF_Unkn8000;
                 if (panel_active_based_on_target(panel))
                     my_build_packet(p_pckt, PAct_PROTECT_INC, dcthing, 0, 0, 0);
+                ret |= GINPUT_PACKET;
+                return ret;
             }
-            return 1;
+            break;
         default:
             break;
         }
@@ -2605,6 +2635,7 @@ TbBool check_panel_input(short panel)
         struct Packet *p_pckt;
         struct Thing *p_agent;
         struct GamePanel *p_panel;
+        ThingIdx dcthing;
 
         lbDisplay.RightButton = 0;
         p_panel = &game_panel[panel];
@@ -2615,39 +2646,44 @@ TbBool check_panel_input(short panel)
         case PanT_AgentMood:
             // Change mood / drugs level
             p_agent = p_locplayer->MyAgent[p_panel->ID];
-            if ((p_agent->Type == TT_PERSON) && (p_agent->State != PerSt_DEAD))
-            {
-                p_locplayer->UserInput[mouser].ControlMode |= UInpCtrF_Unkn4000;
-                i = panel_mouse_move_mood_value(panel);
-                if (panel_active_based_on_target(panel))
-                    my_build_packet(p_pckt, PAct_GROUP_SET_MOOD, p_agent->ThingOffset, i, 0, 0);
-                p_locplayer->PanelState[mouser] = PANEL_STATE_MOOD_SET_GRP + p_panel->ID;
-                if (!IsSamplePlaying(0, 21, 0))
-                    play_sample_using_heap(0, 21, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 1u);
-                ingame.Flags |= GamF_Unkn00100000;
-                return 1;
+            if ((p_agent->Type != TT_PERSON) || (p_agent->State == PerSt_DEAD)) {
+                break;
             }
-            break;
+            p_locplayer->UserInput[mouser].ControlMode |= UInpCtrF_Unkn4000;
+            i = panel_mouse_move_mood_value(panel);
+            if (panel_active_based_on_target(panel)) {
+                my_build_packet(p_pckt, PAct_GROUP_SET_MOOD, p_agent->ThingOffset, i, 0, 0);
+                ret |= GINPUT_PACKET;
+            }
+            p_locplayer->PanelState[mouser] = PANEL_STATE_MOOD_SET_GRP + p_panel->ID;
+            if (!IsSamplePlaying(0, 21, 0))
+                play_sample_using_heap(0, 21, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_4EVER, 1u);
+            ingame.Flags |= GamF_Unkn00100000;
+            if ((ret & GINPUT_PACKET) == 0) {
+                ret |= GINPUT_DIRECT;
+                break;
+            }
+            return ret;
         case PanT_AgentWeapon:
             // Weapon selection for all grouped agent
             p_agent = p_locplayer->MyAgent[p_panel->ID];
-            if ((p_agent->Type == TT_PERSON) && person_can_accept_control(p_agent->ThingOffset))
-            {
-                p_locplayer->UserInput[mouser].ControlMode |= UInpCtrF_Unkn4000;
-                p_locplayer->PanelState[mouser] = PANEL_STATE_WEP_SEL_GRP + p_panel->ID;
-                return 1;
+            if ((p_agent->Type != TT_PERSON) || !person_can_accept_control(p_agent->ThingOffset)) {
+                break;
             }
+            p_locplayer->UserInput[mouser].ControlMode |= UInpCtrF_Unkn4000;
+            p_locplayer->PanelState[mouser] = PANEL_STATE_WEP_SEL_GRP + p_panel->ID;
+            ret |= GINPUT_DIRECT;
             break;
         case PanT_Grouping:
             // Switch grouping fully on or fully off
             p_locplayer->UserInput[mouser].ControlMode |= UInpCtrF_Unkn4000;
-            if (panel_active_based_on_target(panel))
-            {
-                short dcthing;
-                dcthing = p_locplayer->DirectControl[mouser];
-                my_build_packet(p_pckt, PAct_PROTECT_TOGGLE, dcthing, 0, 0, 0);
+            if (!panel_active_based_on_target(panel)) {
+                break;
             }
-            return 1;
+            dcthing = p_locplayer->DirectControl[mouser];
+            my_build_packet(p_pckt, PAct_PROTECT_TOGGLE, dcthing, 0, 0, 0);
+            ret |= GINPUT_PACKET;
+            return ret;
         default:
             break;
         }
@@ -2671,7 +2707,7 @@ TbBool check_panel_input(short panel)
                 p_agent = p_locplayer->MyAgent[p_panel->ID];
                 if ((p_agent->Type == TT_PERSON) && ((p_agent->Flag & TngF_Destroyed) == 0))
                 {
-                    ushort dcthing;
+                    ThingIdx dcthing;
 
                     dcthing = p_locplayer->DirectControl[mouser];
                     if ((things[dcthing].Flag & TngF_WepCharging) == 0)
@@ -2684,7 +2720,8 @@ TbBool check_panel_input(short panel)
                             engn_xc = PRCCOORD_TO_MAPCOORD(p_agent->X);
                             engn_zc = PRCCOORD_TO_MAPCOORD(p_agent->Z);
                         }
-                        return 1;
+                        ret |= GINPUT_PACKET;
+                        return ret;
                     }
                 }
             }
@@ -2693,18 +2730,21 @@ TbBool check_panel_input(short panel)
             break;
         }
     }
-    return 0;
+    return ret;
 }
 
-TbBool check_panel_button(void)
+ubyte check_panel_button(void)
 {
     short panel;
+    ubyte ret;
+
+    ret = GINPUT_NONE;
 
     if (lbDisplay.LeftButton && lbDisplay.RightButton)
     {
         struct Packet *p_pckt;
         PlayerInfo *p_locplayer;
-        short dcthing;
+        ThingIdx dcthing;
 
         lbDisplay.LeftButton = 0;
         lbDisplay.RightButton = 0;
@@ -2713,13 +2753,15 @@ TbBool check_panel_button(void)
         dcthing = p_locplayer->DirectControl[mouser];
         my_build_packet(p_pckt, PAct_PEEPS_SCATTER, dcthing,
             mouse_map_x, 0, mouse_map_z);
-        return 1;
+        ret |= GINPUT_PACKET;
+        return ret;
     }
 
     if (mouse_move_over_scanner())
     {
-        if (check_scanner_input())
-            return 1;
+        ret |= check_scanner_input();
+        if ((ret & GINPUT_PACKET) != 0)
+            return ret;
     }
 
     for (panel = GAME_PANELS_LIMIT - 1; panel >= 0; panel--)
@@ -2728,11 +2770,12 @@ TbBool check_panel_button(void)
             continue;
         if (mouse_move_over_panel(panel))
         {
-            if (check_panel_input(panel))
-                return 1;
+            ret |= check_panel_input(panel);
+            if ((ret & GINPUT_PACKET) != 0)
+                return ret;
         }
     }
-    return 0;
+    return ret;
 }
 
 /******************************************************************************/
