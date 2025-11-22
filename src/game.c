@@ -4975,6 +4975,237 @@ void reset_brightness(void)
     set_default_brightness();
 }
 
+ubyte process_mouse_imputs(void)
+{
+#if 0
+    int ret;
+    asm volatile ("call ASM_process_mouse_imputs\n"
+        : "=r" (ret) : );
+    return ret;
+#endif
+    PlayerInfo *p_locplayer;
+    struct Thing *p_agent;
+    struct Packet *p_pckt;
+    ThingIdx dcthing;
+    int map_y;
+    ubyte ret;
+
+    ret = GINPUT_NONE;
+    p_locplayer = &players[local_player_no];
+
+    if (!lbDisplay.MLeftButton)
+        p_locplayer->UserInput[mouser].ControlMode &= ~0x8000;
+    if (!lbDisplay.MRightButton)
+        p_locplayer->UserInput[mouser].ControlMode &= ~0x4000;
+    if ((ingame.DisplayMode != 50) && (ingame.DisplayMode != 59))
+        return 0;
+    if (process_panel_state())
+        return 1;
+    if (lbDisplay.LeftButton || lbDisplay.RightButton || lbDisplay.MLeftButton || lbDisplay.MRightButton)
+    {
+        ret = check_panel_button();
+        if ((ret & GINPUT_PACKET) != 0)
+            return ret;
+    }
+
+    dcthing = p_locplayer->DirectControl[mouser];
+    p_agent = &things[dcthing];
+    if ((p_agent->State == PerSt_PERSON_BURNING) || ((p_agent->Flag & TngF_Destroyed) != 0)) {
+        return ret;
+    }
+
+    if (lbDisplay.LeftButton)
+    {
+        lbDisplay.LeftButton = 0;
+
+        p_pckt = &packets[local_player_no];
+        if (p_locplayer->field_102 != 0)
+        {
+            switch (p_locplayer->TargetType)
+            {
+            case 1:
+            case 7:
+                my_build_packet(p_pckt, PAct_FOLLOW_PERSON, dcthing,
+                  p_locplayer->field_102, 0, 0);
+                ret |= GINPUT_PACKET;
+                return ret;
+            case 2:
+            case 6:
+                break;
+            case 3:
+                if (p_locplayer->Target == 0)
+                    break;
+                if ((gameturn & 0x7FFF) - p_locplayer->UserInput[mouser].Turn >= 7)
+                {
+                    p_locplayer->UserInput[mouser].Turn = (gameturn & 0x7FFF);
+                    my_build_packet(p_pckt, PAct_AGENT_GOTO_FACE_PT_ABS, dcthing,
+                      mouse_map_x, p_locplayer->Target, mouse_map_z);
+                }
+                else
+                {
+                    p_locplayer->UserInput[mouser].Turn = 0;
+                    my_build_packet(p_pckt, PAct_AGENT_GOTO_FACE_PT_ABS_FF, dcthing,
+                      mouse_map_x, p_locplayer->Target, mouse_map_z);
+                }
+                ret |= GINPUT_PACKET;
+                return ret;
+            case 4:
+                if ((gameturn & 0x7FFF) - p_locplayer->UserInput[mouser].Turn >= 7)
+                {
+                    p_locplayer->UserInput[mouser].Turn = (gameturn & 0x7FFF);
+                    my_build_packet(p_pckt, PAct_GO_ENTER_VEHICLE, dcthing,
+                      p_locplayer->field_102, 0, 0);
+                }
+                else
+                {
+                    p_locplayer->UserInput[mouser].Turn = 0;
+                    my_build_packet(p_pckt, PAct_GO_ENTER_VEHICLE_FF, dcthing,
+                      p_locplayer->field_102, 0, 0);
+                }
+                ret |= GINPUT_PACKET;
+                return ret;
+            case 5:
+                if ((gameturn & 0x7FFF) - p_locplayer->UserInput[mouser].Turn >= 7)
+                {
+                    p_locplayer->UserInput[mouser].Turn = (gameturn & 0x7FFF);
+                    my_build_packet(p_pckt, PAct_GET_ITEM, dcthing,
+                      p_locplayer->field_102, 0, 0);
+                }
+                else
+                {
+                    p_locplayer->UserInput[mouser].Turn = 0;
+                    my_build_packet(p_pckt, PAct_GET_ITEM_FAST, dcthing,
+                      p_locplayer->field_102, 0, 0);
+                }
+                ret |= GINPUT_PACKET;
+                return ret;
+            default:
+                break;
+            }
+        }
+
+        if (!p_locplayer->DoubleMode)
+        {
+            short ctlmode;
+            ctlmode = p_locplayer->UserInput[0].ControlMode & ~UInpCtr_AllFlagsMask;
+            if (ctlmode != UInpCtr_Mouse)
+            {
+                do_change_mouse(8);
+                build_packet(p_pckt, PAct_CONTROL_MODE, 1, 0, 0, 0);
+                return 1;
+            }
+        }
+        if ((mouse_map_x > 0) && (mouse_map_x < MAP_COORD_WIDTH) &&
+          (mouse_map_z > 0) && (mouse_map_z < MAP_COORD_HEIGHT))
+        {
+            short map_y;
+
+            map_y = (alt_at_point(mouse_map_x, mouse_map_z) >> 8) + 20;
+            if ((gameturn & 0x7FFF) - p_locplayer->UserInput[mouser].Turn >= 7)
+            {
+                p_locplayer->UserInput[mouser].Turn = (gameturn & 0x7FFF);
+                my_build_packet(p_pckt, PAct_AGENT_GOTO_GND_PT_ABS, dcthing,
+                  mouse_map_x, map_y, mouse_map_z);
+            }
+            else
+            {
+                p_locplayer->UserInput[mouser].Turn = 0;
+                my_build_packet(p_pckt, PAct_AGENT_GOTO_GND_PT_ABS_FF, dcthing,
+                  mouse_map_x, map_y, mouse_map_z);
+            }
+            return 1;
+        }
+        return 0;
+    }
+
+    if (lbDisplay.RightButton && ((p_locplayer->UserInput[mouser].ControlMode & 0x4000) == 0))
+    {
+        WeaponType wtype;
+        lbDisplay.RightButton = 0;
+
+        p_pckt = &packets[local_player_no];
+        map_y = (alt_at_point(mouse_map_x, mouse_map_z) >> 8) + 20;
+        wtype = p_agent->U.UPerson.CurrentWeapon;
+        if (wtype >= WEP_ELEMINE && wtype <= WEP_EXPLMINE)
+        {
+            if ((gameturn & 0x7FFF) - p_locplayer->UserInput[mouser].Turn >= 7)
+            {
+                p_locplayer->UserInput[mouser].Turn = (gameturn & 0x7FFF);
+                if (p_locplayer->TargetType == 3)
+                    my_build_packet(p_pckt, PAct_PLANT_MINE_AT_FACE_PT, dcthing,
+                      mouse_map_x, p_locplayer->Target, mouse_map_z);
+                else
+                    my_build_packet(p_pckt, PAct_PLANT_MINE_AT_GND_PT, dcthing,
+                      mouse_map_x, map_y, mouse_map_z);
+                return 1;
+            }
+            else
+            {
+                p_locplayer->UserInput[mouser].Turn = 0;
+                if (p_locplayer->TargetType == 3)
+                    my_build_packet( p_pckt, PAct_PLANT_MINE_AT_FACE_PT_FF, dcthing,
+                      mouse_map_x, p_locplayer->Target, mouse_map_z);
+                else
+                    my_build_packet(p_pckt, PAct_PLANT_MINE_AT_GND_PT_FF, dcthing,
+                      mouse_map_x, map_y, mouse_map_z);
+              return 1;
+            }
+        }
+        else if ((wtype <= WEP_RAZORWIRE) || (wtype == WEP_EXPLWIRE))
+        {
+            if ((gameturn & 0x7FFF) - p_locplayer->UserInput[mouser].Turn >= 7)
+            {
+                p_locplayer->UserInput[mouser].Turn = (gameturn & 0x7FFF);
+                if (p_locplayer->TargetType == 3)
+                    my_build_packet(p_pckt, PAct_SHOOT_AT_FACE_POINT, dcthing,
+                      mouse_map_x, p_locplayer->Target, mouse_map_z);
+                else
+                    my_build_packet(p_pckt, PAct_SHOOT_AT_GND_POINT, dcthing,
+                      mouse_map_x, map_y, mouse_map_z);
+                return 1;
+            }
+            else
+            {
+                p_locplayer->UserInput[mouser].Turn = 0;
+                if (p_locplayer->TargetType == 3)
+                    my_build_packet(p_pckt, PAct_SHOOT_AT_FACE_POINT_FF, dcthing,
+                      mouse_map_x, p_locplayer->Target, mouse_map_z);
+                else
+                    my_build_packet(p_pckt, PAct_SHOOT_AT_GND_POINT_FF, dcthing,
+                      mouse_map_x, map_y, mouse_map_z);
+                return 1;
+            }
+        }
+    }
+
+    if ( lbDisplay.MRightButton && ((p_locplayer->UserInput[mouser].ControlMode & 0x4000) == 0))
+    {
+        p_pckt = &packets[local_player_no];
+        map_y = (alt_at_point(mouse_map_x, mouse_map_z) >> 8) + 20;
+        if (p_locplayer->TargetType == 3)
+        {
+            my_build_packet(p_pckt, PAct_SHOOT_AT_FACE_POINT, dcthing,
+              mouse_map_x, p_locplayer->Target, mouse_map_z);
+            return 1;
+        }
+        if (p_locplayer->field_102 > 0)
+        {
+            my_build_packet(p_pckt, PAct_SHOOT_AT_THING, dcthing,
+              p_locplayer->field_102, 0, 0);
+            return 1;
+        }
+        if ((mouse_map_x > 0) && (mouse_map_x < MAP_COORD_WIDTH) &&
+          (mouse_map_z > 0) && (mouse_map_z < MAP_COORD_HEIGHT))
+        {
+            my_build_packet(p_pckt, PAct_SHOOT_AT_GND_POINT, dcthing,
+              mouse_map_x, map_y, mouse_map_z);
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 ubyte do_music_user_input(void)
 {
     ubyte ret;

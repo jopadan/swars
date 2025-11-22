@@ -77,14 +77,6 @@ TbResult load_mouse_pointers_sprites_for_current_mode(void)
 
 void do_change_mouse(ushort mouse)
 {
-  LbMouseChangeSprite(&pointer_sprites[mouse]);
-  LbMouseChangeSpriteOffset(pointer_hotspot[mouse].x, pointer_hotspot[mouse].y);
-}
-
-ubyte process_mouse_imputs(void)
-{
-    int ret;
-    asm volatile ("call ASM_process_mouse_imputs\n"
-        : "=r" (ret) : );
-    return ret;
+    LbMouseChangeSprite(&pointer_sprites[mouse]);
+    LbMouseChangeSpriteOffset(pointer_hotspot[mouse].x, pointer_hotspot[mouse].y);
 }
