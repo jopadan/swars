@@ -32,6 +32,7 @@
 #include "game.h"
 #include "game_data.h"
 #include "game_speed.h"
+#include "game_sprani.h"
 #include "research.h"
 #include "thing_search.h"
 #include "wadfile.h"
@@ -1188,8 +1189,35 @@ void init_long_range(struct Thing *p_owner)
 
 void init_air_strike(struct Thing *p_owner)
 {
+#if 0
     asm volatile ("call ASM_init_air_strike\n"
         : : "a" (p_owner));
+#endif
+    ThingIdx new_thing;
+    struct Thing *p_thing;
+    ubyte grp;
+
+    new_thing = get_new_thing();
+    if (new_thing == 0) {
+        return;
+    }
+    p_thing = &things[new_thing];
+    p_thing->Type = TT_AIR_STRIKE;
+    p_thing->X = p_owner->X;
+    p_thing->Z = p_owner->Z;
+    p_thing->Y = p_owner->Y;
+    p_thing->Owner = p_owner->ThingOffset;
+    p_thing->Timer1 = 400;
+    p_thing->StartFrame = 1004;
+    p_thing->Frame = nstart_ani[p_thing->StartFrame];
+    p_thing->U.UEffect.Object = 0;
+    p_thing->Flag = TngF_Unkn0004;
+    p_thing->Radius = 50;
+    grp = p_owner->U.UPerson.EffectiveGroup;
+    p_thing->U.UEffect.EffectiveGroup = grp;
+    p_thing->U.UEffect.Group = grp;
+
+    play_dist_sample(p_thing, 66, 127u, 64u, 100, 990, 3);
 }
 
 void init_stasis_gun(struct Thing *p_owner)
