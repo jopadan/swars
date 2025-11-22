@@ -78,10 +78,13 @@ extern TbPixel colour_grey1;
 extern TbPixel colour_grey2;
 extern TbPixel colour_brown2;
 
-extern long engn_xc;
-extern long engn_yc;
-extern long engn_zc;
-extern long engn_anglexz;
+extern s32 engn_xc;
+extern s32 engn_yc;
+extern s32 engn_zc;
+extern s32 engn_anglexz;
+
+extern s32 engn_x_vel;
+extern s32 engn_y_vel;
 
 extern ushort text_window_x1;
 extern ushort text_window_y1;

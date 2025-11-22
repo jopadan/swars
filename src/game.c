@@ -3608,7 +3608,7 @@ void gproc3_unknsub2(void)
     long bkp_dword_152EEC;
     ubyte bkp_unkn_flags_01;
     ushort bkp_overall_scale;
-    long bkp_engn_xc, bkp_engn_yc, bkp_engn_zc;
+    s32 bkp_engn_xc, bkp_engn_yc, bkp_engn_zc;
 
     ingame.Flags &= ~GamF_BillboardMovies;
     if (is_key_pressed(KC_Q, KMod_DONTCARE))
@@ -4728,7 +4728,7 @@ void local_to_worldr(int *dx, int *dy, int *dz)
 
 void scroll_map_update_alt(void)
 {
-    long cumm_alt;
+    int cumm_alt;
 
     cumm_alt = alt_at_point(engn_xc, engn_zc) >> 8;
     cumm_alt += alt_at_point(engn_xc + 2048, engn_zc + 2048) >> 8;
@@ -4788,7 +4788,7 @@ void scroll_map_input(int *p_dx, int *p_dy)
 void do_scroll_map(void)
 {
     PlayerInfo *p_locplayer;
-    long engn_xc_orig, engn_zc_orig;
+    s32 engn_xc_orig, engn_zc_orig;
     ushort ctlmode;
     long abase, angle;
     int dx, dy, dz;

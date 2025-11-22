@@ -354,9 +354,6 @@ extern ubyte reload_background_flag;
 
 extern struct LevelDef level_def;
 
-extern long engn_x_vel;
-extern long engn_y_vel;
-
 /** Index of the local user who controls mouse. */
 extern ubyte mouser;
 extern long dword_1AA5C4;

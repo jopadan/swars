@@ -863,7 +863,7 @@ TbResult level_misc_update_mgun(struct LevelMisc *p_lvmsc)
 
 TbResult level_misc_verify_mgun(struct LevelMisc *p_lvmsc)
 {
-    long bkp_engn_xc, bkp_engn_yc, bkp_engn_zc;
+    s32 bkp_engn_xc, bkp_engn_yc, bkp_engn_zc;
     short mgun;
 
     if ((p_lvmsc->Group < 0) || (p_lvmsc->Group >= PEOPLE_GROUPS_COUNT))
