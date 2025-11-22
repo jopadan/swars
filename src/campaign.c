@@ -472,7 +472,7 @@ void read_missions_bin_file(int num)
 {
     TbFileHandle fh;
     char locstr[52];
-    ulong fmtver;
+    u32 fmtver;
     char *p_str;
     int i;
 
@@ -482,7 +482,7 @@ void read_missions_bin_file(int num)
     fh = LbFileOpen(locstr, Lb_FILE_MODE_READ_ONLY);
     if (fh != INVALID_FILE)
     {
-        LbFileRead(fh, &fmtver, sizeof(ulong));
+        LbFileRead(fh, &fmtver, sizeof(u32));
         LbFileRead(fh, &mission_strings_len, sizeof(ushort));
         LbFileRead(fh, p_str, mission_strings_len);
         LbFileRead(fh, &next_mission, sizeof(ushort));

@@ -185,7 +185,7 @@ void floor_texture_switch_to_index(struct SingleFloorTexture *p_fltextr, int ind
 }
 
 void refresh_old_floor_texture_format(struct SingleFloorTexture *p_fltextr,
-  struct SingleFloorTexture *p_oldfltextr, ulong fmtver)
+  struct SingleFloorTexture *p_oldfltextr, u32 fmtver)
 {
     LbMemoryCopy(p_fltextr, p_oldfltextr, sizeof(struct SingleFloorTexture));
 
@@ -416,7 +416,7 @@ void animate_textures(void)
 }
 
 void refresh_old_face_texture_format(struct SingleTexture *p_fctextr,
-  struct SingleTexture *p_oldfctextr, ulong fmtver)
+  struct SingleTexture *p_oldfctextr, u32 fmtver)
 {
     LbMemoryCopy(p_fctextr, p_oldfctextr, sizeof(struct SingleTexture));
 

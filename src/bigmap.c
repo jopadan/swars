@@ -83,7 +83,7 @@ short get_mapwho_thing_index(short tile_x, short tile_z)
 
 /** Maps fields from old MyMapElement struct to the current one.
  */
-void refresh_old_my_big_map_format(struct MyMapElement *p_mapel, struct MyMapElementOldV7 *p_oldmapel, ulong fmtver)
+void refresh_old_my_big_map_format(struct MyMapElement *p_mapel, struct MyMapElementOldV7 *p_oldmapel, u32 fmtver)
 {
     LbMemorySet(p_mapel, 0, sizeof(struct MyMapElement));
 

@@ -946,7 +946,7 @@ extern ubyte debug_log_things;
 struct Thing *get_thing_safe(ThingIdx thing, ubyte ttype);
 
 void init_things(void);
-void refresh_old_thing_format(struct Thing *p_thing, struct ThingOldV9 *p_oldthing, ulong fmtver);
+void refresh_old_thing_format(struct Thing *p_thing, struct ThingOldV9 *p_oldthing, u32 fmtver);
 void process_things(void);
 
 /** Get a string up to 14 chars containing thing/sthing type name.

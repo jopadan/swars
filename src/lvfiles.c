@@ -188,14 +188,14 @@ TbBool is_level_stored_sthing(struct SimpleThing *p_sthing)
 
 ulong load_level_pc_handle(TbFileHandle lev_fh)
 {
-    ulong fmtver;
+    u32 fmtver;
     TbBool mech_initialized;
     long limit;
     int i, k, n;
 
     mech_initialized = 0;
     fmtver = 0;
-    LbFileRead(lev_fh, &fmtver, 4);
+    LbFileRead(lev_fh, &fmtver, sizeof(u32));
 
     if (fmtver >= 1)
     {
@@ -391,7 +391,7 @@ ulong load_level_pc_handle(TbFileHandle lev_fh)
         LbFileRead(lev_fh, engine_mem_alloc_ptr + engine_mem_alloc_size - 32000, unkn3de_len);
     }
     LOGSYNC("Level fmtver=%lu n_command=%hu word_1531E0=%hu unkn3de_len=%hu",
-      fmtver, next_command, word_1531E0, unkn3de_len);
+      (ulong)fmtver, next_command, word_1531E0, unkn3de_len);
     if (fmtver >= 4)
     {
         ulong count;
@@ -500,7 +500,7 @@ ulong load_level_pc_handle(TbFileHandle lev_fh)
 
 void save_level_pc_handle(TbFileHandle lev_fh)
 {
-    ulong fmtver;
+    u32 fmtver;
     ushort count;
     int i, k;
 
@@ -510,7 +510,7 @@ void save_level_pc_handle(TbFileHandle lev_fh)
     assert(sizeof(struct LevelMisc) == 22);
 
     fmtver = 18;
-    LbFileWrite(lev_fh, &fmtver, 4);
+    LbFileWrite(lev_fh, &fmtver, sizeof(u32));
 
     {// Things are partially stored in map, partially in level file
         struct Thing *p_thing;
@@ -530,7 +530,7 @@ void save_level_pc_handle(TbFileHandle lev_fh)
         LbFileWrite(lev_fh, &count, 2);
 
         i = 0;
-        LOGSYNC("Level fmtver=%lu n_things=%hd", fmtver, count);
+        LOGSYNC("Level fmtver=%lu n_things=%hd", (ulong)fmtver, count);
         for (thing = things_used_head; thing > 0; thing = p_thing->LinkChild)
         {
             p_thing = &things[thing];
@@ -581,7 +581,7 @@ void save_level_pc_handle(TbFileHandle lev_fh)
         LbFileWrite(lev_fh, &count, 2);
 
         i = 0;
-        LOGSYNC("Level fmtver=%lu n_sthings=%hd", fmtver, count);
+        LOGSYNC("Level fmtver=%lu n_sthings=%hd", (ulong)fmtver, count);
         for (thing = sthings_used_head; thing < 0; thing = p_sthing->LinkChild)
         {
             p_sthing = &sthings[thing];
@@ -783,13 +783,13 @@ void level_perform_deep_fix(void)
 #endif
 }
 
-void fix_level_indexes(short missi, ulong fmtver, ubyte reload, TbBool deep)
+void fix_level_indexes(short missi, u32 fmtver, ubyte reload, TbBool deep)
 {
     ushort objectv;
     ThingIdx thing;
 
-    LOGSYNC("Fixing mission %d fmtver %d reload %d deep %d",
-      (int)missi, (int)fmtver, (int)reload, (int)deep);
+    LOGSYNC("Fixing mission %d fmtver %lu reload %d deep %d",
+      (int)missi, (ulong)fmtver, (int)reload, (int)deep);
     fix_thing_commands_indexes(deep);
 
     for (objectv = 1; objectv < next_used_lvl_objective; objectv++)
@@ -934,7 +934,7 @@ void level_misc_validate(void)
     }
 }
 
-void level_misc_update(void)
+void level_misc_update(u32 fmtver)
 {
 #if 0
     asm volatile ("call ASM_level_misc_update\n"
@@ -1009,7 +1009,7 @@ void load_level_pc(short level, short missi, ubyte reload)
     lev_fh = LbFileOpen(lev_fname, Lb_FILE_MODE_READ_ONLY);
     if (lev_fh != INVALID_FILE)
     {
-        ulong fmtver;
+        u32 fmtver;
         int i;
 
         word_1C8446 = 1;
@@ -1037,7 +1037,7 @@ void load_level_pc(short level, short missi, ubyte reload)
         check_and_fix_thing_commands();
 
         if (fmtver >= 10)
-            level_misc_update();
+            level_misc_update(fmtver);
 
         if (level_deep_fix) {
             level_perform_deep_fix();
@@ -1119,7 +1119,7 @@ void fix_map_outranged_properties(void)
 
 void load_map_dat_pc_handle(TbFileHandle fh)
 {
-    ulong fmtver;
+    u32 fmtver;
     ushort num_sthings, num_things;
     short i;
 
@@ -1391,15 +1391,15 @@ void load_map_dat_pc_handle(TbFileHandle fh)
 void load_mad_pc_buffer(ubyte *mad_ptr, long rdsize)
 {
     short shut_h;
-    ulong fmtver;
+    u32 fmtver;
     short i;
 
     shut_h = 100;
-    fmtver = *(ulong *)mad_ptr;
+    fmtver = *(u32 *)mad_ptr;
     mad_ptr += 4;
 
     if (fmtver != 1) {
-        LOGWARN("Unexpected MAD version %lu", fmtver);
+        LOGWARN("Unexpected MAD version %lu", (ulong)fmtver);
     }
 
     // Set amounts of quick_load array items

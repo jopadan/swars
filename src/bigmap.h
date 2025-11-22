@@ -129,7 +129,7 @@ void map_coords_limit(short *cor_x, short *cor_y, short *cor_z, long map_x, long
 
 void clear_mapwho_on_whole_map(void);
 void refresh_old_my_big_map_format(struct MyMapElement *p_mapel,
- struct MyMapElementOldV7 *p_oldmapel, ulong fmtver);
+ struct MyMapElementOldV7 *p_oldmapel, u32 fmtver);
 short get_mapwho_thing_index(short tile_x, short tile_z);
 void init_search_spiral(void);
 int alt_at_point(short x, short z);

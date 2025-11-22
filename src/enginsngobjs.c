@@ -37,7 +37,7 @@ ushort next_object_face4 = 1;
 ushort next_object = 1;
 
 void refresh_old_object_face_format(struct SingleObjectFace3 *p_objface,
-  struct SingleObjectFace3OldV7 *p_oldobjface, ulong fmtver)
+  struct SingleObjectFace3OldV7 *p_oldobjface, u32 fmtver)
 {
     int i;
 
@@ -65,7 +65,7 @@ void refresh_old_object_face_format(struct SingleObjectFace3 *p_objface,
 }
 
 void refresh_old_object_face4_format(struct SingleObjectFace4 *p_objface4,
-  struct SingleObjectFace4OldV7 *p_oldobjface4, ulong fmtver)
+  struct SingleObjectFace4OldV7 *p_oldobjface4, u32 fmtver)
 {
     int i;
 

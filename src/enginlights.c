@@ -27,7 +27,7 @@ ushort next_full_light = 1;
 ushort next_light_command = 1;
 
 void refresh_old_full_light_format(struct FullLight *p_fulight,
-  struct FullLightOldV12 *p_oldfulight, ulong fmtver)
+  struct FullLightOldV12 *p_oldfulight, u32 fmtver)
 {
     LbMemorySet(p_fulight, 0, sizeof(struct FullLight));
 

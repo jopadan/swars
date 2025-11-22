@@ -1375,7 +1375,7 @@ ThingIdx new_thing_building_clone(struct Thing *p_clthing, struct M33 *p_clmat, 
 
 /** Maps fields from old Thing struct to the current one.
  */
-void refresh_old_thing_format(struct Thing *p_thing, struct ThingOldV9 *p_oldthing, ulong fmtver)
+void refresh_old_thing_format(struct Thing *p_thing, struct ThingOldV9 *p_oldthing, u32 fmtver)
 {
     ushort len;
 

@@ -1219,6 +1219,10 @@ void unkn_f_pressed_func(void)
     }
 }
 
+void init_mission_starting_camera(void)
+{
+}
+
 void load_level_wrap(short level, short missi, ubyte reload)
 {
     LbMouseChangeSprite(NULL);
@@ -1232,6 +1236,9 @@ void load_level_wrap(short level, short missi, ubyte reload)
     read_primveh_obj(primvehobj_fname, 1);
 
     load_level_pc(level, missi, reload);
+
+    if (!reload)
+        init_mission_starting_camera();
 
     // No idea what exactly pressing F during level load does
     if (is_key_pressed(KC_F, KMod_DONTCARE))
