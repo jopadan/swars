@@ -5092,7 +5092,8 @@ ubyte process_mouse_imputs(void)
             {
                 do_change_mouse(8);
                 build_packet(p_pckt, PAct_CONTROL_MODE, 1, 0, 0, 0);
-                return 1;
+                ret |= GINPUT_PACKET;
+                return ret;
             }
         }
         if ((mouse_map_x > 0) && (mouse_map_x < MAP_COORD_WIDTH) &&
@@ -5113,9 +5114,10 @@ ubyte process_mouse_imputs(void)
                 my_build_packet(p_pckt, PAct_AGENT_GOTO_GND_PT_ABS_FF, dcthing,
                   mouse_map_x, map_y, mouse_map_z);
             }
-            return 1;
+            ret |= GINPUT_PACKET;
+            return ret;
         }
-        return 0;
+        return ret;
     }
 
     if (lbDisplay.RightButton && ((p_locplayer->UserInput[mouser].ControlMode & 0x4000) == 0))
@@ -5137,7 +5139,8 @@ ubyte process_mouse_imputs(void)
                 else
                     my_build_packet(p_pckt, PAct_PLANT_MINE_AT_GND_PT, dcthing,
                       mouse_map_x, map_y, mouse_map_z);
-                return 1;
+                ret |= GINPUT_PACKET;
+                return ret;
             }
             else
             {
@@ -5148,7 +5151,8 @@ ubyte process_mouse_imputs(void)
                 else
                     my_build_packet(p_pckt, PAct_PLANT_MINE_AT_GND_PT_FF, dcthing,
                       mouse_map_x, map_y, mouse_map_z);
-              return 1;
+                ret |= GINPUT_PACKET;
+                return ret;
             }
         }
         else if (weapon_is_for_spreading_on_ground(wtype))
@@ -5162,7 +5166,8 @@ ubyte process_mouse_imputs(void)
                 else
                     my_build_packet(p_pckt, PAct_SHOOT_AT_GND_POINT, dcthing,
                       mouse_map_x, map_y, mouse_map_z);
-                return 1;
+                ret |= GINPUT_PACKET;
+                return ret;
             }
             else
             {
@@ -5173,7 +5178,8 @@ ubyte process_mouse_imputs(void)
                 else
                     my_build_packet(p_pckt, PAct_SHOOT_AT_GND_POINT_FF, dcthing,
                       mouse_map_x, map_y, mouse_map_z);
-                return 1;
+                ret |= GINPUT_PACKET;
+                return ret;
             }
         }
     }
@@ -5186,24 +5192,27 @@ ubyte process_mouse_imputs(void)
         {
             my_build_packet(p_pckt, PAct_SHOOT_AT_FACE_POINT, dcthing,
               mouse_map_x, p_locplayer->Target, mouse_map_z);
-            return 1;
+            ret |= GINPUT_PACKET;
+            return ret;
         }
         if (p_locplayer->field_102 > 0)
         {
             my_build_packet(p_pckt, PAct_SHOOT_AT_THING, dcthing,
               p_locplayer->field_102, 0, 0);
-            return 1;
+            ret |= GINPUT_PACKET;
+            return ret;
         }
         if ((mouse_map_x > 0) && (mouse_map_x < MAP_COORD_WIDTH) &&
           (mouse_map_z > 0) && (mouse_map_z < MAP_COORD_HEIGHT))
         {
             my_build_packet(p_pckt, PAct_SHOOT_AT_GND_POINT, dcthing,
               mouse_map_x, map_y, mouse_map_z);
-            return 1;
+            ret |= GINPUT_PACKET;
+            return ret;
         }
     }
 
-    return 0;
+    return ret;
 }
 
 ubyte do_music_user_input(void)
