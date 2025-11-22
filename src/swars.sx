@@ -183513,9 +183513,9 @@ GLOBAL (packet_rec_fh)
 		.long	0x0
 GLOBAL (smack_malloc_used_tot)	/* 0x177108 */
 		.long	0x0
-GLOBAL (dword_17710C)	/* 0x17710c */
+GLOBAL (engn_x_vel)	/* 0x17710c */
 		.long	0x0
-GLOBAL (dword_177110)	/* 0x177110 */
+GLOBAL (engn_y_vel)	/* 0x177110 */
 		.fill   0x8
 
 /* static ulong last_sel_agent_turn[8] */

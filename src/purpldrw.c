@@ -1459,8 +1459,11 @@ void draw_flic_purple_list(void (*fn)())
 
 void draw_noise_box_purple_list(int x, int y, ulong width, ulong height)
 {
+    struct PurpleDrawItem *pditem;
+
     draw_box_purple_list(x, y, width, height, 0);
-    purple_draw_list[purple_draw_index - 1].Type = PuDT_NOISEBOX;
+    pditem = &purple_draw_list[purple_draw_index - 1];
+    pditem->Type = PuDT_NOISEBOX;
 }
 
 /******************************************************************************/

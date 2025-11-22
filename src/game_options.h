@@ -83,7 +83,7 @@ struct InGame {
     struct Scanner Scanner; // offset=0x0C
     long Credits; // offset=0x473 (on original Scanner struct)
     ulong fld_unkC4B;	// offset=0x477
-    short fld_unkC4F;
+    short MissionEndFade;
     short MissionStatus;
     long Flags;
     ushort fld_unkC57;

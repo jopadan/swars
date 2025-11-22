@@ -2442,11 +2442,13 @@ TbBool process_panel_state_grp_agents_mood(ushort main_panel, ushort agent)
     return did_inp;
 }
 
-TbBool process_panel_state(void)
+ubyte process_panel_state(void)
 {
     PlayerInfo *p_locplayer;
     ubyte pnsta;
+    ubyte did_inp;
 
+    did_inp = GINPUT_NONE;
     p_locplayer = &players[local_player_no];
     pnsta = p_locplayer->PanelState[mouser];
 
@@ -2462,23 +2464,27 @@ TbBool process_panel_state(void)
 
     if ((pnsta >= PANEL_STATE_WEP_SEL_ONE) && (pnsta < PANEL_STATE_WEP_SEL_ONE + 4))
     {
-        if (process_panel_state_one_agent_weapon((pnsta - PANEL_STATE_WEP_SEL_ONE) % 4))
-            return 1;
+        did_inp |= process_panel_state_one_agent_weapon((pnsta - PANEL_STATE_WEP_SEL_ONE) % 4);
+        if ((did_inp & GINPUT_PACKET) != 0)
+            return did_inp;
     }
     else if ((pnsta >= PANEL_STATE_WEP_SEL_GRP) && (pnsta < PANEL_STATE_WEP_SEL_GRP + 4))
     {
-        if (process_panel_state_grp_agents_weapon((pnsta - PANEL_STATE_WEP_SEL_GRP) % 4))
-            return 1;
+        did_inp |= process_panel_state_grp_agents_weapon((pnsta - PANEL_STATE_WEP_SEL_GRP) % 4);
+        if ((did_inp & GINPUT_PACKET) != 0)
+            return did_inp;
     }
     else if ((pnsta >= PANEL_STATE_MOOD_SET_ONE) && (pnsta < PANEL_STATE_MOOD_SET_ONE + 4))
     {
-        if (process_panel_state_one_agent_mood(pnsta - 5, (pnsta - PANEL_STATE_MOOD_SET_ONE) % 4))
-            return 1;
+        did_inp |= process_panel_state_one_agent_mood(pnsta - 5, (pnsta - PANEL_STATE_MOOD_SET_ONE) % 4);
+        if ((did_inp & GINPUT_PACKET) != 0)
+            return did_inp;
     }
     else if ((pnsta >= PANEL_STATE_MOOD_SET_GRP) && (pnsta < PANEL_STATE_MOOD_SET_GRP + 4))
     {
-        if (process_panel_state_grp_agents_mood(pnsta - 9, (pnsta - PANEL_STATE_MOOD_SET_GRP) % 4))
-            return 1;
+        did_inp |= process_panel_state_grp_agents_mood(pnsta - 9, (pnsta - PANEL_STATE_MOOD_SET_GRP) % 4);
+        if ((did_inp & GINPUT_PACKET) != 0)
+            return did_inp;
     }
     else if (pnsta == PANEL_STATE_SEND_MESSAGE)
     {
@@ -2492,10 +2498,11 @@ TbBool process_panel_state(void)
             if (lbShift & KMod_SHIFT)
                 i |= 0x0100;
             my_build_packet(p_pckt, PAct_CHAT_MESSAGE_KEY, i, 0, 0, 0);
-            return 1;
+            did_inp |= GINPUT_PACKET;
+            return did_inp;
         }
     }
-    return 0;
+    return did_inp;
 }
 
 ubyte check_panel_input(short panel)

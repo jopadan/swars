@@ -4719,6 +4719,63 @@ void local_to_worldr(int *dx, int *dy, int *dz)
         : : "a" (dx), "d" (dy), "b" (dz));
 }
 
+void scroll_map_update_alt(void)
+{
+    long cumm_alt;
+
+    cumm_alt = alt_at_point(engn_xc, engn_zc) >> 8;
+    cumm_alt += alt_at_point(engn_xc + 2048, engn_zc + 2048) >> 8;
+    cumm_alt += alt_at_point(engn_xc + 2048, engn_zc - 2048) >> 8;
+    cumm_alt += alt_at_point(engn_xc - 2048, engn_zc + 2048) >> 8;
+    cumm_alt += alt_at_point(engn_xc - 2048, engn_zc - 2048) >> 8;
+    track_y(cumm_alt / 5);
+}
+
+void scroll_map_input(int *p_dx, int *p_dy)
+{
+    PlayerInfo *p_locplayer;
+    int mv_border;
+    int dx, dy;
+
+    dx = 0;
+    dy = 0;
+    p_locplayer = &players[local_player_no];
+    // Define a move border, getting the mouse beyond it causes map scroll
+    if (lbDisplay.GraphicsScreenWidth >= 640)
+        mv_border = 3;
+    else
+        mv_border = 2;
+
+    if (!p_locplayer->DoubleMode)
+    {
+        dx = (is_gamekey_kbd_pressed(GKey_RIGHT) & 1) - (is_gamekey_kbd_pressed(GKey_LEFT) & 1);
+        dy = (is_gamekey_kbd_pressed(GKey_DOWN) & 1) - (is_gamekey_kbd_pressed(GKey_UP) & 1);
+    }
+
+    {
+        if (dx == 0)
+        {
+            int mx;
+            mx = lbDisplay.MMouseX;
+            if (mx >= lbDisplay.GraphicsScreenWidth - mv_border)
+                dx = 1;
+            if (mx < mv_border)
+                dx = -1;
+        }
+        if (dy == 0)
+        {
+            int my;
+            my = lbDisplay.MMouseY;
+            if (my >= lbDisplay.GraphicsScreenHeight - mv_border)
+                dy = 1;
+            if (my < mv_border)
+                dy = -1;
+        }
+    }
+    *p_dx = dx;
+    *p_dy = dy;
+}
+
 void do_scroll_map(void)
 {
     PlayerInfo *p_locplayer;
@@ -4771,47 +4828,11 @@ void do_scroll_map(void)
     engn_zc_orig = engn_zc;
     if (ctlmode == UInpCtr_Mouse || pktrec_mode == PktR_PLAYBACK)
     {
+        // Only allow scroll view if panel is not used
         if (p_locplayer->PanelState[mouser] == PANEL_STATE_NORMAL)
         {
-            long cumm_alt;
-            int mv_border;
-
-            // Define a move border, getting the mouse beyond it causes map scroll
-            if (lbDisplay.GraphicsScreenWidth >= 640)
-                mv_border = 3;
-            else
-                mv_border = 2;
-
-            if (!p_locplayer->DoubleMode)
-            {
-                dx = (is_gamekey_kbd_pressed(GKey_RIGHT) & 1) - (is_gamekey_kbd_pressed(GKey_LEFT) & 1);
-                dy = (is_gamekey_kbd_pressed(GKey_DOWN) & 1) - (is_gamekey_kbd_pressed(GKey_UP) & 1);
-            }
-
-            if (dx == 0)
-            {
-                int mx;
-                mx = lbDisplay.MMouseX;
-                if (mx >= lbDisplay.GraphicsScreenWidth - mv_border)
-                    dx = 1;
-                if (mx < mv_border)
-                    dx = -1;
-            }
-            if (dy == 0)
-            {
-                int my;
-                my = lbDisplay.MMouseY;
-                if (my >= lbDisplay.GraphicsScreenHeight - mv_border)
-                    dy = 1;
-                if (my < mv_border)
-                    dy = -1;
-            }
-            cumm_alt = alt_at_point(engn_xc, engn_zc) >> 8;
-            cumm_alt += alt_at_point(engn_xc + 2048, engn_zc + 2048) >> 8;
-            cumm_alt += alt_at_point(engn_xc + 2048, engn_zc - 2048) >> 8;
-            cumm_alt += alt_at_point(engn_xc - 2048, engn_zc + 2048) >> 8;
-            cumm_alt += alt_at_point(engn_xc - 2048, engn_zc - 2048) >> 8;
-            track_y(cumm_alt / 5);
+            scroll_map_input(&dx, &dy);
+            scroll_map_update_alt();
             dampr = 9;
         }
     }
@@ -4833,9 +4854,9 @@ void do_scroll_map(void)
     }
     angle = -1;
     if (dy > 0)
-        angle = (abase + 3071) & 0x7FF;
+        angle = (abase + 3 * LbFPMath_PI - 1) & LbFPMath_AngleMask;
     if (dy < 0)
-        angle = (abase + 2047) & 0x7FF;
+        angle = (abase + 2 * LbFPMath_PI - 1) & LbFPMath_AngleMask;
     if (angle >= 0) {
         int wibl_x, wibl_y;
         wibl_x = dword_153194 * lbSinTable[angle] >> 8 >> dampr;
@@ -4848,20 +4869,21 @@ void do_scroll_map(void)
 
     if (engn_xc < 0)
         engn_xc = 0;
-    else if (engn_xc >= 0x8000)
-        engn_xc = 0x7FFF;
+    else if (engn_xc > MAP_COORD_WIDTH - 1)
+        engn_xc = MAP_COORD_WIDTH - 1;
     if (engn_zc < 0)
         engn_zc = 0;
-    else if (engn_zc >= 0x8000)
-        engn_zc = 0x7FFF;
-    if (ingame.TrackX > 0xC000)
+    else if (engn_zc > MAP_COORD_HEIGHT - 1)
+        engn_zc = MAP_COORD_HEIGHT - 1;
+    // If unsigned value is exceeded by more than half of the range, treat as below minimum
+    if (ingame.TrackX > MAP_COORD_WIDTH + MAP_COORD_WIDTH/2)
         ingame.TrackX = 0;
-    else if (ingame.TrackX >= 0x8000)
-        ingame.TrackX = 0x7FFF;
-    if (ingame.TrackZ > 0xC000)
+    else if (ingame.TrackX > MAP_COORD_WIDTH - 1)
+        ingame.TrackX = MAP_COORD_WIDTH - 1;
+    if (ingame.TrackZ > MAP_COORD_HEIGHT + MAP_COORD_HEIGHT/2)
         ingame.TrackZ = 0;
-    else if (ingame.TrackZ >= 0x8000)
-        ingame.TrackZ = 0x7FFF;
+    else if (ingame.TrackZ > MAP_COORD_HEIGHT - 1)
+        ingame.TrackZ = MAP_COORD_HEIGHT - 1;
 
     if (dx) {
         dword_153194 += 4 + ((dword_153194 - 252) >> 5);
@@ -4871,17 +4893,17 @@ void do_scroll_map(void)
         dword_153194 -= (dword_153194 - 256) >> 2;
     }
     if ((engn_zc - engn_zc_orig) || (engn_xc - engn_xc_orig)) {
-        dword_17710C = engn_xc - engn_xc_orig;
-        dword_177110 = engn_zc - engn_zc_orig;
+        engn_x_vel = engn_xc - engn_xc_orig;
+        engn_y_vel = engn_zc - engn_zc_orig;
     } else {
-        dword_17710C >>= 2;
-        dword_177110 >>= 2;
-        if (abs(dword_17710C) < 5)
-            dword_17710C = 0;
-        if (abs(dword_177110) < 5)
-            dword_177110 = 0;
-        engn_xc += dword_17710C;
-        engn_zc += dword_177110;
+        engn_x_vel >>= 2;
+        engn_y_vel >>= 2;
+        if (abs(engn_x_vel) < 5)
+            engn_x_vel = 0;
+        if (abs(engn_y_vel) < 5)
+            engn_y_vel = 0;
+        engn_xc += engn_x_vel;
+        engn_zc += engn_y_vel;
     }
 }
 
@@ -6346,7 +6368,7 @@ void show_load_and_prep_mission(void)
             update_open_brief();
         }
 
-        ingame.fld_unkC4F = 0;
+        ingame.MissionEndFade = 0;
         byte_19EC6F = 1;
 
         debug_trace_place(10);
@@ -6999,7 +7021,7 @@ void input_packet_playback(void)
     do_agent_track_only();
 }
 
-void input_mission_cheats(void)
+ubyte input_mission_cheats(void)
 {
     if ((ingame.UserFlags & UsrF_Cheats) != 0)
     {
@@ -7014,6 +7036,7 @@ void input_mission_cheats(void)
             mission_result = -1;
         }
     }
+    return GINPUT_NONE;
 }
 
 void draw_mission_concluded(void)
@@ -7087,7 +7110,7 @@ void input_mission_concluded(void)
           clear_key_pressed(KC_ESCAPE);
           clear_key_pressed(KC_SPACE);
           clear_key_pressed(KC_RETURN);
-          ingame.fld_unkC4F = 1;
+          ingame.MissionEndFade = 1;
         }
         else
         {
@@ -7120,29 +7143,29 @@ void load_packet(void)
     did_inp = GINPUT_NONE;
     if (ingame.DisplayMode == DpM_ENGINEPLY || ingame.DisplayMode == DpM_UNKN_3B)
     {
-        did_inp = do_user_interface();
-        input_mission_cheats();
+        did_inp |= do_user_interface();
+        did_inp |= input_mission_cheats();
         ingame.MissionStatus = test_missions(0);
         if ((ingame.MissionStatus != ObvStatu_UNDECIDED) && !in_network_game)
         {
             draw_mission_concluded();
             input_mission_concluded();
-            if (ingame.fld_unkC4F == 0)
+            if (ingame.MissionEndFade == 0)
             {
                 struct Mission *p_missi;
                 p_missi = &mission_list[ingame.CurrentMission];
                 if (p_missi->WaitToFade != 0)
-                    ingame.fld_unkC4F = p_missi->WaitToFade;
+                    ingame.MissionEndFade = p_missi->WaitToFade;
             }
         }
     }
 
-    if (ingame.fld_unkC4F != 0)
+    if (ingame.MissionEndFade != 0)
     {
-        if (ingame.fld_unkC4F < 30)
+        if (ingame.MissionEndFade < 30)
             change_brightness(-2);
-        ingame.fld_unkC4F--;
-        if (ingame.fld_unkC4F == 0)
+        ingame.MissionEndFade--;
+        if (ingame.MissionEndFade == 0)
         {
             init_level_3d(1);
             if (is_single_game)
@@ -7155,7 +7178,7 @@ void load_packet(void)
         if (is_single_game) {
             exit_game = 1;
         } else {
-            init_level_3d(1u);
+            init_level_3d(1);
             if (ingame.MissionStatus != ObvStatu_COMPLETED)
                 ingame.MissionStatus = -1;
             mission_over();
@@ -7177,7 +7200,7 @@ void load_packet(void)
             if (ingame.TrackThing != 0)
                 continue;
 
-            input_user_control_agent(local_player_no, dmuser);
+            did_inp |= input_user_control_agent(local_player_no, dmuser);
         }
     }
 
@@ -7196,6 +7219,7 @@ void load_packet(void)
                 if (in_network_game || critical_action_input()) {
                     change_brightness(-32);
                     p_pckt->Action = PAct_MISSN_ABORT;
+                    did_inp |= GINPUT_EXIT;
                 }
             }
         }
