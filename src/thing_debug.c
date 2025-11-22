@@ -353,6 +353,7 @@ int person_command_dbg_point_to_target(short x, short y, ushort cmd, struct Thin
     case PCmd_PING_P_V:
     case PCmd_WAIT_OBJT_DESTROY:
     case PCmd_WAND_OBJT_DESTROY:
+    case PCmd_WAIT_P_PERSUADE:
         unused_func_203(x, y, p_cmd->OtherThing, 1u);
         return 1;
     case PCmd_KILL_PERSON:
