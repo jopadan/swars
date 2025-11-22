@@ -137,10 +137,17 @@ extern struct InGame ingame;
 
 /******************************************************************************/
 
+/** Gives national text with description of the action.
+ */
 const char *game_option_desc(int option_no);
+
+/** Decrements value of the option, with wrapping.
+ */
 void game_option_dec(int option_no);
+
+/** Increments value of the option, with wrapping.
+ */
 void game_option_inc(int option_no);
-void game_option_toggle(int option_no);
 
 void set_default_gfx_settings(void);
 void set_default_visual_prefernces(void);

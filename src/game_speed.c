@@ -70,22 +70,22 @@ void frameskip_decrease(void)
 
 ubyte get_speed_control_inputs(void)
 {
-    ubyte ret;
+    ubyte did_inp;
 
-    ret = GINPUT_NONE;
+    did_inp = GINPUT_NONE;
     if (is_gamekey_pressed(GKey_GAMESPEED_INC))
     {
         clear_gamekey_pressed(GKey_GAMESPEED_INC);
         frameskip_increase();
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_GAMESPEED_DEC))
     {
         clear_gamekey_pressed(GKey_GAMESPEED_DEC);
         frameskip_decrease();
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
-    return ret;
+    return did_inp;
 }
 
 void wait_next_gameturn(void)

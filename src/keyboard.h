@@ -123,6 +123,7 @@ enum GameInputResult
   /** Flag set if input function reacted to keys and generated a packet.
    * Currently 1 as some original input functions require that. */
   GINPUT_PACKET = 1,
+  GINPUT_EXIT   = 255,
 };
 
 /******************************************************************************/

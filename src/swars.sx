@@ -14903,7 +14903,7 @@ vtable_3a9e8:
 
 
 /*----------------------------------------------------------------*/
-GLOBAL_FUNC (ASM_process_mouse_imputs)	/* 0x03AA04 */
+GLOBAL_FUNC (ASM_process_mouse_inputs)	/* 0x03AA04 */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx

@@ -1661,9 +1661,9 @@ void engine_draw_things(int pos_beg_x, int pos_beg_z, int rend_beg_x, int rend_b
 
 ubyte get_engine_inputs(void)
 {
-    ubyte ret;
+    ubyte did_inp;
 
-    ret = GINPUT_NONE;
+    did_inp = GINPUT_NONE;
     if (is_gamekey_pressed(GKey_TRANS_OBJ_SURF_COL))
     {
         if (lbShift & KMod_SHIFT)
@@ -1671,7 +1671,7 @@ ubyte get_engine_inputs(void)
         else
             game_option_dec(GOpt_TranspObjSurfaceColr);
         clear_gamekey_pressed(GKey_TRANS_OBJ_SURF_COL);
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_TRANS_OBJ_LINE_COL))
     {
@@ -1680,9 +1680,9 @@ ubyte get_engine_inputs(void)
         else
             game_option_dec(GOpt_TranspObjLineColr);
         clear_gamekey_pressed(GKey_TRANS_OBJ_LINE_COL);
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
-    return ret;
+    return did_inp;
 }
 
 void process_engine_unk3(void)
@@ -2220,22 +2220,22 @@ void set_max_stats_to_all_agents(PlayerInfo *p_locplayer)
 ubyte game_graphics_inputs(void)
 {
     PlayerInfo *p_locplayer;
-    ubyte ret;
+    ubyte did_inp;
 
-    ret = GINPUT_NONE;
+    did_inp = GINPUT_NONE;
     p_locplayer = &players[local_player_no];
     if ((ingame.DisplayMode != DpM_ENGINEPLY) &&
         (ingame.DisplayMode != DpM_UNKN_3B))
-        return ret;
+        return did_inp;
     if (in_network_game && p_locplayer->PanelState[mouser]
       == PANEL_STATE_SEND_MESSAGE)
-        return ret;
+        return did_inp;
 
     if (is_gamekey_pressed(GKey_CAMERA_PERSPECTV))
     {
         clear_gamekey_pressed(GKey_CAMERA_PERSPECTV);
         game_option_inc(GOpt_CameraPerspective);
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
 
     if ((ingame.UserFlags & UsrF_Cheats) != 0)
@@ -2244,7 +2244,7 @@ ubyte game_graphics_inputs(void)
         {
             clear_key_pressed(KC_T);
             teleport_current_agent(p_locplayer);
-            ret |= GINPUT_DIRECT;
+            did_inp |= GINPUT_DIRECT;
         }
     }
 
@@ -2255,14 +2255,14 @@ ubyte game_graphics_inputs(void)
             clear_key_pressed(KC_Q);
             give_best_mods_to_all_agents(p_locplayer);
             set_max_stats_to_all_agents(p_locplayer);
-            ret |= GINPUT_DIRECT;
+            did_inp |= GINPUT_DIRECT;
         }
         if (is_key_pressed(KC_Q, KMod_SHIFT))
         {
             clear_key_pressed(KC_Q);
             resurrect_any_dead_agents(p_locplayer);
             give_all_weapons_to_all_agents(p_locplayer);
-            ret |= GINPUT_DIRECT;
+            did_inp |= GINPUT_DIRECT;
         }
     }
 
@@ -2270,10 +2270,10 @@ ubyte game_graphics_inputs(void)
     {
         clear_key_pressed(KC_F8);
         screen_mode_switch_to_next();
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
 
-    return ret;
+    return did_inp;
 }
 
 void init_syndwars(void)
@@ -4975,11 +4975,11 @@ void reset_brightness(void)
     set_default_brightness();
 }
 
-ubyte process_mouse_imputs(void)
+ubyte process_mouse_inputs(void)
 {
 #if 0
     int ret;
-    asm volatile ("call ASM_process_mouse_imputs\n"
+    asm volatile ("call ASM_process_mouse_inputs\n"
         : "=r" (ret) : );
     return ret;
 #endif
@@ -4988,9 +4988,9 @@ ubyte process_mouse_imputs(void)
     struct Packet *p_pckt;
     ThingIdx dcthing;
     int map_y;
-    ubyte ret;
+    ubyte did_inp;
 
-    ret = GINPUT_NONE;
+    did_inp = GINPUT_NONE;
     p_locplayer = &players[local_player_no];
 
     if (!lbDisplay.MLeftButton)
@@ -4998,20 +4998,21 @@ ubyte process_mouse_imputs(void)
     if (!lbDisplay.MRightButton)
         p_locplayer->UserInput[mouser].ControlMode &= ~0x4000;
     if ((ingame.DisplayMode != 50) && (ingame.DisplayMode != 59))
-        return 0;
-    if (process_panel_state())
-        return 1;
+        return did_inp;
+    did_inp |= process_panel_state();
+    if ((did_inp & GINPUT_PACKET) != 0)
+        return did_inp;
     if (lbDisplay.LeftButton || lbDisplay.RightButton || lbDisplay.MLeftButton || lbDisplay.MRightButton)
     {
-        ret = check_panel_button();
-        if ((ret & GINPUT_PACKET) != 0)
-            return ret;
+        did_inp = check_panel_button();
+        if ((did_inp & GINPUT_PACKET) != 0)
+            return did_inp;
     }
 
     dcthing = p_locplayer->DirectControl[mouser];
     p_agent = &things[dcthing];
     if ((p_agent->State == PerSt_PERSON_BURNING) || ((p_agent->Flag & TngF_Destroyed) != 0)) {
-        return ret;
+        return did_inp;
     }
 
     if (lbDisplay.LeftButton)
@@ -5027,8 +5028,8 @@ ubyte process_mouse_imputs(void)
             case 7:
                 my_build_packet(p_pckt, PAct_FOLLOW_PERSON, dcthing,
                   p_locplayer->field_102, 0, 0);
-                ret |= GINPUT_PACKET;
-                return ret;
+                did_inp |= GINPUT_PACKET;
+                return did_inp;
             case 2:
             case 6:
                 break;
@@ -5047,8 +5048,8 @@ ubyte process_mouse_imputs(void)
                     my_build_packet(p_pckt, PAct_AGENT_GOTO_FACE_PT_ABS_FF, dcthing,
                       mouse_map_x, p_locplayer->Target, mouse_map_z);
                 }
-                ret |= GINPUT_PACKET;
-                return ret;
+                did_inp |= GINPUT_PACKET;
+                return did_inp;
             case 4:
                 if ((gameturn & 0x7FFF) - p_locplayer->UserInput[mouser].Turn >= 7)
                 {
@@ -5062,8 +5063,8 @@ ubyte process_mouse_imputs(void)
                     my_build_packet(p_pckt, PAct_GO_ENTER_VEHICLE_FF, dcthing,
                       p_locplayer->field_102, 0, 0);
                 }
-                ret |= GINPUT_PACKET;
-                return ret;
+                did_inp |= GINPUT_PACKET;
+                return did_inp;
             case 5:
                 if ((gameturn & 0x7FFF) - p_locplayer->UserInput[mouser].Turn >= 7)
                 {
@@ -5077,8 +5078,8 @@ ubyte process_mouse_imputs(void)
                     my_build_packet(p_pckt, PAct_GET_ITEM_FAST, dcthing,
                       p_locplayer->field_102, 0, 0);
                 }
-                ret |= GINPUT_PACKET;
-                return ret;
+                did_inp |= GINPUT_PACKET;
+                return did_inp;
             default:
                 break;
             }
@@ -5092,8 +5093,8 @@ ubyte process_mouse_imputs(void)
             {
                 do_change_mouse(8);
                 build_packet(p_pckt, PAct_CONTROL_MODE, 1, 0, 0, 0);
-                ret |= GINPUT_PACKET;
-                return ret;
+                did_inp |= GINPUT_PACKET;
+                return did_inp;
             }
         }
         if ((mouse_map_x > 0) && (mouse_map_x < MAP_COORD_WIDTH) &&
@@ -5114,10 +5115,10 @@ ubyte process_mouse_imputs(void)
                 my_build_packet(p_pckt, PAct_AGENT_GOTO_GND_PT_ABS_FF, dcthing,
                   mouse_map_x, map_y, mouse_map_z);
             }
-            ret |= GINPUT_PACKET;
-            return ret;
+            did_inp |= GINPUT_PACKET;
+            return did_inp;
         }
-        return ret;
+        return did_inp;
     }
 
     if (lbDisplay.RightButton && ((p_locplayer->UserInput[mouser].ControlMode & 0x4000) == 0))
@@ -5139,8 +5140,8 @@ ubyte process_mouse_imputs(void)
                 else
                     my_build_packet(p_pckt, PAct_PLANT_MINE_AT_GND_PT, dcthing,
                       mouse_map_x, map_y, mouse_map_z);
-                ret |= GINPUT_PACKET;
-                return ret;
+                did_inp |= GINPUT_PACKET;
+                return did_inp;
             }
             else
             {
@@ -5151,8 +5152,8 @@ ubyte process_mouse_imputs(void)
                 else
                     my_build_packet(p_pckt, PAct_PLANT_MINE_AT_GND_PT_FF, dcthing,
                       mouse_map_x, map_y, mouse_map_z);
-                ret |= GINPUT_PACKET;
-                return ret;
+                did_inp |= GINPUT_PACKET;
+                return did_inp;
             }
         }
         else if (weapon_is_for_spreading_on_ground(wtype))
@@ -5166,8 +5167,8 @@ ubyte process_mouse_imputs(void)
                 else
                     my_build_packet(p_pckt, PAct_SHOOT_AT_GND_POINT, dcthing,
                       mouse_map_x, map_y, mouse_map_z);
-                ret |= GINPUT_PACKET;
-                return ret;
+                did_inp |= GINPUT_PACKET;
+                return did_inp;
             }
             else
             {
@@ -5178,8 +5179,8 @@ ubyte process_mouse_imputs(void)
                 else
                     my_build_packet(p_pckt, PAct_SHOOT_AT_GND_POINT_FF, dcthing,
                       mouse_map_x, map_y, mouse_map_z);
-                ret |= GINPUT_PACKET;
-                return ret;
+                did_inp |= GINPUT_PACKET;
+                return did_inp;
             }
         }
     }
@@ -5192,34 +5193,34 @@ ubyte process_mouse_imputs(void)
         {
             my_build_packet(p_pckt, PAct_SHOOT_AT_FACE_POINT, dcthing,
               mouse_map_x, p_locplayer->Target, mouse_map_z);
-            ret |= GINPUT_PACKET;
-            return ret;
+            did_inp |= GINPUT_PACKET;
+            return did_inp;
         }
         if (p_locplayer->field_102 > 0)
         {
             my_build_packet(p_pckt, PAct_SHOOT_AT_THING, dcthing,
               p_locplayer->field_102, 0, 0);
-            ret |= GINPUT_PACKET;
-            return ret;
+            did_inp |= GINPUT_PACKET;
+            return did_inp;
         }
         if ((mouse_map_x > 0) && (mouse_map_x < MAP_COORD_WIDTH) &&
           (mouse_map_z > 0) && (mouse_map_z < MAP_COORD_HEIGHT))
         {
             my_build_packet(p_pckt, PAct_SHOOT_AT_GND_POINT, dcthing,
               mouse_map_x, map_y, mouse_map_z);
-            ret |= GINPUT_PACKET;
-            return ret;
+            did_inp |= GINPUT_PACKET;
+            return did_inp;
         }
     }
 
-    return ret;
+    return did_inp;
 }
 
 ubyte do_music_user_input(void)
 {
-    ubyte ret;
+    ubyte did_inp;
 
-    ret = GINPUT_NONE;
+    did_inp = GINPUT_NONE;
     // MIDI Music (tension) volume control
     if (is_gamekey_pressed(GKey_DANGR_VOL_INC))
     {
@@ -5228,7 +5229,7 @@ ubyte do_music_user_input(void)
         else
             startscr_midivol += 10;
         sfx_apply_midivol();
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_DANGR_VOL_DEC))
     {
@@ -5237,7 +5238,7 @@ ubyte do_music_user_input(void)
         else
             startscr_midivol -= 10;
         sfx_apply_midivol();
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
 
     // Sample volume control
@@ -5248,7 +5249,7 @@ ubyte do_music_user_input(void)
         else
             startscr_samplevol += 10;
         sfx_apply_samplevol();
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_SOUND_VOL_DEC))
     {
@@ -5257,7 +5258,7 @@ ubyte do_music_user_input(void)
         else
             startscr_samplevol -= 10;
         sfx_apply_samplevol();
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
 
     // CD Music volume control
@@ -5268,7 +5269,7 @@ ubyte do_music_user_input(void)
         else
             startscr_cdvolume += 10;
         sfx_apply_cdvolume();
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_MUSIC_VOL_DEC))
     {
@@ -5277,7 +5278,7 @@ ubyte do_music_user_input(void)
         else
             startscr_cdvolume -= 10;
         sfx_apply_cdvolume();
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
 
     // Music track control
@@ -5285,26 +5286,26 @@ ubyte do_music_user_input(void)
     {
         clear_gamekey_pressed(GKey_MUSIC_TRACK);
         game_option_inc(GOpt_CDATrack);
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_DANGR_TRACK))
     {
         clear_gamekey_pressed(GKey_DANGR_TRACK);
         game_option_inc(GOpt_DangerTrack);
         StartMusic(ingame.DangerTrack, 0);
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
 
-    return ret;
+    return did_inp;
 }
 
 ubyte do_user_interface(void)
 {
     PlayerInfo *p_locplayer;
     int n;
-    ubyte ret;
+    ubyte did_inp;
 
-    ret = GINPUT_NONE;
+    did_inp = GINPUT_NONE;
     p_locplayer = &players[local_player_no];
     update_danger_music(0);
     do_scroll_map();
@@ -5323,13 +5324,15 @@ ubyte do_user_interface(void)
                 player_unkn0C9[local_player_no] = 0;
                 scanner_unkn370 = 0;
                 scanner_unkn3CC = 0;
-                ret |= GINPUT_DIRECT;
+                did_inp |= GINPUT_DIRECT;
             }
         }
     }
     if (p_locplayer->PanelState[mouser] == PANEL_STATE_SEND_MESSAGE)
     {
-        return process_mouse_imputs() != 0;
+        did_inp |= process_mouse_inputs();
+        // do not allow other keyboard inputs when writing chat message
+        return did_inp;
     }
 
     // screenshot
@@ -5337,7 +5340,7 @@ ubyte do_user_interface(void)
     {
         clear_gamekey_pressed(GKey_SCREENSHOT);
         LbPngSaveScreen("synII", lbDisplay.WScreen, display_palette, 0);
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
 
 #if 0
@@ -5368,7 +5371,7 @@ ubyte do_user_interface(void)
         game_option_inc(GOpt_PanelPermutation);
         init_scanner_colour();
         load_pop_sprites_for_current_mode();
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
 
     // change agents colours
@@ -5378,7 +5381,7 @@ ubyte do_user_interface(void)
         StopCD();
         game_option_inc(GOpt_TrenchcoatPreference);
         prep_multicolor_sprites();
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
 
     // adjust palette brightness
@@ -5386,28 +5389,28 @@ ubyte do_user_interface(void)
     {
         clear_key_pressed(KC_F11);
         reset_brightness();
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_key_pressed(KC_F11, KMod_SHIFT))
     {
         clear_key_pressed(KC_F11);
         change_brightness(-1);
         brightness--;
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_key_pressed(KC_F11, KMod_NONE))
     {
         clear_key_pressed(KC_F11);
         change_brightness(1);
         brightness++;
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
 
     if (is_key_pressed(KC_F1, KMod_CONTROL))
     {
         clear_key_pressed(KC_F1);
         game_option_inc(GOpt_BillboardMovies);
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_key_pressed(KC_F2, KMod_CONTROL))
     {
@@ -5416,7 +5419,7 @@ ubyte do_user_interface(void)
             ingame.Flags &= ~GamF_RenderScene;
         else
             ingame.Flags |= GamF_RenderScene;
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_key_pressed(KC_F3, KMod_CONTROL))
     {
@@ -5425,19 +5428,19 @@ ubyte do_user_interface(void)
             ingame.Flags &= ~GamF_StopThings;
         else
             ingame.Flags |= GamF_StopThings;
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_key_pressed(KC_F4, KMod_CONTROL))
     {
         clear_key_pressed(KC_F4);
         game_option_inc(GOpt_AdvancedLights);
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_key_pressed(KC_F6, KMod_CONTROL))
     {
         clear_key_pressed(KC_F6);
         game_option_inc(GOpt_DeepRadar);
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_key_pressed(KC_F10, KMod_CONTROL))
     {
@@ -5446,13 +5449,13 @@ ubyte do_user_interface(void)
             ingame.Flags &= ~GamF_HUDPanel;
         else
             ingame.Flags |= GamF_HUDPanel;
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
 
     // Game Speed control
     if (!in_network_game)
     {
-        ret |= get_speed_control_inputs();
+        did_inp |= get_speed_control_inputs();
     }
 
     // Toggle Scanner beep
@@ -5460,7 +5463,7 @@ ubyte do_user_interface(void)
     {
         clear_gamekey_pressed(GKey_SCANNER_PULSE);
         game_option_inc(GOpt_ScannerPulse);
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
 
     // Control map area to draw
@@ -5474,7 +5477,7 @@ ubyte do_user_interface(void)
                 n = 2;
             render_area_a = bound_render_area(render_area_a + n);
             render_area_b = bound_render_area(render_area_b + n);
-            ret |= GINPUT_DIRECT;
+            did_inp |= GINPUT_DIRECT;
         }
     }
 
@@ -5484,7 +5487,7 @@ ubyte do_user_interface(void)
         if (is_gamekey_pressed(GKey_PAUSE))
         {
             if (pause_screen_handle()) {
-                return -1;
+                return GINPUT_EXIT;
             }
         }
     }
@@ -5492,11 +5495,11 @@ ubyte do_user_interface(void)
     // Scanner appearence control
     if (is_gamekey_pressed(GKey_SCANNR_BRIGH_INC)) {
         ingame.Scanner.Brightness += 4;
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (is_gamekey_pressed(GKey_SCANNR_BRIGH_DEC)) {
         ingame.Scanner.Brightness -= 4;
-        ret |= GINPUT_DIRECT;
+        did_inp |= GINPUT_DIRECT;
     }
     if (ingame.Scanner.Brightness < 0)
         ingame.Scanner.Brightness = 0;
@@ -5515,7 +5518,7 @@ ubyte do_user_interface(void)
             init_level_3d(1);
 
             restart_back_into_mission(ingame.CurrentMission);
-            ret |= GINPUT_DIRECT;
+            did_inp |= GINPUT_DIRECT;
         }
     }
 
@@ -5524,8 +5527,8 @@ ubyte do_user_interface(void)
         short dcthing;
         dcthing = p_locplayer->DirectControl[0];
         build_packet(&packets[local_player_no], 0, dcthing, 0, 0, 0);
-        ret |= GINPUT_PACKET;
-        return ret;
+        did_inp |= GINPUT_PACKET;
+        return did_inp;
     }
 
     static GameKey sel_agent_gkeys[] = {
@@ -5575,8 +5578,8 @@ ubyte do_user_interface(void)
                     }
                     last_sel_agent_turn[n] = gameturn;
                 }
-                ret |= GINPUT_PACKET;
-                return ret;
+                did_inp |= GINPUT_PACKET;
+                return did_inp;
             }
         }
     }
@@ -5586,8 +5589,8 @@ ubyte do_user_interface(void)
         short dcthing;
         dcthing = p_locplayer->DirectControl[0];
         build_packet(&packets[local_player_no], 0, dcthing, 0, 0, 0);
-        ret |= GINPUT_PACKET;
-        return ret;
+        did_inp |= GINPUT_PACKET;
+        return did_inp;
     }
 
     // Resurrection and best equipment cheat; why is it in two places?
@@ -5598,14 +5601,14 @@ ubyte do_user_interface(void)
             clear_key_pressed(KC_Q);
             give_best_mods_to_all_agents(p_locplayer);
             set_max_stats_to_all_agents(p_locplayer);
-            ret |= GINPUT_DIRECT;
+            did_inp |= GINPUT_DIRECT;
         }
         if (is_key_pressed(KC_Q, KMod_SHIFT))
         {
             clear_key_pressed(KC_Q);
             resurrect_any_dead_agents(p_locplayer);
             give_all_weapons_to_all_agents(p_locplayer);
-            ret |= GINPUT_DIRECT;
+            did_inp |= GINPUT_DIRECT;
         }
     }
 
@@ -5624,15 +5627,15 @@ ubyte do_user_interface(void)
             if (ctlmode == UInpCtr_Mouse)
             {
                 p_usrinp->Bits &= 0x0000FFFF;
-                process_mouse_imputs();
+                process_mouse_inputs();
             }
             else if (ctlmode <= UInpCtr_Keyboard)
             {
                 dcthing = p_locplayer->DirectControl[n];
                 if (person_can_accept_control(dcthing))
                 {
-                    ret = weapon_select_input();
-                    if ((ret & GINPUT_PACKET) == 0)
+                    did_inp = weapon_select_input();
+                    if ((did_inp & GINPUT_PACKET) == 0)
                     {
                         do_user_input_bits_direction_clear(p_usrinp);
                         do_user_input_bits_direction_from_kbd(p_usrinp);
@@ -5644,7 +5647,7 @@ ubyte do_user_interface(void)
             {
                 dcthing = p_locplayer->DirectControl[n];
                 if (!person_can_accept_control(dcthing))
-                    return ret;
+                    return did_inp;
 
                 do_user_input_bits_direction_clear(p_usrinp);
                 do_user_input_bits_direction_from_joy(p_usrinp, ctlmode - 2);
@@ -5670,18 +5673,18 @@ ubyte do_user_interface(void)
             p_usrinp->ControlMode |= UInpCtr_Keyboard;
             do_change_mouse(8);
             p_locplayer->State[0] = 0;
-            ret |= GINPUT_DIRECT;
+            did_inp |= GINPUT_DIRECT;
         }
         p_usrinp->Bits &= 0x0000FFFF;
         do_user_input_bits_direction_clear(p_usrinp);
 
-        ret |= process_mouse_imputs();
-        if ((ret & GINPUT_PACKET) != 0)
-            return ret;
+        did_inp |= process_mouse_inputs();
+        if ((did_inp & GINPUT_PACKET) != 0)
+            return did_inp;
 
-        ret |= weapon_select_input();
-        if ((ret & GINPUT_PACKET) != 0)
-            return ret;
+        did_inp |= weapon_select_input();
+        if ((did_inp & GINPUT_PACKET) != 0)
+            return did_inp;
 
         dcthing = p_locplayer->DirectControl[0];
         if (person_can_accept_control(dcthing))
@@ -5698,7 +5701,7 @@ ubyte do_user_interface(void)
             }
         }
     }
-    return ret;
+    return did_inp;
 }
 
 void show_menu_screen_st0(void)
@@ -7099,7 +7102,7 @@ void load_packet(void)
 {
     PlayerInfo *p_locplayer;
     struct Packet *p_pckt;
-    int did_actn;
+    ubyte did_inp;
 
     p_locplayer = &players[local_player_no];
     p_pckt = &packets[local_player_no];
@@ -7114,10 +7117,10 @@ void load_packet(void)
         return;
     }
 
-    did_actn = 0;
+    did_inp = GINPUT_NONE;
     if (ingame.DisplayMode == DpM_ENGINEPLY || ingame.DisplayMode == DpM_UNKN_3B)
     {
-        did_actn = do_user_interface();
+        did_inp = do_user_interface();
         input_mission_cheats();
         ingame.MissionStatus = test_missions(0);
         if ((ingame.MissionStatus != ObvStatu_UNDECIDED) && !in_network_game)
@@ -7147,7 +7150,7 @@ void load_packet(void)
             mission_over();
         }
     }
-    if (did_actn == 255)
+    if (did_inp == GINPUT_EXIT)
     {
         if (is_single_game) {
             exit_game = 1;
@@ -7159,7 +7162,7 @@ void load_packet(void)
         }
     }
 
-    if ((did_actn == 0) || (p_locplayer->DoubleMode != 0))
+    if ((did_inp == 0) || (p_locplayer->DoubleMode != 0))
     {
         short dmuser;
 
