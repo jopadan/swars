@@ -170,6 +170,15 @@ TbBool weapon_is_for_throwing(WeaponType wtype);
  */
 TbBool weapon_is_for_planting(WeaponType wtype);
 
+/** Returns if the weapon should be used where the wielder stands, which
+ * consumes the thing and converts it into something else.
+ */
+TbBool weapon_is_for_deploying(WeaponType wtype);
+
+/** Returns if the weapon should be used by spreading on the ground while walking.
+ */
+TbBool weapon_is_for_spreading_on_ground(WeaponType wtype);
+
 /** Returns if the weapon activates at the location of the wielding person.
  */
 TbBool weapon_is_deployed_at_wielder_pos(WeaponType wtype);

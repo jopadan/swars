@@ -556,13 +556,6 @@ ushort weapon_sprite_index(WeaponType wtype, TbBool enabled)
     return sprid;
 }
 
-TbBool weapon_is_deployed_at_wielder_pos(WeaponType wtype)
-{
-    return (wtype == WEP_ELEMINE) || (wtype == WEP_EXPLMINE) ||
-      (wtype == WEP_AIRSTRIKE) || (wtype == WEP_CEREBUSIFF) ||
-      (wtype == WEP_RAZORWIRE) || (wtype == WEP_EXPLWIRE);
-}
-
 TbBool weapon_is_for_throwing(WeaponType wtype)
 {
     return (wtype == WEP_NUCLGREN) || (wtype == WEP_CRAZYGAS) || (wtype == WEP_KOGAS);
@@ -571,6 +564,23 @@ TbBool weapon_is_for_throwing(WeaponType wtype)
 TbBool weapon_is_for_planting(WeaponType wtype)
 {
     return (wtype == WEP_ELEMINE) || (wtype == WEP_EXPLMINE);
+}
+
+TbBool weapon_is_for_deploying(WeaponType wtype)
+{
+    return (wtype == WEP_AIRSTRIKE) || (wtype == WEP_CEREBUSIFF);
+}
+
+TbBool weapon_is_for_spreading_on_ground(WeaponType wtype)
+{
+    return (wtype == WEP_RAZORWIRE) || (wtype == WEP_EXPLWIRE);
+}
+
+TbBool weapon_is_deployed_at_wielder_pos(WeaponType wtype)
+{
+    return weapon_is_for_planting(wtype) ||
+      weapon_is_for_deploying(wtype) ||
+      weapon_is_for_spreading_on_ground(wtype);
 }
 
 TbBool weapon_is_breaking_will(WeaponType wtype)

@@ -5126,7 +5126,7 @@ ubyte process_mouse_imputs(void)
         p_pckt = &packets[local_player_no];
         map_y = (alt_at_point(mouse_map_x, mouse_map_z) >> 8) + 20;
         wtype = p_agent->U.UPerson.CurrentWeapon;
-        if (wtype >= WEP_ELEMINE && wtype <= WEP_EXPLMINE)
+        if (weapon_is_for_planting(wtype))
         {
             if ((gameturn & 0x7FFF) - p_locplayer->UserInput[mouser].Turn >= 7)
             {
@@ -5151,7 +5151,7 @@ ubyte process_mouse_imputs(void)
               return 1;
             }
         }
-        else if ((wtype <= WEP_RAZORWIRE) || (wtype == WEP_EXPLWIRE))
+        else if (weapon_is_for_spreading_on_ground(wtype))
         {
             if ((gameturn & 0x7FFF) - p_locplayer->UserInput[mouser].Turn >= 7)
             {
