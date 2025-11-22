@@ -4746,7 +4746,9 @@ void scroll_map_input(int *p_dx, int *p_dy)
     else
         mv_border = 2;
 
-    if (!p_locplayer->DoubleMode)
+    // Only allow scrolling via keyboard arrows if not DoubleMode, and if the arrows
+    // are not used for something else currntly (like changing weapon/mood)
+    if ((!p_locplayer->DoubleMode) && ((p_locplayer->UserInput[0].Bits & SpUIn_ChangeMoodOrWep) == 0))
     {
         dx = (is_gamekey_kbd_pressed(GKey_RIGHT) & 1) - (is_gamekey_kbd_pressed(GKey_LEFT) & 1);
         dy = (is_gamekey_kbd_pressed(GKey_DOWN) & 1) - (is_gamekey_kbd_pressed(GKey_UP) & 1);
@@ -5644,11 +5646,11 @@ ubyte do_user_interface(void)
             short dcthing;
 
             p_usrinp = &p_locplayer->UserInput[n];
-            p_usrinp->Bits &= 0x8000FFFF;
+            do_user_input_bits_control_clear_nonmove(p_usrinp);
             ctlmode = p_usrinp->ControlMode & ~UInpCtr_AllFlagsMask;
             if (ctlmode == UInpCtr_Mouse)
             {
-                p_usrinp->Bits &= 0x0000FFFF;
+                do_user_input_bits_control_clear_all(p_usrinp);
                 process_mouse_inputs();
             }
             else if (ctlmode <= UInpCtr_Keyboard)
@@ -5697,7 +5699,7 @@ ubyte do_user_interface(void)
             p_locplayer->State[0] = 0;
             did_inp |= GINPUT_DIRECT;
         }
-        p_usrinp->Bits &= 0x0000FFFF;
+        do_user_input_bits_control_clear_all(p_usrinp);
         do_user_input_bits_direction_clear(p_usrinp);
 
         did_inp |= process_mouse_inputs();
@@ -5720,6 +5722,13 @@ ubyte do_user_interface(void)
                 do_user_input_bits_direction_from_kbd(p_usrinp);
                 do_user_input_bits_direction_from_joy(p_usrinp, 0);
                 update_agent_move_direction_deltas(p_usrinp);
+            }
+            else if ((p_usrinp->Bits & SpUIn_ChangeMoodOrWep) != 0)
+            {
+                // Changing weapon or mood - prepare direction values, but do not treat them as movement
+                do_user_input_bits_direction_clear(p_usrinp);
+                do_user_input_bits_direction_from_kbd(p_usrinp);
+                do_user_input_bits_direction_from_joy(p_usrinp, 0);
             }
         }
     }

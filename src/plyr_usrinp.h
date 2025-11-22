@@ -53,6 +53,8 @@ enum SpecialUserInputBits {
     SpUIn_DoDropOrGoOut    = 0x40000000,
     /** Use fast version of the next action (ie. run to target). */
     SpUIn_DoActionFast     = 0x80000000,
+    SpUIn_AllNonMoveBits   = 0x7FFF0000,
+    SpUIn_AllControlBits   = 0xFFFF0000,
 };
 
 enum SpecialUserInputControlModes {
@@ -95,6 +97,8 @@ struct SpecialUserInput
 #pragma pack()
 /******************************************************************************/
 void do_user_input_bits_direction_clear(struct SpecialUserInput *p_usrinp);
+void do_user_input_bits_control_clear_all(struct SpecialUserInput *p_usrinp);
+void do_user_input_bits_control_clear_nonmove(struct SpecialUserInput *p_usrinp);
 void do_user_input_bits_direction_from_kbd(struct SpecialUserInput *p_usrinp);
 void do_user_input_bits_direction_from_joy(struct SpecialUserInput *p_usrinp, ubyte channel);
 short get_agent_move_direction_delta_x(const struct SpecialUserInput *p_usrinp);

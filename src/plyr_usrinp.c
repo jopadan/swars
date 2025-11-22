@@ -36,28 +36,78 @@
 #include "thing.h"
 /******************************************************************************/
 
+short get_agent_move_direction_delta_x(const struct SpecialUserInput *p_usrinp)
+{
+    return (sbyte)(p_usrinp->Bits >> 0);
+}
+
+void set_agent_move_direction_delta_x(struct SpecialUserInput *p_usrinp, short dt)
+{
+    if (dt > 127)
+        dt = 127;
+    if (dt < -127)
+        dt = -127;
+    //p_usrinp->Bits &= ~(0xFF << 0); -- no need, should be always clear before set
+    p_usrinp->Bits |= (((ubyte)dt) << 0);
+}
+
+short get_agent_move_direction_delta_z(const struct SpecialUserInput *p_usrinp)
+{
+    return (sbyte)(p_usrinp->Bits >> 8);
+}
+
+void set_agent_move_direction_delta_z(struct SpecialUserInput *p_usrinp, short dt)
+{
+    if (dt > 127)
+        dt = 127;
+    if (dt < -127)
+        dt = -127;
+    //p_usrinp->Bits &= ~(0xFF << 8); -- no need, should be always clear before set
+    p_usrinp->Bits |= (((ubyte)dt) << 8);
+}
+
 void do_user_input_bits_direction_clear(struct SpecialUserInput *p_usrinp)
 {
     p_usrinp->Bits &= ~(0xFF << 0);
     p_usrinp->Bits &= ~(0xFF << 8);
 }
 
+void do_user_input_bits_control_clear_all(struct SpecialUserInput *p_usrinp)
+{
+    p_usrinp->Bits &= ~SpUIn_AllControlBits;
+}
+
+void do_user_input_bits_control_clear_nonmove(struct SpecialUserInput *p_usrinp)
+{
+    p_usrinp->Bits &= ~SpUIn_AllNonMoveBits;
+}
+
 void do_user_input_bits_direction_from_kbd(struct SpecialUserInput *p_usrinp)
 {
-    sbyte k;
+    short dt;
 
-    k = (is_gamekey_kbd_pressed(GKey_RIGHT) & 1) - (is_gamekey_kbd_pressed(GKey_LEFT) & 1);
-    p_usrinp->Bits |= ((ubyte)k & 0xFF) << 0;
-    k = (is_gamekey_kbd_pressed(GKey_UP) & 1) - (is_gamekey_kbd_pressed(GKey_DOWN) & 1);
-    p_usrinp->Bits |= ((ubyte)k & 0xFF) << 8;
+    if (get_agent_move_direction_delta_x(p_usrinp) == 0) {
+        dt = (is_gamekey_kbd_pressed(GKey_RIGHT) & 1) - (is_gamekey_kbd_pressed(GKey_LEFT) & 1);
+        set_agent_move_direction_delta_x(p_usrinp, dt);
+    }
+    if (get_agent_move_direction_delta_z(p_usrinp) == 0) {
+        dt = (is_gamekey_kbd_pressed(GKey_UP) & 1) - (is_gamekey_kbd_pressed(GKey_DOWN) & 1);
+        set_agent_move_direction_delta_z(p_usrinp, dt);
+    }
 }
 
 void do_user_input_bits_direction_from_joy(struct SpecialUserInput *p_usrinp, ubyte channel)
 {
-    if (((p_usrinp->Bits >> 0) & 0xFF) == 0)
-        p_usrinp->Bits |= ((ubyte)joy.DigitalX[channel] & 0xFF) << 0;
-    if (((p_usrinp->Bits >> 8) & 0xFF) == 0)
-        p_usrinp->Bits |= ((ubyte)(-joy.DigitalY[channel]) & 0xFF) << 8;
+    short dt;
+
+    if (get_agent_move_direction_delta_x(p_usrinp) == 0) {
+        dt = joy.DigitalX[channel];
+        set_agent_move_direction_delta_x(p_usrinp, dt);
+    }
+    if (get_agent_move_direction_delta_z(p_usrinp) == 0) {
+        dt = joy.DigitalY[channel];
+        set_agent_move_direction_delta_z(p_usrinp, dt);
+    }
 }
 
 /** Input function for a user controlling the cyborgs via keyboard only.
@@ -147,16 +197,6 @@ ubyte do_user_input_bits_actions_from_joy_and_kbd(struct SpecialUserInput *p_usr
         did_inp |= GINPUT_DIRECT;
     }
     return did_inp;
-}
-
-short get_agent_move_direction_delta_x(const struct SpecialUserInput *p_usrinp)
-{
-    return (sbyte)(p_usrinp->Bits >> 0);
-}
-
-short get_agent_move_direction_delta_z(const struct SpecialUserInput *p_usrinp)
-{
-    return (sbyte)(p_usrinp->Bits >> 8);
 }
 
 void update_agent_move_direction_deltas(struct SpecialUserInput *p_usrinp)
