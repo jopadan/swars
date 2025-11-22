@@ -114,6 +114,17 @@ enum PacketActionResults
     PARes_TNGBADST,	/**< Action skipped, thing in bad state (ie. agent is performing contradictory command). */
 };
 
+/** Per-player packet, for players input exchange.
+ *
+ * A Packet represents an information from a specific player, required
+ * to achieve sync between players. If a player does something which
+ * results in a change in game world, this action needs to generate
+ * a packet so that the change can happen for all clients in a network
+ * game. Actions which are irrelevent for other players (like moving
+ * the camera, or switching to thermal mode) should not generate packets,
+ * or generate them only if not claimed by an important action.
+ *
+ */
 struct Packet
 {
     ushort Action;
