@@ -5386,7 +5386,7 @@ void person_burning(struct Thing *p_person)
             smpl_no = 1;
             break;
         }
-        play_dist_speech(p_person, smpl_no, 0x7Fu, 0x40u, 100, 0, 2);
+        play_dist_speech(p_person, smpl_no, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 2);
     }
 
     if (p_person->U.UPerson.RecoilTimer > 95)

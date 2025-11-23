@@ -86,10 +86,10 @@ extern long dword_176D04;
 
 extern ubyte byte_176D49;
 
-extern long dword_19F4FC;
-extern long dword_19F500;
-extern long dword_19F504;
-extern long dword_19F508;
+extern long engn_nuclear_shade_timer;
+extern long engn_nuclear_shade_x;
+extern long engn_nuclear_shade_y;
+extern long engn_nuclear_shade_z;
 
 extern short word_1A5834;
 extern short word_1A5836;
@@ -388,13 +388,13 @@ int calculate_enginepoint_shade_1(struct PolyPoint *p_pt1, struct SingleObjectFa
     p_pt2 = &game_object_points[p_face->PointNo[pt2]];
     p_sobj = &game_objects[p_face->Object];
 
-    dist_x = dword_19F500 - p_pt2->X - p_sobj->MapX;
-    dist_y = dword_19F504 - p_pt2->Y - p_sobj->OffsetY;
-    dist_z = dword_19F508 - p_pt2->Z - p_sobj->MapZ;
+    dist_x = engn_nuclear_shade_x - p_pt2->X - p_sobj->MapX;
+    dist_y = engn_nuclear_shade_y - p_pt2->Y - p_sobj->OffsetY;
+    dist_z = engn_nuclear_shade_z - p_pt2->Z - p_sobj->MapZ;
     distance = (dist_y * dist_y + dist_x * dist_x + dist_z * dist_z) >> 17;
 
     if (distance != 0)
-        p_pt1->S += dword_19F4FC * (0x1000000 / distance);
+        p_pt1->S += engn_nuclear_shade_timer * (0x1000000 / distance);
     else
         p_pt1->S = 0x3F0000;
 
@@ -421,13 +421,13 @@ int calculate_enginepoint_shade_2(struct PolyPoint *p_pt1, struct SingleObjectFa
     p_pt2 = &game_object_points[p_face4->PointNo[pt2]];
     p_sobj = &game_objects[p_face4->Object];
 
-    dist_x = dword_19F500 - p_pt2->X - p_sobj->MapX;
-    dist_y = dword_19F504 - p_pt2->Y - p_sobj->OffsetY;
-    dist_z = dword_19F508 - p_pt2->Z - p_sobj->MapZ;
+    dist_x = engn_nuclear_shade_x - p_pt2->X - p_sobj->MapX;
+    dist_y = engn_nuclear_shade_y - p_pt2->Y - p_sobj->OffsetY;
+    dist_z = engn_nuclear_shade_z - p_pt2->Z - p_sobj->MapZ;
     distance = (dist_y * dist_y + dist_x * dist_x + dist_z * dist_z) >> 17;
 
     if (distance != 0)
-        p_pt1->S += dword_19F4FC * (0x1000000 / distance);
+        p_pt1->S += engn_nuclear_shade_timer * (0x1000000 / distance);
     else
         p_pt1->S = 0x3F0000;
 
@@ -435,6 +435,19 @@ int calculate_enginepoint_shade_2(struct PolyPoint *p_pt1, struct SingleObjectFa
         p_pt1->S = 0x3F0000;
 
     return p_pt1->S;
+}
+
+void set_nuclear_shade_point(MapCoord x, MapCoord y, MapCoord z)
+{
+    engn_nuclear_shade_x = x;
+    engn_nuclear_shade_y = y;
+    engn_nuclear_shade_z = z;
+    engn_nuclear_shade_timer = 0;
+}
+
+void set_nuclear_shade_timer(ulong tmval)
+{
+    engn_nuclear_shade_timer = tmval;
 }
 
 uint cummulate_shade_from_quick_lights(ushort light_first)

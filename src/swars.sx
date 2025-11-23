@@ -10468,7 +10468,7 @@ GLOBAL_FUNC(ASM_calculate_enginepoint_shade_1)	/* 0x02980C */
 		add    %eax,%eax
 		add    %eax,%edx
 		mov    (%edx),%eax
-		mov    EXPORT_SYMBOL(dword_19F500),%edi
+		mov    EXPORT_SYMBOL(engn_nuclear_shade_x),%edi
 		sar    $0x10,%eax
 		mov    0xc(%esi),%si
 		sub    %eax,%edi
@@ -10485,7 +10485,7 @@ GLOBAL_FUNC(ASM_calculate_enginepoint_shade_1)	/* 0x02980C */
 		imul   %ebx,%ebx
 		mov    0x2(%edx),%esi
 		sar    $0x10,%esi
-		mov    EXPORT_SYMBOL(dword_19F504),%edi
+		mov    EXPORT_SYMBOL(engn_nuclear_shade_y),%edi
 		sub    %esi,%edi
 		mov    %edi,%esi
 		mov    0xc(%eax),%edi
@@ -10494,7 +10494,7 @@ GLOBAL_FUNC(ASM_calculate_enginepoint_shade_1)	/* 0x02980C */
 		imul   %esi,%esi
 		mov    0x4(%edx),%edx
 		sar    $0x10,%edx
-		mov    EXPORT_SYMBOL(dword_19F508),%edi
+		mov    EXPORT_SYMBOL(engn_nuclear_shade_z),%edi
 		mov    0x14(%eax),%eax
 		sub    %edx,%edi
 		sar    $0x10,%eax
@@ -10511,7 +10511,7 @@ GLOBAL_FUNC(ASM_calculate_enginepoint_shade_1)	/* 0x02980C */
 		mov    %eax,%edx
 		sar    $0x1f,%edx
 		idiv   %esi
-		imul   EXPORT_SYMBOL(dword_19F4FC),%eax
+		imul   EXPORT_SYMBOL(engn_nuclear_shade_timer),%eax
 		mov    0x10(%ecx),%ebx
 		add    %eax,%ebx
 		mov    %ebx,0x10(%ecx)
@@ -10545,7 +10545,7 @@ GLOBAL_FUNC(ASM_calculate_enginepoint_shade_2)	/* 0x0298E0 */
 		add    %eax,%eax
 		add    %eax,%edx
 		mov    (%edx),%eax
-		mov    EXPORT_SYMBOL(dword_19F500),%edi
+		mov    EXPORT_SYMBOL(engn_nuclear_shade_x),%edi
 		sar    $0x10,%eax
 		mov    0xe(%esi),%si
 		sub    %eax,%edi
@@ -10562,7 +10562,7 @@ GLOBAL_FUNC(ASM_calculate_enginepoint_shade_2)	/* 0x0298E0 */
 		imul   %ebx,%ebx
 		mov    0x2(%edx),%esi
 		sar    $0x10,%esi
-		mov    EXPORT_SYMBOL(dword_19F504),%edi
+		mov    EXPORT_SYMBOL(engn_nuclear_shade_y),%edi
 		sub    %esi,%edi
 		mov    %edi,%esi
 		mov    0xc(%eax),%edi
@@ -10571,7 +10571,7 @@ GLOBAL_FUNC(ASM_calculate_enginepoint_shade_2)	/* 0x0298E0 */
 		imul   %esi,%esi
 		mov    0x4(%edx),%edx
 		sar    $0x10,%edx
-		mov    EXPORT_SYMBOL(dword_19F508),%edi
+		mov    EXPORT_SYMBOL(engn_nuclear_shade_z),%edi
 		mov    0x14(%eax),%eax
 		sub    %edx,%edi
 		sar    $0x10,%eax
@@ -10588,7 +10588,7 @@ GLOBAL_FUNC(ASM_calculate_enginepoint_shade_2)	/* 0x0298E0 */
 		mov    %eax,%edx
 		sar    $0x1f,%edx
 		idiv   %esi
-		imul   EXPORT_SYMBOL(dword_19F4FC),%eax
+		imul   EXPORT_SYMBOL(engn_nuclear_shade_timer),%eax
 		mov    0x10(%ecx),%ebx
 		add    %eax,%ebx
 		mov    %ebx,0x10(%ecx)
@@ -63974,11 +63974,11 @@ GLOBAL_FUNC(ASM_init_nuclear_bomb)	/* 0x0632BC */
 		shl    $0x8,%edi
 		mov    %edi,0x1c(%edx)
 		call   ac_add_node_sthing
-		mov    %ecx,EXPORT_SYMBOL(dword_19F500)
-		mov    %ebx,EXPORT_SYMBOL(dword_19F508)
+		mov    %ecx,EXPORT_SYMBOL(engn_nuclear_shade_x)
+		mov    %ebx,EXPORT_SYMBOL(engn_nuclear_shade_z)
 		xor    %ebx,%ebx
-		mov    %esi,EXPORT_SYMBOL(dword_19F504)
-		mov    %ebx,EXPORT_SYMBOL(dword_19F4FC)
+		mov    %esi,EXPORT_SYMBOL(engn_nuclear_shade_y)
+		mov    %ebx,EXPORT_SYMBOL(engn_nuclear_shade_timer)
 	jump_63386:
 		mov    %edx,%eax
 		pop    %edi
@@ -156347,7 +156347,7 @@ GLOBAL_FUNC(ASM_process_nuclear_bomb)	/* 0x0C67EC */
 		mov    -0x1c(%ebp),%eax
 		mov    0x26(%eax),%eax
 		sar    $0x10,%eax
-		mov    %eax,EXPORT_SYMBOL(dword_19F4FC)
+		mov    %eax,EXPORT_SYMBOL(engn_nuclear_shade_timer)
 		cmp    $0xc,%eax
 		jge    jump_c6858
 		mov    -0x1c(%ebp),%edx
@@ -156583,7 +156583,7 @@ GLOBAL_FUNC(ASM_process_canister)	/* 0x0C6AB8 */
 		mov    %edx,(%esp)
 		sar    $0x10,%eax
 		movw   $0x0,0x14(%ebp)
-		mov    %eax,EXPORT_SYMBOL(dword_19F4FC)
+		mov    %eax,EXPORT_SYMBOL(engn_nuclear_shade_timer)
 		jmp    jump_c6bc4
 	jump_c6afc:
 		orb    $0x10,0xc(%eax)
@@ -184074,13 +184074,13 @@ data_19f498:
 		.fill   0x60
 GLOBAL (dword_19F4F8)	/* 0x19F4F8 */
 		.long	0x0
-GLOBAL (dword_19F4FC)	/* 0x19F4FC */
+GLOBAL (engn_nuclear_shade_timer)	/* 0x19F4FC */
 		.long	0x0
-GLOBAL (dword_19F500)	/* 0x19F500 */
+GLOBAL (engn_nuclear_shade_x)	/* 0x19F500 */
 		.long	0x0
-GLOBAL (dword_19F504)	/* 0x19F504 */
+GLOBAL (engn_nuclear_shade_y)	/* 0x19F504 */
 		.long	0x0
-GLOBAL (dword_19F508)	/* 0x19F508 */
+GLOBAL (engn_nuclear_shade_z)	/* 0x19F508 */
 		.long	0x0
 GLOBAL (pktrec_mode)	/* 0x19F50C */
 		.byte	0x0

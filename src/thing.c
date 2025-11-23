@@ -30,6 +30,7 @@
 #include "building.h"
 #include "bmbang.h"
 #include "display.h"
+#include "engindrwlstx.h"
 #include "enginfexpl.h"
 #include "enginsngobjs.h"
 #include "enginsngtxtr.h"
@@ -382,13 +383,43 @@ void process_razor_wire(struct Thing *p_thing)
     ;
 }
 
-struct SimpleThing *init_nuclear_bomb(int x, int y, int z)
+struct SimpleThing *init_nuclear_bomb(MapCoord x, MapCoord y, MapCoord z)
 {
+#if 0
     struct SimpleThing *ret;
     asm volatile (
       "call ASM_init_nuclear_bomb\n"
         : "=r" (ret) : "a" (x), "d" (y), "b" (z));
     return ret;
+#endif
+    struct SimpleThing *p_sthing;
+    ThingIdx new_sthing;
+
+    if (x < 0)
+        return 0;
+    if (z < 0)
+        return 0;
+    if (sthings_used > STHINGS_LIMIT - 5)
+        return 0;
+
+    new_sthing = get_new_sthing();
+    if (new_sthing == 0)
+        return 0;
+    if (new_sthing < -STHINGS_LIMIT)
+        return 0;
+
+    p_sthing = &sthings[new_sthing];
+    p_sthing->Type = SmTT_NUCLEAR_BOMB;
+    p_sthing->Radius = 64;
+    p_sthing->X = MAPCOORD_TO_PRCCOORD(x, 0);
+    p_sthing->Z = MAPCOORD_TO_PRCCOORD(z, 0);
+    p_sthing->Y = MAPCOORD_TO_PRCCOORD(y, 0);
+    p_sthing->Timer1 = 0;
+    p_sthing->Flag = (TngF_InVehicle|TngF_Persuaded|TngF_Unkn0004);
+    add_node_sthing(new_sthing);
+    set_nuclear_shade_point(x, y, z);
+
+    return p_sthing;
 }
 
 
@@ -410,10 +441,11 @@ void process_air_strike(struct Thing *p_thing)
 
     if (p_thing->Timer1 == WEP_AIRSTRIKE_BOMB_GTURNS * WEP_AIRSTRIKE_BOMBS_NUM + WEP_AIRSTRIKE_DELAY_GTURNS)
     {
-        play_dist_speech(p_thing, 4u, 127u, 64u, 100, 0, 3);
+        play_dist_speech(p_thing, 4, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
     }
 
-    if ((p_thing->Timer1 < WEP_AIRSTRIKE_BOMB_GTURNS * WEP_AIRSTRIKE_BOMBS_NUM) && (p_thing->Timer1 % WEP_AIRSTRIKE_BOMB_GTURNS) == 0)
+    if ((p_thing->Timer1 < WEP_AIRSTRIKE_BOMB_GTURNS * WEP_AIRSTRIKE_BOMBS_NUM) &&
+      (p_thing->Timer1 % WEP_AIRSTRIKE_BOMB_GTURNS) == 0)
     {
         MapCoord cor_x, cor_y, cor_z;
 
@@ -428,11 +460,11 @@ void process_air_strike(struct Thing *p_thing)
         p_sthing = init_nuclear_bomb(cor_x, cor_y, cor_z);
         if (p_sthing != NULL)
         {
-            play_dist_ssample(p_sthing, 1, 127u, 64u, 100, 0, 3);
+            play_dist_ssample(p_sthing, 1, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
             p_sthing->Timer1 = WEP_AIRSTRIKE_IMPACT_GTURNS;
             p_sthing->Owner2 = p_thing->Owner;
             p_sthing->Radius = 0;
-            p_sthing->Flag &= ~0x00080000;
+            p_sthing->Flag &= ~TngF_Persuaded;
         }
     }
 }
