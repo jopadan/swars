@@ -61,7 +61,7 @@ struct BuildingStat bldng_type_stats[] = {
   {"BLD_12",},
   {"BLD_13",},
   {"SHUTTL_LDR",},
-  {"BLD_15",},
+  {"BEZIER_ROAD",},
   {"BLD_16",},
   {"BLD_17",},
   {"DOME",},
@@ -355,7 +355,7 @@ void collapse_building_shuttle_loader(short x, short y, short z, struct Thing *p
             break;
         if (thing <= 0)
         {
-            if (p_building->SubType == SubTT_BLD_15) {
+            if (p_building->SubType == SubTT_BLD_BEZIER_ROAD) {
                 tnode_all_unlink_thing(pvthing);
             }
             break;
@@ -382,7 +382,7 @@ void collapse_building_shuttle_loader(short x, short y, short z, struct Thing *p
             break;
         if (thing <= 0)
         {
-            if (p_building->SubType == SubTT_BLD_15) {
+            if (p_building->SubType == SubTT_BLD_BEZIER_ROAD) {
                 tnode_all_unlink_thing(nxthing);
             }
             break;
@@ -498,7 +498,7 @@ void collapse_building(short x, short y, short z, struct Thing *p_building)
     case SubTT_BLD_SHUTLDR:
     case SubTT_BLD_1D:
     case SubTT_BLD_TRAINTRK:
-    case SubTT_BLD_15:
+    case SubTT_BLD_BEZIER_ROAD:
         collapse_building_shuttle_loader(x, y, z, p_building);
         break;
     case SubTT_BLD_STATION:

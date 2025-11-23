@@ -20,6 +20,7 @@
 #define LVFILES_H
 
 #include "bftypes.h"
+#include "game_bstype.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -63,6 +64,12 @@ extern ushort next_used_lvl_objective;
 TbResult load_mad_pc(ushort mapno);
 
 void load_level_pc(short level, short missi, ubyte reload);
+
+/** Get start position for in-mission camera from misc entry with mounted gun.
+ *
+ * Makes little sense, but original game does that (if there ar any guns on a level).
+ */
+TbBool level_misc_get_starting_camera_pos(MapCoord *cor_x, MapCoord *cor_z);
 
 /******************************************************************************/
 #ifdef __cplusplus

@@ -124,6 +124,7 @@
 #include "rules.h"
 #include "scandraw.h"
 #include "thing.h"
+#include "thing_search.h"
 #include "tngcolisn.h"
 #include "tngobjdrw.h"
 #include "packet.h"
@@ -1219,10 +1220,6 @@ void unkn_f_pressed_func(void)
     }
 }
 
-void init_mission_starting_camera(void)
-{
-}
-
 void load_level_wrap(short level, short missi, ubyte reload)
 {
     LbMouseChangeSprite(NULL);
@@ -1236,9 +1233,6 @@ void load_level_wrap(short level, short missi, ubyte reload)
     read_primveh_obj(primvehobj_fname, 1);
 
     load_level_pc(level, missi, reload);
-
-    if (!reload)
-        init_mission_starting_camera();
 
     // No idea what exactly pressing F during level load does
     if (is_key_pressed(KC_F, KMod_DONTCARE))
@@ -2858,6 +2852,67 @@ void validate_player_double_mode(void)
     }
 }
 
+void game_set_cam_starting_location_xz(void)
+{
+    MapCoord agent_x, agent_z;
+    ThingIdx thing;
+
+    {
+        PlayerInfo *p_player;
+        struct Thing *p_agent;
+
+        p_player = &players[local_player_no];
+        p_agent = p_player->MyAgent[0];
+        if (p_agent->Type == TT_PERSON) {
+            agent_x = PRCCOORD_TO_MAPCOORD(p_agent->X);
+            agent_z = PRCCOORD_TO_MAPCOORD(p_agent->Z);
+        } else {
+            agent_x = MAP_COORD_WIDTH / 2;
+            agent_z = MAP_COORD_HEIGHT / 2;
+        }
+    }
+    engn_xc = MAP_COORD_WIDTH - agent_x;
+    engn_zc = MAP_COORD_HEIGHT - agent_z;
+    thing = 0;
+
+    if (thing == 0)
+    {
+        MapCoord cor_x, cor_z;
+
+        if (level_misc_get_starting_camera_pos(&cor_x, &cor_z))
+        {
+            engn_xc = cor_x;
+            engn_zc = cor_z;
+            thing = -1;
+        }
+    }
+
+    if (thing == 0)
+    {
+        thing = search_things_for_type_farthest_from_xz(agent_x, agent_z, TT_BUILDING, SubTT_BLD_MGUN);
+        if (thing > 0)
+        {
+            struct Thing *p_thing;
+
+            p_thing = &things[thing];
+            engn_xc = PRCCOORD_TO_MAPCOORD(p_thing->X);
+            engn_zc = PRCCOORD_TO_MAPCOORD(p_thing->Z);
+        }
+    }
+    if (thing == 0)
+    {
+        thing = search_things_for_type_farthest_from_xz(agent_x, agent_z, TT_BUILDING, SubTT_BLD_BILLBOARD);
+        if (thing > 0)
+        {
+            struct Thing *p_thing;
+
+            p_thing = &things[thing];
+            engn_xc = PRCCOORD_TO_MAPCOORD(p_thing->X);
+            engn_zc = PRCCOORD_TO_MAPCOORD(p_thing->Z);
+        }
+    }
+}
+
 TbBool game_cam_tracked_thing_is_player_agent(void)
 {
     struct Thing *p_thing;
@@ -3208,6 +3263,8 @@ void init_game(ubyte reload)
     }
     debug_trace_setup(3);
     init_player();
+    if (!reload)
+        game_set_cam_starting_location_xz();
     debug_trace_setup(4);
     execute_commands = 1;
     ingame.DisplayMode = DpM_ENGINEPLY;

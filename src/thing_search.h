@@ -84,6 +84,8 @@ ThingIdx find_thing_type_within_circle_with_bfilter(short X, short Z, ushort R,
 ThingIdx find_thing_type_within_circle_with_mfilter(short X, short Z, ushort R,
   short ttype, short subtype, ThingMinFilter filter, ThingFilterParams *params);
 
+ThingIdx search_things_for_type_farthest_from_xz(short X, short Z, short ttype, short subtype);
+
 ThingIdx find_dropped_weapon_within_circle(short X, short Z, ushort R, short weapon);
 ThingIdx find_person_carrying_weapon_within_circle(short X, short Z, ushort R, short weapon);
 ThingIdx find_person_carrying_weapon(short weapon);

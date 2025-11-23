@@ -527,7 +527,7 @@ void VNAV_preprocess_bezier_turns(ulong nturns)
 
             p_thing = &things[thing];
             if ((p_thing->Type == TT_BUILDING)
-              && (p_thing->SubType == SubTT_BLD_15))
+              && (p_thing->SubType == SubTT_BLD_BEZIER_ROAD))
                 VNAV_process_bezier(p_thing);
             thing = p_thing->LinkChild;
             i--;

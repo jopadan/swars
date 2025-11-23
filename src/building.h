@@ -50,7 +50,7 @@ enum SubTypeBuilding {
   SubTT_BLD_12 = 0x12,
   SubTT_BLD_13 = 0x13,
   SubTT_BLD_SHUTLDR = 0x14,
-  SubTT_BLD_15 = 0x15,
+  SubTT_BLD_BEZIER_ROAD = 0x15,
   SubTT_BLD_16 = 0x16,
   SubTT_BLD_17 = 0x17,
   SubTT_BLD_DOME = 0x18,
