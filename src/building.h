@@ -136,6 +136,8 @@ void init_mgun_explode(struct Thing *p_thing);
 
 void collapse_building(short x, short y, short z, struct Thing *p_building);
 
+void bul_hit_vector(int x, int y, int z, short col, int hp, int type);
+
 void process_building(struct Thing *p_building);
 
 int building_hit_by_bullet(struct Thing *p_thing, short hp,

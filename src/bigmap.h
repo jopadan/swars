@@ -115,6 +115,11 @@ struct MapOffset {
   short both;
 };
 
+struct Direction {
+  short DiX;
+  short DiY;
+};
+
 #pragma pack()
 /******************************************************************************/
 extern struct MyMapElement *game_my_big_map;
@@ -122,6 +127,8 @@ extern struct MyMapElement *game_my_big_map;
 extern struct MapOffset spiral_step[SPIRAL_STEPS_COUNT];
 extern ushort dist_tiles_to_spiral_step[MAP_TILE_WIDTH];
 extern ushort spiral_dist_tiles_limit;
+
+extern const struct Direction angle_direction[];
 
 /** Limit the map coordinates boundaries of valid map positions and ranges of data types used.
  */

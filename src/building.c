@@ -482,7 +482,7 @@ void collapse_building(short x, short y, short z, struct Thing *p_building)
         short tng_x, tng_y, tng_z;
         get_thing_position_mapcoords(&tng_x, &tng_y, &tng_z, p_building->ThingOffset);
         play_dist_sample(p_building, 45, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
-        p_sthing = create_sound_effect(tng_x, tng_y, tng_z, 0x2Eu, 127, -1);
+        p_sthing = create_sound_effect(tng_x, tng_y, tng_z, 46, FULL_VOL, -1);
         if (p_sthing != NULL)
         {
             p_sthing->State = 1;
@@ -593,12 +593,12 @@ ubyte track_target(struct Thing *p_mgun)
     return ret;
 }
 
-void init_mgun_laser(struct Thing *p_owner, ushort bmsize)
+void init_mgun_laser(struct Thing *p_owner, ushort start_age)
 {
 #if 0
     asm volatile (
       "call ASM_init_mgun_laser\n"
-        : : "a" (p_owner), "d" (bmsize));
+        : : "a" (p_owner), "d" (start_age));
     return;
 #endif
     struct Thing *p_shot;
@@ -635,9 +635,9 @@ void init_mgun_laser(struct Thing *p_owner, ushort bmsize)
         tgtng_x = tgtng_y = tgtng_z = 0;
 
     p_shot->U.UEffect.Angle = p_owner->U.UMGun.AngleY;
-    p_shot->Z = prc_z;
-    p_shot->Y = prc_y;
     p_shot->X = prc_x;
+    p_shot->Y = prc_y;
+    p_shot->Z = prc_z;
     p_shot->VX = tgtng_x;
     p_shot->VY = (tgtng_y >> 3) + 10;
     p_shot->VZ = tgtng_z;
@@ -650,18 +650,18 @@ void init_mgun_laser(struct Thing *p_owner, ushort bmsize)
 
     rhit = laser_hit_at(cor_x, cor_y, cor_z, &p_shot->VX, &p_shot->VY, &p_shot->VZ, p_shot);
 
-    if (bmsize > 15)
-        bmsize = 15;
-    if (bmsize < 5)
-        bmsize = 5;
-    damage = (bmsize - 4) * weapon_defs[WEP_LASER].HitDamage;
+    if (start_age > 15)
+        start_age = 15;
+    if (start_age < 5)
+        start_age = 5;
+    damage = (start_age - 4) * weapon_defs[WEP_LASER].HitDamage;
 
     if ((rhit & 0x80000000) != 0) // hit 3D object collision vector
     {
         s32 hitvec;
 
         hitvec = rhit;
-        bul_hit_vector(p_shot->VX, p_shot->VY, p_shot->VZ, -hitvec, 2 * bmsize, 0);
+        bul_hit_vector(p_shot->VX, p_shot->VY, p_shot->VZ, -hitvec, 2 * start_age, 0);
     }
     else if ((rhit & 0x40000000) != 0) // hit SimpleThing
     {
@@ -684,8 +684,8 @@ void init_mgun_laser(struct Thing *p_owner, ushort bmsize)
         person_hit_by_bullet(p_hittng, damage, p_shot->VX - cor_x,
           p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_LASER);
     }
-    p_shot->StartTimer1 = bmsize;
-    p_shot->Timer1 = bmsize;
+    p_shot->StartTimer1 = start_age;
+    p_shot->Timer1 = start_age;
     p_shot->Flag = TngF_Unkn0004;
     p_shot->Type = TT_LASER11;
     add_node_thing(p_shot->ThingOffset);

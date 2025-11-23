@@ -151286,17 +151286,17 @@ GLOBAL_FUNC(ASM_init_time_gun)	/* 0x0C2AE0 */
 		add    $0xa,%eax
 		mov    $0x1,%edx
 		mov    %eax,0x30(%esi)
-		mov    data_1dd8f8,%ch
+		mov    EXPORT_SYMBOL(byte_1DD8F8),%ch
 		mov    0x8(%esp),%eax
 		or     $0x1,%ch
 		mov    %eax,0x34(%esi)
 		mov    %esi,%eax
-		mov    %ch,data_1dd8f8
+		mov    %ch,EXPORT_SYMBOL(byte_1DD8F8)
 		call   ac_init_laser
-		mov    data_1dd8f8,%ah
+		mov    EXPORT_SYMBOL(byte_1DD8F8),%ah
 		and    $0xfe,%ah
 		mov    %ebx,0x40(%esi)
-		mov    %ah,data_1dd8f8
+		mov    %ah,EXPORT_SYMBOL(byte_1DD8F8)
 		add    $0x14,%esp
 		pop    %ebp
 		pop    %edi
@@ -159502,7 +159502,7 @@ GLOBAL_FUNC(ASM_init_laser)	/* 0x0C88A4 */
 		mov    0x16(%esi),%ax
 		movb   $0xb,0x9(%esi)
 		call   ac_add_node_thing
-		testb  $0x1,data_1dd8f8
+		testb  $0x1,EXPORT_SYMBOL(byte_1DD8F8)
 		je     jump_c8c52
 		orb    $0x10,0xd(%esi)
 		add    $0x14,%esp
@@ -186047,7 +186047,7 @@ g_fat_data__WayPoints__x8:	/* 0x1DD0F8 */
 		.long	0x0
 g_fat_data__WayPoints__y8:	/* 0x1DD0FC */
 		.fill   0x7fc
-data_1dd8f8:
+GLOBAL (byte_1DD8F8)	/* 0x1DD8F8 */
 		.long	0x0
 data_1dd8fc:
 		.long	0x0

@@ -28,6 +28,17 @@ struct MapOffset spiral_step[SPIRAL_STEPS_COUNT];
 ushort dist_tiles_to_spiral_step[MAP_TILE_WIDTH];
 ushort spiral_dist_tiles_limit = 0;
 
+const struct Direction angle_direction[] = {
+    {   0,  256},
+    { 181,  181},
+    { 256,    0},
+    { 181, -181},
+    {   0, -256},
+    {-181, -181},
+    {-256,    0},
+    {-181,  181},
+};
+
 void map_coords_limit(short *cor_x, short *cor_y, short *cor_z, long map_x, long map_y, long map_z)
 {
     if (map_x < 0)

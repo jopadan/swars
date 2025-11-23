@@ -26,6 +26,7 @@
 #include "ssampply.h"
 
 #include "bigmap.h"
+#include "building.h"
 #include "network.h"
 #include "thing.h"
 #include "player.h"
@@ -128,6 +129,10 @@ const struct TbNamedEnum weapons_conf_weapon_cmds[] = {
   {"ResearchPercentPerDay",	CCWep_PercentPerDay},
   {NULL,		0},
 };
+
+extern ubyte byte_1DD8F8;
+
+/******************************************************************************/
 
 void read_weapons_conf_file(void)
 {
@@ -1047,10 +1052,150 @@ void do_weapon_quantities_proper1(struct Thing *p_person)
     }
 }
 
-void init_laser(struct Thing *p_person, ushort timer)
+void init_laser(struct Thing *p_owner, ushort start_age)
 {
+#if 0
     asm volatile ("call ASM_init_laser\n"
-        : : "a" (p_person), "d" (timer));
+        : : "a" (p_owner), "d" (start_age));
+#endif
+    struct Thing *p_shot;
+    struct WeaponDef *wdef;
+    uint hitret;
+    int damage;
+    ThingIdx new_thing, target;
+    int prc_x, prc_y, prc_z;
+    MapCoord cor_x, cor_y, cor_z;
+
+    new_thing = get_new_thing();
+
+    if (new_thing == 0) {
+        return;
+    }
+    p_shot = &things[new_thing];
+    if ((p_owner->Flag2 & 0x1000000) != 0)
+    {
+        prc_x = p_owner->X;
+        prc_y = p_owner->Y + 5120;
+        prc_z = p_owner->Z;
+    }
+    else
+    {
+        ubyte angle;
+        angle = p_owner->U.UObject.Angle;
+        prc_x = p_owner->X + (angle_direction[angle].DiX << 7);
+        prc_y = p_owner->Y + 5120;
+        prc_z = p_owner->Z + (angle_direction[angle].DiY << 7);
+    }
+
+    p_shot->U.UObject.Angle = p_owner->U.UObject.Angle;
+    if ((PRCCOORD_TO_MAPCOORD(prc_x) >= MAP_COORD_WIDTH) ||
+      (PRCCOORD_TO_MAPCOORD(prc_z) >= MAP_COORD_HEIGHT)) {
+        remove_thing(new_thing);
+        return;
+    }
+
+    target = 0;
+    wdef = &weapon_defs[WEP_LASER];
+    if ((p_owner->Flag & 0x20000000) != 0)
+    {
+        p_shot->VX = p_owner->VX;
+        p_shot->VY = p_owner->VY;
+        p_shot->VZ = p_owner->VZ;
+        p_owner->Flag &= ~0x20000000;
+    }
+    else if (p_owner->PTarget != NULL)
+    {
+        struct Thing *p_target;
+        p_target = p_owner->PTarget;
+        p_shot->VX = PRCCOORD_TO_MAPCOORD(p_target->X);
+        p_shot->VY = PRCCOORD_TO_MAPCOORD(p_target->Y) + 10;
+        p_shot->VZ = PRCCOORD_TO_MAPCOORD(p_target->Z);
+        target = p_target->ThingOffset;
+    }
+    else if ((p_owner->Flag & TngF_Unkn1000) != 0)
+    {
+        ushort range;
+        ubyte angle;
+        range = wdef->RangeBlocks;
+        angle = p_owner->U.UObject.Angle;
+        p_shot->VX = PRCCOORD_TO_MAPCOORD(prc_x) + ((range * angle_direction[angle].DiX) >> 16);
+        p_shot->VY = PRCCOORD_TO_MAPCOORD(prc_y);
+        p_shot->VZ = PRCCOORD_TO_MAPCOORD(prc_z) + ((range * angle_direction[angle].DiY) >> 16);
+    }
+    else
+    {
+        remove_thing(new_thing);
+        return;
+    }
+
+    p_shot->X = prc_x;
+    p_shot->Y = prc_y;
+    p_shot->Z = prc_z;
+    p_shot->Radius = 50;
+    p_shot->Owner = p_owner->ThingOffset;
+
+    cor_x = PRCCOORD_TO_MAPCOORD(prc_x);
+    cor_y = PRCCOORD_TO_MAPCOORD(prc_y);
+    cor_z = PRCCOORD_TO_MAPCOORD(prc_z);
+    hitret = laser_hit_at(cor_x, cor_y, cor_z, &p_shot->VX, &p_shot->VY, &p_shot->VZ, p_shot);
+
+    if (start_age > 15)
+        start_age = 15;
+    if (start_age < 5)
+        start_age = 5;
+
+    damage = wdef->HitDamage + ((wdef->HitDamage * (start_age - 5)) >> 3);
+
+    if ((hitret & 0x80000000) != 0)
+    {
+        if ((p_owner->Flag2 & 0x1000000) == 0)
+        {
+            bul_hit_vector(p_shot->VX, p_shot->VY, p_shot->VZ, -(hitret & 0xFFFF), 4 * start_age, 4);
+            p_owner->U.UPerson.Flag3 |= 0x40;
+        }
+    }
+    else if (hitret == 0)
+    {
+        if (target != 0)
+        {
+            person_hit_by_bullet(&things[target], damage, p_shot->VX - cor_x,
+              p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, 4);
+        }
+        else if ((p_owner->Flag2 & 0x1000000) != 0)
+        {
+            p_shot->VY = p_shot->Y >> 8;
+        }
+    }
+    else if ((hitret & 0x20000000) != 0)
+    {
+        // no action
+    }
+    else if ((hitret & 0x40000000) != 0)
+    {
+        struct SimpleThing *p_sthing;
+        ThingIdx thing;
+        thing = hitret & ~0x60000000;
+        p_sthing = &sthings[-thing];
+        person_hit_by_bullet((struct Thing *)p_sthing, damage, p_shot->VX - cor_x,
+          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, 4);
+    } else {
+        struct Thing *p_thing;
+        ThingIdx thing;
+        thing = hitret & ~0x60000000;
+        p_thing = &things[thing];
+        person_hit_by_bullet(p_thing, damage, p_shot->VX - cor_x,
+          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, 4);
+    }
+    p_shot->Flag = 0x0004;
+    p_shot->StartTimer1 = start_age;
+    p_shot->Timer1 = start_age;
+    p_shot->Type = TT_LASER11;
+    add_node_thing(p_shot->ThingOffset);
+
+    if ((byte_1DD8F8 & 1) != 0)
+        p_shot->Flag |= 0x1000;
+    else
+        p_shot->Flag &= ~0x1000;
 }
 
 void init_laser_6shot(struct Thing *p_person, ushort timer)
