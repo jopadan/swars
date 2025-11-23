@@ -382,11 +382,59 @@ void process_razor_wire(struct Thing *p_thing)
     ;
 }
 
+struct SimpleThing *init_nuclear_bomb(int x, int y, int z)
+{
+    struct SimpleThing *ret;
+    asm volatile (
+      "call ASM_init_nuclear_bomb\n"
+        : "=r" (ret) : "a" (x), "d" (y), "b" (z));
+    return ret;
+}
+
+
 void process_air_strike(struct Thing *p_thing)
 {
+#if 0
     asm volatile (
       "call ASM_process_air_strike\n"
         : : "a" (p_thing));
+#endif
+    struct SimpleThing *p_sthing;
+
+    p_thing->Timer1--;
+    if (p_thing->Timer1 < 0)
+    {
+        remove_thing(p_thing->ThingOffset);
+        return;
+    }
+
+    if (p_thing->Timer1 == WEP_AIRSTRIKE_BOMB_GTURNS * WEP_AIRSTRIKE_BOMBS_NUM + WEP_AIRSTRIKE_DELAY_GTURNS)
+    {
+        play_dist_speech(p_thing, 4u, 127u, 64u, 100, 0, 3);
+    }
+
+    if ((p_thing->Timer1 < WEP_AIRSTRIKE_BOMB_GTURNS * WEP_AIRSTRIKE_BOMBS_NUM) && (p_thing->Timer1 % WEP_AIRSTRIKE_BOMB_GTURNS) == 0)
+    {
+        MapCoord cor_x, cor_y, cor_z;
+
+        cor_x = PRCCOORD_TO_MAPCOORD(p_thing->X);
+        cor_z = PRCCOORD_TO_MAPCOORD(p_thing->Z);
+        cor_x += (LbRandomAnyShort() % 3000) - 1500;
+        cor_z += (LbRandomAnyShort() % 3000) - 1500;
+        cor_y = PRCCOORD_TO_MAPCOORD(alt_at_point(cor_x, cor_z)) + 10;
+        bang_new4(MAPCOORD_TO_PRCCOORD(cor_x,0), MAPCOORD_TO_PRCCOORD(cor_y,0),
+          MAPCOORD_TO_PRCCOORD(cor_z,0), 50);
+
+        p_sthing = init_nuclear_bomb(cor_x, cor_y, cor_z);
+        if (p_sthing != NULL)
+        {
+            play_dist_ssample(p_sthing, 1, 127u, 64u, 100, 0, 3);
+            p_sthing->Timer1 = WEP_AIRSTRIKE_IMPACT_GTURNS;
+            p_sthing->Owner2 = p_thing->Owner;
+            p_sthing->Radius = 0;
+            p_sthing->Flag &= ~0x00080000;
+        }
+    }
 }
 
 void process_unkn35_crashing(struct Thing *p_thing)

@@ -564,7 +564,7 @@ struct SimpleThing
         struct STngUBang UBang;
         struct STngUFire UFire;
     } U;
-    short field_38;
+    short Owner2;
     ushort UniqueID;
 };
 

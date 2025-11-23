@@ -38,6 +38,22 @@ extern "C" {
  */
 #define WEAPON_RANGE_BLOCKS_LIMIT 27
 
+/** Amount of bombs in a single use.
+ */
+#define WEP_AIRSTRIKE_BOMBS_NUM 10
+
+/** Game turns separating bombs.
+ */
+#define WEP_AIRSTRIKE_BOMB_GTURNS 20
+
+/** Initial age of explosion; higher value makes the explosion shorter.
+ */
+#define WEP_AIRSTRIKE_IMPACT_GTURNS 17
+
+/** Game turns between the weapon triggered and the bombs start.
+ */
+#define WEP_AIRSTRIKE_DELAY_GTURNS 20
+
 enum WeaponType
 {
   WEP_NULL = 0x0,

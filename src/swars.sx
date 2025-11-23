@@ -53970,7 +53970,7 @@ GLOBAL_FUNC(ASM_person_self_destruct)	/* 0x05AD58 */
 		mov    (%esp),%edx
 		mov    %edi,%ebx
 		mov    %ebp,%eax
-		call   init_nuclear_bomb
+		call   ac_init_nuclear_bomb
 		mov    %eax,%edi
 		test   %eax,%eax
 		je     jump_5aeee
@@ -63893,7 +63893,7 @@ GLOBAL_FUNC(ASM_add_static)	/* 0x0631BC */
 
 
 /*----------------------------------------------------------------*/
-init_nuclear_bomb:	/* 0x0632BC */
+GLOBAL_FUNC(ASM_init_nuclear_bomb)	/* 0x0632BC */
 /*----------------------------------------------------------------*/
 		push   %ecx
 		push   %esi
@@ -69174,7 +69174,7 @@ func_67796:
 		sar    $0x8,%ebx
 		sar    $0x8,%edx
 		sar    $0x8,%eax
-		call   init_nuclear_bomb
+		call   ac_init_nuclear_bomb
 		test   %eax,%eax
 		je     jump_677d7
 		push   $0x3
@@ -69209,7 +69209,7 @@ func_677f9:
 		sar    $0x8,%ebx
 		sar    $0x8,%edx
 		sar    $0x8,%eax
-		call   init_nuclear_bomb
+		call   ac_init_nuclear_bomb
 		test   %eax,%eax
 		je     jump_677d7
 		push   $0x3
@@ -69233,7 +69233,7 @@ func_67838:
 		sar    $0x8,%ebx
 		sar    $0x8,%edx
 		sar    $0x8,%eax
-		call   init_nuclear_bomb
+		call   ac_init_nuclear_bomb
 		test   %eax,%eax
 		je     jump_677d7
 		movw   $0x13,0x28(%eax)
@@ -154185,7 +154185,7 @@ GLOBAL_FUNC(ASM_process_air_strike)	/* 0x0C4EE8 */
 		mov    (%esp),%ebx
 		mov    %ebp,%edx
 		mov    %edi,%eax
-		call   init_nuclear_bomb
+		call   ac_init_nuclear_bomb
 		mov    %eax,%edi
 		test   %eax,%eax
 		je     jump_c5021
@@ -160804,7 +160804,7 @@ GLOBAL_FUNC(ASM_process_mine)	/* 0x0C9ADC */
 		sar    $0x8,%ebx
 		sar    $0x8,%edx
 		sar    $0x8,%eax
-		call   init_nuclear_bomb
+		call   ac_init_nuclear_bomb
 		mov    %eax,%edi
 		test   %eax,%eax
 		je     jump_c9bd3
@@ -161086,7 +161086,7 @@ GLOBAL_FUNC(ASM_process_grenade)	/* 0x0C9D60 */
 		mov    0x18(%esi),%eax
 		sar    $0x8,%ebx
 		sar    $0x8,%eax
-		call   init_nuclear_bomb
+		call   ac_init_nuclear_bomb
 		mov    %eax,%edi
 		test   %eax,%eax
 		je     jump_c9fc1
@@ -161115,7 +161115,7 @@ GLOBAL_FUNC(ASM_process_grenade)	/* 0x0C9D60 */
 		mov    0x18(%esi),%eax
 		sar    $0x8,%ebx
 		sar    $0x8,%eax
-		call   init_nuclear_bomb
+		call   ac_init_nuclear_bomb
 		mov    %eax,%edi
 		test   %eax,%eax
 		je     jump_c9fc1
