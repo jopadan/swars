@@ -89414,7 +89414,7 @@ GLOBAL_FUNC(ASM_init_vehicle_explode)	/* 0x07CDE4 */
 
 
 /*----------------------------------------------------------------*/
-track_target:	/* 0x07CFC0 */
+GLOBAL_FUNC(ASM_track_target)	/* 0x07CFC0 */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx
@@ -89757,7 +89757,7 @@ GLOBAL_FUNC(ASM_init_mgun_laser)	/* 0x07D100 */
 
 
 /*----------------------------------------------------------------*/
-rotate_object:	/* 0x07D3A4 */
+GLOBAL_FUNC(ASM_rotate_object)	/* 0x07D3A4 */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx
@@ -89811,7 +89811,7 @@ rotate_object:	/* 0x07D3A4 */
 
 
 /*----------------------------------------------------------------*/
-aquire_target:	/* 0x07D424 */
+GLOBAL_FUNC(ASM_aquire_target)	/* 0x07D424 */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx
@@ -89969,7 +89969,7 @@ aquire_target:	/* 0x07D424 */
 
 
 /*----------------------------------------------------------------*/
-mounted_los:	/* 0x07D5C8 */
+GLOBAL_FUNC(ASM_mounted_los)	/* 0x07D5C8 */
 /*----------------------------------------------------------------*/
 		push   %esi
 		push   %edi
@@ -90156,7 +90156,7 @@ GLOBAL_FUNC(ASM_process_mounted_gun)	/* 0x07D710 */
 		test   $0x7,%al
 		jne    jump_7d753
 		mov    %esi,%eax
-		call   aquire_target
+		call   ac_aquire_target
 		cwtl
 		test   %eax,%eax
 		jle    jump_7d753
@@ -90170,14 +90170,14 @@ GLOBAL_FUNC(ASM_process_mounted_gun)	/* 0x07D710 */
 		test   $0x1f,%al
 		jne    jump_7d7a7
 		mov    %esi,%eax
-		call   aquire_target
+		call   ac_aquire_target
 		cwtl
 		test   %eax,%eax
 		jne    jump_7d7a7
 		movw   $0xa,0xa(%esi)
 	jump_7d7a7:
 		mov    %esi,%eax
-		call   track_target
+		call   ac_track_target
 		test   %al,%al
 		je     jump_7d835
 		mov    0x40(%esi),%ecx
@@ -90210,7 +90210,7 @@ GLOBAL_FUNC(ASM_process_mounted_gun)	/* 0x07D710 */
 		push   %ebx
 		mov    0xc(%esp),%eax
 		mov    %edi,%ebx
-		call   mounted_los
+		call   ac_mounted_los
 		test   %eax,%eax
 		je     jump_7d835
 		mov    0x58(%esi),%cx
@@ -90225,7 +90225,7 @@ GLOBAL_FUNC(ASM_process_mounted_gun)	/* 0x07D710 */
 		call   ac_init_mgun_laser
 	jump_7d835:
 		mov    %esi,%eax
-		call   rotate_object
+		call   ac_rotate_object
 		add    $0x8,%esp
 		pop    %ebp
 		pop    %edi
@@ -160702,7 +160702,7 @@ process_c_iff:	/* 0x0C99C8 */
 		push   %eax
 		mov    %edi,%ebx
 		mov    0x8(%esp),%eax
-		call   mounted_los
+		call   ac_mounted_los
 		test   %eax,%eax
 		je     jump_c9ad0
 		orb    $0x8,0xd(%esi)
@@ -160728,7 +160728,7 @@ process_c_iff:	/* 0x0C99C8 */
 		test   $0x7,%al
 		jne    jump_c9ad0
 		mov    %esi,%eax
-		call   aquire_target
+		call   ac_aquire_target
 	jump_c9ad0:
 		add    $0x4,%esp
 	jump_c9ad3:

@@ -294,9 +294,9 @@ void veh_add(struct Thing *p_vehicle, short frame)
         p_mgun->U.UMGun.MatrixIndex = mat;
         p_mgun->StartFrame = frame;
 
-        coord_x = (p_vehicle->X >> 8);
-        coord_y = (p_vehicle->Y >> 8);
-        coord_z = (p_vehicle->Z >> 8);
+        coord_x = PRCCOORD_TO_MAPCOORD(p_vehicle->X);
+        coord_y = PRCCOORD_TO_MAPCOORD(p_vehicle->Y);
+        coord_z = PRCCOORD_TO_MAPCOORD(p_vehicle->Z);
         byte_1C83D1 = 0;
         sub_6031C(coord_x, coord_z, -19 - prim_unknprop01, coord_y + 20);
         p_mgun->X = 0;
@@ -323,9 +323,9 @@ void veh_add(struct Thing *p_vehicle, short frame)
         p_mgun->U.UMGun.MatrixIndex = mat;
         p_mgun->StartFrame = frame;
 
-        coord_x = (p_vehicle->X >> 8);
-        coord_y = (p_vehicle->Y >> 8);
-        coord_z = (p_vehicle->Z >> 8);
+        coord_x = PRCCOORD_TO_MAPCOORD(p_vehicle->X);
+        coord_y = PRCCOORD_TO_MAPCOORD(p_vehicle->Y);
+        coord_z = PRCCOORD_TO_MAPCOORD(p_vehicle->Z);
         byte_1C83D1 = 0;
         sub_6031C(coord_x, coord_z, -27 - prim_unknprop01, coord_y + 20);
         p_mgun->X = 0;

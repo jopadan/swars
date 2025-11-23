@@ -917,7 +917,7 @@ void level_misc_validate(void)
     {
         struct LevelMisc *p_lvmsc;
         p_lvmsc = &game_level_miscs[i];
-        if (p_lvmsc->Type != 0)
+        if (p_lvmsc->Type != LvMiscT_NONE)
             last_used = i;
     }
 
@@ -929,10 +929,10 @@ void level_misc_validate(void)
         p_lvmsc = &game_level_miscs[i];
         switch (p_lvmsc->Type)
         {
-        case 0: // empty entry
+        case LvMiscT_NONE: // empty entry
             ret = Lb_FAIL;
             break;
-        case 1:
+        case LvMiscT_MGUN:
             ret = level_misc_verify_mgun(p_lvmsc);
             break;
         default:
@@ -973,10 +973,10 @@ void level_misc_update(u32 fmtver)
         p_lvmsc = &game_level_miscs[i];
         switch (p_lvmsc->Type)
         {
-        case 0: // empty entry
+        case LvMiscT_NONE: // empty entry
             ret = Lb_OK;
             break;
-        case 1:
+        case LvMiscT_MGUN:
             ret = level_misc_update_mgun(p_lvmsc);
             break;
         default:
@@ -1002,7 +1002,7 @@ TbBool level_misc_get_starting_camera_pos(MapCoord *cor_x, MapCoord *cor_z)
     {
         struct LevelMisc *p_lvmsc;
         p_lvmsc = &game_level_miscs[i];
-        if (p_lvmsc->Type == 1)
+        if (p_lvmsc->Type == LvMiscT_MGUN)
             last_match = i;
     }
 

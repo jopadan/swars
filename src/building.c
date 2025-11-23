@@ -401,7 +401,7 @@ void collapse_building_shuttle_loader(short x, short y, short z, struct Thing *p
 
 void collapse_building_station(struct Thing *p_building)
 {
-    short cntr_cor_x, cntr_cor_z;
+    MapCoord cntr_cor_x, cntr_cor_z;
     short cntr_x, cntr_z;
     short x, z;
 
@@ -558,6 +558,41 @@ void bul_hit_vector(int x, int y, int z, short col, int hp, int type)
         : : "a" (x), "d" (y), "b" (z), "c" (col), "g" (hp), "g" (type));
 }
 
+void rotate_object(struct Thing *p_object)
+{
+    asm volatile ("call ASM_rotate_object\n"
+        : : "a" (p_object));
+}
+
+int mounted_los(int x1, int y1, int z1, int x2, int y2, int z2)
+{
+    int ret;
+    asm volatile (
+      "push %6\n"
+      "push %5\n"
+      "call ASM_mounted_los\n"
+        : "=r" (ret) : "a" (x1), "d" (y1), "b" (z1), "c" (x2), "g" (y2), "g" (z2));
+    return ret;
+}
+
+ThingIdx aquire_target(struct Thing *p_gun)
+{
+    ThingIdx ret;
+    asm volatile (
+      "call ASM_aquire_target\n"
+        : "=r" (ret) : "a" (p_gun));
+    return ret;
+}
+
+ubyte track_target(struct Thing *p_mgun)
+{
+    ubyte ret;
+    asm volatile (
+      "call ASM_track_target\n"
+        : "=r" (ret) : "a" (p_mgun));
+    return ret;
+}
+
 void init_mgun_laser(struct Thing *p_owner, ushort bmsize)
 {
 #if 0
@@ -589,7 +624,7 @@ void init_mgun_laser(struct Thing *p_owner, ushort bmsize)
     else
         angle = p_owner->U.UMGun.AngleY - 48;
 
-    angle = (angle + 0x800) & 0x7FF;
+    angle = (angle + 2 * LbFPMath_PI) & LbFPMath_AngleMask;
     prc_x = p_owner->X + 3 * lbSinTable[angle] / 2;
     prc_z = p_owner->Z - 3 * lbSinTable[angle + LbFPMath_PI/2] / 2;
     prc_y = p_owner->Y;
@@ -658,8 +693,60 @@ void init_mgun_laser(struct Thing *p_owner, ushort bmsize)
 
 void process_mounted_gun(struct Thing *p_building)
 {
+#if 0
     asm volatile ("call ASM_process_mounted_gun\n"
         : : "a" (p_building));
+#endif
+    struct Thing *p_target;
+
+    if (p_building->U.UMGun.RecoilTimer > 0)
+        p_building->U.UMGun.RecoilTimer--;
+    if (p_building->PTarget == NULL)
+        p_building->State = 10;
+
+    switch(p_building->State)
+    {
+    case 10:
+        if (((gameturn + p_building->ThingOffset) & 0x07) == 0 && aquire_target(p_building) > 0)
+            p_building->State = 11;
+        break;
+    case 11:
+        if (((gameturn + p_building->ThingOffset) & 0x1F) == 0 && aquire_target(p_building) == 0)
+            p_building->State = 10;
+        if (!track_target(p_building))
+        {
+            rotate_object(p_building);
+            break;
+        }
+        p_target = p_building->PTarget;
+        if (p_target != NULL)
+        {
+            MapCoord tg_cor_x, tg_cor_y, tg_cor_z; // Target/victim coords
+            MapCoord at_cor_x, at_cor_y, at_cor_z; // Attacker coords
+
+            tg_cor_x = PRCCOORD_TO_MAPCOORD(p_target->X);
+            tg_cor_y = PRCCOORD_TO_MAPCOORD(p_target->Y);
+            tg_cor_z = PRCCOORD_TO_MAPCOORD(p_target->Z);
+            if (p_target->Type == TT_PERSON)
+                tg_cor_y += 20;
+            at_cor_x = PRCCOORD_TO_MAPCOORD(p_building->X);
+            at_cor_y = PRCCOORD_TO_MAPCOORD(p_building->Y) + 40;
+            at_cor_z = PRCCOORD_TO_MAPCOORD(p_building->Z);
+            if (mounted_los(at_cor_x, at_cor_y, at_cor_z, tg_cor_x, tg_cor_y, tg_cor_z))
+            {
+                if (p_building->U.UMGun.WeaponTurn == 0)
+                {
+                    ubyte turn;
+                    turn = p_building->U.UMGun.ShotTurn;
+                    p_building->U.UMGun.WeaponTurn = 8;
+                    p_building->U.UMGun.ShotTurn = (turn == 0);
+                    init_mgun_laser(p_building, 7);
+                }
+            }
+            rotate_object(p_building);
+        }
+        break;
+    }
 }
 
 void process_gate1(struct Thing *p_building)
