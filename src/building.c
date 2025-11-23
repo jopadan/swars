@@ -94,7 +94,7 @@ struct BuildingStat bldng_type_stats[] = {
   {"BLD_33",},
   {"BLD_34",},
   {"BLD_35",},
-  {"WIND_ROTOR",},
+  {"MOVN_ROTOR",},
   {"BLD_37",},
   {"BLD_38",},
   {"BLD_39",},
@@ -717,7 +717,7 @@ void process_building(struct Thing *p_building)
     case SubTT_BLD_GATE:
         process_gate1(p_building);
         break;
-    case SubTT_BLD_WIND_ROTOR:
+    case SubTT_BLD_MOVN_ROTOR:
         process_bld36(p_building);
         break;
     default:
