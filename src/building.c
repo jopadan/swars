@@ -603,7 +603,16 @@ ubyte mgun_shoot_at_target(struct Thing *p_mgun)
     turn = p_mgun->U.UMGun.ShotTurn;
     p_mgun->U.UMGun.WeaponTurn = 8;
     p_mgun->U.UMGun.ShotTurn = (turn == 0);
-    init_mgun_laser(p_mgun, 7);
+    switch (p_mgun->U.UMGun.CurrentWeapon)
+    {
+    default:
+        LOGWARN("Mounted gun weapon %d not supported, using laser",
+          (int)p_mgun->U.UMGun.CurrentWeapon);
+        // fall through
+    case WEP_LASER:
+        init_mgun_laser(p_mgun, 7);
+        break;
+    }
     return 0;
 }
 

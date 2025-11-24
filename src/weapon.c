@@ -1060,6 +1060,7 @@ void elec_hit_building(int x, int y, int z, short col)
         : : "a" (x), "d" (y), "b" (z), "c" (col));
 }
 
+
 void init_laser(struct Thing *p_owner, ushort start_age)
 {
 #if 0
@@ -1073,6 +1074,7 @@ void init_laser(struct Thing *p_owner, ushort start_age)
     u32 rhit;
     int damage;
     ThingIdx shottng, target;
+    ubyte wdmgtyp;
 
     shottng = get_new_thing();
     if (shottng == 0) {
@@ -1104,6 +1106,8 @@ void init_laser(struct Thing *p_owner, ushort start_age)
 
     target = 0;
     wdef = &weapon_defs[WEP_LASER];
+    wdmgtyp = DMG_LASER;
+
     if ((p_owner->Flag & 0x20000000) != 0)
     {
         p_shot->VX = p_owner->VX;
@@ -1161,7 +1165,7 @@ void init_laser(struct Thing *p_owner, ushort start_age)
         hitvec = rhit;
         if ((p_owner->Flag2 & TgF2_ExistsOffMap) == 0)
         {
-            bul_hit_vector(p_shot->VX, p_shot->VY, p_shot->VZ, -hitvec, 4 * start_age, DMG_LASER);
+            bul_hit_vector(p_shot->VX, p_shot->VY, p_shot->VZ, -hitvec, 4 * start_age, wdmgtyp);
             p_owner->U.UPerson.Flag3 |= 0x40;
         }
     }
@@ -1176,7 +1180,7 @@ void init_laser(struct Thing *p_owner, ushort start_age)
         hitstng = rhit & ~0x60000000;
         p_hitstng = &sthings[-hitstng];
         person_hit_by_bullet((struct Thing *)p_hitstng, damage, p_shot->VX - cor_x,
-          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_LASER);
+          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, wdmgtyp);
     }
     else if (rhit != 0) // hit normal thing
     {
@@ -1185,14 +1189,14 @@ void init_laser(struct Thing *p_owner, ushort start_age)
         hittng = rhit & ~0x60000000;
         p_hittng = &things[hittng];
         person_hit_by_bullet(p_hittng, damage, p_shot->VX - cor_x,
-          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_LASER);
+          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, wdmgtyp);
     }
     else // if did not hit anything else, go for original target
     {
         if (target != 0)
         {
             person_hit_by_bullet(&things[target], damage, p_shot->VX - cor_x,
-              p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_LASER);
+              p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, wdmgtyp);
         }
         else if ((p_owner->Flag2 & TgF2_ExistsOffMap) != 0)
         {
@@ -1225,9 +1229,10 @@ void init_mgun_laser(struct Thing *p_owner, ushort start_age)
     MapCoord cor_x, cor_y, cor_z;
     short tgtng_x, tgtng_y, tgtng_z;
     u32 rhit;
-    short shottng;
+    ThingIdx shottng;
     short angle;
     short damage;
+    ubyte wdmgtyp;
 
     if (p_owner->PTarget == NULL)
         return;
@@ -1248,6 +1253,7 @@ void init_mgun_laser(struct Thing *p_owner, ushort start_age)
     prc_y = p_owner->Y;
 
     wdef = &weapon_defs[WEP_LASER];
+    wdmgtyp = DMG_LASER;
 
     get_thing_position_mapcoords(&tgtng_x, &tgtng_y, &tgtng_z, p_owner->PTarget->ThingOffset);
 
@@ -1279,7 +1285,7 @@ void init_mgun_laser(struct Thing *p_owner, ushort start_age)
         short hitvec;
 
         hitvec = rhit;
-        bul_hit_vector(p_shot->VX, p_shot->VY, p_shot->VZ, -hitvec, 2 * start_age, DMG_LASER);
+        bul_hit_vector(p_shot->VX, p_shot->VY, p_shot->VZ, -hitvec, 2 * start_age, wdmgtyp);
     }
     else if ((rhit & 0x20000000) != 0)
     {
@@ -1293,7 +1299,7 @@ void init_mgun_laser(struct Thing *p_owner, ushort start_age)
         hittng = rhit & ~0x60000000;
         p_hitstng = &sthings[-hittng];
         person_hit_by_bullet((struct Thing *)p_hitstng, damage, p_shot->VX - cor_x,
-          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_LASER);
+          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, wdmgtyp);
     }
     else if (rhit != 0) // hit normal thing
     {
@@ -1303,7 +1309,7 @@ void init_mgun_laser(struct Thing *p_owner, ushort start_age)
         hittng = rhit & ~0x60000000;
         p_hittng = &things[hittng];
         person_hit_by_bullet(p_hittng, damage, p_shot->VX - cor_x,
-          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_LASER);
+          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, wdmgtyp);
     }
     p_shot->StartTimer1 = start_age;
     p_shot->Timer1 = start_age;
@@ -1437,7 +1443,8 @@ void init_laser_elec(struct Thing *p_owner, ushort start_age)
     u32 rhit;
     int damage;
     ThingIdx shottng, target;
-    TbBool allow_smoke;
+    ubyte wdmgtyp;
+    TbBool allow_gnd_hit_eff;
 
     shottng = get_new_thing();
     if (shottng == 0) {
@@ -1468,15 +1475,17 @@ void init_laser_elec(struct Thing *p_owner, ushort start_age)
     }
 
     target = 0;
+    allow_gnd_hit_eff = false;
     wdef = &weapon_defs[WEP_ELLASER];
-    allow_smoke = 0;
+    wdmgtyp = DMG_ELLASER;
+
     if ((p_owner->Flag & TngF_Unkn20000000) != 0)
     {
         p_shot->VX = p_owner->VX;
         p_shot->VY = p_owner->VY;
         p_shot->VZ = p_owner->VZ;
         p_owner->Flag &= ~TngF_Unkn20000000;
-        allow_smoke = 1;
+        allow_gnd_hit_eff = true;
     }
     else if (p_owner->PTarget != NULL)
     {
@@ -1542,7 +1551,7 @@ void init_laser_elec(struct Thing *p_owner, ushort start_age)
         hitstng = rhit & ~0x60000000;
         p_hitstng = &sthings[-hitstng];
         person_hit_by_bullet((struct Thing *)p_hitstng, damage, p_shot->VX - cor_x,
-          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_ELLASER);
+          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, wdmgtyp);
     }
     else if (rhit != 0) // hit normal thing
     {
@@ -1551,21 +1560,21 @@ void init_laser_elec(struct Thing *p_owner, ushort start_age)
         hittng = rhit & ~0x60000000;
         p_hittng = &things[hittng];
         person_hit_by_bullet(p_hittng, damage, p_shot->VX - cor_x,
-          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_ELLASER);
+          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, wdmgtyp);
     }
     else // if did not hit anything else, go for original target
     {
         if (target != 0)
         {
             person_hit_by_bullet(&things[target], damage, p_shot->VX - cor_x,
-              p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_ELLASER);
+              p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, wdmgtyp);
         }
         else
         {
             if ((p_owner->Flag2 & TgF2_ExistsOffMap) != 0) {
                 p_shot->VY = PRCCOORD_TO_MAPCOORD(p_shot->Y);
             }
-            if (allow_smoke) {
+            if (allow_gnd_hit_eff) {
                 weapon_shooting_floor_creates_smoke(p_shot->VX, p_shot->VZ);
             }
         }
