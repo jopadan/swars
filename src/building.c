@@ -593,6 +593,20 @@ ubyte track_target(struct Thing *p_mgun)
     return ret;
 }
 
+ubyte mgun_shoot_at_target(struct Thing *p_mgun)
+{
+    ubyte turn;
+
+    if (p_mgun->U.UMGun.WeaponTurn != 0) {
+        return 0;
+    }
+    turn = p_mgun->U.UMGun.ShotTurn;
+    p_mgun->U.UMGun.WeaponTurn = 8;
+    p_mgun->U.UMGun.ShotTurn = (turn == 0);
+    init_mgun_laser(p_mgun, 7);
+    return 0;
+}
+
 void process_mounted_gun(struct Thing *p_building)
 {
 #if 0
@@ -621,6 +635,13 @@ void process_mounted_gun(struct Thing *p_building)
             break;
         }
         p_target = p_building->PTarget;
+        if (p_target != NULL) // Invalid pointer correction
+        {
+            if ((p_target <= &things[0]) || (p_target >= &things[THINGS_LIMIT])) {
+                LOGERR("Tried to shoot at invalid target 0x%p", p_target);
+                p_building->PTarget = p_target = NULL;
+            }
+        }
         if (p_target != NULL)
         {
             MapCoord tg_cor_x, tg_cor_y, tg_cor_z; // Target/victim coords
@@ -636,14 +657,7 @@ void process_mounted_gun(struct Thing *p_building)
             at_cor_z = PRCCOORD_TO_MAPCOORD(p_building->Z);
             if (mounted_los(at_cor_x, at_cor_y, at_cor_z, tg_cor_x, tg_cor_y, tg_cor_z))
             {
-                if (p_building->U.UMGun.WeaponTurn == 0)
-                {
-                    ubyte turn;
-                    turn = p_building->U.UMGun.ShotTurn;
-                    p_building->U.UMGun.WeaponTurn = 8;
-                    p_building->U.UMGun.ShotTurn = (turn == 0);
-                    init_mgun_laser(p_building, 7);
-                }
+                mgun_shoot_at_target(p_building);
             }
             rotate_object(p_building);
         }

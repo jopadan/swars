@@ -1249,12 +1249,6 @@ void init_mgun_laser(struct Thing *p_owner, ushort start_age)
 
     wdef = &weapon_defs[WEP_LASER];
 
-    if ((p_owner->PTarget <= &things[0]) || (p_owner->PTarget >= &things[THINGS_LIMIT])) {
-        LOGERR("Tried to shoot at invalid target 0x%p", p_owner->PTarget);
-        remove_thing(shottng);
-        p_owner->PTarget = NULL;
-        return;
-    }
     get_thing_position_mapcoords(&tgtng_x, &tgtng_y, &tgtng_z, p_owner->PTarget->ThingOffset);
 
     p_shot->U.UEffect.Angle = p_owner->U.UMGun.AngleY;
