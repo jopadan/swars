@@ -77,6 +77,8 @@ extern long dword_176D64;
 
 short angle_between_points(int x1, int z1, int x2, int z2);
 
+void local_to_worldr(int *dx, int *dy, int *dz);
+
 /** Transform map coordinates from EnginePoint into screen position.
  *
  * Given map coordinates within the game engine, transforms them

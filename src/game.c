@@ -4776,13 +4776,6 @@ void track_y(int y)
     engn_yc += (y - engn_yc) >> 3;
 }
 
-void local_to_worldr(int *dx, int *dy, int *dz)
-{
-    asm volatile (
-      "call ASM_local_to_worldr\n"
-        : : "a" (dx), "d" (dy), "b" (dz));
-}
-
 void scroll_map_update_alt(void)
 {
     int cumm_alt;
