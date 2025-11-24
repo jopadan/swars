@@ -363,6 +363,17 @@ void face_texture_switch_to_index(struct SingleTexture *p_fctextr, int index)
     p_fctextr->TMapY3 = beg_y + (p_fctextr->TMapY3 - prev_beg_y);
 }
 
+ubyte get_my_texture_bits(short tex)
+{
+#if 1
+    ubyte ret;
+    asm volatile (
+      "call ASM_get_my_texture_bits\n"
+        : "=r" (ret) : "a" (tex));
+    return ret;
+#endif
+}
+
 static void animate_texture(ushort tmap)
 {
     struct AnimTmap *p_atmap;

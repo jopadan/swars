@@ -85,6 +85,8 @@ extern ushort tnext_floor_texture;
 void refresh_old_floor_texture_format(struct SingleFloorTexture *p_fltextr,
   struct SingleFloorTexture *p_oldfltextr, u32 fmtver);
 
+ubyte get_my_texture_bits(short tex);
+
 void animate_textures(void);
 
 /** Maps content of old SingleTexture struct to the current one.

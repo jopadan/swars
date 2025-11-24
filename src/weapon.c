@@ -28,19 +28,20 @@
 
 #include "bigmap.h"
 #include "building.h"
-#include "network.h"
-#include "thing.h"
-#include "player.h"
+#include "enginsngtxtr.h"
 #include "game.h"
 #include "game_data.h"
 #include "game_speed.h"
 #include "game_sprani.h"
+#include "network.h"
+#include "thing.h"
+#include "player.h"
 #include "research.h"
 #include "thing_search.h"
 #include "wadfile.h"
 #include "sound.h"
-#include "vehicle.h"
 #include "swlog.h"
+#include "vehicle.h"
 /******************************************************************************/
 
 struct WeaponDef weapon_defs[] = {
@@ -1053,6 +1054,12 @@ void do_weapon_quantities_proper1(struct Thing *p_person)
     }
 }
 
+void elec_hit_building(int x, int y, int z, short col)
+{
+    asm volatile ("call ASM_elec_hit_building\n"
+        : : "a" (x), "d" (y), "b" (z), "c" (col));
+}
+
 void init_laser(struct Thing *p_owner, ushort start_age)
 {
 #if 0
@@ -1068,13 +1075,12 @@ void init_laser(struct Thing *p_owner, ushort start_age)
     ThingIdx shottng, target;
 
     shottng = get_new_thing();
-
     if (shottng == 0) {
         LOGERR("No thing slots for a shot");
         return;
     }
     p_shot = &things[shottng];
-    if ((p_owner->Flag2 & 0x1000000) != 0)
+    if ((p_owner->Flag2 & TgF2_ExistsOffMap) != 0)
     {
         prc_x = p_owner->X;
         prc_y = p_owner->Y + 5120;
@@ -1090,8 +1096,8 @@ void init_laser(struct Thing *p_owner, ushort start_age)
     }
 
     p_shot->U.UObject.Angle = p_owner->U.UObject.Angle;
-    if ((PRCCOORD_TO_MAPCOORD(prc_x) >= MAP_COORD_WIDTH) ||
-      (PRCCOORD_TO_MAPCOORD(prc_z) >= MAP_COORD_HEIGHT)) {
+    if ((PRCCOORD_TO_MAPCOORD(prc_x) < 0) || (PRCCOORD_TO_MAPCOORD(prc_x) >= MAP_COORD_WIDTH) ||
+      (PRCCOORD_TO_MAPCOORD(prc_z) < 0) || (PRCCOORD_TO_MAPCOORD(prc_z) >= MAP_COORD_HEIGHT)) {
         remove_thing(shottng);
         return;
     }
@@ -1153,7 +1159,7 @@ void init_laser(struct Thing *p_owner, ushort start_age)
         short hitvec;
 
         hitvec = rhit;
-        if ((p_owner->Flag2 & 0x1000000) == 0)
+        if ((p_owner->Flag2 & TgF2_ExistsOffMap) == 0)
         {
             bul_hit_vector(p_shot->VX, p_shot->VY, p_shot->VZ, -hitvec, 4 * start_age, DMG_LASER);
             p_owner->U.UPerson.Flag3 |= 0x40;
@@ -1188,7 +1194,7 @@ void init_laser(struct Thing *p_owner, ushort start_age)
             person_hit_by_bullet(&things[target], damage, p_shot->VX - cor_x,
               p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_LASER);
         }
-        else if ((p_owner->Flag2 & 0x1000000) != 0)
+        else if ((p_owner->Flag2 & TgF2_ExistsOffMap) != 0)
         {
             p_shot->VY = p_shot->Y >> 8;
         }
@@ -1406,10 +1412,186 @@ void init_laser_guided(struct Thing *p_owner, ushort size)
         : : "a" (p_owner), "d" (size));
 }
 
-void init_laser_elec(struct Thing *p_owner, ushort size)
+void weapon_shooting_ground_creates_smoke(MapCoord cor_x, MapCoord cor_z)
 {
+    struct SimpleThing *p_sthing;
+    struct MyMapElement *p_mapel;
+    MapCoord cor_y;
+    ushort textr;
+
+    if ((cor_x < 0) || (cor_x >= MAP_COORD_WIDTH) ||
+      (cor_y < 0) || (cor_y >= MAP_COORD_HEIGHT)) {
+        return;
+    }
+
+    p_mapel = &game_my_big_map[MAPCOORD_TO_TILE(cor_x) + MAPCOORD_TO_TILE(cor_z) * MAP_TILE_WIDTH];
+    textr = p_mapel->Texture & 0x3FFF;
+    if ((get_my_texture_bits(textr) & 2) != 0)
+    {
+        // Create small smoke effect for weapon discharge into water
+        cor_y = alt_at_point(cor_x, cor_z) >> 8;
+        p_sthing = create_scale_effect(cor_x, cor_y, cor_z, 1090, 8);
+        if (p_sthing != NULL) {
+            p_sthing->SubType = 58;
+        }
+    }
+}
+
+void init_laser_elec(struct Thing *p_owner, ushort start_age)
+{
+#if 0
     asm volatile ("call ASM_init_laser_elec\n"
         : : "a" (p_owner), "d" (size));
+#endif
+    struct Thing *p_shot;
+    struct WeaponDef *wdef;
+    int prc_x, prc_y, prc_z;
+    MapCoord cor_x, cor_y, cor_z;
+    u32 rhit;
+    int damage;
+    ThingIdx shottng, target;
+    TbBool allow_smoke;
+
+    shottng = get_new_thing();
+    if (shottng == 0) {
+        LOGERR("No thing slots for a shot");
+        return;
+    }
+    p_shot = &things[shottng];
+    if ((p_owner->Flag2 & TgF2_ExistsOffMap) != 0)
+    {
+        prc_x = p_owner->X;
+        prc_y = p_owner->Y + 5120;
+        prc_z = p_owner->Z;
+    }
+    else
+    {
+        ubyte angle;
+        angle = p_owner->U.UObject.Angle;
+        prc_x = p_owner->X + (angle_direction[angle].DiX << 7);
+        prc_y = p_owner->Y + 5120;
+        prc_z = p_owner->Z + (angle_direction[angle].DiY << 7);
+    }
+
+    p_shot->U.UObject.Angle = p_owner->U.UObject.Angle;
+    if ((PRCCOORD_TO_MAPCOORD(prc_x) < 0) || (PRCCOORD_TO_MAPCOORD(prc_x) >= MAP_COORD_WIDTH) ||
+      (PRCCOORD_TO_MAPCOORD(prc_z) < 0) || (PRCCOORD_TO_MAPCOORD(prc_z) >= MAP_COORD_HEIGHT)) {
+        remove_thing(shottng);
+        return;
+    }
+
+    target = 0;
+    wdef = &weapon_defs[WEP_ELLASER];
+    allow_smoke = 0;
+    if ((p_owner->Flag & TngF_Unkn20000000) != 0)
+    {
+        p_shot->VX = p_owner->VX;
+        p_shot->VY = p_owner->VY;
+        p_shot->VZ = p_owner->VZ;
+        p_owner->Flag &= ~TngF_Unkn20000000;
+        allow_smoke = 1;
+    }
+    else if (p_owner->PTarget != NULL)
+    {
+        struct Thing *p_target;
+        p_target = p_owner->PTarget;
+        p_shot->VX = PRCCOORD_TO_MAPCOORD(p_target->X);
+        p_shot->VY = PRCCOORD_TO_MAPCOORD(p_target->Y) + 10;
+        p_shot->VZ = PRCCOORD_TO_MAPCOORD(p_target->Z);
+        target = p_target->ThingOffset;
+    }
+    else if ((p_owner->Flag & TngF_Unkn1000) != 0)
+    {
+        ushort range;
+        ubyte angle;
+        range = wdef->RangeBlocks;
+        angle = p_owner->U.UObject.Angle;
+        p_shot->VX = PRCCOORD_TO_MAPCOORD(prc_x) + ((range * angle_direction[angle].DiX) >> 16);
+        p_shot->VY = PRCCOORD_TO_MAPCOORD(prc_y);
+        p_shot->VZ = PRCCOORD_TO_MAPCOORD(prc_z) + ((range * angle_direction[angle].DiY) >> 16);
+    }
+    else
+    {
+        remove_thing(shottng);
+        return;
+    }
+
+    p_shot->X = prc_x;
+    p_shot->Y = prc_y;
+    p_shot->Z = prc_z;
+    p_shot->Radius = 50;
+    p_shot->Owner = p_owner->ThingOffset;
+
+    cor_x = PRCCOORD_TO_MAPCOORD(prc_x);
+    cor_y = PRCCOORD_TO_MAPCOORD(prc_y);
+    cor_z = PRCCOORD_TO_MAPCOORD(prc_z);
+    rhit = laser_hit_at(cor_x, cor_y, cor_z, &p_shot->VX, &p_shot->VY, &p_shot->VZ, p_shot);
+
+    if (start_age > 15)
+        start_age = 15;
+    if (start_age < 5)
+        start_age = 5;
+    // For every consecutive turn of damage, deal more of it
+    damage = wdef->HitDamage + ((wdef->HitDamage * (start_age - 5)) >> 3);
+
+    if ((rhit & 0x80000000) != 0) // hit 3D object collision vector
+    {
+        short hitvec;
+
+        hitvec = rhit;
+        if (hitvec != -9999)
+        {
+            elec_hit_building(p_shot->VX, p_shot->VY, p_shot->VZ, -hitvec);
+        }
+    }
+    else if ((rhit & 0x20000000) != 0)
+    {
+        // no action
+    }
+    else if ((rhit & 0x40000000) != 0) // hit SimpleThing
+    {
+        struct SimpleThing *p_hitstng;
+        ThingIdx hitstng;
+        hitstng = rhit & ~0x60000000;
+        p_hitstng = &sthings[-hitstng];
+        person_hit_by_bullet((struct Thing *)p_hitstng, damage, p_shot->VX - cor_x,
+          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_ELLASER);
+    }
+    else if (rhit != 0) // hit normal thing
+    {
+        struct Thing *p_hittng;
+        ThingIdx hittng;
+        hittng = rhit & ~0x60000000;
+        p_hittng = &things[hittng];
+        person_hit_by_bullet(p_hittng, damage, p_shot->VX - cor_x,
+          p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_ELLASER);
+    }
+    else // if did not hit anything else, go for original target
+    {
+        if (target != 0)
+        {
+            person_hit_by_bullet(&things[target], damage, p_shot->VX - cor_x,
+              p_shot->VY - cor_y, p_shot->VZ - cor_z, p_owner, DMG_ELLASER);
+        }
+        else
+        {
+            if ((p_owner->Flag2 & TgF2_ExistsOffMap) != 0) {
+                p_shot->VY = p_shot->Y >> 8;
+            }
+            if (allow_smoke) {
+                weapon_shooting_ground_creates_smoke(p_shot->VX, p_shot->VY);
+            }
+        }
+    }
+    p_shot->StartTimer1 = start_age;
+    p_shot->Timer1 = start_age;
+    if (start_age > 8)
+        start_age = 8;
+    p_shot->SubType = start_age;
+    p_shot->Flag = TngF_Unkn0004;
+    p_shot->Type = TT_LASER_ELEC;
+    p_shot->State = 0;
+    add_node_thing(p_shot->ThingOffset);
 }
 
 void init_laser_q_sep(struct Thing *p_owner, ushort size)

@@ -1627,6 +1627,16 @@ void refresh_old_thing_format(struct Thing *p_thing, struct ThingOldV9 *p_oldthi
     }
 }
 
+struct SimpleThing *create_scale_effect(int x, int y, int z, ushort frame, int timer)
+{
+    struct SimpleThing *ret;
+    asm volatile (
+      "push %5\n"
+      "call ASM_create_scale_effect\n"
+        : "=r" (ret) : "a" (x), "d" (y), "b" (z), "c" (frame), "g" (timer));
+    return ret;
+}
+
 struct SimpleThing *create_sound_effect(int x, int y, int z, ushort sample, int vol, int loop)
 {
     struct SimpleThing *ret;

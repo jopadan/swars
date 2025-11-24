@@ -32,6 +32,7 @@
 #include "display.h"
 #include "drawtext.h"
 #include "enginsngobjs.h"
+#include "enginsngtxtr.h"
 #include "engintrns.h"
 #include "febrief.h"
 #include "game.h"
@@ -3513,17 +3514,6 @@ void person_go_sleep(struct Thing *p_person)
         p_person->Flag &= ~(TngF_Unkn0800|TngF_WepRecoil);
         p_person->Flag2 |= TgF2_KnockedOut;
     }
-}
-
-ubyte get_my_texture_bits(short tex)
-{
-#if 1
-    ubyte ret;
-    asm volatile (
-      "call ASM_get_my_texture_bits\n"
-        : "=r" (ret) : "a" (tex));
-    return ret;
-#endif
 }
 
 ubyte vector_in_way(struct Thing *p_thing, int dx, int dz)

@@ -63988,7 +63988,7 @@ GLOBAL_FUNC(ASM_init_nuclear_bomb)	/* 0x0632BC */
 
 
 /*----------------------------------------------------------------*/
-create_scale_effect:	/* 0x06338C */
+GLOBAL_FUNC(ASM_create_scale_effect)	/* 0x06338C */
 /*----------------------------------------------------------------*/
 		push   %esi
 		push   %edi
@@ -69141,7 +69141,7 @@ GLOBAL_FUNC(ASM_set_static_on_fire)	/* 0x067614 */
 		sar    $0x8,%ebx
 		sar    $0x8,%edx
 		sar    $0x8,%eax
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		test   %eax,%eax
 		je     jump_6778b
 		movb   $0x39,0x8(%eax)
@@ -150119,7 +150119,7 @@ GLOBAL_FUNC(ASM_init_uzi)	/* 0x0C1C0C */
 		add    %ecx,%eax
 		mov    $0x41e,%ecx
 		sub    $0x20,%eax
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		test   %eax,%eax
 		je     jump_c206d
 		push   $0x1
@@ -150179,7 +150179,7 @@ GLOBAL_FUNC(ASM_init_uzi)	/* 0x0C1C0C */
 		sar    $0x8,%edx
 		mov    %cx,%ax
 		mov    $0x43f,%ecx
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		mov    %eax,%esi
 		test   %eax,%eax
 		je     jump_c206d
@@ -150484,7 +150484,7 @@ GLOBAL_FUNC(ASM_init_long_range)	/* 0x0C2078 */
 		add    %ecx,%eax
 		mov    $0x41e,%ecx
 		sub    $0x20,%eax
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		test   %eax,%eax
 		je     jump_c24b7
 		push   $0x1
@@ -150544,7 +150544,7 @@ GLOBAL_FUNC(ASM_init_long_range)	/* 0x0C2078 */
 		sar    $0x8,%edx
 		mov    %cx,%ax
 		mov    $0x43f,%ecx
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		mov    %eax,%esi
 		test   %eax,%eax
 		je     jump_c24b7
@@ -150858,7 +150858,7 @@ GLOBAL_FUNC(ASM_init_minigun)	/* 0x0C24C4 */
 		add    %ecx,%eax
 		mov    $0x41e,%ecx
 		sub    $0x20,%eax
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		test   %eax,%eax
 		je     jump_c2928
 		push   $0x1
@@ -150919,7 +150919,7 @@ GLOBAL_FUNC(ASM_init_minigun)	/* 0x0C24C4 */
 		sar    $0x8,%edx
 		mov    %cx,%ax
 		mov    $0x43f,%ecx
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		mov    %eax,%esi
 		test   %eax,%eax
 		je     jump_c2928
@@ -151748,7 +151748,7 @@ GLOBAL_FUNC(ASM_init_flamer)	/* 0x0C303C */
 		sar    $0x8,%ebx
 		sar    $0x8,%edx
 		sar    $0x8,%eax
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		mov    %eax,%edx
 		test   %eax,%eax
 		je     jump_c31da
@@ -152524,7 +152524,7 @@ GLOBAL_FUNC(ASM_process_electric_strand)	/* 0x0C3A40 */
 
 
 /*----------------------------------------------------------------*/
-elec_hit_building:	/* 0x0C3B98 */
+GLOBAL_FUNC(ASM_elec_hit_building)	/* 0x0C3B98 */
 /*----------------------------------------------------------------*/
 		push   %esi
 		push   %edi
@@ -153246,7 +153246,7 @@ GLOBAL_FUNC(ASM_init_laser_elec)	/* 0x0C422C */
 		mov    0x30(%esi),%edx
 		movswl %ax,%ecx
 		mov    0x2c(%esi),%eax
-		call   elec_hit_building
+		call   ac_elec_hit_building
 		jmp    jump_c463e
 	jump_c447b:
 		mov    0x8(%esp),%edx
@@ -153392,7 +153392,7 @@ GLOBAL_FUNC(ASM_init_laser_elec)	/* 0x0C422C */
 		sar    $0x8,%edx
 		mov    %cx,%ax
 		mov    $0x442,%ecx
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		movb   $0x3a,0x8(%eax)
 	jump_c463e:
 		mov    0x10(%esp),%eax
@@ -156293,7 +156293,7 @@ test_stuff:	/* 0x0C66CC */
 		mov    0xc(%esp),%eax
 		mov    0x4(%esp),%edx
 		add    %esi,%eax
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		test   %eax,%eax
 		je     jump_c66fb
 		movb   $0x1f,0x8(%eax)
@@ -156488,7 +156488,7 @@ GLOBAL_FUNC(ASM_process_nuclear_bomb)	/* 0x0C67EC */
 		mov    -0x10(%ebp),%eax
 		add    %edi,%ebx
 		add    %esi,%eax
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		test   %eax,%eax
 		je     jump_c697e
 		mov    -0x18(%ebp),%ebx
@@ -156679,7 +156679,7 @@ GLOBAL_FUNC(ASM_process_canister)	/* 0x0C6AB8 */
 		push   %eax
 		mov    0xc(%esp),%edx
 		mov    0x8(%esp),%eax
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		test   %eax,%eax
 		jne    jump_c6b37
 		jmp    jump_c6bac
@@ -156809,7 +156809,7 @@ GLOBAL_FUNC(ASM_process_smoke_generator)	/* 0x0C6D4C */
 		push   %eax
 		mov    %edi,%edx
 		mov    %ebp,%eax
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		test   %eax,%eax
 		je     jump_c6e55
 		movb   $0x2c,0x8(%eax)
@@ -158182,7 +158182,7 @@ process_splash:	/* 0x0C7D44 */
 		sar    $0x8,%edx
 		mov    %bx,%ax
 		mov    %edi,%ebx
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		mov    %eax,%edx
 		test   %eax,%eax
 		je     jump_c7dda
@@ -160231,7 +160231,7 @@ GLOBAL_FUNC(ASM_process_rocket)	/* 0x0C9100 */
 		mov    0x18(%esi),%eax
 		sar    $0x8,%ebx
 		sar    $0x8,%eax
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		mov    %eax,%edx
 		test   %eax,%eax
 		je     jump_c9513
@@ -160340,7 +160340,7 @@ GLOBAL_FUNC(ASM_process_rocket)	/* 0x0C9100 */
 		mov    0x1c(%esi),%edx
 		mov    0x24(%esp),%cx
 		sar    $0x8,%edx
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		mov    %eax,%edx
 		test   %eax,%eax
 		je     jump_c9741
@@ -160436,7 +160436,7 @@ GLOBAL_FUNC(ASM_process_rocket)	/* 0x0C9100 */
 		sar    $0x8,%edx
 		mov    %ax,%cx
 		mov    0x20(%esp),%eax
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		mov    %eax,%edx
 		test   %eax,%eax
 		je     jump_c9881
@@ -161041,7 +161041,7 @@ GLOBAL_FUNC(ASM_process_grenade)	/* 0x0C9D60 */
 		mov    0x18(%esi),%eax
 		sar    $0x8,%ebx
 		sar    $0x8,%eax
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		mov    %eax,%edi
 		test   %eax,%eax
 		je     jump_c9e72
@@ -162348,7 +162348,7 @@ func_ca88e:
 		mov    %ecx,%edx
 		mov    $0x43f,%ecx
 		sar    $0x8,%edx
-		call   create_scale_effect
+		call   ac_create_scale_effect
 		mov    %eax,%edx
 		test   %eax,%eax
 		je     jump_cadc5
