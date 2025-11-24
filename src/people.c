@@ -3583,24 +3583,27 @@ TbBool check_ground_unkn01(struct Thing *p_person, short sh_x, short sh_z)
 {
     struct MyMapElement *p_mapel;
     ushort tflags;
+    MapCoord cor_x, cor_z;
     short tile_x, tile_z;
     ushort txtr;
     TbBool tile_blocking;
 
-    tile_z = (p_person->Z + (sh_z << 8)) >> 16;
-    tile_x = (p_person->X + (sh_x << 8)) >> 16;
+    cor_x = PRCCOORD_TO_MAPCOORD(p_person->X) + sh_x;
+    cor_z = PRCCOORD_TO_MAPCOORD(p_person->Z) + sh_z;
+    tile_x = MAPCOORD_TO_TILE(cor_x);
+    tile_z = MAPCOORD_TO_TILE(cor_z);
 
     tile_blocking = compute_map_tile_is_blocking_walk(tile_x, tile_z);
 
-    p_mapel = &game_my_big_map[MAP_TILE_WIDTH * tile_z + tile_x];
-
-    txtr = p_mapel->Texture & 0x3FFF;
+    txtr = floor_texture_at_point(cor_x, cor_z);
     tflags = ((get_my_texture_bits(txtr) & 0xC0) >> 6) & 0x02;
 
     if ((tile_x < 0) || (tile_x >= MAP_TILE_WIDTH) || (tile_z < 0) || (tile_z >= MAP_TILE_HEIGHT))
     {
       return true;
     }
+
+    p_mapel = &game_my_big_map[MAP_TILE_WIDTH * tile_z + tile_x];
 
     if (tile_blocking)
         tflags |= 0x04;

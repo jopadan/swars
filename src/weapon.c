@@ -1412,20 +1412,14 @@ void init_laser_guided(struct Thing *p_owner, ushort size)
         : : "a" (p_owner), "d" (size));
 }
 
-void weapon_shooting_ground_creates_smoke(MapCoord cor_x, MapCoord cor_z)
+void weapon_shooting_floor_creates_smoke(MapCoord cor_x, MapCoord cor_z)
 {
     struct SimpleThing *p_sthing;
-    struct MyMapElement *p_mapel;
     MapCoord cor_y;
     ushort textr;
 
-    if ((cor_x < 0) || (cor_x >= MAP_COORD_WIDTH) ||
-      (cor_y < 0) || (cor_y >= MAP_COORD_HEIGHT)) {
-        return;
-    }
+    textr = floor_texture_at_point(cor_x, cor_z);
 
-    p_mapel = &game_my_big_map[MAPCOORD_TO_TILE(cor_x) + MAPCOORD_TO_TILE(cor_z) * MAP_TILE_WIDTH];
-    textr = p_mapel->Texture & 0x3FFF;
     if ((get_my_texture_bits(textr) & 2) != 0)
     {
         // Create small smoke effect for weapon discharge into water
@@ -1579,7 +1573,7 @@ void init_laser_elec(struct Thing *p_owner, ushort start_age)
                 p_shot->VY = p_shot->Y >> 8;
             }
             if (allow_smoke) {
-                weapon_shooting_ground_creates_smoke(p_shot->VX, p_shot->VY);
+                weapon_shooting_floor_creates_smoke(p_shot->VX, p_shot->VY);
             }
         }
     }

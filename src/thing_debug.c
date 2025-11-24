@@ -618,10 +618,10 @@ void things_debug_hud(void)
     char locstr[100];
     short tng_x, tng_y, tng_z;
     short scr_x, scr_y, ln;
-    short map_x, map_y, map_z;
+    MapCoord cor_x, cor_y, cor_z;
 
-    map_coords_limit(&map_x, &map_y, &map_z, mouse_map_x, 0, mouse_map_z);
-    thing = select_thing_for_debug(map_x, map_y, map_z, -1);
+    map_coords_limit(&cor_x, &cor_y, &cor_z, mouse_map_x, 0, mouse_map_z);
+    thing = select_thing_for_debug(cor_x, cor_y, cor_z, -1);
     // Lock on current thing
     if (is_key_pressed(KC_W, KMod_SHIFT))
     {

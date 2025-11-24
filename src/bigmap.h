@@ -20,6 +20,7 @@
 #define BIGMAP_H
 
 #include "bftypes.h"
+#include "game_bstype.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -132,7 +133,7 @@ extern const struct Direction angle_direction[];
 
 /** Limit the map coordinates boundaries of valid map positions and ranges of data types used.
  */
-void map_coords_limit(short *cor_x, short *cor_y, short *cor_z, long map_x, long map_y, long map_z);
+void map_coords_limit(MapCoord *cor_x, MapCoord *cor_y, MapCoord *cor_z, long map_x, long map_y, long map_z);
 
 void clear_mapwho_on_whole_map(void);
 void refresh_old_my_big_map_format(struct MyMapElement *p_mapel,
@@ -140,6 +141,7 @@ void refresh_old_my_big_map_format(struct MyMapElement *p_mapel,
 short get_mapwho_thing_index(short tile_x, short tile_z);
 void init_search_spiral(void);
 int alt_at_point(short x, short z);
+ushort floor_texture_at_point(MapCoord cor_x, MapCoord cor_z);
 
 /** Computes length of vector defined by given 3 coordinates.
  * Uses some simplifications, but is fast. Requires the resulting
