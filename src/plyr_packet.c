@@ -24,6 +24,7 @@
 #include "bfmusic.h"
 #include "ssampply.h"
 
+#include "bigmap.h"
 #include "game_bstype.h"
 #include "game_options.h"
 #include "game.h"
@@ -82,19 +83,39 @@ void player_agent_select(PlayerIdx plyr, ThingIdx person)
     }
 }
 
+/** Alter relative position, limiting its vector length to 256.
+ *
+ * Relative position change needs to be capped, as packet creation function does
+ * not care too much about exceeding the limit. Normalizing here, on packet receive
+ * side, also makes sure cheating is not possible.
+ */
+void packet_rel_position_3d_normalize(short *p_x, short *p_y, short *p_z)
+{
+    int len;
+    len = map_distance_deltas_fast(*p_x, *p_y, *p_z);
+    if (len < 256) { // do not increase vector length if below max
+        len = 256;
+    }
+    *p_x = (*p_x) * 256 / len;
+    *p_y = (*p_y) * 256 / len;
+    *p_z = (*p_z) * 256 / len;
+}
+
+void thing_goto_point_rel(struct Thing *p_thing, short x, short y, short z)
+{
+    // Make sure the normalization is kept when this function is remade
+    packet_rel_position_3d_normalize(&x, &y, &z);
+    asm volatile (
+      "call ASM_thing_goto_point_rel\n"
+        : : "a" (p_thing), "d" (x), "b" (y), "c" (z));
+}
+
 void thing_goto_point_rel_fast(struct Thing *p_thing, short x, short y, short z, int plyr)
 {
     asm volatile (
       "push %4\n"
       "call ASM_thing_goto_point_rel_fast\n"
         : : "a" (p_thing), "d" (x), "b" (y), "c" (z), "g" (plyr));
-}
-
-void thing_goto_point_rel(struct Thing *p_thing, short x, short y, short z)
-{
-    asm volatile (
-      "call ASM_thing_goto_point_rel\n"
-        : : "a" (p_thing), "d" (x), "b" (y), "c" (z));
 }
 
 void thing_goto_point_fast(struct Thing *p_thing, short x, short y, short z, int plyr)

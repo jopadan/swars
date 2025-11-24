@@ -20,6 +20,7 @@
 
 #include <stdlib.h>
 #include <limits.h>
+#include "bfmath.h"
 #include "bfmemut.h"
 
 #include "swlog.h"
@@ -398,6 +399,11 @@ void quick_crater(int x, int z, int size)
 {
     asm volatile ("call ASM_quick_crater\n"
         :  : "a" (x), "d" (z), "b" (size));
+}
+
+u32 map_distance_deltas_precise(int dt_x, int dt_y, int dt_z)
+{
+    return LbSqrL(dt_x * dt_x + dt_y * dt_y + dt_z * dt_z);
 }
 
 u32 map_distance_deltas_fast(int dt_x, int dt_y, int dt_z)

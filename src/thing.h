@@ -467,8 +467,15 @@ struct Thing { // sizeof=168
     ushort StartFrame;
     short Timer1;
     short StartTimer1;
+    /** Move velocity vector or shoot target position; X coord.
+     * The vector set is expected to be normalized, length od 256 means full speed.
+     */
     s32 VX;
+    /** Move velocity vector, Y coord.
+     */
     s32 VY;
+    /** Move velocity vector, Z coord.
+     */
     s32 VZ;
     short Speed;
     short Health;

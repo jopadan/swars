@@ -149,6 +149,8 @@ ushort floor_texture_at_point(MapCoord cor_x, MapCoord cor_z);
  */
 u32 map_distance_deltas_fast(int dt_x, int dt_y, int dt_z);
 
+u32 map_distance_deltas_precise(int dt_x, int dt_y, int dt_z);
+
 /** Computes length of vector defined by two 3D points.
  * Uses some simplifications, but is fast. Requires the givn values
  * to be map coords - they can not exceed 15-bit.
