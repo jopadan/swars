@@ -224,7 +224,7 @@ ushort floor_texture_at_point(MapCoord cor_x, MapCoord cor_z)
         return 0;
 
     p_mapel = &game_my_big_map[MAP_TILE_WIDTH * (tile_z) + (tile_x)];
-    return p_mapel->Texture & 0x3FFF;
+    return (p_mapel->Texture & 0x3FFF);
 }
 
 int alt_at_point(short x, short z)

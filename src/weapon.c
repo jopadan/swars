@@ -1419,7 +1419,6 @@ void weapon_shooting_floor_creates_smoke(MapCoord cor_x, MapCoord cor_z)
     ushort textr;
 
     textr = floor_texture_at_point(cor_x, cor_z);
-
     if ((get_my_texture_bits(textr) & 2) != 0)
     {
         // Create small smoke effect for weapon discharge into water
@@ -1570,10 +1569,10 @@ void init_laser_elec(struct Thing *p_owner, ushort start_age)
         else
         {
             if ((p_owner->Flag2 & TgF2_ExistsOffMap) != 0) {
-                p_shot->VY = p_shot->Y >> 8;
+                p_shot->VY = PRCCOORD_TO_MAPCOORD(p_shot->Y);
             }
             if (allow_smoke) {
-                weapon_shooting_floor_creates_smoke(p_shot->VX, p_shot->VY);
+                weapon_shooting_floor_creates_smoke(p_shot->VX, p_shot->VZ);
             }
         }
     }
