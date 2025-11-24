@@ -1108,12 +1108,12 @@ void init_laser(struct Thing *p_owner, ushort start_age)
     wdef = &weapon_defs[WEP_LASER];
     wdmgtyp = DMG_LASER;
 
-    if ((p_owner->Flag & 0x20000000) != 0)
+    if ((p_owner->Flag & TngF_Unkn20000000) != 0)
     {
         p_shot->VX = p_owner->VX;
         p_shot->VY = p_owner->VY;
         p_shot->VZ = p_owner->VZ;
-        p_owner->Flag &= ~0x20000000;
+        p_owner->Flag &= ~TngF_Unkn20000000;
     }
     else if (p_owner->PTarget != NULL)
     {
@@ -1243,7 +1243,7 @@ void init_mgun_laser(struct Thing *p_owner, ushort start_age)
         return;
     }
     p_shot = &things[shottng];
-    if (p_owner->U.UMGun.ShotTurn != 0)
+    if (p_owner->U.UMGun.ShotTurn != 0) // which barrel to shoot from
         angle = p_owner->U.UMGun.AngleY + 48;
     else
         angle = p_owner->U.UMGun.AngleY - 48;

@@ -725,6 +725,24 @@ void things_debug_hud(void)
               (int)p_track_thing->ThingOffset,
               (int)p_track_thing->U.UPerson.AnimMode);
             break;
+        case TT_BUILDING:
+            //snprint_building_state(locstr+strlen(locstr), sizeof(locstr)-strlen(locstr), p_track_thing);
+            if (p_track_thing->SubType == SubTT_BLD_MGUN) {
+                snprintf(locstr+strlen(locstr), sizeof(locstr)-strlen(locstr),
+                  " G %d EG %d th %d",
+                 (int)p_track_thing->U.UMGun.Group,
+                  (int)p_track_thing->U.UMGun.EffectiveGroup,
+                  (int)p_track_thing->ThingOffset);
+            } else {
+                snprintf(locstr+strlen(locstr), sizeof(locstr)-strlen(locstr),
+                  " Mood %d G %d comcur %x EG %d th %d",
+                  (int)p_track_thing->U.UObject.Mood,
+                 (int)p_track_thing->U.UObject.Group,
+                  (uint)p_track_thing->U.UObject.ComCur,
+                  (int)p_track_thing->U.UObject.EffectiveGroup,
+                  (int)p_track_thing->ThingOffset);
+            }
+            break;
         default:
             snprintf(locstr+strlen(locstr), sizeof(locstr)-strlen(locstr), " th %d",
               (int)p_track_thing->ThingOffset);
@@ -756,6 +774,31 @@ void things_debug_hud(void)
               (int)p_track_thing->U.UPerson.MaxShieldEnergy,
               (int)p_track_thing->StartFrame,
               (int)p_track_thing->Frame);
+            break;
+        case TT_BUILDING:
+            if (p_track_thing->SubType == SubTT_BLD_MGUN) {
+                sprintf(locstr, "F  %08x Spd %d Obj %d He %d/%d ObN %d ShTn %d SF %d F %d",
+                  (uint)p_track_thing->Flag,
+                  (int)p_track_thing->Speed,
+                  (int)p_track_thing->U.UMGun.Object,
+                  (int)p_track_thing->Health,
+                  (int)p_track_thing->U.UMGun.MaxHealth,
+                  (int)p_track_thing->U.UMGun.ObjectNo,
+                  (int)p_track_thing->U.UMGun.ShotTurn,
+                  (int)p_track_thing->StartFrame,
+                  (int)p_track_thing->Frame);
+            } else {
+                sprintf(locstr, "F  %08x Spd %d Obj %d He %d ToD %d Off %d,%d SF %d F %d",
+                  (uint)p_track_thing->Flag,
+                  (int)p_track_thing->Speed,
+                  (int)p_track_thing->U.UObject.Object,
+                  (int)p_track_thing->Health,
+                  (int)p_track_thing->U.UObject.TokenDir,
+                  (int)p_track_thing->U.UObject.OffX,
+                  (int)p_track_thing->U.UObject.OffZ,
+                  (int)p_track_thing->StartFrame,
+                  (int)p_track_thing->Frame);
+            }
             break;
         default:
             sprintf(locstr, "F  %08x Spd %d He %d SF %d F %d",
