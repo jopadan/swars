@@ -20,6 +20,9 @@
 /******************************************************************************/
 #include "packet.h"
 
+#include "bffile.h"
+#include "bfutility.h"
+
 #include "campaign.h"
 #include "game_data.h"
 #include "game_options.h"
@@ -481,16 +484,62 @@ void PacketRecord_OpenRead(void)
 
 void PacketRecord_Read(struct Packet *p_pckt)
 {
+#if 0
     asm volatile (
       "call ASM_PacketRecord_Read\n"
         : : "a" (p_pckt));
+#endif
+    ushort locbuf[6];
+    uint len;
+
+    if (packet_rec_fh != INVALID_FILE) {
+        return;
+    }
+
+    len = 2 * sizeof(ushort);
+    LbFileRead(packet_rec_fh, locbuf, len);
+    locbuf[2] = 0;
+    locbuf[3] = 0;
+    locbuf[4] = 0;
+    if (locbuf[0] & 0xFF) {
+        len = 4 * sizeof(ushort);
+        LbFileRead(packet_rec_fh, &locbuf[2], len);
+    }
+    p_pckt->Action = locbuf[0];
+    p_pckt->Data = locbuf[1];
+    p_pckt->X = locbuf[2];
+    p_pckt->Y = locbuf[3];
+    p_pckt->Z = locbuf[4];
 }
 
 void PacketRecord_Write(struct Packet *p_pckt)
 {
+#if 0
     asm volatile (
       "call ASM_PacketRecord_Write\n"
         : : "a" (p_pckt));
+#endif
+    ushort locbuf[6];
+    uint len;
+
+    if (in_network_game) {
+        return;
+    }
+    if (packet_rec_fh != INVALID_FILE) {
+        return;
+    }
+
+    locbuf[0] = p_pckt->Action;
+    locbuf[1] = p_pckt->Data;
+    locbuf[2] = p_pckt->X;
+    locbuf[3] = p_pckt->Y;
+    locbuf[4] = p_pckt->Z;
+    locbuf[5] = lbSeed;
+    if (p_pckt->Action & 0xFF)
+        len = 6 * sizeof(ushort);
+    else
+        len = 2 * sizeof(ushort);
+    LbFileWrite(packet_rec_fh, locbuf, len);
 }
 
 /******************************************************************************/

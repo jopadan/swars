@@ -1343,7 +1343,8 @@ int draw_rot_object(int offset_x, int offset_y, int offset_z, struct SingleObjec
     return bckt_max;
 }
 
-short draw_rot_object2(int offset_x, int offset_y, int offset_z, struct SingleObject *point_object, struct Thing *p_thing)
+short draw_rot_object2(int offset_x, int offset_y, int offset_z,
+  struct SingleObject *point_object, struct Thing *p_thing)
 {
     int i, bckt_max;
     int face_beg, face;
