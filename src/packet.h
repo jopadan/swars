@@ -147,10 +147,23 @@ struct Packet
     short X4;
     short Y4;
     short Z4;
-    long D1Seed;
-    long D2Check;
+    s32 D1Seed;
+    s32 D2Check;
 };
 
+/** Per-player packet, for players input exchange.
+ *
+ * Short version, for low bandwidth links (serial port and modem).
+ */
+struct ShortPacket
+{
+    ushort Action;
+    ushort Data;
+    short X;
+    short Y;
+    short Z;
+    ubyte BCheck;
+};
 
 #pragma pack()
 /******************************************************************************/

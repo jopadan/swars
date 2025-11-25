@@ -20,22 +20,30 @@
 #include "plyr_packet.h"
 
 #include <assert.h>
+#include "bfkeybd.h"
 #include "bfscd.h"
+#include "bfmemut.h"
 #include "bfmusic.h"
+#include "bfutility.h"
 #include "ssampply.h"
 
 #include "bigmap.h"
 #include "game_bstype.h"
 #include "game_options.h"
+#include "game_speed.h"
 #include "game.h"
 #include "guitext.h"
 #include "hud_panel.h"
+#include "keyboard.h"
 #include "network.h"
 #include "packet.h"
 #include "player.h"
 #include "sound.h"
 #include "thing.h"
 #include "swlog.h"
+/******************************************************************************/
+extern struct ShortPacket shpackets[8];
+
 /******************************************************************************/
 
 void net_player_leave(PlayerIdx plyr)
@@ -267,12 +275,172 @@ void person_grp_switch_to_specific_weapon(struct Thing *p_person, PlayerIdx plyr
     }
 }
 
-short net_unkn_check_1(void)
+int net_unkn_func_12(void *a1)
 {
-    short ret;
-    asm volatile ("call ASM_net_unkn_check_1\n"
-        : "=r" (ret) : );
+    int ret;
+    asm volatile ("call ASM_net_unkn_func_12\n"
+        : "=r" (ret) : "a" (a1));
     return ret;
+}
+
+int show_message(const char *str)
+{
+    int ret;
+    asm volatile ("call ASM_show_message\n"
+        : "=r" (ret) : "a" (str));
+    return ret;
+}
+
+void net_unkn_check_1(void)
+{
+#if 0
+    asm volatile ("call ASM_net_unkn_check_1\n"
+        :  : );
+#endif
+    char locstr[100];
+    ushort i, m;
+    s32 check_val;
+    char recvd2[8];
+    char recvd3[8];
+    char recvd[8];
+
+    LbMemorySet(recvd, 0, 8);
+    if ((pktrec_mode == PktR_PLAYBACK) && in_network_game)
+    {
+        for (i = 0; i < 8; i++)
+        {
+            if (((1 << i) & ingame.InNetGame_UNSURE) != 0) {
+                PacketRecord_Read(&packets[i]);
+            }
+        }
+    }
+    else if (nsvc.I.Type == NetSvc_IPX)
+    {
+        struct Packet *p_pckt;
+        int ret;
+
+        p_pckt = &packets[local_player_no];
+        p_pckt->D1Seed = lbSeed;
+        p_pckt->D2Check = ingame.fld_unkC4B;
+        net_unkn_func_12(recvd2);
+        ret = LbNetworkExchange(packets, sizeof(struct Packet));
+        if (gameturn == 5) {
+            LbNetworkSetTimeoutSec(15);
+        }
+        if (ret == -1)
+        {
+            net_unkn_func_12(recvd3);
+            for (i = 0; i < 8; i++)
+            {
+                if (((1 << i) & ingame.InNetGame_UNSURE) == 0)
+                    continue;
+                if (recvd2[i] == recvd3[i])
+                    continue;
+
+                sprintf(locstr, " Player >%s< Has Timed Out", unkn2_names[i]);
+                show_message(locstr);
+                ingame.InNetGame_UNSURE &= ~(1 << i);
+                if (i == local_player_no)
+                {
+                  show_message("You have Timed out from the system");
+                  ingame.DisplayMode = DpM_PURPLEMNU;
+                  StopCD();
+                  StopAllSamples();
+                }
+                net_players_num--;
+            }
+        }
+        else if (ret == -8)
+        {
+            show_message(" Host Connection Lost");
+            ingame.InNetGame_UNSURE = 0;
+            ingame.DisplayMode = DpM_PURPLEMNU;
+            StopCD();
+            StopAllSamples();
+        }
+    }
+    else
+    {
+        struct Packet *p_pckt;
+        struct ShortPacket *p_shpckt;
+
+        p_pckt = &packets[local_player_no];
+        p_shpckt = &shpackets[local_player_no];
+        p_shpckt->Action = p_pckt->Action;
+        p_shpckt->Data = p_pckt->Data;
+        p_shpckt->X = p_pckt->X;
+        p_shpckt->Y = p_pckt->Y;
+        p_shpckt->Z = p_pckt->Z;
+        p_shpckt->BCheck = ingame.fld_unkC4B;
+
+        LbNetworkExchange(shpackets, sizeof(struct ShortPacket));
+
+        for (i = 0; i < 8; i++)
+        {
+            struct Packet *p_pckt;
+            struct ShortPacket *p_shpckt;
+
+            p_pckt = &packets[i];
+            p_shpckt = &shpackets[i];
+            p_pckt->Action = p_shpckt->Action;
+            p_pckt->Action2 = 0;
+            p_pckt->Action3 = 0;
+            p_pckt->Action4 = 0;
+            p_pckt->Data = p_shpckt->Data;
+            p_pckt->X = p_shpckt->X;
+            p_pckt->Y = p_shpckt->Y;
+            p_pckt->Z = p_shpckt->Z;
+            p_pckt->D1Seed = lbSeed;
+            p_pckt->D2Check = p_shpckt->BCheck;
+        }
+    }
+
+    if (nsvc.I.Type == NetSvc_IPX)
+        check_val = ingame.fld_unkC4B;
+    else
+        check_val = (ubyte)ingame.fld_unkC4B;
+    if (nsvc.I.Type == NetSvc_IPX)
+    {
+        for (i = 0; i < 8; i++)
+        {
+            if (((1 << i) & ingame.InNetGame_UNSURE) == 0)
+                continue;
+            for (m = 0; m < 8; m++)
+            {
+                if ( ((1 << m) & ingame.InNetGame_UNSURE) == 0)
+                    continue;
+                if (packets[m].D2Check == packets[i].D2Check)
+                    recvd[i]++;
+            }
+        }
+    }
+
+    for (i = 0; i < 8; i++)
+    {
+        if (((1 << i) & ingame.InNetGame_UNSURE) == 0)
+            continue;
+
+        if ((pktrec_mode == 1) && in_network_game && (net_host_player_no == local_player_no))
+            PacketRecord_Write(&packets[i]);
+
+        if ((nsvc.I.Type == NetSvc_IPX) && (recvd[i] == 1) && (net_players_num > 2))
+        {
+            sprintf(locstr, " Player >%s< is out of sync", unkn2_names[i]);
+            show_message(locstr);
+        }
+        if (check_val != packets[i].D2Check)
+        {
+          show_message(" CHECK ERROR ");
+          clear_gamekey_pressed(GKey_MISSN_RESTART);
+          in_network_game = 2;
+          StopCD();
+          test_missions(1);
+          init_level_3d(1);
+          restart_back_into_mission(ingame.CurrentMission);
+          in_network_game = 1;
+          return;
+        }
+    }
 }
 
 void player_chat_message_add_key(ushort a1, int a2)

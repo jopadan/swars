@@ -19103,7 +19103,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		shl    $0x4,%edx
 		sub    %ebx,%eax
 		mov    packets(%edx),%bx
-		mov    %bx,data_1aa214(%eax)
+		mov    %bx,EXPORT_SYMBOL(shpackets)(%eax)
 		mov    data_1a7032(%edx),%bx
 		mov    %bx,data_1aa216(%eax)
 		mov    data_1a7034(%edx),%bx
@@ -19115,7 +19115,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		mov    EXPORT_SYMBOL(ingame)+0x927,%dl # ingame.fld_unkC4B
 		mov    %dl,data_1aa21e(%eax)
 		mov    $0xb,%edx
-		mov    $data_1aa214,%eax
+		mov    $EXPORT_SYMBOL(shpackets),%eax
 		xor    %esi,%esi
 		call   ac_LbNetworkExchange
 		xor    %eax,%eax
@@ -19127,7 +19127,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 	jump_40015:
 		imul   $0xb,%edx,%ebx
 		imul   $0x30,%edx,%edx
-		mov    data_1aa214(%ebx),%cx
+		mov    EXPORT_SYMBOL(shpackets)(%ebx),%cx
 		mov    %cx,packets(%edx)
 		mov    %si,data_1a703a(%edx)
 		mov    %si,data_1a7044(%edx)
@@ -19163,7 +19163,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		mov    %edx,data_1a705c(%eax)
 		lea    0xc8(%esp),%eax
 		mov    $0x30,%edx
-		call   ASM_net_unkn_func_12
+		call   ac_net_unkn_func_12
 		mov    $packets,%eax
 		call   ac_LbNetworkExchange
 		mov    gameturn,%ebx
@@ -19177,7 +19177,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		jne    jump_401c4
 		lea    0xd0(%esp),%eax
 		mov    $aYouHaveTimedOu,%edi
-		call   ASM_net_unkn_func_12
+		call   ac_net_unkn_func_12
 		xor    %edx,%edx
 		jmp    jump_40125
 	jump_40124:
@@ -19207,7 +19207,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		add    $0xc,%esp
 		mov    %esp,%eax
 		mov    %dl,%cl
-		call   show_message
+		call   ac_show_message
 		mov    $0x1,%al
 		shl    %cl,%al
 		mov    EXPORT_SYMBOL(ingame)+0x995,%ch # ingame.InNetGame_UNSURE
@@ -19220,7 +19220,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		jne    jump_401b9
 		mov    %edi,%eax
 		mov    $0x37,%ebx
-		call   show_message
+		call   ac_show_message
 		mov    %bx,EXPORT_SYMBOL(ingame)+0x002 # ingame.DisplayMode
 		call   ac_StopCD
 		call   ac_StopAllSamples
@@ -19232,7 +19232,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		jne    jump_401ee
 		mov    $aHostConnection,%eax
 		xor    %dl,%dl
-		call   show_message
+		call   ac_show_message
 		mov    %dl,EXPORT_SYMBOL(ingame)+0x995 # ingame.InNetGame_UNSURE
 		movw   $0x37,EXPORT_SYMBOL(ingame)+0x002 # ingame.DisplayMode
 		call   ac_StopCD
@@ -19348,7 +19348,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		call   ac_sprintf
 		add    $0xc,%esp
 		lea    0x64(%esp),%eax
-		call   show_message
+		call   ac_show_message
 	jump_40334:
 		xor    %eax,%eax
 		mov    %dx,%ax
@@ -19356,7 +19356,7 @@ GLOBAL_FUNC (ASM_net_unkn_check_1)	/* 0x03FF04 */
 		cmp    data_1a705c(%eax),%edi
 		je     jump_40293
 		mov    $aCheckError,%eax
-		call   show_message
+		call   ac_show_message
 		xor    %al,%al
 		mov    %al,EXPORT_SYMBOL(lbKeyOn)+19
 		movb   $0x2,in_network_game
@@ -75638,7 +75638,7 @@ GLOBAL_FUNC (ASM_merged_noop_unkn1)	/* 0x6F828 */
 
 
 /*----------------------------------------------------------------*/
-show_message:	/* 0x06FA04 */
+GLOBAL_FUNC (ASM_show_message)	/* 0x06FA04 */
 /*----------------------------------------------------------------*/
 		push   %ebx
 		push   %ecx
@@ -184464,7 +184464,7 @@ GLOBAL (byte_1A7B00)	/* 0x1A7B00 */
 		.fill   0x3e8
 GLOBAL (byte_1A7EE8)	/* 0x1A7EE8 */
 		.fill   0x232c
-data_1aa214:
+GLOBAL (shpackets)	/* 0x1aa214 */
 		.short  0x0
 data_1aa216:
 		.short  0x0

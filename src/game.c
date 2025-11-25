@@ -2942,6 +2942,41 @@ void game_set_cam_track_player_agent_xz(PlayerIdx plyr, ushort plagent)
     game_set_cam_track_thing_xz(p_agent->ThingOffset);
 }
 
+void init_random_seed(void)
+{
+    if (in_network_game)
+    {
+        struct NetworkPlayer *p_netplyr;
+
+        mission_open[1] = ingame.CurrentMission;
+        mission_state[1] = MResol_UNDECIDED;
+        mission_open[2] = 0;
+        mission_state[2] = MResol_UNDECIDED;
+
+        p_netplyr = &network_players[net_host_player_no];
+        if (is_unkn_current_player())
+        {
+            lbSeed = time(0);
+            p_netplyr->U.RandInit.Seed = lbSeed;
+            LbNetworkExchange(network_players, sizeof(struct NetworkPlayer));
+        } else {
+            LbNetworkExchange(network_players, sizeof(struct NetworkPlayer));
+            lbSeed = p_netplyr->U.RandInit.Seed;
+        }
+    }
+    else
+    {
+        lbSeed = time(0);
+    }
+    srand(lbSeed);
+}
+
+void init_random_seed_default(void)
+{
+    lbSeed = 0xD15C1234;
+    srand(lbSeed);
+}
+
 void preprogress_game_turns(void)
 {
     struct Mission *p_missi;
@@ -3298,11 +3333,13 @@ void restart_back_into_mission(ushort missi)
         execute_commands = 0;
     engn_yc = 0;
     init_game(reload);
-    lbSeed = 0xD15C1234;
-    if (pktrec_mode == PktR_RECORD)
+    init_random_seed_default();
+    if (!in_network_game)
     {
-        PacketRecord_Close();
-        PacketRecord_OpenWrite();
+        if (pktrec_mode == PktR_RECORD) {
+            PacketRecord_Close();
+            PacketRecord_OpenWrite();
+        }
     }
 }
 
@@ -6349,35 +6386,6 @@ void show_menu_screen_st2(void)
         play_sample_using_heap(0, 119 + (LbRandomAnyShort() % 3), FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
 
     net_system_init2();
-}
-
-void init_random_seed(void)
-{
-    if (in_network_game)
-    {
-        struct NetworkPlayer *p_netplyr;
-
-        mission_open[1] = ingame.CurrentMission;
-        mission_state[1] = MResol_UNDECIDED;
-        mission_open[2] = 0;
-        mission_state[2] = MResol_UNDECIDED;
-
-        p_netplyr = &network_players[net_host_player_no];
-        if (is_unkn_current_player())
-        {
-            lbSeed = time(0);
-            p_netplyr->U.RandInit.Seed = lbSeed;
-            LbNetworkExchange(network_players, sizeof(struct NetworkPlayer));
-        } else {
-            LbNetworkExchange(network_players, sizeof(struct NetworkPlayer));
-            lbSeed = p_netplyr->U.RandInit.Seed;
-        }
-    }
-    else
-    {
-        lbSeed = time(0);
-    }
-    srand(lbSeed);
 }
 
 ushort find_mission_with_mapid(short mapID, short mission_limit)
