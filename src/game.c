@@ -1176,11 +1176,36 @@ void fill_floor_textures(void)
         :  :  : "eax" );
 }
 
-void fill_netgame_agent_pos(int player, int group, int num_agents)
+void fill_netgame_agent_pos(int plyr, int group, int num_agents)
 {
+#if 0
     asm volatile (
       "call ASM_fill_netgame_agent_pos\n"
-        : : "a" (player), "d" (group), "b" (num_agents));
+        : : "a" (plyr), "d" (group), "b" (num_agents));
+#endif
+    ThingIdx thing;
+    struct Thing *p_thing;
+    short plagent;
+
+    plagent = 0;
+    for (thing = things_used_head; thing != 0; thing = p_thing->LinkChild)
+    {
+        p_thing = &things[thing];
+
+        if (p_thing->Type != TT_PERSON)
+            continue;
+        if (p_thing->U.UPerson.Group != group)
+            continue;
+
+        netgame_agent_pos_x[plyr][plagent] = PRCCOORD_TO_MAPCOORD(p_thing->X);
+        netgame_agent_pos_z[plyr][plagent] = PRCCOORD_TO_MAPCOORD(p_thing->Z);
+        plagent++;
+        if (plagent == num_agents)
+            break;
+    }
+    if (plagent < num_agents) {
+        LOGERR("Not enough agents discovered on level");
+    }
 }
 
 void unkn_f_pressed_func(void)
