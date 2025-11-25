@@ -305,8 +305,8 @@ ulong person_carried_weapons_pesuaded_sell_value(struct Thing *p_person);
 TbBool person_weapons_remove_one(struct Thing *p_person, WeaponType wtype);
 
 void do_weapon_quantities_net_to_player(struct Thing *p_person);
-void do_weapon_quantities1(struct Thing *p_person);
-void do_weapon_quantities_proper1(struct Thing *p_person);
+void player_agent_set_weapon_quantities_max(struct Thing *p_person);
+void player_agent_set_weapon_quantities_proper(struct Thing *p_person);
 
 void process_weapon(struct Thing *p_person);
 short process_persuadertron(struct Thing *p_person, ubyte target_select, ushort *energy_reqd);

@@ -1019,14 +1019,14 @@ void do_weapon_quantities_max_to_player(struct Thing *p_person)
             continue;
 
         if (person_carries_weapon(p_person, wtype))
-            n = 4;
+            n = WEAPONS_FOURPACK_MAX_COUNT;
         else
             n = 0;
         players[plyr].FourPacks[fp][plagent] = n;
     }
 }
 
-void do_weapon_quantities1(struct Thing *p_person)
+void player_agent_set_weapon_quantities_max(struct Thing *p_person)
 {
     if ((in_network_game) || ((p_person->Flag & TngF_PlayerAgent) == 0))
     {
@@ -1038,7 +1038,7 @@ void do_weapon_quantities1(struct Thing *p_person)
     }
 }
 
-void do_weapon_quantities_proper1(struct Thing *p_person)
+void player_agent_set_weapon_quantities_proper(struct Thing *p_person)
 {
     if ((p_person->Flag & TngF_PlayerAgent) == 0)
     {

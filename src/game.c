@@ -2129,7 +2129,7 @@ void person_give_all_weapons(struct Thing *p_person)
         wepflg = 1 << (wtype-1);
         p_person->U.UPerson.WeaponsCarried |= wepflg;
     }
-    do_weapon_quantities1(p_person);
+    player_agent_set_weapon_quantities_max(p_person);
     if ((p_person->Flag & TngF_PlayerAgent) != 0) {
         player_agent_update_prev_weapon(p_person);
     }
@@ -2337,10 +2337,10 @@ void setup_host(void)
 {
     BAT_unknsub_20(0, 0, 0, 0, vec_tmap[4] + 160 * 256 + 64);
     smack_malloc_setup();
-    LOGDBG("&setup_host() = 0x%lx", (ulong)setup_host);
+    LOGDBG("&setup_host() = 0x%p", (void *)setup_host);
     setup_initial_screen_mode();
 
-    if ( keyboard_mode_direct )
+    if (keyboard_mode_direct)
         LbKeyboardOpen();
     else
         LbIKeyboardOpen();
@@ -3051,9 +3051,9 @@ ushort make_group_into_players(ushort group, ushort plyr, ushort max_agent, shor
         // Setting command to player control is required to properly update weapons
         p_person->U.UPerson.ComCur = (plyr << 2) + plagent;
         if (ingame.GameMode == GamM_Unkn3)
-            do_weapon_quantities_proper1(p_person);
+            player_agent_set_weapon_quantities_proper(p_person);
         else
-            do_weapon_quantities1(p_person);
+            player_agent_set_weapon_quantities_max(p_person);
 
         // Using any commands other than preplay on player agents requires explicit marking
         // in form of use of EXECUTE_COMS.

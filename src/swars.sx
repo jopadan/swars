@@ -354,7 +354,7 @@ GLOBAL_FUNC(ASM_place_default_player)	/* 0x0101F0 */
 		jmp    jump_10571
 	jump_1056a:
 		mov    %ebx,%eax
-		call   ac_do_weapon_quantities1
+		call   ac_player_agent_set_weapon_quantities_max
 	jump_10571:
 		mov    0x4(%esp),%eax
 		test   %eax,%eax

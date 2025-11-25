@@ -27,6 +27,7 @@
 #include "game_data.h"
 #include "game_options.h"
 #include "game.h"
+#include "lvfiles.h"
 #include "player.h"
 #include "swlog.h"
 /******************************************************************************/
@@ -478,8 +479,9 @@ void PacketRecord_OpenRead(void)
         LOGWARN("Packet file expects map %hu, not %d",
           fname, head.mapno, (int)p_missi->MapNo);
     if ((head.levelno != p_missi->LevelNo) && (head.levelno != 0xFFFF))
-        LOGWARN("Packet file expects level %hu, not %d",
-          fname, head.levelno, (int)p_missi->LevelNo);
+        LOGWARN("Packet file expects level %d.%d, not %d.%d", fname,
+          LEVEL_NUM_STRAIN(head.levelno), LEVEL_NUM_VARIANT(head.levelno),
+          LEVEL_NUM_STRAIN(p_missi->LevelNo), LEVEL_NUM_VARIANT(p_missi->LevelNo));
 }
 
 void PacketRecord_Read(struct Packet *p_pckt)
