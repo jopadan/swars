@@ -631,7 +631,7 @@ void show_sysmenu_screen(void)
             if (login_control__State == LognCt_Unkn5)
             {
                 plyr = LbNetworkPlayerNumber();
-                network_players[plyr].Type = 13;
+                network_players[plyr].Type = NPAct_Unkn13;
                 byte_15516D = -1;
                 byte_15516C = -1;
                 switch_net_screen_boxes_to_initiate();

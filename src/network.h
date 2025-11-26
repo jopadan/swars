@@ -44,6 +44,29 @@ enum NetworkServiceType {
     NetSvc_RADICA,
 };
 
+enum NetPacketActions
+{
+    NPAct_NONE = 0x0,
+    NPAct_Unkn01,
+    NPAct_Unkn02,
+    NPAct_Unkn03,
+    NPAct_Unkn04,
+    NPAct_Unkn05,
+    NPAct_Unkn06,
+    NPAct_Unkn07,
+    NPAct_Unkn08,
+    NPAct_Unkn09,
+    NPAct_Unkn10,
+    NPAct_Unkn11,
+    NPAct_Unkn12,
+    NPAct_Unkn13,
+    NPAct_Unkn14,
+    NPAct_Unkn15,
+    NPAct_Unkn16,
+    NPAct_Unkn17,
+    NPAct_Unkn18,
+};
+
 struct NetworkServiceInfo { // sizeof=12
     NSERV_HANDLE Id; // offset=0
     ushort GameId; // offset=4

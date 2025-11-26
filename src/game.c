@@ -6043,7 +6043,7 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
     int i;
 
     p_netplyr = &network_players[plyr];
-    if (p_netplyr->Type == 17)
+    if (p_netplyr->Type == NPAct_Unkn17)
         return;
 
     nptype = p_netplyr->Type & 0x1F;
@@ -6264,16 +6264,16 @@ void net_unkn_func_33(void)
 
     switch (p_netplyr->Type)
     {
-    case 14:
+    case NPAct_Unkn14:
         agents_copy_wepmod_cryo_to_netplayer(p_netplyr);
         break;
-    case 15:
+    case NPAct_Unkn15:
         agents_copy_fourpacks_cryo_to_netplayer(p_netplyr);
         break;
-    case 10:
+    case NPAct_Unkn10:
         break;
-    case 17:
-        p_netplyr->Type = 0;
+    case NPAct_Unkn17:
+        p_netplyr->Type = NPAct_NONE;
         // Fall through
     default:
         p_netplyr->U.Progress.SelectedCity = login_control__City;
@@ -6319,7 +6319,7 @@ void net_unkn_func_33(void)
     if (byte_1C6D4A)
     {
         p_netplyr = &network_players[net_host_player_no];
-        if (p_netplyr->Type != 10 && p_netplyr->Type != 14 && p_netplyr->Type != 15)
+        if ((p_netplyr->Type != NPAct_Unkn10) && (p_netplyr->Type != NPAct_Unkn14) && (p_netplyr->Type != NPAct_Unkn15))
         {
             login_control__TechLevel = p_netplyr->U.Progress.TechLevel;
             unkn_flags_08 = p_netplyr->U.Progress.val_flags_08;
@@ -6334,7 +6334,7 @@ void net_unkn_func_33(void)
 
     for (i = 0; i < PLAYERS_LIMIT; i++)
     {
-        network_players[i].Type = 17;
+        network_players[i].Type = NPAct_Unkn17;
     }
 }
 
@@ -6575,22 +6575,22 @@ void mouse_sprite_animate(void)
 
 void net_players_copy_cryo(void)
 {
-    network_players[local_player_no].Type = 14;
+    network_players[local_player_no].Type = NPAct_Unkn14;
 }
 
 void net_players_copy_equip_and_cryo(void)
 {
-    network_players[local_player_no].Type = 14;
+    network_players[local_player_no].Type = NPAct_Unkn14;
     net_unkn_func_33();
-    network_players[local_player_no].Type = 15;
+    network_players[local_player_no].Type = NPAct_Unkn15;
     gameturn++;
 }
 
 void net_players_copy_equip_and_cryo_now(void)
 {
-    network_players[local_player_no].Type = 14;
+    network_players[local_player_no].Type = NPAct_Unkn14;
     net_unkn_func_33();
-    network_players[local_player_no].Type = 15;
+    network_players[local_player_no].Type = NPAct_Unkn15;
     net_unkn_func_33();
 }
 

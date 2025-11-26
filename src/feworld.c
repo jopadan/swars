@@ -548,7 +548,7 @@ void input_world_cities(struct ScreenBox *p_box)
                 int plyr;
                 plyr = LbNetworkPlayerNumber();
                 login_control__City = landmap_8C4;
-                network_players[plyr].Type = 9;
+                network_players[plyr].Type = NPAct_Unkn09;
             }
             word_1C48CC = 0;
             world_city_info_box.Flags |= GBxFlg_Unkn0080;
