@@ -288,7 +288,7 @@ ubyte do_equip_offer_buy(ubyte click)
 
     if ((login_control__State == LognCt_Unkn5) && ((unkn_flags_08 & 0x08) != 0))
     {
-        if (!local_player_hosts_the_game())
+        if (!net_local_player_hosts_the_game())
             return 0;
     }
 
@@ -319,7 +319,7 @@ ubyte sell_equipment(ubyte click)
 
     if ((login_control__State == LognCt_Unkn5) && ((unkn_flags_08 & 0x08) != 0))
     {
-        if (!local_player_hosts_the_game())
+        if (!net_local_player_hosts_the_game())
             return 0;
     }
 

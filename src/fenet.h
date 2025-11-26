@@ -31,7 +31,11 @@ extern "C" {
 #pragma pack()
 /******************************************************************************/
 
-TbBool local_player_hosts_the_game(void);
+TbBool net_local_player_hosts_the_game(void);
+void net_schedule_local_player_logout(void);
+void net_schedule_player_cryo_equip_sync(void);
+void net_schedule_player_equip_fourpack_sync(void);
+void net_schedule_player_city_choice_sync(void);
 
 void init_net_screen_boxes(void);
 void net_sessionlist_clear(void);

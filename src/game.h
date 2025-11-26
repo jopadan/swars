@@ -457,7 +457,6 @@ ubyte *anim_type_get_output_buffer(ubyte anislot);
 
 void net_unkn_func_33(void);
 void net_players_copy_equip_and_cryo(void);
-void net_players_copy_cryo(void);
 
 short test_missions(ubyte flag);
 void init_level_3d(ubyte flag);

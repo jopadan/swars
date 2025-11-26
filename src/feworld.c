@@ -25,10 +25,11 @@
 #include "poly.h"
 #include "ssampply.h"
 
+#include "display.h"
 #include "femain.h"
+#include "fenet.h"
 #include "guiboxes.h"
 #include "guitext.h"
-#include "display.h"
 #include "game_data.h"
 #include "game_options.h"
 #include "game_speed.h"
@@ -545,10 +546,8 @@ void input_world_cities(struct ScreenBox *p_box)
         {
             unkn_city_no = landmap_8C4;
             if (login_control__State == LognCt_Unkn5) {
-                int plyr;
-                plyr = LbNetworkPlayerNumber();
                 login_control__City = landmap_8C4;
-                network_players[plyr].Type = NPAct_SetCity;
+                net_schedule_player_city_choice_sync();
             }
             word_1C48CC = 0;
             world_city_info_box.Flags |= GBxFlg_Unkn0080;

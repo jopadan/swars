@@ -34,8 +34,9 @@
 #include "campaign.h"
 #include "cybmod.h"
 #include "display.h"
-#include "femain.h"
 #include "feequip.h"
+#include "femain.h"
+#include "fenet.h"
 #include "game_options.h"
 #include "guiboxes.h"
 #include "guitext.h"
@@ -355,7 +356,7 @@ ubyte do_equip_offer_buy_cybmod(ubyte click)
     if (nbought > 0)
     {
         if ((login_control__State == LognCt_Unkn5) && ((unkn_flags_08 & 0x08) != 0)) {
-            net_players_copy_cryo();
+            net_schedule_player_cryo_equip_sync();
         }
         selected_mod = -1;
         cryo_update_for_selected_cybmod();

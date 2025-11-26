@@ -6302,7 +6302,7 @@ void net_unkn_func_33(void)
     {
         LbNetworkSessionStop();
         net_new_game_prepare();
-        if (nsvc.I.Type != 1)
+        if (nsvc.I.Type != NetSvc_IPX)
         {
             if (byte_1C4A6F)
                 LbNetworkHangUp();
@@ -6573,24 +6573,19 @@ void mouse_sprite_animate(void)
     }
 }
 
-void net_players_copy_cryo(void)
-{
-    network_players[local_player_no].Type = NPAct_PlyrWeapModsSync;
-}
-
 void net_players_copy_equip_and_cryo(void)
 {
-    network_players[local_player_no].Type = NPAct_PlyrWeapModsSync;
+    net_schedule_player_cryo_equip_sync();
     net_unkn_func_33();
-    network_players[local_player_no].Type = NPAct_PlyrFourPackSync;
+    net_schedule_player_equip_fourpack_sync();
     gameturn++;
 }
 
 void net_players_copy_equip_and_cryo_now(void)
 {
-    network_players[local_player_no].Type = NPAct_PlyrWeapModsSync;
+    net_schedule_player_cryo_equip_sync();
     net_unkn_func_33();
-    network_players[local_player_no].Type = NPAct_PlyrFourPackSync;
+    net_schedule_player_equip_fourpack_sync();
     net_unkn_func_33();
 }
 

@@ -109,12 +109,56 @@ ubyte ac_show_net_protocol_box(struct ScreenBox *box);
 void ac_purple_unkn1_data_to_screen(void);
 void ac_purple_unkn3_data_to_screen(void);
 
-TbBool local_player_hosts_the_game(void)
+TbBool net_local_player_hosts_the_game(void)
 {
     int plyr;
 
     plyr = LbNetworkPlayerNumber();
     return login_control__State == LognCt_Unkn6 || plyr == net_host_player_no;
+}
+
+void net_schedule_local_player_logout(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = NPAct_PlyrLogOut;
+    byte_15516D = -1;
+    byte_15516C = -1;
+}
+
+void net_schedule_local_player_reset(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = NPAct_NetReset;
+    byte_15516D = -1;
+    byte_15516C = -1;
+}
+
+void net_schedule_player_cryo_equip_sync(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = NPAct_PlyrWeapModsSync;
+}
+
+void net_schedule_player_equip_fourpack_sync(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = NPAct_PlyrFourPackSync;
+}
+
+void net_schedule_player_city_choice_sync(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = NPAct_SetCity;
 }
 
 void net_sessionlist_clear(void)
@@ -389,7 +433,7 @@ ubyte do_net_SET2(ubyte click)
 #endif
     int plyr;
 
-    if (!local_player_hosts_the_game() || login_control__State != LognCt_Unkn5)
+    if (!net_local_player_hosts_the_game() || login_control__State != LognCt_Unkn5)
         return 0;
 
     plyr = LbNetworkPlayerNumber();
@@ -408,7 +452,7 @@ ubyte do_net_SET(ubyte click)
 #endif
     int plyr;
 
-    if (!local_player_hosts_the_game() || login_control__State != LognCt_Unkn5)
+    if (!net_local_player_hosts_the_game() || login_control__State != LognCt_Unkn5)
         return 0;
 
     plyr = LbNetworkPlayerNumber();
@@ -481,13 +525,15 @@ skip_modem_init:
     net_players_num = LbNetworkSessionNumberPlayers();
     byte_15516C = -1;
     byte_15516D = -1;
-    if (nsvc.I.Type != NetSvc_IPX)
-        players[local_player_no].DoubleMode = 0;
 
+    if (nsvc.I.Type != NetSvc_IPX) {
+        players[local_player_no].DoubleMode = 0;
+    }
     load_missions(99);
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < PLAYERS_LIMIT; i++) {
         network_players[i].Type = NPAct_Unkn17;
     }
+
     return 1;
 
 out_fail:
@@ -572,12 +618,12 @@ skip_modem_init:
     net_players_num = LbNetworkSessionNumberPlayers();
     byte_1C6D4A = 1;
     LbMemoryCopy(&nsvc.S, p_nsession, sizeof(struct TbNetworkSession));
+
     if (nsvc.I.Type != NetSvc_IPX) {
         players[local_player_no].DoubleMode = 0;
     }
     load_missions(99);
-
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < PLAYERS_LIMIT; i++) {
         network_players[i].Type = NPAct_Unkn17;
     }
 
@@ -645,9 +691,7 @@ ubyte do_net_INITIATE(ubyte click)
                 LOGWARN("Cannot init protocol %d player %d - city not selected", (int)nsvc.I.Type, plyr);
                 return 0;
             }
-            byte_15516D = -1;
-            byte_15516C = -1;
-            network_players[plyr].Type = NPAct_NetReset;
+            net_schedule_local_player_reset();
         }
     }
     return 1;
@@ -661,19 +705,14 @@ ubyte do_net_groups_LOGON(ubyte click)
         : "=r" (ret) : "a" (click));
     return ret;
 #endif
-    int plyr;
-
-    if (nsvc.I.Type == NetSvc_IPX && !net_service_started) {
+    if ((nsvc.I.Type == NetSvc_IPX) && !net_service_started) {
         LOGWARN("Cannot abort protocol %d - not ready", (int)nsvc.I.Type);
         return 0;
     }
 
     if (login_control__State == LognCt_Unkn5)
     {
-        plyr = LbNetworkPlayerNumber();
-        network_players[plyr].Type = NPAct_PlyrLogOut;
-        byte_15516C = -1;
-        byte_15516D = -1;
+        net_schedule_local_player_logout();
         switch_net_screen_boxes_to_initiate();
         net_unkn_func_33();
     }
