@@ -36,6 +36,9 @@ void net_schedule_local_player_logout(void);
 void net_schedule_player_cryo_equip_sync(void);
 void net_schedule_player_equip_fourpack_sync(void);
 void net_schedule_player_city_choice_sync(void);
+void net_schedule_game_options_sync(void);
+void net_schedule_player_faction_change_sync(void);
+void net_schedule_player_team_change_sync(void);
 
 void init_net_screen_boxes(void);
 void net_sessionlist_clear(void);

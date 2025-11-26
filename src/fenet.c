@@ -161,6 +161,30 @@ void net_schedule_player_city_choice_sync(void)
     network_players[plyr].Type = NPAct_SetCity;
 }
 
+void net_schedule_game_options_sync(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = NPAct_SetGameOptions;
+}
+
+void net_schedule_player_faction_change_sync(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = NPAct_SetFaction;
+}
+
+void net_schedule_player_team_change_sync(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = NPAct_SetTeam;
+}
+
 void net_sessionlist_clear(void)
 {
     ushort i;
@@ -431,14 +455,11 @@ ubyte do_net_SET2(ubyte click)
         : "=r" (ret) : "a" (click));
     return ret;
 #endif
-    int plyr;
-
     if (!net_local_player_hosts_the_game() || login_control__State != LognCt_Unkn5)
         return 0;
 
-    plyr = LbNetworkPlayerNumber();
     unkn_flags_08 |= 0x02;
-    network_players[plyr].Type = NPAct_SetGameOptions;
+    net_schedule_game_options_sync();
     return 1;
 }
 
@@ -450,14 +471,11 @@ ubyte do_net_SET(ubyte click)
         : "=r" (ret) : "a" (click));
     return ret;
 #endif
-    int plyr;
-
     if (!net_local_player_hosts_the_game() || login_control__State != LognCt_Unkn5)
         return 0;
 
-    plyr = LbNetworkPlayerNumber();
     unkn_flags_08 |= 0x01;
-    network_players[plyr].Type = NPAct_SetGameOptions;
+    net_schedule_game_options_sync();
     return 1;
 }
 
@@ -1424,14 +1442,12 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
             {
                 if (lbDisplay.LeftButton)
                 {
-                    int plyr;
                     lbDisplay.LeftButton = 0;
                     if ((unkn_flags_08 & 0x0004) != 0)
                         unkn_flags_08 &= ~0x0004;
                     else
                         unkn_flags_08 |= 0x0004;
-                    plyr = LbNetworkPlayerNumber();
-                    network_players[plyr].Type = NPAct_SetGameOptions;
+                    net_schedule_game_options_sync();
                 }
             }
         }
@@ -1452,14 +1468,12 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
             {
                 if (lbDisplay.LeftButton)
                 {
-                    int plyr;
                     lbDisplay.LeftButton = 0;
                     if ((unkn_flags_08 & 0x0008) != 0)
                         unkn_flags_08 &= ~0x0008;
                     else
                         unkn_flags_08 |= 0x0008;
-                    plyr = LbNetworkPlayerNumber();
-                    network_players[plyr].Type = NPAct_SetGameOptions;
+                    net_schedule_game_options_sync();
                 }
             }
         }
@@ -1480,14 +1494,12 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
             {
                 if (lbDisplay.LeftButton)
                 {
-                    int plyr;
                     lbDisplay.LeftButton = 0;
                     if ((unkn_flags_08 & 0x0010) != 0)
                         unkn_flags_08 &= ~0x0010;
                     else
                         unkn_flags_08 |= 0x0010;
-                    plyr = LbNetworkPlayerNumber();
-                    network_players[plyr].Type = NPAct_SetGameOptions;
+                    net_schedule_game_options_sync();
                 }
             }
         }
@@ -1508,14 +1520,12 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
             {
                 if (lbDisplay.LeftButton)
                 {
-                    int plyr;
                     lbDisplay.LeftButton = 0;
                     if ((unkn_flags_08 & 0x0020) != 0)
                         unkn_flags_08 &= ~0x0020;
                     else
                         unkn_flags_08 |= 0x0020;
-                    plyr = LbNetworkPlayerNumber();
-                    network_players[plyr].Type = NPAct_SetGameOptions;
+                    net_schedule_game_options_sync();
                 }
             }
         }
@@ -1724,11 +1734,9 @@ ubyte show_net_faction_box(struct ScreenBox *p_box)
         {
             if (lbDisplay.LeftButton)
             {
-              int plyr;
               lbDisplay.LeftButton = 0;
               byte_181183 = i;
-              plyr = LbNetworkPlayerNumber();
-              network_players[plyr].Type = NPAct_SetFaction;
+              net_schedule_player_faction_change_sync();
             }
         }
         scr_y += tx_height + 9;
@@ -1802,14 +1810,12 @@ ubyte show_net_team_box(struct ScreenBox *p_box)
         {
             if (lbDisplay.LeftButton)
             {
-              int plyr;
               lbDisplay.LeftButton = 0;
               if (byte_181189 == i + 1)
                   byte_181189 = 0;
               else
                   byte_181189 = i + 1;
-              plyr = LbNetworkPlayerNumber();
-              network_players[plyr].Type = NPAct_SetTeam;
+              net_schedule_player_team_change_sync();
             }
         }
         scr_y += tx_height + 5;
