@@ -394,7 +394,7 @@ ubyte do_net_SET2(ubyte click)
 
     plyr = LbNetworkPlayerNumber();
     unkn_flags_08 |= 0x02;
-    network_players[plyr].Type = NPAct_Unkn06;
+    network_players[plyr].Type = NPAct_SetGameOptions;
     return 1;
 }
 
@@ -413,7 +413,7 @@ ubyte do_net_SET(ubyte click)
 
     plyr = LbNetworkPlayerNumber();
     unkn_flags_08 |= 0x01;
-    network_players[plyr].Type = NPAct_Unkn06;
+    network_players[plyr].Type = NPAct_SetGameOptions;
     return 1;
 }
 
@@ -647,7 +647,7 @@ ubyte do_net_INITIATE(ubyte click)
             }
             byte_15516D = -1;
             byte_15516C = -1;
-            network_players[plyr].Type = NPAct_Unkn02;
+            network_players[plyr].Type = NPAct_NetReset;
         }
     }
     return 1;
@@ -1392,7 +1392,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                     else
                         unkn_flags_08 |= 0x0004;
                     plyr = LbNetworkPlayerNumber();
-                    network_players[plyr].Type = NPAct_Unkn06;
+                    network_players[plyr].Type = NPAct_SetGameOptions;
                 }
             }
         }
@@ -1420,7 +1420,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                     else
                         unkn_flags_08 |= 0x0008;
                     plyr = LbNetworkPlayerNumber();
-                    network_players[plyr].Type = NPAct_Unkn06;
+                    network_players[plyr].Type = NPAct_SetGameOptions;
                 }
             }
         }
@@ -1448,7 +1448,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                     else
                         unkn_flags_08 |= 0x0010;
                     plyr = LbNetworkPlayerNumber();
-                    network_players[plyr].Type = NPAct_Unkn06;
+                    network_players[plyr].Type = NPAct_SetGameOptions;
                 }
             }
         }
@@ -1476,7 +1476,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                     else
                         unkn_flags_08 |= 0x0020;
                     plyr = LbNetworkPlayerNumber();
-                    network_players[plyr].Type = NPAct_Unkn06;
+                    network_players[plyr].Type = NPAct_SetGameOptions;
                 }
             }
         }
