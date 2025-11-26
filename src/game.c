@@ -5933,11 +5933,11 @@ void update_mission_time(char a1)
         : : "a" (a1));
 }
 
-void net_unkn_func_29(short a1, short a2, ubyte a3, sbyte a4, ubyte a5)
+void net_grpaint_draw_op(short a1, short a2, ubyte a3, sbyte a4, ubyte a5)
 {
     asm volatile (
       "push %4\n"
-      "call ASM_net_unkn_func_29\n"
+      "call ASM_net_grpaint_draw_op\n"
         : : "a" (a1), "d" (a2), "b" (a3), "c" (a4), "g" (a5));
 }
 
@@ -6084,32 +6084,32 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
 
     switch (p_netplyr->Type & 0x1F)
     {
-    case 2:
+    case NPAct_NetReset:
         login_control__State = LognCt_Unkn8;
         LbNetworkShutDownListeners();
         net_sessionlist_clear();
         break;
-    case 3:
+    case NPAct_GrPaintClear:
         draw_flic_purple_list(ac_purple_unkn1_data_to_screen);
         break;
-    case 4:
+    case NPAct_SetTechLvl:
         login_control__TechLevel = p_netplyr->U.Progress.TechLevel;
         break;
-    case 5:
+    case NPAct_SetStCredits:
         i = p_netplyr->U.Progress.Credits;
         ingame.Expenditure = 0;
         login_control__Money = i;
         ingame.Credits = i;
         ingame.CashAtStart = i;
         break;
-    case 6:
+    case NPAct_SetGameOptions:
         refresh_equip_list = 1;
         unkn_flags_08 = p_netplyr->U.Progress.val_flags_08;
         break;
-    case 9:
+    case NPAct_SetCity:
         login_control__City = p_netplyr->U.Progress.SelectedCity;
         break;
-    case 10:
+    case NPAct_ChatMsg:
         // Free last net_players[] slot
         {
             struct NetPlayer2 *p_nplyr1;
@@ -6134,18 +6134,18 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
             strcpy(p_nplyr1->field_0, p_text);
         }
         break;
-    case 11:
-        net_unkn_func_29(
+    case NPAct_GrPaintDrawLn:
+        net_grpaint_draw_op(
           p_netplyr->U.Progress.npfield_8,
           p_netplyr->U.Progress.npfield_A,
           p_netplyr->U.Progress.npfield_12,
             1, i);
         break;
-    case 12:
+    case NPAct_PlyrEject:
         byte_15516D = -1;
         reset_net_screen_EJECT_flags();
         LbNetworkSessionStop();
-        if (nsvc.I.Type == 1)
+        if (nsvc.I.Type == NetSvc_IPX)
         {
             if (p_netplyr->U.Progress.val_15516D == netplyr)
             {
@@ -6166,9 +6166,9 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
             net_service_started = 0;
         }
         break;
-    case 13:
+    case NPAct_PlyrLogOut:
         LbNetworkSessionStop();
-        if (nsvc.I.Type == 1)
+        if (nsvc.I.Type == NetSvc_IPX)
         {
             if (plyr == netplyr || net_host_player_no == plyr)
             {
@@ -6192,7 +6192,7 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
             set_mod_draw_states_flag08();
         }
         break;
-    case 14:
+    case NPAct_PlyrWeapModsSync:
         if ((net_host_player_no == plyr) && ((unkn_flags_08 & 0x08) != 0))
         {
             for (i = 0; i < PLAYERS_LIMIT; i++)
@@ -6216,7 +6216,7 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
             }
         }
         break;
-    case 15:
+    case NPAct_PlyrFourPackSync:
         if ((net_host_player_no == plyr) && ((unkn_flags_08 & 0x08) != 0))
         {
             for (i = 0; i < PLAYERS_LIMIT; i++)
@@ -6232,15 +6232,15 @@ void net_unkn_func_33_sub1(int plyr, int netplyr)
             agents_copy_fourpacks_netplayer_to_player(plyr, p_netplyr);
         }
         break;
-    case 16:
-        net_unkn_func_29(
+    case NPAct_GrPaintDrawPt:
+        net_grpaint_draw_op(
           p_netplyr->U.Progress.npfield_8,
           p_netplyr->U.Progress.npfield_A,
           p_netplyr->U.Progress.npfield_12,
           0, i);
         break;
-    case 18:
-        net_unkn_func_29(
+    case NPAct_GrPaintPt1Upd:
+        net_grpaint_draw_op(
           p_netplyr->U.Progress.npfield_8,
           p_netplyr->U.Progress.npfield_A,
           p_netplyr->U.Progress.npfield_12,
@@ -6264,13 +6264,13 @@ void net_unkn_func_33(void)
 
     switch (p_netplyr->Type)
     {
-    case NPAct_Unkn14:
+    case NPAct_PlyrWeapModsSync:
         agents_copy_wepmod_cryo_to_netplayer(p_netplyr);
         break;
-    case NPAct_Unkn15:
+    case NPAct_PlyrFourPackSync:
         agents_copy_fourpacks_cryo_to_netplayer(p_netplyr);
         break;
-    case NPAct_Unkn10:
+    case NPAct_ChatMsg:
         break;
     case NPAct_Unkn17:
         p_netplyr->Type = NPAct_NONE;
@@ -6319,7 +6319,7 @@ void net_unkn_func_33(void)
     if (byte_1C6D4A)
     {
         p_netplyr = &network_players[net_host_player_no];
-        if ((p_netplyr->Type != NPAct_Unkn10) && (p_netplyr->Type != NPAct_Unkn14) && (p_netplyr->Type != NPAct_Unkn15))
+        if ((p_netplyr->Type != NPAct_ChatMsg) && (p_netplyr->Type != NPAct_PlyrWeapModsSync) && (p_netplyr->Type != NPAct_PlyrFourPackSync))
         {
             login_control__TechLevel = p_netplyr->U.Progress.TechLevel;
             unkn_flags_08 = p_netplyr->U.Progress.val_flags_08;
@@ -6575,22 +6575,22 @@ void mouse_sprite_animate(void)
 
 void net_players_copy_cryo(void)
 {
-    network_players[local_player_no].Type = NPAct_Unkn14;
+    network_players[local_player_no].Type = NPAct_PlyrWeapModsSync;
 }
 
 void net_players_copy_equip_and_cryo(void)
 {
-    network_players[local_player_no].Type = NPAct_Unkn14;
+    network_players[local_player_no].Type = NPAct_PlyrWeapModsSync;
     net_unkn_func_33();
-    network_players[local_player_no].Type = NPAct_Unkn15;
+    network_players[local_player_no].Type = NPAct_PlyrFourPackSync;
     gameturn++;
 }
 
 void net_players_copy_equip_and_cryo_now(void)
 {
-    network_players[local_player_no].Type = NPAct_Unkn14;
+    network_players[local_player_no].Type = NPAct_PlyrWeapModsSync;
     net_unkn_func_33();
-    network_players[local_player_no].Type = NPAct_Unkn15;
+    network_players[local_player_no].Type = NPAct_PlyrFourPackSync;
     net_unkn_func_33();
 }
 

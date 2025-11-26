@@ -352,10 +352,7 @@ ubyte sell_equipment(ubyte click)
         }
         if ((login_control__State == LognCt_Unkn5) && ((unkn_flags_08 & 0x08) != 0))
         {
-            network_players[local_player_no].Type = NPAct_Unkn14;
-            net_unkn_func_33();
-            ++gameturn;
-            network_players[local_player_no].Type = NPAct_Unkn15;
+            net_players_copy_equip_and_cryo();
         }
     }
 

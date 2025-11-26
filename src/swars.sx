@@ -164527,7 +164527,7 @@ GLOBAL_FUNC(ASM_is_unkn_current_player)	/* 0x0CCF00 */
 
 
 /*----------------------------------------------------------------*/
-GLOBAL_FUNC(ASM_net_unkn_func_29)	/* 0x0CCF28 */
+GLOBAL_FUNC(ASM_net_grpaint_draw_op)	/* 0x0CCF28 */
 /*----------------------------------------------------------------*/
 		push   %esi
 		push   %edi

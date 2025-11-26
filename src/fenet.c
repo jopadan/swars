@@ -671,7 +671,7 @@ ubyte do_net_groups_LOGON(ubyte click)
     if (login_control__State == LognCt_Unkn5)
     {
         plyr = LbNetworkPlayerNumber();
-        network_players[plyr].Type = NPAct_Unkn13;
+        network_players[plyr].Type = NPAct_PlyrLogOut;
         byte_15516C = -1;
         byte_15516D = -1;
         switch_net_screen_boxes_to_initiate();
@@ -1129,14 +1129,14 @@ ubyte show_net_grpaint(struct ScreenBox *p_box)
         {
             lbDisplay.LeftButton = 0;
             if ((lbShift & 0x01) != 0)
-                network_players[plyr].Type = NPAct_Unkn16;
+                network_players[plyr].Type = NPAct_GrPaintDrawPt;
             else
-                network_players[plyr].Type = NPAct_Unkn11;
+                network_players[plyr].Type = NPAct_GrPaintDrawLn;
             pos_progress = true;
         }
         else if (network_players[plyr].Type == NPAct_Unkn17)
         {
-            network_players[plyr].Type = NPAct_Unkn18;
+            network_players[plyr].Type = NPAct_GrPaintPt1Upd;
             pos_progress = true;
         }
         if (pos_progress)
@@ -1151,7 +1151,7 @@ ubyte show_net_grpaint(struct ScreenBox *p_box)
         {
             lbDisplay.RightButton = 0;
             if (is_unkn_current_player())
-                network_players[plyr].Type = NPAct_Unkn03;
+                network_players[plyr].Type = NPAct_GrPaintClear;
         }
     }
     return 0;
@@ -1226,7 +1226,7 @@ ubyte show_net_comms_box(struct ScreenBox *p_box)
     {
         int plyr;
         plyr = LbNetworkPlayerNumber();
-        network_players[plyr].Type = NPAct_Unkn10;
+        network_players[plyr].Type = NPAct_ChatMsg;
         strncpy(network_players[plyr].U.Text, net_unkn1_text,
           min(sizeof(net_unkn1_text), sizeof(network_players[0].U.Text)));
         byte_1C4805 = 1;
@@ -1689,7 +1689,7 @@ ubyte show_net_faction_box(struct ScreenBox *p_box)
               lbDisplay.LeftButton = 0;
               byte_181183 = i;
               plyr = LbNetworkPlayerNumber();
-              network_players[plyr].Type = NPAct_Unkn08;
+              network_players[plyr].Type = NPAct_SetFaction;
             }
         }
         scr_y += tx_height + 9;
@@ -1770,7 +1770,7 @@ ubyte show_net_team_box(struct ScreenBox *p_box)
               else
                   byte_181189 = i + 1;
               plyr = LbNetworkPlayerNumber();
-              network_players[plyr].Type = NPAct_Unkn07;
+              network_players[plyr].Type = NPAct_SetTeam;
             }
         }
         scr_y += tx_height + 5;
@@ -2103,7 +2103,7 @@ ubyte do_unkn8_EJECT(ubyte click)
     plyr = LbNetworkPlayerNumber();
     if (byte_15516D == plyr)
         return 0;
-    network_players[plyr].Type = NPAct_Unkn12;
+    network_players[plyr].Type = NPAct_PlyrEject;
     return 1;
 }
 
