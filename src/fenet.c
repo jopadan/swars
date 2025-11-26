@@ -137,6 +137,14 @@ void net_schedule_local_player_reset(void)
     byte_15516C = -1;
 }
 
+void net_schedule_player_eject_sync(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = NPAct_PlyrEject;
+}
+
 void net_schedule_player_cryo_equip_sync(void)
 {
     int plyr;
@@ -183,6 +191,35 @@ void net_schedule_player_team_change_sync(void)
 
     plyr = LbNetworkPlayerNumber();
     network_players[plyr].Type = NPAct_SetTeam;
+}
+
+void net_schedule_player_chat_message_sync(const char *msg_text)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = NPAct_ChatMsg;
+    strncpy(network_players[plyr].U.Text, msg_text,
+      sizeof(network_players[0].U.Text));
+}
+
+void net_schedule_player_grpaint_action_sync(ubyte action, short pos_x, short pos_y, TbPixel colour)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = action;
+    network_players[plyr].U.Progress.npfield_8 = pos_x;
+    network_players[plyr].U.Progress.npfield_A = pos_y;
+    network_players[plyr].U.Progress.npfield_12 = colour;
+}
+
+void net_schedule_player_grpaint_clear_sync(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = NPAct_GrPaintClear;
 }
 
 void net_sessionlist_clear(void)
@@ -1177,38 +1214,36 @@ ubyte show_net_grpaint(struct ScreenBox *p_box)
 
     if (mouse_move_over_box_coords(p_box->X + 4, p_box->Y + 4 , p_box->X + 259, p_box->Y + 100))
     {
-        TbBool pos_progress;
         short plyr;
+        ubyte paint_action;
 
         plyr = LbNetworkPlayerNumber();
-        pos_progress = false;
+        paint_action = NPAct_NONE;
         if (lbDisplay.MLeftButton)
         {
             lbDisplay.LeftButton = 0;
             if ((lbShift & 0x01) != 0)
-                network_players[plyr].Type = NPAct_GrPaintDrawPt;
+                paint_action = NPAct_GrPaintDrawPt;
             else
-                network_players[plyr].Type = NPAct_GrPaintDrawLn;
-            pos_progress = true;
+                paint_action = NPAct_GrPaintDrawLn;
         }
         else if (network_players[plyr].Type == NPAct_Unkn17)
         {
-            network_players[plyr].Type = NPAct_GrPaintPt1Upd;
-            pos_progress = true;
+            paint_action = NPAct_GrPaintPt1Upd;
         }
-        if (pos_progress)
+        if (paint_action != NPAct_NONE)
         {
-            network_players[plyr].U.Progress.npfield_8 =
-              mouse_move_position_horizonal_over_bar_coords(p_box->X + 4, p_box->Width);
-            network_players[plyr].U.Progress.npfield_A =
-              mouse_move_position_vertical_over_bar_coords(p_box->Y + 4, p_box->Height);
-            network_players[plyr].U.Progress.npfield_12 = byte_1C47EA;
+            short pos_x, pos_y;
+
+            pos_x = mouse_move_position_horizonal_over_bar_coords(p_box->X + 4, p_box->Width);
+            pos_y = mouse_move_position_vertical_over_bar_coords(p_box->Y + 4, p_box->Height);
+            net_schedule_player_grpaint_action_sync(paint_action, pos_x, pos_y, byte_1C47EA);
         }
         if (lbDisplay.MRightButton)
         {
             lbDisplay.RightButton = 0;
             if (is_unkn_current_player())
-                network_players[plyr].Type = NPAct_GrPaintClear;
+                net_schedule_player_grpaint_clear_sync();
         }
     }
     return 0;
@@ -1281,11 +1316,7 @@ ubyte show_net_comms_box(struct ScreenBox *p_box)
     if (user_read_value(net_unkn1_text, 20, 0) && (login_control__State == 5)
       && (net_unkn1_text[0] != '\0'))
     {
-        int plyr;
-        plyr = LbNetworkPlayerNumber();
-        network_players[plyr].Type = NPAct_ChatMsg;
-        strncpy(network_players[plyr].U.Text, net_unkn1_text,
-          min(sizeof(net_unkn1_text), sizeof(network_players[0].U.Text)));
+        net_schedule_player_chat_message_sync(net_unkn1_text);
         byte_1C4805 = 1;
     }
     draw_text_purple_list2(2, 86, net_unkn1_text, 0);
@@ -2148,7 +2179,7 @@ ubyte do_unkn8_EJECT(ubyte click)
     plyr = LbNetworkPlayerNumber();
     if (byte_15516D == plyr)
         return 0;
-    network_players[plyr].Type = NPAct_PlyrEject;
+    net_schedule_player_eject_sync();
     return 1;
 }
 
