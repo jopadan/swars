@@ -41,6 +41,8 @@ void set_flag01_net_screen_boxes(void);
 void skip_flashy_draw_net_screen_boxes(void);
 void switch_net_screen_boxes_to_initiate(void);
 void switch_net_screen_boxes_to_execute(void);
+void net_grpaint_draw_op(short a1, short a2, ubyte a3, sbyte a4, ubyte a5);
+void net_grpaint_clear_op(void);
 
 /******************************************************************************/
 #ifdef __cplusplus

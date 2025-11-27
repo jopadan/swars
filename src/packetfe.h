@@ -130,7 +130,15 @@ void net_schedule_player_chat_message_sync(const char *msg_text);
 void net_schedule_player_grpaint_action_sync(ubyte action,
   short pos_x, short pos_y, TbPixel colour);
 void net_schedule_player_grpaint_clear_sync(void);
+void net_immediate_random_seed_sync(void);
+
 void net_players_all_set_unkn17(void);
+TbBool net_player_action_is_unkn17(int plyr);
+
+void net_player_action_execute(int plyr, int netplyr);
+
+void agents_copy_wepmod_cryo_to_netplayer(struct NetworkPlayer *p_netplyr);
+void agents_copy_fourpacks_cryo_to_netplayer(struct NetworkPlayer *p_netplyr);
 
 /******************************************************************************/
 #ifdef __cplusplus

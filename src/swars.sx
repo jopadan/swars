@@ -109058,7 +109058,7 @@ GLOBAL_FUNC(ASM_show_net_grpaint)	/* 0x08E3C0 */
 		je     jump_8e7de
 		xor    %ch,%ch
 		mov    %ch,EXPORT_SYMBOL(lbDisplay)+104 # lbDisplay.RightButton
-		call   ac_is_unkn_current_player
+		call   ac_net_local_player_hosts_the_game
 		test   %al,%al
 		je     jump_8e7de
 		lea    0x0(,%edx,4),%eax
@@ -110138,7 +110138,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    EXPORT_SYMBOL(lbDisplay)+96,%bx # lbDisplay__DrawFlags
 		and    $0x7f,%bh
 		mov    %bx,EXPORT_SYMBOL(lbDisplay)+96 # lbDisplay__DrawFlags
-		call   ac_is_unkn_current_player
+		call   ac_net_local_player_hosts_the_game
 		test   %al,%al
 		je     jump_8f70f
 		xor    %eax,%eax
@@ -110264,7 +110264,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    EXPORT_SYMBOL(lbDisplay)+96,%ax # lbDisplay__DrawFlags
 		and    $0x7f,%ah
 		mov    %ax,EXPORT_SYMBOL(lbDisplay)+96 # lbDisplay__DrawFlags
-		call   ac_is_unkn_current_player
+		call   ac_net_local_player_hosts_the_game
 		test   %al,%al
 		je     jump_8f89d
 		xor    %eax,%eax
@@ -110390,7 +110390,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    EXPORT_SYMBOL(lbDisplay)+96,%bx # lbDisplay__DrawFlags
 		and    $0x7f,%bh
 		mov    %bx,EXPORT_SYMBOL(lbDisplay)+96 # lbDisplay__DrawFlags
-		call   ac_is_unkn_current_player
+		call   ac_net_local_player_hosts_the_game
 		test   %al,%al
 		je     jump_8fa2d
 		xor    %eax,%eax
@@ -110516,7 +110516,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    EXPORT_SYMBOL(lbDisplay)+96,%ax # lbDisplay__DrawFlags
 		and    $0x7f,%ah
 		mov    %ax,EXPORT_SYMBOL(lbDisplay)+96 # lbDisplay__DrawFlags
-		call   ac_is_unkn_current_player
+		call   ac_net_local_player_hosts_the_game
 		test   %al,%al
 		je     jump_8fbbb
 		xor    %eax,%eax
@@ -111288,7 +111288,7 @@ GLOBAL_FUNC(ASM_show_net_groups_box)	/* 0x0901E0 */
 		add    %ecx,%esi
 		mov    %esi,text_buf_pos
 	jump_9043b:
-		call   ac_is_unkn_current_player
+		call   ac_net_local_player_hosts_the_game
 		test   %al,%al
 		je     jump_90467
 		mov    $net_INITIATE_button,%eax
@@ -111705,7 +111705,7 @@ GLOBAL_FUNC(ASM_show_net_users_box)	/* 0x0906E4 */
 		jne    jump_9093f
 	jump_90957:
 		pop    %edi
-		call   ac_is_unkn_current_player
+		call   ac_net_local_player_hosts_the_game
 		test   %al,%al
 		je     jump_9096a
 		orw    $0x8000,EXPORT_SYMBOL(lbDisplay)+96 # lbDisplay__DrawFlags
@@ -111780,7 +111780,7 @@ GLOBAL_FUNC(ASM_show_net_users_box)	/* 0x0906E4 */
 		add    %ecx,%eax
 		call   ac_draw_sprite_purple_list
 	jump_90a5a:
-		call   ac_is_unkn_current_player
+		call   ac_net_local_player_hosts_the_game
 		test   %al,%al
 		je     jump_90b67
 		xor    %eax,%eax
@@ -118848,7 +118848,7 @@ func_a0291:
 		mov    $0x1,%al
 		cmp    $0x5,%edx
 		jne    jump_9fea2
-		call   ac_is_unkn_current_player
+		call   ac_net_local_player_hosts_the_game
 		test   %al,%al
 		je     jump_9fe76
 		cmp    $0x1,%ecx
@@ -164506,7 +164506,7 @@ my_net_session_callback:	/* 0x0CCEE8 */
 
 
 /*----------------------------------------------------------------*/
-GLOBAL_FUNC(ASM_is_unkn_current_player)	/* 0x0CCF00 */
+GLOBAL_FUNC(ASM_net_local_player_hosts_the_game)	/* 0x0CCF00 */
 /*----------------------------------------------------------------*/
 		push   %edx
 		xor    %eax,%eax

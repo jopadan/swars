@@ -764,7 +764,7 @@ void show_net_benefits_sub2(short x0, short y0, TbPixel *colours)
             if (lbDisplay.LeftButton)
             {
                 lbDisplay.LeftButton = 0;
-                if (is_unkn_current_player() && ((unkn_flags_08 & 0x02) == 0)
+                if (net_local_player_hosts_the_game() && ((unkn_flags_08 & 0x02) == 0)
                   && (login_control__State == LognCt_Unkn5))
                     login_control__TechLevel = i + 1;
             }
@@ -799,7 +799,7 @@ void show_net_benefits_sub3(struct ScreenBox *box)
             if (mouse_down_over_box(&box1))
             {
                 lbDisplay.LeftButton = 0;
-                if (is_unkn_current_player() && ((unkn_flags_08 & 0x02) == 0)
+                if (net_local_player_hosts_the_game() && ((unkn_flags_08 & 0x02) == 0)
                   && (login_control__State == LognCt_Unkn5))
                 {
                     login_control__TechLevel--;
@@ -825,7 +825,7 @@ void show_net_benefits_sub4(struct ScreenBox *box)
             if (mouse_down_over_box(&box2))
             {
                 lbDisplay.LeftButton = 0;
-                if (is_unkn_current_player() && ((unkn_flags_08 & 0x02) == 0)
+                if (net_local_player_hosts_the_game() && ((unkn_flags_08 & 0x02) == 0)
                     && (login_control__State == LognCt_Unkn5))
                 {
                     login_control__TechLevel++;
@@ -907,7 +907,7 @@ void show_net_benefits_sub5(short x0, short y0, TbPixel *colours)
             if (lbDisplay.LeftButton)
             {
                 lbDisplay.LeftButton = 0;
-                if (is_unkn_current_player() && ((unkn_flags_08 & 0x01) == 0)
+                if (net_local_player_hosts_the_game() && ((unkn_flags_08 & 0x01) == 0)
                   && (login_control__State == LognCt_Unkn5))
                 {
                     login_control__Money = starting_cash_amounts[i];
@@ -945,7 +945,7 @@ void show_net_benefits_sub6(struct ScreenBox *box)
             if (mouse_down_over_box(&box1))
             {
                 lbDisplay.LeftButton = 0;
-                if (is_unkn_current_player() && ((unkn_flags_08 & 0x01) == 0)
+                if (net_local_player_hosts_the_game() && ((unkn_flags_08 & 0x01) == 0)
                     && (login_control__State == LognCt_Unkn5))
                 {
                     reinit_starting_credits(-1);
@@ -971,7 +971,7 @@ void show_net_benefits_sub7(struct ScreenBox *box)
             if (mouse_down_over_box(&box2))
             {
                 lbDisplay.LeftButton = 0;
-                if (is_unkn_current_player() && ((unkn_flags_08 & 0x01) == 0)
+                if (net_local_player_hosts_the_game() && ((unkn_flags_08 & 0x01) == 0)
                     && (login_control__State == LognCt_Unkn5))
                 {
                     reinit_starting_credits(1);
@@ -1016,7 +1016,7 @@ ubyte show_net_benefits_box(struct ScreenBox *box)
     show_net_benefits_sub7(box);
 
     lbDisplay.DrawFlags = 0;
-    if (is_unkn_current_player() && (login_control__State == LognCt_Unkn5))
+    if (net_local_player_hosts_the_game() && (login_control__State == LognCt_Unkn5))
     {
         //net_SET2_button.DrawFn(&net_SET2_button); -- incompatible calling convention
         asm volatile ("call *%2\n"
@@ -1049,6 +1049,19 @@ void purple_unkn4_data_to_screen(void)
     LbScreenCopy(dword_1C6DE4, lbDisplay.GraphicsWindowPtr, lbDisplay.GraphicsWindowHeight);
     LbScreenSetGraphicsWindow(0, 0, lbDisplay.GraphicsScreenWidth,
         lbDisplay.GraphicsScreenHeight);
+}
+
+void net_grpaint_draw_op(short scr_x2, short scr_y2, ubyte colno, sbyte op, ubyte a5)
+{
+    asm volatile (
+      "push %4\n"
+      "call ASM_net_grpaint_draw_op\n"
+        : : "a" (scr_x2), "d" (scr_y2), "b" (colno), "c" (op), "g" (a5));
+}
+
+void net_grpaint_clear_op(void)
+{
+    draw_flic_purple_list(ac_purple_unkn1_data_to_screen);
 }
 
 ubyte show_net_grpaint(struct ScreenBox *p_box)
@@ -1115,7 +1128,7 @@ ubyte show_net_grpaint(struct ScreenBox *p_box)
             else
                 paint_action = NPAct_GrPaintDrawLn;
         }
-        else if (network_players[plyr].Type == NPAct_Unkn17)
+        else if (net_player_action_is_unkn17(plyr))
         {
             paint_action = NPAct_GrPaintPt1Upd;
         }
@@ -1130,7 +1143,7 @@ ubyte show_net_grpaint(struct ScreenBox *p_box)
         if (lbDisplay.MRightButton)
         {
             lbDisplay.RightButton = 0;
-            if (is_unkn_current_player())
+            if (net_local_player_hosts_the_game())
                 net_schedule_player_grpaint_clear_sync();
         }
     }
@@ -1354,7 +1367,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
         tx_width = my_string_width(text);
         draw_text_purple_list2(165 - (tx_width >> 1), scr_y, text, 0);
         lbDisplay.DrawFlags &= ~0x8000;
-        if (is_unkn_current_player())
+        if (net_local_player_hosts_the_game())
         {
             if (mouse_down_over_box_coords(text_window_x1 + 4, text_window_y1 + scr_y - 2,
               text_window_x1 + (tx_width >> 1) + 165, text_window_y1 + tx_height + scr_y + 2))
@@ -1380,7 +1393,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
         tx_width = my_string_width(text);
         draw_text_purple_list2(165 - (tx_width >> 1), scr_y, text, 0);
         lbDisplay.DrawFlags &= ~0x8000;
-        if (is_unkn_current_player())
+        if (net_local_player_hosts_the_game())
         {
             if (mouse_down_over_box_coords(text_window_x1 + 4, text_window_y1 + scr_y - 2,
               text_window_x1 + (tx_width >> 1) + 165, text_window_y1 + scr_y + tx_height + 2))
@@ -1406,7 +1419,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
         tx_width = my_string_width(text);
         draw_text_purple_list2(165 - (tx_width >> 1), scr_y, text, 0);
         lbDisplay.DrawFlags &= ~0x8000;
-        if (is_unkn_current_player())
+        if (net_local_player_hosts_the_game())
         {
             if (mouse_down_over_box_coords(text_window_x1 + 4, text_window_y1 + scr_y - 2,
               text_window_x1 + (tx_width >> 1) + 165, text_window_y1 + scr_y + tx_height + 2))
@@ -1432,7 +1445,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
         tx_width = my_string_width(text);
         draw_text_purple_list2(165 - (tx_width >> 1), scr_y, text, 0);
         lbDisplay.DrawFlags &= ~0x8000;
-        if (is_unkn_current_player())
+        if (net_local_player_hosts_the_game())
         {
             if (mouse_down_over_box_coords(text_window_x1 + 4, text_window_y1 + scr_y - 2,
               text_window_x1 + (tx_width >> 1) + 165, text_window_y1 + scr_y + tx_height + 2))
@@ -1844,7 +1857,7 @@ ubyte show_net_groups_box(struct ScreenBox *p_box)
         }
     }
 
-    if (is_unkn_current_player())
+    if (net_local_player_hosts_the_game())
     {
         //net_INITIATE_button.DrawFn(&net_INITIATE_button); -- incompatible calling convention
         asm volatile ("call *%1\n"
@@ -1960,7 +1973,7 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
             }
             tx_width = my_string_width(text);
             scr_x = (110 - tx_width) >> 1;
-            if (is_unkn_current_player())
+            if (net_local_player_hosts_the_game())
                 lbDisplay.DrawFlags |= 0x8000;
             text = loctext_to_gtext(text);
             draw_text_purple_list2(scr_x, scr_y + 3, text, 0);
@@ -1977,7 +1990,7 @@ ubyte show_net_users_box(struct ScreenBox *p_box)
                 draw_sprite_purple_list(p_box->X + (112 + p_spr->SWidth) + 4,
                   p_box->Y + 4 + scr_y + 2, p_dspr);
             }
-            if (is_unkn_current_player())
+            if (net_local_player_hosts_the_game())
             {
                 if (mouse_down_over_box_coords(text_window_x1, text_window_y1 + scr_y + 1,
                   text_window_x2, text_window_y1 + tx_height + scr_y + 5))

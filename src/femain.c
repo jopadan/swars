@@ -1171,7 +1171,7 @@ TbBool is_purple_apps_utility_visible(short iconid)
     {
         TbBool visible;
 
-        if (is_unkn_current_player()) {
+        if (net_local_player_hosts_the_game()) {
             visible = (iconid != ApBar_PANET && iconid != ApBar_RESEARCH);
         } else {
             visible = (iconid != ApBar_PANET &&

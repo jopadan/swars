@@ -410,6 +410,7 @@ void free_texturemaps(void);
 void init_variables(void);
 void init_agents(void);
 void srm_reset_research(void);
+void net_new_game_prepare(void);
 
 /** Decode and draw next frame of the animation.
  */
@@ -429,7 +430,6 @@ void my_preprocess_text(char *text);
 ushort my_count_lines(const char *text);
 
 TbBool player_try_spend_money(long cost);
-TbBool is_unkn_current_player(void);
 void campaign_new_game_prepare(void);
 
 void process_sound_heap(void);
