@@ -117,6 +117,7 @@
 #include "oswindws.h"
 #include "util.h"
 #include "command.h"
+#include "packetfe.h"
 #include "player.h"
 #include "plyr_usrinp.h"
 #include "plyr_packet.h"
@@ -6332,10 +6333,7 @@ void net_unkn_func_33(void)
         byte_1C6D4A = 0;
     }
 
-    for (i = 0; i < PLAYERS_LIMIT; i++)
-    {
-        network_players[i].Type = NPAct_Unkn17;
-    }
+    net_players_all_set_unkn17();
 }
 
 void show_menu_screen_st2(void)

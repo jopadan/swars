@@ -53,6 +53,7 @@
 #include "game.h"
 #include "keyboard.h"
 #include "network.h"
+#include "packetfe.h"
 #include "player.h"
 #include "purpldrw.h"
 #include "purpldrwlst.h"
@@ -630,6 +631,8 @@ void show_sysmenu_screen(void)
             if (login_control__State == LognCt_Unkn5)
             {
                 net_schedule_local_player_logout();
+                byte_15516D = -1;
+                byte_15516C = -1;
                 switch_net_screen_boxes_to_initiate();
                 net_unkn_func_33();
             }

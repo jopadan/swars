@@ -44,30 +44,6 @@ enum NetworkServiceType {
     NetSvc_RADICA,
 };
 
-enum NetPacketActions
-{
-    NPAct_NONE = 0x0,
-    NPAct_Unkn01,
-    NPAct_NetReset,
-    NPAct_GrPaintClear,
-    NPAct_SetTechLvl,
-    NPAct_SetStCredits,
-    NPAct_SetGameOptions,
-    NPAct_SetTeam,
-    NPAct_SetFaction,
-    NPAct_SetCity,
-    NPAct_ChatMsg,
-    /** Draw a line in group paint box. */
-    NPAct_GrPaintDrawLn,
-    NPAct_PlyrEject,
-    NPAct_PlyrLogOut,
-    NPAct_PlyrWeapModsSync,
-    NPAct_PlyrFourPackSync,
-    NPAct_GrPaintDrawPt,
-    NPAct_Unkn17,
-    NPAct_GrPaintPt1Upd,
-};
-
 struct NetworkServiceInfo { // sizeof=12
     NSERV_HANDLE Id; // offset=0
     ushort GameId; // offset=4
@@ -104,66 +80,6 @@ struct TbNetworkService { // sizeof=10
     struct NetworkServiceFunction F; // offset=12
     struct TbNetworkSession S;
     };
-};
-
-struct NetworkPlayerUFourPacks {
-  ubyte FourPacks[4][5];
-};
-
-struct NetworkPlayerUProgress {
-  long Credits;
-  ubyte val_181189;
-  ubyte val_181183;
-  ubyte TechLevel;
-  ubyte SelectedCity;
-  ushort npfield_8;
-  ushort npfield_A;
-  ubyte ControlMode[4];
-  ubyte DoubleMode;
-  ubyte val_flags_08;
-  ubyte npfield_12;
-  ubyte val_15516D;
-  long Expenditure;
-};
-
-struct NetworkPlayerUWepMod {
-  ulong Weapons[4];
-  union Mod Mods[4];
-};
-
-struct NetworkPlayerURandInit {
-  ulong Seed;
-};
-
-struct NetworkPlayerUUnkn {
-    long npfield_1;
-    sbyte npfield_5;
-    sbyte npfield_6;
-    sbyte npfield_7;
-    sbyte SelectedCity;
-    sbyte npfield_9[2];
-    sbyte npfield_b;
-    sbyte npfield_c;
-    ushort npfield_d;
-    ushort npfield_e;
-    sbyte DoubleMode;
-    sbyte npfield_12;
-    sbyte npfield_13;
-    sbyte npfield_14;
-    long npfield_15;
-};
-
-struct NetworkPlayer { // sizeof=26
-    ubyte Type;
-    union {
-      struct NetworkPlayerUFourPacks FourPacks;
-      struct NetworkPlayerUProgress Progress;
-      struct NetworkPlayerUWepMod WepMod;
-      struct NetworkPlayerURandInit RandInit;
-      char Text[24];
-      struct NetworkPlayerUUnkn Unkn;
-    } U;
-    sbyte npfield_19;
 };
 
 // TODO maybe this only ocntains one string?
@@ -363,7 +279,6 @@ extern ubyte data_1c4a70;
 extern ubyte net_players_num;
 extern struct TbNetworkService NetworkServicePtr;
 extern ulong NetTimeoutTicks;
-extern struct NetworkPlayer network_players[8];
 extern struct NetPlayer2 net_players[5];
 // Application-accessible copy of the service structure?
 extern struct TbNetworkService nsvc;

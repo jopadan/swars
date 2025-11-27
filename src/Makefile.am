@@ -192,6 +192,8 @@ syndwarsfx_SOURCES = \
 	pathtrig.h \
 	packet.c \
 	packet.h \
+	packetfe.c \
+	packetfe.h \
 	people.c \
 	people.h \
 	pepgroup.c \

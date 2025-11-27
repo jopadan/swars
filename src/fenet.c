@@ -44,6 +44,7 @@
 #include "game.h"
 #include "keyboard.h"
 #include "network.h"
+#include "packetfe.h"
 #include "purpldrw.h"
 #include "purpldrwlst.h"
 #include "player.h"
@@ -108,119 +109,6 @@ ubyte ac_show_net_protocol_box(struct ScreenBox *box);
 
 void ac_purple_unkn1_data_to_screen(void);
 void ac_purple_unkn3_data_to_screen(void);
-
-TbBool net_local_player_hosts_the_game(void)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    return login_control__State == LognCt_Unkn6 || plyr == net_host_player_no;
-}
-
-void net_schedule_local_player_logout(void)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = NPAct_PlyrLogOut;
-    byte_15516D = -1;
-    byte_15516C = -1;
-}
-
-void net_schedule_local_player_reset(void)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = NPAct_NetReset;
-    byte_15516D = -1;
-    byte_15516C = -1;
-}
-
-void net_schedule_player_eject_sync(void)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = NPAct_PlyrEject;
-}
-
-void net_schedule_player_cryo_equip_sync(void)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = NPAct_PlyrWeapModsSync;
-}
-
-void net_schedule_player_equip_fourpack_sync(void)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = NPAct_PlyrFourPackSync;
-}
-
-void net_schedule_player_city_choice_sync(void)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = NPAct_SetCity;
-}
-
-void net_schedule_game_options_sync(void)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = NPAct_SetGameOptions;
-}
-
-void net_schedule_player_faction_change_sync(void)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = NPAct_SetFaction;
-}
-
-void net_schedule_player_team_change_sync(void)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = NPAct_SetTeam;
-}
-
-void net_schedule_player_chat_message_sync(const char *msg_text)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = NPAct_ChatMsg;
-    strncpy(network_players[plyr].U.Text, msg_text,
-      sizeof(network_players[0].U.Text));
-}
-
-void net_schedule_player_grpaint_action_sync(ubyte action, short pos_x, short pos_y, TbPixel colour)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = action;
-    network_players[plyr].U.Progress.npfield_8 = pos_x;
-    network_players[plyr].U.Progress.npfield_A = pos_y;
-    network_players[plyr].U.Progress.npfield_12 = colour;
-}
-
-void net_schedule_player_grpaint_clear_sync(void)
-{
-    int plyr;
-
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = NPAct_GrPaintClear;
-}
 
 void net_sessionlist_clear(void)
 {
@@ -524,7 +412,7 @@ ubyte net_unkn_func_32(void)
         : "=r" (ret) : );
     return ret;
 #else
-    int i, ret;
+    int ret;
     TbBool modem_on_line;
 
     modem_on_line = 0;
@@ -585,9 +473,7 @@ skip_modem_init:
         players[local_player_no].DoubleMode = 0;
     }
     load_missions(99);
-    for (i = 0; i < PLAYERS_LIMIT; i++) {
-        network_players[i].Type = NPAct_Unkn17;
-    }
+    net_players_all_set_unkn17();
 
     return 1;
 
@@ -618,7 +504,7 @@ ubyte net_unkn_func_31(struct TbNetworkSession *p_nsession)
     return ret;
 #else
     TbBool modem_on_line;
-    int i, ret;
+    int ret;
 
     modem_on_line = false;
     if (nsvc.I.Type == NetSvc_IPX)
@@ -678,9 +564,7 @@ skip_modem_init:
         players[local_player_no].DoubleMode = 0;
     }
     load_missions(99);
-    for (i = 0; i < PLAYERS_LIMIT; i++) {
-        network_players[i].Type = NPAct_Unkn17;
-    }
+    net_players_all_set_unkn17();
 
     return 1;
 
@@ -747,6 +631,8 @@ ubyte do_net_INITIATE(ubyte click)
                 return 0;
             }
             net_schedule_local_player_reset();
+            byte_15516D = -1;
+            byte_15516C = -1;
         }
     }
     return 1;
@@ -768,6 +654,8 @@ ubyte do_net_groups_LOGON(ubyte click)
     if (login_control__State == LognCt_Unkn5)
     {
         net_schedule_local_player_logout();
+        byte_15516D = -1;
+        byte_15516C = -1;
         switch_net_screen_boxes_to_initiate();
         net_unkn_func_33();
     }

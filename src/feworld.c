@@ -35,6 +35,7 @@
 #include "game_speed.h"
 #include "game_sprts.h"
 #include "game.h"
+#include "packetfe.h"
 #include "purpldrw.h"
 #include "purpldrwlst.h"
 #include "keyboard.h"

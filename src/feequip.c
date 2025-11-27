@@ -42,6 +42,7 @@
 #include "game.h"
 #include "keyboard.h"
 #include "network.h"
+#include "packetfe.h"
 #include "player.h"
 #include "purpldrw.h"
 #include "purpldrwlst.h"
