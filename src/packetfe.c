@@ -258,9 +258,6 @@ void net_schedule_player_random_init_sync(void)
 
 void net_immediate_random_seed_sync(void)
 {
-    struct NetworkPlayer *p_netplyr;
-
-    p_netplyr = &network_players[net_host_player_no];
     if (net_local_player_hosts_the_game())
     {
         net_schedule_player_random_init_sync();
@@ -268,7 +265,7 @@ void net_immediate_random_seed_sync(void)
         LbNetworkExchange(network_players, sizeof(struct NetworkPlayer));
     } else {
         LbNetworkExchange(network_players, sizeof(struct NetworkPlayer));
-        lbSeed = p_netplyr->U.MissInit.Seed;
+        net_player_action_execute(net_host_player_no, net_host_player_no);
     }
 }
 
