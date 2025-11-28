@@ -486,7 +486,7 @@ void PacketRecord_OpenRead(void)
           LEVEL_NUM_STRAIN(p_missi->LevelNo), LEVEL_NUM_VARIANT(p_missi->LevelNo));
 }
 
-void PacketRecord_Read(struct Packet *p_pckt)
+TbResult PacketRecord_Read(struct Packet *p_pckt)
 {
 #if 0
     asm volatile (
@@ -494,26 +494,28 @@ void PacketRecord_Read(struct Packet *p_pckt)
         : : "a" (p_pckt));
 #endif
     ushort locbuf[6];
-    uint len;
+    int nread, len;
 
     if (packet_rec_fh == INVALID_FILE) {
-        return;
+        return Lb_FAIL;
     }
 
     len = 2 * sizeof(ushort);
-    LbFileRead(packet_rec_fh, locbuf, len);
+    nread = LbFileRead(packet_rec_fh, locbuf, len);
     locbuf[2] = 0;
     locbuf[3] = 0;
     locbuf[4] = 0;
     if (locbuf[0] & 0xFF) {
         len = 4 * sizeof(ushort);
-        LbFileRead(packet_rec_fh, &locbuf[2], len);
+        nread += LbFileRead(packet_rec_fh, &locbuf[2], len);
+        len += 2 * sizeof(ushort);
     }
     p_pckt->Action = locbuf[0];
     p_pckt->Data = locbuf[1];
     p_pckt->X = locbuf[2];
     p_pckt->Y = locbuf[3];
     p_pckt->Z = locbuf[4];
+    return (nread == len) ? Lb_SUCCESS : Lb_FAIL;
 }
 
 void PacketRecord_Write(struct Packet *p_pckt)
@@ -544,6 +546,21 @@ void PacketRecord_Write(struct Packet *p_pckt)
     else
         len = 2 * sizeof(ushort);
     LbFileWrite(packet_rec_fh, locbuf, len);
+}
+
+TbResult PacketRecord_ReadNP(struct NetworkPlayer *p_netplyr)
+{
+    ubyte locbuf[sizeof(struct NetworkPlayer)];
+    int nread, len;
+
+    if (packet_rec_fh == INVALID_FILE) {
+        return Lb_FAIL;
+    }
+
+    len = sizeof(struct NetworkPlayer);
+    nread = LbFileRead(packet_rec_fh, locbuf, len);
+    LbMemoryCopy(p_netplyr, locbuf, sizeof(struct NetworkPlayer));
+    return (nread == len) ? Lb_SUCCESS : Lb_FAIL;
 }
 
 void PacketRecord_WriteNP(struct NetworkPlayer *p_netplyr)

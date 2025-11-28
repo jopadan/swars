@@ -148,6 +148,7 @@ TbBool net_players_immediate_exchange(void);
 void net_players_copy_equip_and_cryo(void);
 void net_players_copy_equip_and_cryo_now(void);
 
+void packet_read_whole_player_init(void);
 void packet_write_whole_player_init(void);
 /******************************************************************************/
 #ifdef __cplusplus

@@ -63,19 +63,25 @@ void net_players_all_set_unkn17(void)
     }
 }
 
-TbBool net_player_action_is_unkn17(int plyr)
+TbBool net_player_action_is(int plyr, ubyte action)
 {
     struct NetworkPlayer *p_netplyr;
 
     p_netplyr = &network_players[plyr];
-    return (p_netplyr->Type == NPAct_ProgressOnly);
+    return (p_netplyr->Type == action);
+}
+
+TbBool net_player_action_is_unkn17(int plyr)
+{
+    return net_player_action_is(plyr, NPAct_ProgressOnly);
 }
 
 TbBool net_player_action_type_has_progress(ubyte nptype)
 {
     return (nptype != NPAct_ChatMsg) &&
       (nptype != NPAct_PlyrWeapModsSync) &&
-      (nptype != NPAct_PlyrFourPackSync);
+      (nptype != NPAct_PlyrFourPackSync) &&
+      (nptype != NPAct_RandInit);
 }
 
 TbBool net_player_packet_has_progress_data(int plyr)
@@ -452,6 +458,9 @@ void net_player_action_execute(int plyr, int netplyr)
     case NPAct_SetCity:
         login_control__City = p_netplyr->U.Progress.SelectedCity;
         break;
+    case NPAct_RandInit:
+        lbSeed = p_netplyr->U.RandInit.Seed;
+        break;
     case NPAct_ChatMsg:
         // Free last net_players[] slot
         {
@@ -612,6 +621,16 @@ void packet_file_net_player_write(void)
     PacketRecord_WriteNP(p_netplyr);
 }
 
+TbBool packet_file_net_player_read(void)
+{
+    struct NetworkPlayer *p_netplyr;
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    p_netplyr = &network_players[plyr];
+    return PacketRecord_ReadNP(p_netplyr);
+}
+
 void packet_write_whole_player_init(void)
 {
     net_schedule_player_cryo_equip_sync();
@@ -629,6 +648,19 @@ void packet_write_whole_player_init(void)
     net_schedule_player_random_init_sync();
     net_player_scheduled_action_prepare_packet();
     packet_file_net_player_write();
+}
+
+void packet_read_whole_player_init(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    while (packet_file_net_player_read() == Lb_SUCCESS)
+    {
+        net_player_action_execute(plyr, plyr);
+        if (net_player_action_is(plyr, NPAct_RandInit))
+            break;
+    }
 }
 
 void net_unkn_func_33(void)
