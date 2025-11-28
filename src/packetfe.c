@@ -29,6 +29,7 @@
 #include "game_options.h"
 #include "game_speed.h"
 #include "network.h"
+#include "packet.h"
 #include "player.h"
 #include "swlog.h"
 /******************************************************************************/
@@ -187,6 +188,14 @@ void net_schedule_player_grpaint_clear_sync(void)
     network_players[plyr].Type = NPAct_GrPaintClear;
 }
 
+void net_schedule_player_random_init_sync(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    network_players[plyr].Type = NPAct_RandInit;
+}
+
 void net_immediate_random_seed_sync(void)
 {
     struct NetworkPlayer *p_netplyr;
@@ -194,7 +203,8 @@ void net_immediate_random_seed_sync(void)
     p_netplyr = &network_players[net_host_player_no];
     if (net_local_player_hosts_the_game())
     {
-        p_netplyr->U.RandInit.Seed = lbSeed;
+        net_schedule_player_random_init_sync();
+        net_player_action_prepare(net_host_player_no);
         LbNetworkExchange(network_players, sizeof(struct NetworkPlayer));
     } else {
         LbNetworkExchange(network_players, sizeof(struct NetworkPlayer));
@@ -367,6 +377,9 @@ void net_player_action_prepare(int plyr)
         break;
     case NPAct_PlyrFourPackSync:
         agents_copy_fourpacks_cryo_to_netplayer(p_netplyr);
+        break;
+    case NPAct_RandInit:
+        p_netplyr->U.RandInit.Seed = lbSeed;
         break;
     case NPAct_ChatMsg:
         // Chat mssage packet is filled while scheduling
@@ -579,6 +592,43 @@ void net_player_action_execute(int plyr, int netplyr)
     default:
         break;
     }
+}
+
+void net_player_scheduled_action_prepare_packet(void)
+{
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    net_player_action_prepare(plyr);
+}
+
+void packet_file_net_player_write(void)
+{
+    struct NetworkPlayer *p_netplyr;
+    int plyr;
+
+    plyr = LbNetworkPlayerNumber();
+    p_netplyr = &network_players[plyr];
+    PacketRecord_WriteNP(p_netplyr);
+}
+
+void packet_write_whole_player_init(void)
+{
+    net_schedule_player_cryo_equip_sync();
+    net_player_scheduled_action_prepare_packet();
+    packet_file_net_player_write();
+
+    net_schedule_player_equip_fourpack_sync();
+    net_player_scheduled_action_prepare_packet();
+    packet_file_net_player_write();
+
+    net_schedule_player_faction_change_sync();
+    net_player_scheduled_action_prepare_packet();
+    packet_file_net_player_write();
+
+    net_schedule_player_random_init_sync();
+    net_player_scheduled_action_prepare_packet();
+    packet_file_net_player_write();
 }
 
 void net_unkn_func_33(void)

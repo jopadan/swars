@@ -28,6 +28,7 @@ extern "C" {
 #pragma pack(1)
 
 struct Thing;
+struct NetworkPlayer;
 
 enum PacketActions
 {
@@ -183,6 +184,7 @@ void PacketRecord_OpenWrite(void);
 void PacketRecord_OpenRead(void);
 void PacketRecord_Read(struct Packet *p_pckt);
 void PacketRecord_Write(struct Packet *p_pckt);
+void PacketRecord_WriteNP(struct NetworkPlayer *p_netplyr);
 /******************************************************************************/
 #ifdef __cplusplus
 }

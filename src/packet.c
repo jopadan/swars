@@ -21,6 +21,7 @@
 #include "packet.h"
 
 #include "bffile.h"
+#include "bfmemut.h"
 #include "bfutility.h"
 
 #include "campaign.h"
@@ -28,6 +29,7 @@
 #include "game_options.h"
 #include "game.h"
 #include "lvfiles.h"
+#include "packetfe.h"
 #include "player.h"
 #include "swlog.h"
 /******************************************************************************/
@@ -494,7 +496,7 @@ void PacketRecord_Read(struct Packet *p_pckt)
     ushort locbuf[6];
     uint len;
 
-    if (packet_rec_fh != INVALID_FILE) {
+    if (packet_rec_fh == INVALID_FILE) {
         return;
     }
 
@@ -527,7 +529,7 @@ void PacketRecord_Write(struct Packet *p_pckt)
     if (in_network_game) {
         return;
     }
-    if (packet_rec_fh != INVALID_FILE) {
+    if (packet_rec_fh == INVALID_FILE) {
         return;
     }
 
@@ -541,6 +543,23 @@ void PacketRecord_Write(struct Packet *p_pckt)
         len = 6 * sizeof(ushort);
     else
         len = 2 * sizeof(ushort);
+    LbFileWrite(packet_rec_fh, locbuf, len);
+}
+
+void PacketRecord_WriteNP(struct NetworkPlayer *p_netplyr)
+{
+    ubyte locbuf[sizeof(struct NetworkPlayer)];
+    uint len;
+
+    if (in_network_game) {
+        return;
+    }
+    if (packet_rec_fh == INVALID_FILE) {
+        return;
+    }
+
+    LbMemoryCopy(locbuf, p_netplyr, sizeof(struct NetworkPlayer));
+    len = sizeof(struct NetworkPlayer);
     LbFileWrite(packet_rec_fh, locbuf, len);
 }
 

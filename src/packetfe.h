@@ -51,6 +51,7 @@ enum NetPacketActions
     /** Progress with syncing general variables, no specific action taken. */
     NPAct_ProgressOnly,
     NPAct_GrPaintPt1Upd,
+    NPAct_RandInit,
 };
 
 struct NetworkPlayerUFourPacks {
@@ -137,6 +138,7 @@ TbBool net_player_action_is_unkn17(int plyr);
 TbBool net_player_packet_has_progress_data(int plyr);
 
 void net_unkn_func_33(void);
+void net_player_scheduled_action_prepare_packet(void);
 
 void net_player_action_prepare(int plyr);
 void net_player_action_execute(int plyr, int netplyr);
@@ -145,6 +147,8 @@ TbBool net_players_immediate_exchange(void);
 
 void net_players_copy_equip_and_cryo(void);
 void net_players_copy_equip_and_cryo_now(void);
+
+void packet_write_whole_player_init(void);
 /******************************************************************************/
 #ifdef __cplusplus
 }
