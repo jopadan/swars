@@ -247,7 +247,16 @@ You should now have a working `src/syndwarsfx` executable file.
 
 Here are specific commands required to compile the executable on Ubuntu linux.
 
-Install the dependencies - remember that some must be 32-bit (i386):
+First, dependencies have to be installed. But this project can be built only
+for 32-bit address space - some installed packages have to be compatible with
+it. To even allow installing packages for a different architecture, it needs
+to be added:
+
+```
+dpkg --add-architecture i386
+```
+
+Now install the dependencies - remember that some must be 32-bit (i386):
 
 ```
 sudo apt install gcc-multilib g++-multilib lib32z1
@@ -260,6 +269,11 @@ sudo apt install libvorbis-dev:i386 libvorbisfile3:i386
 sudo apt install libogg-dev:i386
 sudo apt install libwildmidi-dev:i386
 ```
+
+Be warned - your package manager may assume you want to replace the architecture
+if you did not explicitly added it. If the information on screen suggests
+that the installation would remove a group of currently installed packages,
+do not proceed with the changes and find another way.
 
 Now as our host is ready, we can start working on the actual `syndwarsfx` sources.
 Go to that folder, and generate build scripts from templates using autotools:
