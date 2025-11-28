@@ -473,7 +473,7 @@ skip_modem_init:
         players[local_player_no].DoubleMode = 0;
     }
     load_missions(99);
-    net_players_all_set_unkn17();
+    net_players_all_set_no_action();
 
     return 1;
 
@@ -564,7 +564,7 @@ skip_modem_init:
         players[local_player_no].DoubleMode = 0;
     }
     load_missions(99);
-    net_players_all_set_unkn17();
+    net_players_all_set_no_action();
 
     return 1;
 
@@ -1128,7 +1128,7 @@ ubyte show_net_grpaint(struct ScreenBox *p_box)
             else
                 paint_action = NPAct_GrPaintDrawLn;
         }
-        else if (net_player_action_is_unkn17(plyr))
+        else if (net_player_no_action_scheduled(plyr))
         {
             paint_action = NPAct_GrPaintPt1Upd;
         }

@@ -53,7 +53,7 @@ TbBool net_local_player_hosts_the_game(void)
     return (login_control__State == LognCt_Unkn6) || (plyr == net_host_player_no);
 }
 
-void net_players_all_set_unkn17(void)
+void net_players_all_set_no_action(void)
 {
     int plyr;
 
@@ -71,7 +71,7 @@ TbBool net_player_action_is(int plyr, ubyte action)
     return (p_netplyr->Type == action);
 }
 
-TbBool net_player_action_is_unkn17(int plyr)
+TbBool net_player_no_action_scheduled(int plyr)
 {
     return net_player_action_is(plyr, NPAct_ProgressOnly);
 }
@@ -81,13 +81,15 @@ TbBool net_player_action_type_has_progress(ubyte nptype)
     return (nptype != NPAct_ChatMsg) &&
       (nptype != NPAct_PlyrWeapModsSync) &&
       (nptype != NPAct_PlyrFourPackSync) &&
-      (nptype != NPAct_RandInit);
+      (nptype != NPAct_MissionInit);
 }
 
 TbBool net_player_packet_has_progress_data(int plyr)
 {
     struct NetworkPlayer *p_netplyr;
 
+    if (plyr < 0)
+        return false;
     p_netplyr = &network_players[plyr];
     return net_player_action_type_has_progress(p_netplyr->Type & 0x1F);
 }
@@ -97,7 +99,11 @@ void net_schedule_local_player_logout(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     network_players[plyr].Type = NPAct_PlyrLogOut;
 }
 
@@ -105,7 +111,11 @@ void net_schedule_local_player_reset(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     network_players[plyr].Type = NPAct_NetReset;
 }
 
@@ -113,7 +123,11 @@ void net_schedule_player_eject_sync(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     network_players[plyr].Type = NPAct_PlyrEject;
 }
 
@@ -121,7 +135,11 @@ void net_schedule_player_cryo_equip_sync(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     network_players[plyr].Type = NPAct_PlyrWeapModsSync;
 }
 
@@ -129,7 +147,11 @@ void net_schedule_player_equip_fourpack_sync(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     network_players[plyr].Type = NPAct_PlyrFourPackSync;
 }
 
@@ -137,7 +159,11 @@ void net_schedule_player_city_choice_sync(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     network_players[plyr].Type = NPAct_SetCity;
 }
 
@@ -145,7 +171,11 @@ void net_schedule_game_options_sync(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     network_players[plyr].Type = NPAct_SetGameOptions;
 }
 
@@ -153,7 +183,11 @@ void net_schedule_player_faction_change_sync(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     network_players[plyr].Type = NPAct_SetFaction;
 }
 
@@ -161,7 +195,11 @@ void net_schedule_player_team_change_sync(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     network_players[plyr].Type = NPAct_SetTeam;
 }
 
@@ -169,7 +207,11 @@ void net_schedule_player_chat_message_sync(const char *msg_text)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     network_players[plyr].Type = NPAct_ChatMsg;
     strncpy(network_players[plyr].U.Text, msg_text,
       sizeof(network_players[0].U.Text));
@@ -179,7 +221,11 @@ void net_schedule_player_grpaint_action_sync(ubyte action, short pos_x, short po
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     network_players[plyr].Type = action;
     network_players[plyr].U.Progress.GrPaintX = pos_x;
     network_players[plyr].U.Progress.GrPaintY = pos_y;
@@ -190,7 +236,11 @@ void net_schedule_player_grpaint_clear_sync(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     network_players[plyr].Type = NPAct_GrPaintClear;
 }
 
@@ -198,8 +248,12 @@ void net_schedule_player_random_init_sync(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
-    network_players[plyr].Type = NPAct_RandInit;
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
+    network_players[plyr].Type = NPAct_MissionInit;
 }
 
 void net_immediate_random_seed_sync(void)
@@ -214,7 +268,7 @@ void net_immediate_random_seed_sync(void)
         LbNetworkExchange(network_players, sizeof(struct NetworkPlayer));
     } else {
         LbNetworkExchange(network_players, sizeof(struct NetworkPlayer));
-        lbSeed = p_netplyr->U.RandInit.Seed;
+        lbSeed = p_netplyr->U.MissInit.Seed;
     }
 }
 
@@ -384,8 +438,9 @@ void net_player_action_prepare(int plyr)
     case NPAct_PlyrFourPackSync:
         agents_copy_fourpacks_cryo_to_netplayer(p_netplyr);
         break;
-    case NPAct_RandInit:
-        p_netplyr->U.RandInit.Seed = lbSeed;
+    case NPAct_MissionInit:
+        p_netplyr->U.MissInit.Seed = lbSeed;
+        p_netplyr->U.MissInit.GameMode = ingame.GameMode;
         break;
     case NPAct_ChatMsg:
         // Chat mssage packet is filled while scheduling
@@ -422,11 +477,13 @@ void net_player_action_execute(int plyr, int netplyr)
     struct NetworkPlayer *p_netplyr;
     int i;
 
-    if (net_player_action_is_unkn17(plyr)) {
+    if (net_player_no_action_scheduled(plyr)) {
+        LOGSYNC("Skip player %d packet, no action", plyr);
         return;
     }
 
     p_netplyr = &network_players[plyr];
+    LOGSYNC("Execute player %d packet, action=%d", plyr, (int)p_netplyr->Type);
     if (net_player_packet_has_progress_data(plyr)) {
         net_player_update_from_progress_packet(plyr);
     }
@@ -458,8 +515,9 @@ void net_player_action_execute(int plyr, int netplyr)
     case NPAct_SetCity:
         login_control__City = p_netplyr->U.Progress.SelectedCity;
         break;
-    case NPAct_RandInit:
-        lbSeed = p_netplyr->U.RandInit.Seed;
+    case NPAct_MissionInit:
+        lbSeed = p_netplyr->U.MissInit.Seed;
+        ingame.GameMode = p_netplyr->U.MissInit.GameMode;
         break;
     case NPAct_ChatMsg:
         // Free last net_players[] slot
@@ -607,7 +665,11 @@ void net_player_scheduled_action_prepare_packet(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
     net_player_action_prepare(plyr);
 }
 
@@ -616,18 +678,26 @@ void packet_file_net_player_write(void)
     struct NetworkPlayer *p_netplyr;
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
     p_netplyr = &network_players[plyr];
+
     PacketRecord_WriteNP(p_netplyr);
 }
 
-TbBool packet_file_net_player_read(void)
+TbResult packet_file_net_player_read(void)
 {
     struct NetworkPlayer *p_netplyr;
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
     p_netplyr = &network_players[plyr];
+
     return PacketRecord_ReadNP(p_netplyr);
 }
 
@@ -654,11 +724,19 @@ void packet_read_whole_player_init(void)
 {
     int plyr;
 
-    plyr = LbNetworkPlayerNumber();
-    while (packet_file_net_player_read() == Lb_SUCCESS)
+    if (LbNetworkSessionActive())
+        plyr = LbNetworkPlayerNumber();
+    else
+        plyr = local_player_no;
+
+    while (1)
     {
+        if (packet_file_net_player_read() != Lb_SUCCESS) {
+            LOGWARN("Cannot read more packets");
+            break;
+        }
         net_player_action_execute(plyr, plyr);
-        if (net_player_action_is(plyr, NPAct_RandInit))
+        if (net_player_action_is(plyr, NPAct_MissionInit))
             break;
     }
 }
@@ -690,7 +768,7 @@ void net_unkn_func_33(void)
         byte_1C6D4A = 0;
     }
 
-    net_players_all_set_unkn17();
+    net_players_all_set_no_action();
 }
 
 void net_players_copy_equip_and_cryo(void)

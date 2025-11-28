@@ -2385,17 +2385,6 @@ void setup_host(void)
     LoadMusic(0);
 
     setup_host_sub6();
-    if (pktrec_mode == PktR_RECORD)
-    {
-      if ( !in_network_game )
-      {
-          PacketRecord_OpenWrite();
-      }
-    }
-    if (pktrec_mode == PktR_PLAYBACK)
-    {
-        PacketRecord_OpenRead();
-    }
     play_intro();
     flic_unkn03(AniSl_BILLBOARD);
 }
@@ -3320,7 +3309,19 @@ void prep_single_mission(void)
 {
     load_missions(background_type);
     load_objectives_text();
+    if (pktrec_mode == PktR_PLAYBACK)
+    {
+        PacketRecord_OpenRead();
+        packet_read_whole_player_init();
+    }
     init_game(0);
+    if (!in_network_game)
+    {
+        if (pktrec_mode == PktR_RECORD) {
+            PacketRecord_OpenWrite();
+            packet_write_whole_player_init();
+        }
+    }
     prep_multicolor_sprites();
     LbScreenClear(0);
     generate_shadows_for_multicolor_sprites();
@@ -3349,6 +3350,7 @@ void restart_back_into_mission(ushort missi)
         if (pktrec_mode == PktR_RECORD) {
             PacketRecord_Close();
             PacketRecord_OpenWrite();
+            packet_write_whole_player_init();
         }
     }
 }
@@ -6110,8 +6112,12 @@ void show_load_and_prep_mission(void)
     // Now we can call the init; it uses current video mode and colour tables
     // to scale correctly, so has to be done after video setup
     // (though we should at some point separate the part linked to current video settings)
-    if ( start_into_mission )
+    if (start_into_mission)
     {
+        if (pktrec_mode == PktR_PLAYBACK)
+        {
+            packet_read_whole_player_init();
+        }
         init_game(0);
     }
 
@@ -6132,6 +6138,13 @@ void show_load_and_prep_mission(void)
             update_mission_time(1);
             cities[unkn_city_no].Info = 0;
             mission_result = 0;
+        }
+        if (!in_network_game)
+        {
+            if (pktrec_mode == PktR_RECORD) {
+                PacketRecord_OpenWrite();
+                packet_write_whole_player_init();
+            }
         }
         debug_trace_place(19);
     }

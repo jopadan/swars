@@ -51,7 +51,7 @@ enum NetPacketActions
     /** Progress with syncing general variables, no specific action taken. */
     NPAct_ProgressOnly,
     NPAct_GrPaintPt1Upd,
-    NPAct_RandInit,
+    NPAct_MissionInit,
 };
 
 struct NetworkPlayerUFourPacks {
@@ -79,8 +79,9 @@ struct NetworkPlayerUWepMod {
   union Mod Mods[4];
 };
 
-struct NetworkPlayerURandInit {
+struct NetworkPlayerUMissInit {
   ulong Seed;
+  short GameMode;
 };
 
 struct NetworkPlayerUUnkn {
@@ -107,7 +108,7 @@ struct NetworkPlayer { // sizeof=26
       struct NetworkPlayerUProgress Progress;
       struct NetworkPlayerUFourPacks FourPacks;
       struct NetworkPlayerUWepMod WepMod;
-      struct NetworkPlayerURandInit RandInit;
+      struct NetworkPlayerUMissInit MissInit;
       char Text[24];
       struct NetworkPlayerUUnkn Unkn;
     } U;
@@ -133,8 +134,8 @@ void net_schedule_player_grpaint_action_sync(ubyte action,
 void net_schedule_player_grpaint_clear_sync(void);
 void net_immediate_random_seed_sync(void);
 
-void net_players_all_set_unkn17(void);
-TbBool net_player_action_is_unkn17(int plyr);
+void net_players_all_set_no_action(void);
+TbBool net_player_no_action_scheduled(int plyr);
 TbBool net_player_packet_has_progress_data(int plyr);
 
 void net_unkn_func_33(void);
