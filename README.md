@@ -183,7 +183,7 @@ You can now [start the game](#starting-the-game).
 The original game needed to be started with parameters to play normally. While
 with SyndWarsFX this is no longer mandatory, the parameters can still be used,
 and many new ones are actually available. The executable can be run with
-`--help` parameter to show a short description of all aprameters.
+`--help` parameter to show a short description of all parameters.
 
 Parameter `-w` (used in the original game) is not recommended when running on
 new hardware.
