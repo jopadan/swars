@@ -5941,90 +5941,6 @@ void update_mission_time(char a1)
         : : "a" (a1));
 }
 
-void net_unkn_func_33(void)
-{
-    struct NetworkPlayer *p_netplyr;
-    int player;
-    int i;
-
-    player = LbNetworkPlayerNumber();
-    net_players_num = LbNetworkSessionNumberPlayers();
-    net_host_player_no = LbNetworkHostPlayerNumber();
-    p_netplyr = &network_players[player];
-
-    switch (p_netplyr->Type)
-    {
-    case NPAct_PlyrWeapModsSync:
-        agents_copy_wepmod_cryo_to_netplayer(p_netplyr);
-        break;
-    case NPAct_PlyrFourPackSync:
-        agents_copy_fourpacks_cryo_to_netplayer(p_netplyr);
-        break;
-    case NPAct_ChatMsg:
-        break;
-    case NPAct_Unkn17:
-        p_netplyr->Type = NPAct_NONE;
-        // Fall through
-    default:
-        p_netplyr->U.Progress.SelectedCity = login_control__City;
-        if (((gameturn & 1) == 0) && ((unkn_flags_08 & 0x08) != 0))
-            p_netplyr->U.Progress.Credits = -ingame.Credits;
-        else
-            p_netplyr->U.Progress.Credits = login_control__Money;
-        p_netplyr->U.Progress.TechLevel = login_control__TechLevel;
-        p_netplyr->U.Progress.val_flags_08 = unkn_flags_08;
-        p_netplyr->U.Progress.val_181189 = byte_181189;
-        p_netplyr->U.Progress.val_181183 = byte_181183;
-        p_netplyr->U.Progress.val_15516D = byte_15516D;
-        p_netplyr->U.Progress.Expenditure = ingame.Expenditure;
-
-        for (i = 0; i < 4; i++)
-        {
-            p_netplyr->U.Progress.ControlMode[i] =
-              players[player].UserInput[i].ControlMode;
-        }
-        p_netplyr->U.Progress.DoubleMode = players[player].DoubleMode;
-        break;
-    }
-
-    // TODO VERIFY why are we exchanging first packet, not the one we filled?
-    if (LbNetworkExchange(&network_players[0], sizeof(struct NetworkPlayer)) != 1)
-    {
-        LbNetworkSessionStop();
-        net_new_game_prepare();
-        if (nsvc.I.Type != NetSvc_IPX)
-        {
-            if (byte_1C4A6F)
-                LbNetworkHangUp();
-            LbNetworkReset();
-            net_service_started = 0;
-        }
-    }
-
-    for (i = 0; i < 8; i++)
-    {
-        net_player_action_execute(i, player);
-    }
-
-    if (byte_1C6D4A)
-    {
-        p_netplyr = &network_players[net_host_player_no];
-        if ((p_netplyr->Type != NPAct_ChatMsg) && (p_netplyr->Type != NPAct_PlyrWeapModsSync) && (p_netplyr->Type != NPAct_PlyrFourPackSync))
-        {
-            login_control__TechLevel = p_netplyr->U.Progress.TechLevel;
-            unkn_flags_08 = p_netplyr->U.Progress.val_flags_08;
-            login_control__City = p_netplyr->U.Progress.SelectedCity;
-            ingame.Expenditure = p_netplyr->U.Progress.Expenditure;
-            login_control__Money = abs(p_netplyr->U.Progress.Credits);
-            ingame.Credits = login_control__Money;
-            ingame.CashAtStart = login_control__Money;
-        }
-        byte_1C6D4A = 0;
-    }
-
-    net_players_all_set_unkn17();
-}
-
 void show_menu_screen_st2(void)
 {
     LOGSYNC("Init debrief, %s game", in_network_game ? "MP" : "SP");
@@ -6258,22 +6174,6 @@ void mouse_sprite_animate(void)
           mouse_sprite_anim_frame = 0;
       LbMouseChangeSprite(&fe_mouseptr_sprites[mouse_sprite_anim_frame + 1]);
     }
-}
-
-void net_players_copy_equip_and_cryo(void)
-{
-    net_schedule_player_cryo_equip_sync();
-    net_unkn_func_33();
-    net_schedule_player_equip_fourpack_sync();
-    gameturn++;
-}
-
-void net_players_copy_equip_and_cryo_now(void)
-{
-    net_schedule_player_cryo_equip_sync();
-    net_unkn_func_33();
-    net_schedule_player_equip_fourpack_sync();
-    net_unkn_func_33();
 }
 
 void menu_screen_redraw(void)

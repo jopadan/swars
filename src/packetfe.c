@@ -27,6 +27,7 @@
 #include "fenet.h"
 #include "game.h"
 #include "game_options.h"
+#include "game_speed.h"
 #include "network.h"
 #include "player.h"
 #include "swlog.h"
@@ -35,6 +36,7 @@
 
 #pragma pack()
 /******************************************************************************/
+extern struct NetworkPlayer network_players[8];
 
 TbBool net_local_player_hosts_the_game(void)
 {
@@ -75,7 +77,7 @@ TbBool net_player_action_type_has_progress(ubyte nptype)
       (nptype != NPAct_PlyrFourPackSync);
 }
 
-TbBool net_player_action_has_progress(int plyr)
+TbBool net_player_packet_has_progress_data(int plyr)
 {
     struct NetworkPlayer *p_netplyr;
 
@@ -272,6 +274,33 @@ void agents_copy_wepmod_netplayer_to_cryo(struct NetworkPlayer *p_netplyr)
     }
 }
 
+void net_player_copy_to_progress_packet(struct NetworkPlayer *p_netplyr)
+{
+    int plyr;
+    int i;
+
+    plyr = net_host_player_no;
+    p_netplyr->U.Progress.SelectedCity = login_control__City;
+    if (((gameturn & 1) == 0) && ((unkn_flags_08 & 0x08) != 0))
+        p_netplyr->U.Progress.Credits = -ingame.Credits;
+    else
+        p_netplyr->U.Progress.Credits = login_control__Money;
+
+    p_netplyr->U.Progress.TechLevel = login_control__TechLevel;
+    p_netplyr->U.Progress.val_flags_08 = unkn_flags_08;
+    p_netplyr->U.Progress.val_181189 = byte_181189;
+    p_netplyr->U.Progress.val_181183 = byte_181183;
+    p_netplyr->U.Progress.val_15516D = byte_15516D;
+    p_netplyr->U.Progress.Expenditure = ingame.Expenditure;
+
+    for (i = 0; i < 4; i++)
+    {
+        p_netplyr->U.Progress.ControlMode[i] =
+          players[plyr].UserInput[i].ControlMode;
+    }
+    p_netplyr->U.Progress.DoubleMode = players[plyr].DoubleMode;
+}
+
 void net_player_update_from_progress_packet(int plyr)
 {
     struct NetworkPlayer *p_netplyr;
@@ -311,6 +340,63 @@ void net_player_update_from_progress_packet(int plyr)
     players[plyr].DoubleMode = p_netplyr->U.Progress.DoubleMode;
 }
 
+void net_player_update_from_progress_packet_hostonly(void)
+{
+    struct NetworkPlayer *p_netplyr;
+
+    p_netplyr = &network_players[net_host_player_no];
+    login_control__TechLevel = p_netplyr->U.Progress.TechLevel;
+    unkn_flags_08 = p_netplyr->U.Progress.val_flags_08;
+    login_control__City = p_netplyr->U.Progress.SelectedCity;
+    ingame.Expenditure = p_netplyr->U.Progress.Expenditure;
+    login_control__Money = abs(p_netplyr->U.Progress.Credits);
+    ingame.Credits = login_control__Money;
+    ingame.CashAtStart = login_control__Money;
+}
+
+void net_player_action_prepare(int plyr)
+{
+    struct NetworkPlayer *p_netplyr;
+
+    p_netplyr = &network_players[plyr];
+
+    switch (p_netplyr->Type)
+    {
+    case NPAct_PlyrWeapModsSync:
+        agents_copy_wepmod_cryo_to_netplayer(p_netplyr);
+        break;
+    case NPAct_PlyrFourPackSync:
+        agents_copy_fourpacks_cryo_to_netplayer(p_netplyr);
+        break;
+    case NPAct_ChatMsg:
+        break;
+    case NPAct_Unkn17:
+        p_netplyr->Type = NPAct_NONE;
+        // Fall through
+    default:
+        net_player_copy_to_progress_packet(p_netplyr);
+        break;
+    }
+}
+
+TbBool net_players_immediate_exchange(void)
+{
+    if (LbNetworkExchange(network_players, sizeof(struct NetworkPlayer)) != 1)
+    {
+        LbNetworkSessionStop();
+        net_new_game_prepare();
+        if (nsvc.I.Type != NetSvc_IPX)
+        {
+            if (byte_1C4A6F)
+                LbNetworkHangUp();
+            LbNetworkReset();
+            net_service_started = 0;
+        }
+        return false;
+    }
+    return true;
+}
+
 void net_player_action_execute(int plyr, int netplyr)
 {
     struct NetworkPlayer *p_netplyr;
@@ -321,7 +407,7 @@ void net_player_action_execute(int plyr, int netplyr)
     }
 
     p_netplyr = &network_players[plyr];
-    if (net_player_action_has_progress(plyr)) {
+    if (net_player_packet_has_progress_data(plyr)) {
         net_player_update_from_progress_packet(plyr);
     }
 
@@ -492,6 +578,52 @@ void net_player_action_execute(int plyr, int netplyr)
     default:
         break;
     }
+}
+
+void net_unkn_func_33(void)
+{
+    int player;
+    int i;
+
+    player = LbNetworkPlayerNumber();
+    net_players_num = LbNetworkSessionNumberPlayers();
+    net_host_player_no = LbNetworkHostPlayerNumber();
+
+    net_player_action_prepare(player);
+
+    net_players_immediate_exchange();
+
+    for (i = 0; i < 8; i++)
+    {
+        net_player_action_execute(i, player);
+    }
+
+    if (byte_1C6D4A)
+    {
+        if (net_player_packet_has_progress_data(net_host_player_no))
+        {
+            net_player_update_from_progress_packet_hostonly();
+        }
+        byte_1C6D4A = 0;
+    }
+
+    net_players_all_set_unkn17();
+}
+
+void net_players_copy_equip_and_cryo(void)
+{
+    net_schedule_player_cryo_equip_sync();
+    net_unkn_func_33();
+    net_schedule_player_equip_fourpack_sync();
+    gameturn++;
+}
+
+void net_players_copy_equip_and_cryo_now(void)
+{
+    net_schedule_player_cryo_equip_sync();
+    net_unkn_func_33();
+    net_schedule_player_equip_fourpack_sync();
+    net_unkn_func_33();
 }
 
 /******************************************************************************/

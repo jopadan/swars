@@ -102,8 +102,8 @@ struct NetworkPlayerUUnkn {
 struct NetworkPlayer { // sizeof=26
     ubyte Type;
     union {
-      struct NetworkPlayerUFourPacks FourPacks;
       struct NetworkPlayerUProgress Progress;
+      struct NetworkPlayerUFourPacks FourPacks;
       struct NetworkPlayerUWepMod WepMod;
       struct NetworkPlayerURandInit RandInit;
       char Text[24];
@@ -114,9 +114,8 @@ struct NetworkPlayer { // sizeof=26
 
 #pragma pack()
 /******************************************************************************/
-extern struct NetworkPlayer network_players[8];
-
 TbBool net_local_player_hosts_the_game(void);
+
 void net_schedule_local_player_logout(void);
 void net_schedule_local_player_reset(void);
 void net_schedule_player_eject_sync(void);
@@ -134,12 +133,17 @@ void net_immediate_random_seed_sync(void);
 
 void net_players_all_set_unkn17(void);
 TbBool net_player_action_is_unkn17(int plyr);
+TbBool net_player_packet_has_progress_data(int plyr);
 
+void net_unkn_func_33(void);
+
+void net_player_action_prepare(int plyr);
 void net_player_action_execute(int plyr, int netplyr);
+void net_player_update_from_progress_packet_hostonly(void);
+TbBool net_players_immediate_exchange(void);
 
-void agents_copy_wepmod_cryo_to_netplayer(struct NetworkPlayer *p_netplyr);
-void agents_copy_fourpacks_cryo_to_netplayer(struct NetworkPlayer *p_netplyr);
-
+void net_players_copy_equip_and_cryo(void);
+void net_players_copy_equip_and_cryo_now(void);
 /******************************************************************************/
 #ifdef __cplusplus
 }
