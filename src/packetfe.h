@@ -48,7 +48,8 @@ enum NetPacketActions
     NPAct_PlyrWeapModsSync,
     NPAct_PlyrFourPackSync,
     NPAct_GrPaintDrawPt,
-    NPAct_Unkn17,
+    /** Progress with syncing general variables, no specific action taken. */
+    NPAct_ProgressOnly,
     NPAct_GrPaintPt1Upd,
 };
 
@@ -62,12 +63,12 @@ struct NetworkPlayerUProgress {
   ubyte val_181183;
   ubyte TechLevel;
   ubyte SelectedCity;
-  ushort npfield_8;
-  ushort npfield_A;
+  ushort GrPaintX;
+  ushort GrPaintY;
   ubyte ControlMode[4];
   ubyte DoubleMode;
   ubyte val_flags_08;
-  ubyte npfield_12;
+  ubyte GrPaintColour;
   ubyte val_15516D;
   long Expenditure;
 };

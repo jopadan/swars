@@ -58,7 +58,7 @@ void net_players_all_set_unkn17(void)
 
     for (plyr = 0; plyr < PLAYERS_LIMIT; plyr++)
     {
-        network_players[plyr].Type = NPAct_Unkn17;
+        network_players[plyr].Type = NPAct_ProgressOnly;
     }
 }
 
@@ -67,7 +67,7 @@ TbBool net_player_action_is_unkn17(int plyr)
     struct NetworkPlayer *p_netplyr;
 
     p_netplyr = &network_players[plyr];
-    return (p_netplyr->Type == NPAct_Unkn17);
+    return (p_netplyr->Type == NPAct_ProgressOnly);
 }
 
 TbBool net_player_action_type_has_progress(ubyte nptype)
@@ -174,9 +174,9 @@ void net_schedule_player_grpaint_action_sync(ubyte action, short pos_x, short po
 
     plyr = LbNetworkPlayerNumber();
     network_players[plyr].Type = action;
-    network_players[plyr].U.Progress.npfield_8 = pos_x;
-    network_players[plyr].U.Progress.npfield_A = pos_y;
-    network_players[plyr].U.Progress.npfield_12 = colour;
+    network_players[plyr].U.Progress.GrPaintX = pos_x;
+    network_players[plyr].U.Progress.GrPaintY = pos_y;
+    network_players[plyr].U.Progress.GrPaintColour = colour;
 }
 
 void net_schedule_player_grpaint_clear_sync(void)
@@ -369,8 +369,9 @@ void net_player_action_prepare(int plyr)
         agents_copy_fourpacks_cryo_to_netplayer(p_netplyr);
         break;
     case NPAct_ChatMsg:
+        // Chat mssage packet is filled while scheduling
         break;
-    case NPAct_Unkn17:
+    case NPAct_ProgressOnly:
         p_netplyr->Type = NPAct_NONE;
         // Fall through
     default:
@@ -465,9 +466,9 @@ void net_player_action_execute(int plyr, int netplyr)
         break;
     case NPAct_GrPaintDrawLn:
         net_grpaint_draw_op(
-          p_netplyr->U.Progress.npfield_8,
-          p_netplyr->U.Progress.npfield_A,
-          p_netplyr->U.Progress.npfield_12,
+          p_netplyr->U.Progress.GrPaintX,
+          p_netplyr->U.Progress.GrPaintY,
+          p_netplyr->U.Progress.GrPaintColour,
             1, plyr);
         break;
     case NPAct_PlyrEject:
@@ -563,16 +564,16 @@ void net_player_action_execute(int plyr, int netplyr)
         break;
     case NPAct_GrPaintDrawPt:
         net_grpaint_draw_op(
-          p_netplyr->U.Progress.npfield_8,
-          p_netplyr->U.Progress.npfield_A,
-          p_netplyr->U.Progress.npfield_12,
+          p_netplyr->U.Progress.GrPaintX,
+          p_netplyr->U.Progress.GrPaintY,
+          p_netplyr->U.Progress.GrPaintColour,
           0, plyr);
         break;
     case NPAct_GrPaintPt1Upd:
         net_grpaint_draw_op(
-          p_netplyr->U.Progress.npfield_8,
-          p_netplyr->U.Progress.npfield_A,
-          p_netplyr->U.Progress.npfield_12,
+          p_netplyr->U.Progress.GrPaintX,
+          p_netplyr->U.Progress.GrPaintY,
+          p_netplyr->U.Progress.GrPaintColour,
           2, plyr);
         break;
     default:
