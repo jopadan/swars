@@ -130,6 +130,7 @@ void (*my_build_packet)(struct Packet *packet, ushort action, ulong param1, long
 
 extern TbFileHandle packet_rec_fh;
 ushort packet_rec_no = 0;
+ubyte packet_rec_use_levelno = 0;
 
 const char * get_packet_action_name(ushort atype)
 {
@@ -428,16 +429,14 @@ void PacketRecord_Close(void)
 void PacketRecord_OpenWrite(void)
 {
     char fname[DISKPATH_SIZE];
-    struct Mission *p_missi;
     struct PacketFileHead head;
     int file_no;
 
     head.magic = 0x544B4350; // 'PCKT'
     head.campgn = background_type;
     head.missi = ingame.CurrentMission;
-    p_missi = &mission_list[head.missi];
-    head.mapno = p_missi->MapNo;
-    head.levelno = p_missi->LevelNo;
+    head.mapno = current_map;
+    head.levelno = current_level;
 
     file_no = get_highest_used_packet_record_no(head.campgn, head.missi);
     packet_rec_no = file_no + 1;
@@ -480,10 +479,18 @@ void PacketRecord_OpenRead(void)
     if ((head.mapno != p_missi->MapNo) && (head.mapno != 0xFFFF))
         LOGWARN("Packet file expects map %hu, not %d",
           fname, head.mapno, (int)p_missi->MapNo);
-    if ((head.levelno != p_missi->LevelNo) && (head.levelno != 0xFFFF))
+    if (head.levelno == 0xFFFF) { // No level identified within the packet
+        packet_rec_use_levelno = p_missi->LevelNo;
+    } else if (head.levelno == p_missi->LevelNo) {
+        packet_rec_use_levelno = p_missi->LevelNo;
+    } else if ((p_missi->ReLevelNo != 0) && (head.levelno == p_missi->ReLevelNo)) {
+        packet_rec_use_levelno = p_missi->ReLevelNo;
+    } else {
+        packet_rec_use_levelno = head.levelno;
         LOGWARN("Packet file expects level %d.%d, not %d.%d", fname,
           LEVEL_NUM_STRAIN(head.levelno), LEVEL_NUM_VARIANT(head.levelno),
           LEVEL_NUM_STRAIN(p_missi->LevelNo), LEVEL_NUM_VARIANT(p_missi->LevelNo));
+    }
 }
 
 TbResult PacketRecord_Read(struct Packet *p_pckt)
@@ -578,6 +585,18 @@ void PacketRecord_WriteNP(struct NetworkPlayer *p_netplyr)
     LbMemoryCopy(locbuf, p_netplyr, sizeof(struct NetworkPlayer));
     len = sizeof(struct NetworkPlayer);
     LbFileWrite(packet_rec_fh, locbuf, len);
+}
+
+TbBool PacketRecord_IsPlayback(void)
+{
+    if (in_network_game)
+        return false;
+    return (pktrec_mode == PktR_PLAYBACK);
+}
+
+TbBool PacketRecord_IsRecord(void)
+{
+    return (pktrec_mode == PktR_RECORD);
 }
 
 /******************************************************************************/

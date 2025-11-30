@@ -115,6 +115,12 @@ enum PacketActionResults
     PARes_TNGBADST,	/**< Action skipped, thing in bad state (ie. agent is performing contradictory command). */
 };
 
+enum PacketRecordMode {
+  PktR_NONE = 0x0,
+  PktR_RECORD = 0x1,
+  PktR_PLAYBACK = 0x2,
+};
+
 /** Per-player packet, for players input exchange.
  *
  * A Packet represents an information from a specific player, required
@@ -170,6 +176,9 @@ struct ShortPacket
 /******************************************************************************/
 extern struct Packet packets[8];
 extern void (*my_build_packet)(struct Packet *packet, ushort action, ulong param1, long x, long y, long z);
+extern ubyte pktrec_mode;
+extern ushort packet_rec_no;
+extern ubyte packet_rec_use_levelno;
 
 const char * get_packet_action_name(ushort atype);
 const char * get_packet_action_result_text(short result);
@@ -186,6 +195,8 @@ TbResult PacketRecord_Read(struct Packet *p_pckt);
 void PacketRecord_Write(struct Packet *p_pckt);
 TbResult PacketRecord_ReadNP(struct NetworkPlayer *p_netplyr);
 void PacketRecord_WriteNP(struct NetworkPlayer *p_netplyr);
+TbBool PacketRecord_IsPlayback(void);
+TbBool PacketRecord_IsRecord(void);
 /******************************************************************************/
 #ifdef __cplusplus
 }

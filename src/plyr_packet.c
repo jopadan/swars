@@ -305,7 +305,7 @@ void net_unkn_check_1(void)
     char recvd[8];
 
     LbMemorySet(recvd, 0, 8);
-    if ((pktrec_mode == PktR_PLAYBACK) && in_network_game)
+    if ((PacketRecord_IsPlayback()) && in_network_game)
     {
         for (i = 0; i < 8; i++)
         {

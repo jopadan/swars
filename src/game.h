@@ -114,12 +114,6 @@ enum AnimSlot {
   AniSl_SCRATCH = 10,	/**< scratch buffer for some transparent menu animations */
 };
 
-enum PacketRecordMode {
-  PktR_NONE = 0x0,
-  PktR_RECORD = 0x1,
-  PktR_PLAYBACK = 0x2,
-};
-
 // For some reason, we have different values for change_screen
 //TODO consolidate with ScreenType, use the same values
 enum ChangeScreenType {
@@ -199,8 +193,6 @@ extern ubyte byte_181183;
 extern ubyte byte_181189;
 
 extern ubyte cmdln_param_n;
-extern ubyte pktrec_mode;
-extern ushort packet_rec_no;
 extern ubyte exit_game;
 extern ubyte input_char;
 

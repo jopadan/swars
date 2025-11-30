@@ -95,6 +95,7 @@
 #include "building.h"
 #include "campaign.h"
 #include "cybmod.h"
+#include "packet.h"
 #include "pathtrig.h"
 #include "pepgroup.h"
 #include "lvdraw3d.h"
@@ -129,7 +130,6 @@
 #include "thing_search.h"
 #include "tngcolisn.h"
 #include "tngobjdrw.h"
-#include "packet.h"
 #include "vehicle.h"
 #include "wadfile.h"
 #include "weapon.h"
@@ -1487,7 +1487,7 @@ void draw_hud(int dcthing)
             }
         }
 
-        if (pktrec_mode != PktR_PLAYBACK)
+        if (!PacketRecord_IsPlayback())
         {
           draw_hud_target_mouse(dcthing);
         }
@@ -3255,7 +3255,9 @@ void init_game(ubyte reload)
     missi = ingame.CurrentMission;
     next_mapno = mission_list[missi].MapNo;
 
-    if ((reload) && (mission_list[missi].ReLevelNo != 0)) {
+    if (PacketRecord_IsPlayback()) {
+        next_level = packet_rec_use_levelno;
+    } else if ((reload) && (mission_list[missi].ReLevelNo != 0)) {
         next_level = mission_list[missi].ReLevelNo;
     } else {
         next_level = mission_list[missi].LevelNo;
@@ -3299,7 +3301,7 @@ void prep_single_mission(void)
 {
     load_missions(background_type);
     load_objectives_text();
-    if (pktrec_mode == PktR_PLAYBACK)
+    if (PacketRecord_IsPlayback())
     {
         PacketRecord_OpenRead();
         packet_read_whole_player_init();
@@ -3307,7 +3309,7 @@ void prep_single_mission(void)
     init_game(0);
     if (!in_network_game)
     {
-        if (pktrec_mode == PktR_RECORD) {
+        if (PacketRecord_IsRecord()) {
             PacketRecord_OpenWrite();
             packet_write_whole_player_init();
         }
@@ -3337,7 +3339,7 @@ void restart_back_into_mission(ushort missi)
     init_random_seed_default();
     if (!in_network_game)
     {
-        if (pktrec_mode == PktR_RECORD) {
+        if (PacketRecord_IsRecord()) {
             PacketRecord_Close();
             PacketRecord_OpenWrite();
             packet_write_whole_player_init();
@@ -4912,7 +4914,7 @@ void do_scroll_map(void)
         if (dcthing)
         {
             ctlmode = p_locplayer->UserInput[0].ControlMode & ~UInpCtr_AllFlagsMask;
-            if (ctlmode == UInpCtr_Mouse || pktrec_mode == PktR_PLAYBACK)
+            if (ctlmode == UInpCtr_Mouse || PacketRecord_IsPlayback())
                 move_camera(ingame.TrackX, engn_yc, ingame.TrackZ);
             else
                 track_player(dcthing);
@@ -4923,7 +4925,7 @@ void do_scroll_map(void)
     ctlmode = p_locplayer->UserInput[byte_153198-1].ControlMode & ~UInpCtr_AllFlagsMask;
     engn_xc_orig = engn_xc;
     engn_zc_orig = engn_zc;
-    if (ctlmode == UInpCtr_Mouse || pktrec_mode == PktR_PLAYBACK)
+    if (ctlmode == UInpCtr_Mouse || PacketRecord_IsPlayback())
     {
         // Only allow scroll view if panel is not used
         if (p_locplayer->PanelState[mouser] == PANEL_STATE_NORMAL)
@@ -6103,7 +6105,7 @@ void show_load_and_prep_mission(void)
     // (though we should at some point separate the part linked to current video settings)
     if (start_into_mission)
     {
-        if (pktrec_mode == PktR_PLAYBACK)
+        if (PacketRecord_IsPlayback())
         {
             packet_read_whole_player_init();
         }
@@ -6130,7 +6132,7 @@ void show_load_and_prep_mission(void)
         }
         if (!in_network_game)
         {
-            if (pktrec_mode == PktR_RECORD) {
+            if (PacketRecord_IsRecord()) {
                 PacketRecord_OpenWrite();
                 packet_write_whole_player_init();
             }
@@ -6814,7 +6816,7 @@ void load_packet(void)
     p_pckt = &packets[local_player_no];
 
     game_graphics_inputs();
-    if (pktrec_mode == PktR_PLAYBACK) // packet replay controls
+    if (PacketRecord_IsPlayback()) // packet replay controls
     {
         if (!in_network_game)
             PacketRecord_Read(p_pckt);
@@ -6907,7 +6909,7 @@ void load_packet(void)
             }
         }
 
-        if (pktrec_mode == PktR_RECORD && !in_network_game)
+        if (PacketRecord_IsRecord() && !in_network_game)
         {
             PacketRecord_Write(p_pckt);
         }

@@ -39,6 +39,7 @@
 #include "game_speed.h"
 #include "game_sprani.h"
 #include "matrix.h"
+#include "packet.h"
 #include "pepgroup.h"
 #include "player.h"
 #include "sound.h"
@@ -958,7 +959,7 @@ void process_things(void)
         return;
     monitor_all_samples();
 
-    if (!in_network_game && !pktrec_mode && (ingame.Flags & GamF_Unkn0004) != 0 && ((gameturn & 0xF) != 0))
+    if (!in_network_game && (pktrec_mode == PktR_NONE) && (ingame.Flags & GamF_Unkn0004) != 0 && ((gameturn & 0xF) != 0))
         return;
 
     if (execute_commands)

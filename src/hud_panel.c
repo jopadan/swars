@@ -2237,7 +2237,7 @@ void draw_new_panel(void)
             ushort ctlmode;
 
             ctlmode = p_locplayer->UserInput[0].ControlMode & ~UInpCtr_AllFlagsMask;
-            if (ctlmode == UInpCtr_Mouse && pktrec_mode != PktR_PLAYBACK) {
+            if (ctlmode == UInpCtr_Mouse && !PacketRecord_IsPlayback()) {
                 y = alt_at_point(mouse_map_x, mouse_map_z);
                 func_702c0(mouse_map_x, PRCCOORD_TO_YCOORD(y), mouse_map_z, 64, 64, colour_lookup[ColLU_RED]);
             }

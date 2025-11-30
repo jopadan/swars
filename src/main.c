@@ -18,6 +18,7 @@
 #include "lvfiles.h"
 #include "lvobjctv.h"
 #include "network.h"
+#include "packet.h"
 #include "thing.h"
 #include "util.h"
 
