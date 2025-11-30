@@ -2611,23 +2611,10 @@ ubyte check_panel_input(short panel)
             if (mouse_over_infrared_slant_box(panel))
             {
                 // Toggle thermal view
-                if ((ingame.Flags & GamF_ThermalView) == 0)
-                {
-                    dcthing = p_locplayer->DirectControl[mouser];
-                    if (things[dcthing].U.UPerson.Energy > 100)
-                    {
-                        ingame.Flags |= GamF_ThermalView;
-                        play_sample_using_heap(0, 35, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
-                        ingame_palette_reload();
-                        did_inp |= GINPUT_DIRECT;
-                    }
-                }
-                else
-                {
-                    ingame.Flags &= ~GamF_ThermalView;
-                    change_brightness(0);
-                    did_inp |= GINPUT_DIRECT;
-                }
+                dcthing = p_locplayer->DirectControl[mouser];
+                build_packet(p_pckt, PAct_THERMAL_TOGGLE, dcthing, 0, 0, 0);
+                did_inp |= GINPUT_PACKET;
+                return did_inp;
             }
             else
             {

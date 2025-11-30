@@ -28,6 +28,7 @@
 #include "ssampply.h"
 
 #include "bigmap.h"
+#include "display.h"
 #include "game_bstype.h"
 #include "game_options.h"
 #include "game_speed.h"
@@ -174,6 +175,24 @@ void unkn_player_group_prot(sbyte a1, ubyte a2)
 {
     asm volatile ("call ASM_unkn_player_group_prot\n"
         :  : "a" (a1), "d" (a2));
+}
+
+void player_thermal_toggle(PlayerIdx plyr, struct Thing *p_person)
+{
+    if ((ingame.Flags & GamF_ThermalView) == 0)
+    {
+        if (p_person->U.UPerson.Energy > 100)
+        {
+            ingame.Flags |= GamF_ThermalView;
+            play_sample_using_heap(0, 35, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
+            ingame_palette_reload();
+        }
+    }
+    else
+    {
+        ingame.Flags &= ~GamF_ThermalView;
+        change_brightness(0);
+    }
 }
 
 void peep_change_weapon(struct Thing *p_person)
@@ -1113,6 +1132,19 @@ void process_packet(PlayerIdx plyr, struct Packet *p_pckt, ushort i)
         break;
     case PAct_AGENT_UNKGROUP_ADD: // Unfinished mess; remove pending
         unkn_player_group_add(p_pckt->Data, plyr);
+        result = PARes_DONE;
+        break;
+    case PAct_THERMAL_TOGGLE:
+        p_thing = get_thing_safe(p_pckt->Data, TT_PERSON);
+        if (p_thing == INVALID_THING) {
+            result = PARes_EINVAL;
+            break;
+        }
+        if (person_slot_as_player_agent(p_thing, plyr) < 0) {
+            result = PARes_EBADSLT;
+            break;
+        }
+        player_thermal_toggle(plyr, p_thing);
         result = PARes_DONE;
         break;
     case PAct_CHAT_MESSAGE_KEY:

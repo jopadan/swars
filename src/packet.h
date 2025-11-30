@@ -100,7 +100,7 @@ enum PacketActions
     PAct_3D = 0x3D,
     PAct_3E = 0x3E,
     PAct_3F = 0x3F,
-    PAct_40 = 0x40,
+    PAct_THERMAL_TOGGLE = 0x40,
     PAct_AGENT_SELF_DESTRUCT = 0xFF,
 };
 
@@ -128,7 +128,7 @@ enum PacketRecordMode {
  * results in a change in game world, this action needs to generate
  * a packet so that the change can happen for all clients in a network
  * game. Actions which are irrelevent for other players (like moving
- * the camera, or switching to thermal mode) should not generate packets,
+ * the camera, or switching view mode) should not generate packets,
  * or generate them only if not claimed by an important action.
  *
  */

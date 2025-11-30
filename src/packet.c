@@ -180,6 +180,7 @@ ubyte packet_action_params_count(ushort action)
     case PAct_DROP_SELC_WEAPON_SECR:
     case PAct_SHIELD_TOGGLE:
     case PAct_CONTROL_MODE:
+    case PAct_THERMAL_TOGGLE:
         return 1;
 
     case PAct_GET_ITEM:
@@ -241,7 +242,6 @@ ubyte packet_action_params_count(ushort action)
     case PAct_3D:
     case PAct_3E:
     case PAct_3F:
-    case PAct_40:
     default:
         return 0;
     }
