@@ -56,6 +56,7 @@ enum NetPacketActions
 
 struct NetworkPlayerUFourPacks {
   ubyte FourPacks[4][5];
+  ubyte MissionAgents;
 };
 
 struct NetworkPlayerUProgress {

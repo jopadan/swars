@@ -433,6 +433,7 @@ void net_player_action_prepare(int plyr)
         agents_copy_wepmod_cryo_to_netplayer(p_netplyr);
         break;
     case NPAct_PlyrFourPackSync:
+        p_netplyr->U.FourPacks.MissionAgents = players[plyr].MissionAgents;
         agents_copy_fourpacks_cryo_to_netplayer(p_netplyr);
         break;
     case NPAct_MissionInit:
@@ -637,6 +638,20 @@ void net_player_action_execute(int plyr, int netplyr)
         else if ((unkn_flags_08 & 0x08) == 0)
         {
             agents_copy_fourpacks_netplayer_to_player(plyr, p_netplyr);
+        }
+
+        players[plyr].MissionAgents = p_netplyr->U.FourPacks.MissionAgents;
+        if (players[plyr].MissionAgents != 0x0F)
+        {
+            if (in_network_game) {
+                LOGWARN("Partial team in network game, mask 0x%x; switching to full",
+                  (uint)players[plyr].MissionAgents);
+                player_mission_agents_reset(plyr);
+            }
+            if ((players[plyr].MissionAgents & 0x0F) == 0) {
+                LOGWARN("Cannot start a game with empty team, switching to full");
+                player_mission_agents_reset(plyr);
+            }
         }
         break;
     case NPAct_GrPaintDrawPt:
