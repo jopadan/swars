@@ -207,6 +207,7 @@ ushort replace_mission_state_slot(ushort old_missi, ushort new_missi);
 short get_mission_state_using_state_slot(ushort missi);
 void set_mission_state_using_state_slot(ushort missi, short mstate);
 void init_mission_states(void);
+void missions_clear_bank_tests(void);
 
 ushort find_mission_with_map_and_level(ushort mapno, ushort level);
 void fix_mission_used_objectives(short missi);

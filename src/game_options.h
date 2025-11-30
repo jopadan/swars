@@ -70,6 +70,22 @@ enum GameOptions {
     GOpt_TranspObjLineColr,
 };
 
+enum DisplayModes {
+  DpM_NONE = 0x0,
+  DpM_UNKN_1 = 0x1,
+  DpM_2 = 0x2,
+  DpM_31 = 0x31,
+  DpM_ENGINEPLY = 0x32,
+  DpM_UNKN_33 = 0x33,
+  DpM_34 = 0x34,
+  DpM_36 = 0x36,
+  DpM_PURPLEMNU = 0x37,
+  DpM_38 = 0x38,
+  DpM_39 = 0x39,
+  DpM_UNKN_3A = 0x3A,
+  DpM_UNKN_3B = 0x3B,
+};
+
 struct InGame {
     short GameMode;
     short DisplayMode;

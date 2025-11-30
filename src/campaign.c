@@ -1865,4 +1865,15 @@ TbBool mission_is_final_at_game_end(ushort missi)
     return ((p_missi->Flags & MisF_IsFinalMission) != 0);
 }
 
+void missions_clear_bank_tests(void)
+{
+    short missi;
+
+    for (missi = 1; missi < next_mission; missi++)
+    {
+        mission_list[missi].BankTest = 0;
+        mission_list[missi].BankTestFail = 0;
+    }
+}
+
 /******************************************************************************/

@@ -2491,17 +2491,6 @@ void func_3d904(void)
     }
 }
 
-void missions_clear_bank_tests(void)
-{
-    short missi;
-
-    for (missi = 1; missi < next_mission; missi++)
-    {
-        mission_list[missi].BankTest = 0;
-        mission_list[missi].BankTestFail = 0;
-    }
-}
-
 void clear_word_1774E8(void)
 {
     short i;
@@ -4949,9 +4938,9 @@ void do_scroll_map(void)
     abase = -engn_anglexz >> 5;
     angle = -1;
     if (dx > 0)
-        angle = (abase + 3583) & 0x7FF;
+        angle = (abase + 3583) & LbFPMath_AngleMask;
     if (dx < 0)
-        angle = (abase + 2559) & 0x7FF;
+        angle = (abase + 2559) & LbFPMath_AngleMask;
     if (angle >= 0) {
         int wibl_x, wibl_y;
         wibl_x = dword_153194 * lbSinTable[angle] >> 8 >> dampr;
@@ -5125,10 +5114,10 @@ ubyte process_mouse_inputs(void)
     p_locplayer = &players[local_player_no];
 
     if (!lbDisplay.MLeftButton)
-        p_locplayer->UserInput[mouser].ControlMode &= ~0x8000;
+        p_locplayer->UserInput[mouser].ControlMode &= ~UInpCtrF_Unkn8000;
     if (!lbDisplay.MRightButton)
-        p_locplayer->UserInput[mouser].ControlMode &= ~0x4000;
-    if ((ingame.DisplayMode != 50) && (ingame.DisplayMode != 59))
+        p_locplayer->UserInput[mouser].ControlMode &= ~UInpCtrF_Unkn4000;
+    if ((ingame.DisplayMode != DpM_ENGINEPLY) && (ingame.DisplayMode != DpM_UNKN_3B))
         return did_inp;
     did_inp |= process_panel_state();
     if ((did_inp & GINPUT_PACKET) != 0)
