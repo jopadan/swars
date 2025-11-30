@@ -57,6 +57,14 @@ ubyte ac_do_controls_save(ubyte click);
 ubyte ac_do_controls_calibrate(ubyte click);
 ubyte ac_show_menu_controls_list_box(struct ScreenTextBox *p_box);
 
+/** Game key currently being edited in the controls screen.
+ * Max value is 2x max GameKey index - because it also stored distinction
+ * between entering keyboard key and joystick key.
+ */
+extern ubyte controls_edited_gkey;
+
+/******************************************************************************/
+
 ubyte do_controls_defaults(ubyte click)
 {
 #if 0
@@ -97,6 +105,11 @@ ubyte do_controls_calibrate(ubyte click)
     net_unkn_pos_02 = 1;
     alert_box_text_fmt("%s", gui_strings[574]);
     return 1;
+}
+
+TbBool is_defining_control_key(void)
+{
+    return (controls_hlight_gkey != 0);
 }
 
 ubyte show_controls_joystick_box(struct ScreenBox *p_box)

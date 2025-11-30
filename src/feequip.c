@@ -18,6 +18,7 @@
 /******************************************************************************/
 #include "feequip.h"
 
+#include <assert.h>
 #include "bftext.h"
 #include "bfsprite.h"
 #include "bfkeybd.h"
@@ -27,6 +28,7 @@
 #include "bflib_joyst.h"
 #include "ssampply.h"
 
+#include "feappbar.h"
 #include "fecryo.h"
 #include "femain.h"
 #include "fenet.h"
@@ -109,6 +111,22 @@ void ac_weapon_flic_data_to_screen(void);
 ubyte ac_do_equip_all_agents_set(ubyte click);
 
 ubyte do_equip_offer_buy_cybmod(ubyte click);
+
+TbBool dragged_weapon_can_drop_on_research(void)
+{
+    return (mo_weapon != -1 && mo_weapon == research.CurrentWeapon);
+}
+
+void dragged_weapon_drop_on_research(void)
+{
+    assert(dragged_weapon_can_drop_on_research());
+
+    LOGSYNC("Transferred weapon %s from agent %d to research",
+      weapon_codename(mo_weapon+1), mo_from_agent);
+    player_cryo_remove_weapon_one(mo_from_agent, mo_weapon + 1);
+    research_unkn_func_003();
+    mo_weapon = -1;
+}
 
 TbBool weapon_has_display_anim(ubyte weapon)
 {

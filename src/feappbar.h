@@ -1,14 +1,14 @@
 /******************************************************************************/
 // Syndicate Wars Fan Expansion, source port of the classic game from Bullfrog.
 /******************************************************************************/
-/** @file fecntrls.h
- *     Header file for fecntrls.c.
+/** @file feappbar.h
+ *     Header file for feappbar.c.
  * @par Purpose:
- *     Front-end desktop and menu system, research screen.
+ *     Front-end desktop and menu system, application bar at the bottom.
  * @par Comment:
  *     Just a header file - #defines, typedefs, function prototypes etc.
  * @author   Tomasz Lis
- * @date     22 Apr 2023 - 22 Oct 2023
+ * @date     05 Apr 2024 - 22 Nov 2025
  * @par  Copying and copyrights:
  *     This program is free software; you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
  *     (at your option) any later version.
  */
 /******************************************************************************/
-#ifndef FECNTRLS_H
-#define FECNTRLS_H
+#ifndef FEAPPBAR_H
+#define FEAPPBAR_H
 
 #include "bftypes.h"
 
@@ -27,20 +27,35 @@ extern "C" {
 /******************************************************************************/
 #pragma pack(1)
 
+enum AppBarIcons {
+  ApBar_SYSTEM = 0,
+  ApBar_PANET,
+  ApBar_WORLDMAP,
+  ApBar_CRYO,
+  ApBar_EQUIP,
+  ApBar_RESEARCH,
+  ApBar_NEWMAIL,
+};
+
 #pragma pack()
 /******************************************************************************/
+extern struct ScreenBoxBase global_apps_bar_box;
 
-void init_controls_screen_boxes(void);
-void reset_controls_screen_boxes_flags(void);
-ubyte show_options_controls_screen(void);
-void set_flag01_controls_screen_boxes(void);
-void skip_flashy_draw_controls_screen_boxes(void);
+/******************************************************************************/
 
-/** Returns whether the game is currently defining a key in controls screen.
+TbBool is_purple_apps_selection_bar_visible(void);
+TbBool mouse_over_purple_apps_icon(short iconid);
+void show_purple_apps_selection_bar(void);
+TbBool input_purple_apps_selection_bar(void);
+
+void init_global_app_bar_box(void);
+
+/** Reset players part of app bar state.
  *
- * Most of control buttons should be disabled during control key definition.
+ * Resets all parts of app bar at bottom which are set by the player
+ * or related to players game progress.
  */
-TbBool is_defining_control_key(void);
+void reset_app_bar_player_state(void);
 
 /******************************************************************************/
 #ifdef __cplusplus

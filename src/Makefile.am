@@ -102,6 +102,8 @@ syndwarsfx_SOURCES = \
 	engintrns.h \
 	enginzoom.c \
 	enginzoom.h \
+	feappbar.c \
+	feappbar.h \
 	febrief.c \
 	febrief.h \
 	fedebrief.c \

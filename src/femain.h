@@ -37,16 +37,6 @@ enum SysScreenType {
   SySc_TYPES_COUNT,
 };
 
-enum AppBarIcons {
-  ApBar_SYSTEM = 0,
-  ApBar_PANET,
-  ApBar_WORLDMAP,
-  ApBar_CRYO,
-  ApBar_EQUIP,
-  ApBar_RESEARCH,
-  ApBar_NEWMAIL,
-};
-
 /** Special value whch does not have system screen,
  * but commands to logout to main menu.
  */
@@ -67,7 +57,6 @@ struct ScreenTextBox;
 extern struct ScreenTextBox unkn13_SYSTEM_button;
 
 extern struct ScreenBoxBase global_top_bar_box;
-extern struct ScreenBoxBase global_apps_bar_box;
 extern struct ScreenTextBox heading_box;
 
 extern struct SynTime global_date;
@@ -121,18 +110,6 @@ void update_date_time(void);
 TbBool input_date_time(void);
 
 void show_sysmenu_screen(void);
-
-TbBool is_purple_apps_selection_bar_visible(void);
-TbBool mouse_over_purple_apps_icon(short iconid);
-void show_purple_apps_selection_bar(void);
-TbBool input_purple_apps_selection_bar(void);
-
-/** Reset players part of app bar state.
- *
- * Resets all parts of app bar at bottom which are set by the player
- * or related to players game progress.
- */
-void reset_app_bar_player_state(void);
 
 /******************************************************************************/
 #ifdef __cplusplus

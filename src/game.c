@@ -71,6 +71,7 @@
 #include "game_sprts.h"
 #include "guiboxes.h"
 #include "guitext.h"
+#include "feappbar.h"
 #include "femail.h"
 #include "femain.h"
 #include "febrief.h"
