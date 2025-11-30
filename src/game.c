@@ -4674,11 +4674,10 @@ void mission_over(void)
     ingame.GameOver = 0;
     if (mstate == MResol_FAILED)
     {
-        if (!mission_remain_until_success(ingame.CurrentMission))
+        if (!mission_remain_until_success(ingame.CurrentMission) &&
+          !mission_has_fail_email_or_triggers(ingame.CurrentMission))
             ingame.GameOver = 1;
     }
-    if (new_mail)
-        ingame.GameOver = 0;
     if (cryo_agents.NumAgents == 0)
         ingame.GameOver = 1;
     LOGSYNC("Mission %d ended with state=%d gameover=%d",

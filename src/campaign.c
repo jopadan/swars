@@ -1858,6 +1858,17 @@ TbBool mission_has_immediate_previous(ushort missi)
     return ((p_missi->Flags & MisF_ImmediatePrevious) != 0);
 }
 
+TbBool mission_has_fail_email_or_triggers(ushort missi)
+{
+    struct Mission *p_missi;
+    p_missi = &mission_list[missi];
+    if (p_missi->FailID != 0)
+        return true;
+    if ((p_missi->FailTrigger[0]|p_missi->FailTrigger[1]|p_missi->FailTrigger[2]) != 0)
+        return true;
+    return false;
+}
+
 TbBool mission_is_final_at_game_end(ushort missi)
 {
     struct Mission *p_missi;
