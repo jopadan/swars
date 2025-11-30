@@ -6001,7 +6001,7 @@ void show_menu_screen_st2(void)
     update_options_screen_state();
     init_brief_screen_scanner();
 
-    if (new_mail)
+    if ((new_mail != 0) && (screentype != SCRT_MAINMENU))
         play_sample_using_heap(0, 119 + (LbRandomAnyShort() % 3), FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3u);
 
     net_system_init2();
