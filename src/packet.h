@@ -101,6 +101,8 @@ enum PacketActions
     PAct_3E = 0x3E,
     PAct_3F = 0x3F,
     PAct_THERMAL_TOGGLE = 0x40,
+    PAct_CHEAT_AGENT_TELEPORT = 0x41,
+    PAct_CHEAT_ALL_AGENTS = 0x42,
     PAct_AGENT_SELF_DESTRUCT = 0xFF,
 };
 

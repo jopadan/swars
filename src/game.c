@@ -2113,24 +2113,6 @@ void screen_mode_switch_to_next(void)
     adjust_mission_engine_to_video_mode();
 }
 
-void teleport_current_agent(PlayerInfo *p_locplayer)
-{
-    struct Thing *p_person;
-    short dcthing;
-
-    dcthing = p_locplayer->DirectControl[mouser];
-    p_person = &things[dcthing];
-
-    remove_path(p_person);
-    if (on_mapwho(p_person))
-        delete_node(p_person);
-    p_person->U.UPerson.OnFace = 0; // Can only teleport to ground
-    p_person->X = MAPCOORD_TO_PRCCOORD(mouse_map_x, 0);
-    p_person->Z = MAPCOORD_TO_PRCCOORD(mouse_map_z, 0);
-    p_person->Y = alt_at_point(mouse_map_x, mouse_map_z);
-    add_node_thing(dcthing);
-}
-
 void person_give_all_weapons(struct Thing *p_person)
 {
     WeaponType wtype;
@@ -2240,6 +2222,8 @@ void set_max_stats_to_all_agents(PlayerInfo *p_locplayer)
 ubyte game_graphics_inputs(void)
 {
     PlayerInfo *p_locplayer;
+    struct Packet *p_pckt;
+    ThingIdx dcthing;
     ubyte did_inp;
 
     did_inp = GINPUT_NONE;
@@ -2263,8 +2247,12 @@ ubyte game_graphics_inputs(void)
         if (is_key_pressed(KC_T, KMod_ALT))
         {
             clear_key_pressed(KC_T);
-            teleport_current_agent(p_locplayer);
-            did_inp |= GINPUT_DIRECT;
+
+            p_pckt = &packets[local_player_no];
+            dcthing = p_locplayer->DirectControl[0];
+            my_build_packet(p_pckt, PAct_CHEAT_AGENT_TELEPORT, dcthing, mouse_map_x, 0, mouse_map_z);
+            did_inp |= GINPUT_PACKET;
+            return did_inp;
         }
     }
 

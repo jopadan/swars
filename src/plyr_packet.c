@@ -294,6 +294,18 @@ void person_grp_switch_to_specific_weapon(struct Thing *p_person, PlayerIdx plyr
     }
 }
 
+void cheat_teleport_agent_to_gnd(struct Thing *p_person, MapCoord cor_x, MapCoord cor_z)
+{
+    remove_path(p_person);
+    if (on_mapwho(p_person))
+        delete_node(p_person);
+    p_person->U.UPerson.OnFace = 0; // Can only teleport to ground
+    p_person->X = MAPCOORD_TO_PRCCOORD(cor_x, 0);
+    p_person->Z = MAPCOORD_TO_PRCCOORD(cor_z, 0);
+    p_person->Y = alt_at_point(cor_x, cor_z);
+    add_node_thing(p_person->ThingOffset);
+}
+
 int net_unkn_func_12(void *a1)
 {
     int ret;
@@ -1234,6 +1246,19 @@ void process_packet(PlayerIdx plyr, struct Packet *p_pckt, ushort i)
             break;
         }
         person_self_destruct(p_thing);
+        result = PARes_DONE;
+        break;
+    case PAct_CHEAT_AGENT_TELEPORT:
+        p_thing = get_thing_safe(p_pckt->Data, TT_PERSON);
+        if (p_thing == INVALID_THING) {
+            result = PARes_EINVAL;
+            break;
+        }
+        if (person_slot_as_player_agent(p_thing, plyr) < 0) {
+            result = PARes_EBADSLT;
+            break;
+        }
+        cheat_teleport_agent_to_gnd(p_thing, p_pckt->X, p_pckt->Z);
         result = PARes_DONE;
         break;
     case PAct_NONE:

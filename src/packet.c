@@ -120,8 +120,10 @@ const char *packet_action_name[] = {
     "UNKNACTN_3D",
     "UNKNACTN_3E",
     "UNKNACTN_3F",
-    "UNKNACTN_40",
+    "THERMAL_TOGGLE",
     "AGENT_SELF_DESTRUCT",
+    "CHEAT_AGENT_TELEPORT",
+    "CHEAT_ALL_AGENTS",
 };
 
 void (*my_build_packet)(struct Packet *packet, ushort action, ulong param1, long x, long y, long z);
@@ -196,6 +198,7 @@ ubyte packet_action_params_count(ushort action)
     case PAct_FOLLOW_PERSON:
     case PAct_SELECT_AGENT:
     case PAct_SHOOT_AT_THING:
+    case PAct_CHEAT_ALL_AGENTS:
         return 2;
 
     case PAct_SELECT_PREV_WEAPON:
@@ -222,6 +225,7 @@ ubyte packet_action_params_count(ushort action)
     case PAct_AGENT_GOTO_FACE_PT_ABS_FF:
     case PAct_PLANT_MINE_AT_GND_PT_FF:
     case PAct_29:
+    case PAct_CHEAT_AGENT_TELEPORT:
         return 4;
 
     case PAct_1:
