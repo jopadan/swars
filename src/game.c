@@ -2113,117 +2113,9 @@ void screen_mode_switch_to_next(void)
     adjust_mission_engine_to_video_mode();
 }
 
-void person_give_all_weapons(struct Thing *p_person)
-{
-    WeaponType wtype;
-
-    for (wtype = WEP_TYPES_COUNT-1; wtype > WEP_NULL; wtype--)
-    {
-        struct WeaponDef *wdef;
-        ulong wepflg;
-
-        wdef = &weapon_defs[wtype];
-
-        if ((wdef->Flags & WEPDFLG_CanPurchease) == 0)
-            continue;
-
-        wepflg = 1 << (wtype-1);
-        p_person->U.UPerson.WeaponsCarried |= wepflg;
-    }
-    player_agent_set_weapon_quantities_max(p_person);
-    if ((p_person->Flag & TngF_PlayerAgent) != 0) {
-        player_agent_update_prev_weapon(p_person);
-    }
-}
-
-void mark_all_weapons_researched(void)
-{
-    WeaponType wtype;
-
-    for (wtype = WEP_TYPES_COUNT-1; wtype > WEP_NULL; wtype--)
-    {
-        struct WeaponDef *wdef;
-
-        wdef = &weapon_defs[wtype];
-
-        if ((wdef->Flags & WEPDFLG_CanPurchease) == 0)
-            continue;
-
-        research_weapon_complete(wtype);
-    }
-}
-
-void resurrect_any_dead_agents(PlayerInfo *p_locplayer)
-{
-    int i;
-
-    for (i = 0; i < playable_agents; i++)
-    {
-        struct Thing *p_agent;
-        p_agent = p_locplayer->MyAgent[i];
-        if (p_agent->Type != TT_PERSON)
-            continue;
-        if ((p_agent->Flag & TngF_Destroyed) != 0)
-            person_resurrect(p_agent);
-    }
-}
-
-void give_all_weapons_to_all_agents(PlayerInfo *p_locplayer)
-{
-    int i;
-
-    for (i = 0; i < playable_agents; i++)
-    {
-        struct Thing *p_agent;
-        p_agent = p_locplayer->MyAgent[i];
-        if (p_agent->Type != TT_PERSON)
-            continue;
-        if (thing_is_destroyed(p_agent->ThingOffset))
-            continue;
-        person_give_all_weapons(p_agent);
-    }
-    mark_all_weapons_researched();
-}
-
-void give_best_mods_to_all_agents(PlayerInfo *p_locplayer)
-{
-    int i;
-
-    for (i = 0; i < playable_agents; i++)
-    {
-        struct Thing *p_agent;
-        p_agent = p_locplayer->MyAgent[i];
-        if (p_agent->Type != TT_PERSON)
-            continue;
-        if (thing_is_destroyed(p_agent->ThingOffset))
-            continue;
-        person_give_best_mods(p_agent);
-    }
-}
-
-void set_max_stats_to_all_agents(PlayerInfo *p_locplayer)
-{
-    int i;
-
-    for (i = 0; i < playable_agents; i++)
-    {
-        struct Thing *p_agent;
-        p_agent = p_locplayer->MyAgent[i];
-        if (p_agent->Type != TT_PERSON)
-            continue;
-        if (thing_is_destroyed(p_agent->ThingOffset))
-            continue;
-        person_set_helath_to_max_limit(p_agent);
-        person_set_energy_to_max_limit(p_agent);
-        person_set_persuade_power__to_allow_all(p_agent);
-    }
-}
-
 ubyte game_graphics_inputs(void)
 {
     PlayerInfo *p_locplayer;
-    struct Packet *p_pckt;
-    ThingIdx dcthing;
     ubyte did_inp;
 
     did_inp = GINPUT_NONE;
@@ -2241,6 +2133,30 @@ ubyte game_graphics_inputs(void)
         game_option_inc(GOpt_CameraPerspective);
         did_inp |= GINPUT_DIRECT;
     }
+
+    if (is_key_pressed(KC_F8, KMod_DONTCARE))
+    {
+        clear_key_pressed(KC_F8);
+        screen_mode_switch_to_next();
+        did_inp |= GINPUT_DIRECT;
+    }
+
+    return did_inp;
+}
+
+ubyte input_agents_cheats(void)
+{
+    PlayerInfo *p_locplayer;
+    struct Packet *p_pckt;
+    ThingIdx dcthing;
+    ubyte did_inp;
+
+    did_inp = GINPUT_NONE;
+    p_locplayer = &players[local_player_no];
+
+    if (in_network_game && p_locplayer->PanelState[mouser]
+      == PANEL_STATE_SEND_MESSAGE)
+        return did_inp;
 
     if ((ingame.UserFlags & UsrF_Cheats) != 0)
     {
@@ -2261,24 +2177,21 @@ ubyte game_graphics_inputs(void)
         if (is_key_pressed(KC_Q, KMod_ALT))
         {
             clear_key_pressed(KC_Q);
-            give_best_mods_to_all_agents(p_locplayer);
-            set_max_stats_to_all_agents(p_locplayer);
-            did_inp |= GINPUT_DIRECT;
+
+            p_pckt = &packets[local_player_no];
+            my_build_packet(p_pckt, PAct_CHEAT_ALL_AGENTS, PCheatAA_BEEFUP_AND_MODS, 0, 0, 0);
+            did_inp |= GINPUT_PACKET;
+            return did_inp;
         }
         if (is_key_pressed(KC_Q, KMod_SHIFT))
         {
             clear_key_pressed(KC_Q);
-            resurrect_any_dead_agents(p_locplayer);
-            give_all_weapons_to_all_agents(p_locplayer);
-            did_inp |= GINPUT_DIRECT;
-        }
-    }
 
-    if (is_key_pressed(KC_F8, KMod_DONTCARE))
-    {
-        clear_key_pressed(KC_F8);
-        screen_mode_switch_to_next();
-        did_inp |= GINPUT_DIRECT;
+            p_pckt = &packets[local_player_no];
+            my_build_packet(p_pckt, PAct_CHEAT_ALL_AGENTS, PCheatAA_RESURRECT_AND_WEPAPN, 0, 0, 0);
+            did_inp |= GINPUT_PACKET;
+            return did_inp;
+        }
     }
 
     return did_inp;
@@ -5702,25 +5615,6 @@ ubyte do_user_interface(void)
         return did_inp;
     }
 
-    // Resurrection and best equipment cheat; why is it in two places?
-    if (p_locplayer->DoubleMode && (ingame.UserFlags & UsrF_Cheats) && !in_network_game)
-    {
-        if (is_key_pressed(KC_Q, KMod_ALT))
-        {
-            clear_key_pressed(KC_Q);
-            give_best_mods_to_all_agents(p_locplayer);
-            set_max_stats_to_all_agents(p_locplayer);
-            did_inp |= GINPUT_DIRECT;
-        }
-        if (is_key_pressed(KC_Q, KMod_SHIFT))
-        {
-            clear_key_pressed(KC_Q);
-            resurrect_any_dead_agents(p_locplayer);
-            give_all_weapons_to_all_agents(p_locplayer);
-            did_inp |= GINPUT_DIRECT;
-        }
-    }
-
     struct SpecialUserInput *p_usrinp;
     short ctlmode;
 
@@ -6817,7 +6711,10 @@ void load_packet(void)
     if (ingame.DisplayMode == DpM_ENGINEPLY || ingame.DisplayMode == DpM_UNKN_3B)
     {
         did_inp |= do_user_interface();
-        did_inp |= input_mission_cheats();
+        if ((did_inp & GINPUT_PACKET) == 0)
+            did_inp |= input_agents_cheats();
+        if ((did_inp & GINPUT_PACKET) == 0)
+            did_inp |= input_mission_cheats();
         ingame.MissionStatus = test_missions(0);
         if ((ingame.MissionStatus != ObvStatu_UNDECIDED) && !in_network_game)
         {

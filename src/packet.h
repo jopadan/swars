@@ -106,6 +106,12 @@ enum PacketActions
     PAct_AGENT_SELF_DESTRUCT = 0xFF,
 };
 
+enum PacketCheatAllAgents
+{
+    PCheatAA_RESURRECT_AND_WEPAPN = 0,
+    PCheatAA_BEEFUP_AND_MODS = 1,
+};
+
 enum PacketActionResults
 {
     PARes_DONE = 0,	/**< Action was performed, with success or not. */

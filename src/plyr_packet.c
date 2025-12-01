@@ -39,6 +39,7 @@
 #include "network.h"
 #include "packet.h"
 #include "player.h"
+#include "research.h"
 #include "sound.h"
 #include "thing.h"
 #include "swlog.h"
@@ -304,6 +305,124 @@ void cheat_teleport_agent_to_gnd(struct Thing *p_person, MapCoord cor_x, MapCoor
     p_person->Z = MAPCOORD_TO_PRCCOORD(cor_z, 0);
     p_person->Y = alt_at_point(cor_x, cor_z);
     add_node_thing(p_person->ThingOffset);
+}
+
+void person_give_all_weapons(struct Thing *p_person)
+{
+    WeaponType wtype;
+
+    for (wtype = WEP_TYPES_COUNT-1; wtype > WEP_NULL; wtype--)
+    {
+        struct WeaponDef *wdef;
+        ulong wepflg;
+
+        wdef = &weapon_defs[wtype];
+
+        if ((wdef->Flags & WEPDFLG_CanPurchease) == 0)
+            continue;
+
+        wepflg = 1 << (wtype-1);
+        p_person->U.UPerson.WeaponsCarried |= wepflg;
+    }
+    player_agent_set_weapon_quantities_max(p_person);
+    if ((p_person->Flag & TngF_PlayerAgent) != 0) {
+        player_agent_update_prev_weapon(p_person);
+    }
+}
+
+void mark_all_weapons_researched(void)
+{
+    WeaponType wtype;
+
+    for (wtype = WEP_TYPES_COUNT-1; wtype > WEP_NULL; wtype--)
+    {
+        struct WeaponDef *wdef;
+
+        wdef = &weapon_defs[wtype];
+
+        if ((wdef->Flags & WEPDFLG_CanPurchease) == 0)
+            continue;
+
+        research_weapon_complete(wtype);
+    }
+}
+
+void resurrect_any_dead_agents(PlayerIdx plyr)
+{
+    PlayerInfo *p_player;
+    int i;
+
+    p_player = &players[plyr];
+
+    for (i = 0; i < playable_agents; i++)
+    {
+        struct Thing *p_agent;
+        p_agent = p_player->MyAgent[i];
+        if (p_agent->Type != TT_PERSON)
+            continue;
+        if ((p_agent->Flag & TngF_Destroyed) != 0)
+            person_resurrect(p_agent);
+    }
+}
+
+void give_all_weapons_to_all_agents(PlayerIdx plyr)
+{
+    PlayerInfo *p_player;
+    int i;
+
+    p_player = &players[plyr];
+
+    for (i = 0; i < playable_agents; i++)
+    {
+        struct Thing *p_agent;
+        p_agent = p_player->MyAgent[i];
+        if (p_agent->Type != TT_PERSON)
+            continue;
+        if (thing_is_destroyed(p_agent->ThingOffset))
+            continue;
+        person_give_all_weapons(p_agent);
+    }
+    mark_all_weapons_researched();
+}
+
+void give_best_mods_to_all_agents(PlayerIdx plyr)
+{
+    PlayerInfo *p_player;
+    int i;
+
+    p_player = &players[plyr];
+
+    for (i = 0; i < playable_agents; i++)
+    {
+        struct Thing *p_agent;
+        p_agent = p_player->MyAgent[i];
+        if (p_agent->Type != TT_PERSON)
+            continue;
+        if (thing_is_destroyed(p_agent->ThingOffset))
+            continue;
+        person_give_best_mods(p_agent);
+    }
+}
+
+void set_max_stats_to_all_agents(PlayerIdx plyr)
+{
+    PlayerInfo *p_player;
+    int i;
+
+    p_player = &players[plyr];
+
+    for (i = 0; i < playable_agents; i++)
+    {
+        struct Thing *p_agent;
+        p_agent = p_player->MyAgent[i];
+        if (p_agent->Type != TT_PERSON)
+            continue;
+        if (thing_is_destroyed(p_agent->ThingOffset))
+            continue;
+        person_set_helath_to_max_limit(p_agent);
+        person_set_energy_to_max_limit(p_agent);
+        person_set_persuade_power__to_allow_all(p_agent);
+    }
 }
 
 int net_unkn_func_12(void *a1)
@@ -1260,6 +1379,24 @@ void process_packet(PlayerIdx plyr, struct Packet *p_pckt, ushort i)
         }
         cheat_teleport_agent_to_gnd(p_thing, p_pckt->X, p_pckt->Z);
         result = PARes_DONE;
+        break;
+    case PAct_CHEAT_ALL_AGENTS:
+        switch (p_pckt->Data)
+        {
+        case PCheatAA_RESURRECT_AND_WEPAPN:
+            resurrect_any_dead_agents(plyr);
+            give_all_weapons_to_all_agents(plyr);
+            result = PARes_DONE;
+            break;
+        case PCheatAA_BEEFUP_AND_MODS:
+            result = PARes_DONE;
+            give_best_mods_to_all_agents(plyr);
+            set_max_stats_to_all_agents(plyr);
+            break;
+        default:
+            result = PARes_EINVAL;
+            break;
+        }
         break;
     case PAct_NONE:
         result = PARes_DONE;

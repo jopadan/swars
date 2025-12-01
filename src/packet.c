@@ -183,6 +183,7 @@ ubyte packet_action_params_count(ushort action)
     case PAct_SHIELD_TOGGLE:
     case PAct_CONTROL_MODE:
     case PAct_THERMAL_TOGGLE:
+    case PAct_CHEAT_ALL_AGENTS:
         return 1;
 
     case PAct_GET_ITEM:
@@ -198,7 +199,6 @@ ubyte packet_action_params_count(ushort action)
     case PAct_FOLLOW_PERSON:
     case PAct_SELECT_AGENT:
     case PAct_SHOOT_AT_THING:
-    case PAct_CHEAT_ALL_AGENTS:
         return 2;
 
     case PAct_SELECT_PREV_WEAPON:
