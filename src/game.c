@@ -2909,6 +2909,7 @@ void init_player(void)
     init_local_player_group();
     validate_player_double_mode();
     player_agents_init_prev_weapon(local_player_no);
+    player_agents_clear_weapon_delays(local_player_no);
 
     init_game_controls();
     preprogress_game_turns();

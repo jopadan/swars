@@ -2559,16 +2559,16 @@ void set_person_weapon_turn(struct Thing *p_person, short n_turn)
     }
     else if ((p_person->Flag2 & TgF2_Unkn0800) == 0)
     {
-        PlayerInfo *p_player;
-        ushort plyr, plagent;
+        PlayerIdx plyr;
+        ushort plagent;
         WeaponType wtype;
 
         plyr = (p_person->U.UPerson.ComCur & 0x1C) >> 2;
         plagent = p_person->U.UPerson.ComCur & 3;
-        p_player = &players[plyr];
         wtype = p_person->U.UPerson.CurrentWeapon;
-        p_player->WepDelays[plagent][wtype] = n_turn;
+
         p_person->U.UPerson.WeaponTurn = n_turn;
+        player_agent_set_weapon_delay(plyr, plagent, wtype, n_turn);
     }
 }
 

@@ -717,7 +717,8 @@ ubyte load_game(int slot, char *desc)
     else
     {
         PlayerInfo *p_locplayer;
-        int agent, i;
+        int i;
+
         p_locplayer = &players[local_player_no];
 
         i = sizeof(PlayerInfo) - offsetof(PlayerInfo, FourPacks);
@@ -752,12 +753,7 @@ ubyte load_game(int slot, char *desc)
             p_locplayer->UserVZ[i] = 0;
         }
 
-        for (agent = 0; agent < 32; agent++)
-        {
-            for (i = 0; i < 4; i++) {
-                p_locplayer->WepDelays[i][agent] = 0;
-            }
-        }
+        player_agents_clear_weapon_delays(local_player_no);
     }
     players_sync_from_cryo();
 
