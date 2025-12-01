@@ -157,16 +157,6 @@ void player_agents_init_prev_weapon(PlayerIdx plyr)
     }
 }
 
-void player_agents_clear_weapon_delays(PlayerIdx plyr)
-{
-    ushort plagent;
-
-    for (plagent = 0; plagent < playable_agents; plagent++)
-    {
-        player_agent_clear_weapon_delays(plyr, plagent);
-    }
-}
-
 void player_agent_update_prev_weapon(struct Thing *p_agent)
 {
     PlayerInfo *p_player;
@@ -236,6 +226,16 @@ void player_agent_clear_weapon_delays(PlayerIdx plyr, ushort plagent)
     for (wtype = WEP_NULL; wtype < WEP_TYPES_COUNT; wtype++)
     {
         p_player->WepDelays[plagent][wtype] = 0;
+    }
+}
+
+void player_agents_clear_weapon_delays(PlayerIdx plyr)
+{
+    ushort plagent;
+
+    for (plagent = 0; plagent < playable_agents; plagent++)
+    {
+        player_agent_clear_weapon_delays(plyr, plagent);
     }
 }
 

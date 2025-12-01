@@ -142,7 +142,6 @@ short player_agent_current_or_prev_weapon(PlayerIdx plyr, ushort plagent);
 TbBool player_agent_has_weapon(PlayerIdx plyr, ushort plagent, WeaponType wtype);
 short player_agent_weapon_delay(PlayerIdx plyr, ushort plagent, WeaponType wtype);
 void player_agent_set_weapon_delay(PlayerIdx plyr, ushort plagent, WeaponType wtype, short delay_turns);
-void player_agent_clear_weapon_delays(PlayerIdx plyr, ushort plagent);
 void player_agents_clear_weapon_delays(PlayerIdx plyr);
 
 TbBool player_agent_is_alive(PlayerIdx plyr, ushort plagent);

@@ -1386,6 +1386,7 @@ void process_packet(PlayerIdx plyr, struct Packet *p_pckt, ushort i)
         case PCheatAA_RESURRECT_AND_WEPAPN:
             resurrect_any_dead_agents(plyr);
             give_all_weapons_to_all_agents(plyr);
+            player_agents_clear_weapon_delays(plyr);
             result = PARes_DONE;
             break;
         case PCheatAA_BEEFUP_AND_MODS:
