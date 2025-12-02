@@ -6835,7 +6835,7 @@ void game_process_orbital_station_explode(void)
 void game_process(void)
 {
     debug_multicolor_sprite(193);
-    LOGDBG("WSCREEN 0x%lx", (ulong)lbDisplay.WScreen);
+    LOGDBG("WSCREEN 0x%p", (void *)lbDisplay.WScreen);
 
     while ( !exit_game )
     {
