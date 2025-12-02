@@ -56,7 +56,7 @@ and then add the neccessary data files. The steps are:
    (e.g. in `/media/cdrom`).
 2. Choose an installation folder, like `/usr/local/share/syndwarsfx` (this is the default).
 3. Do `util/install -f <SOURCE> -t <TARGET> -l <LANG>`, where
-   * *\<SOURCE\>* is the game CD path, like `/media/cdrom`,
+   * *\<SOURCE\>* is the game CD mount path, like `/media/cdrom`,
    * *\<TARGET\>* is the destination path, meaning the installation folder you've chosen,
    * *\<LANG\>* is the installation language, and can be one of: `eng` `fre` `ger` `ita` `spa` `swe`.
 
