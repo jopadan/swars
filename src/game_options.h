@@ -86,6 +86,18 @@ enum DisplayModes {
   DpM_UNKN_3B = 0x3B,
 };
 
+enum NetGamePlayFlags {
+  NGPF_NONE = 0x0,
+  NGPF_Unkn01 = 0x01,
+  NGPF_Unkn02 = 0x02,
+  NGPF_Unkn04 = 0x04,
+  NGPF_Unkn08 = 0x08,
+  NGPF_Unkn10 = 0x10,
+  NGPF_Unkn20 = 0x20,
+  NGPF_Unkn40 = 0x40,
+  NGPF_Unkn60 = 0x80,
+};
+
 struct InGame {
     short GameMode;
     short DisplayMode;
@@ -150,6 +162,7 @@ struct InGame {
 #pragma pack()
 /******************************************************************************/
 extern struct InGame ingame;
+extern ubyte net_game_play_flags;
 
 /******************************************************************************/
 

@@ -33,6 +33,7 @@
 #include "feequip.h"
 #include "femail.h"
 #include "femain.h"
+#include "game_options.h"
 #include "game_speed.h"
 #include "game_sprts.h"
 #include "game.h"
@@ -155,7 +156,7 @@ TbBool is_purple_apps_utility_visible(short iconid)
               iconid != ApBar_WORLDMAP &&
               iconid != ApBar_RESEARCH);
         }
-        if ((unkn_flags_08 & 0x02) == 0 || (unkn_flags_08 & 0x01) == 0)
+        if ((net_game_play_flags & NGPF_Unkn02) == 0 || (net_game_play_flags & NGPF_Unkn01) == 0)
             visible = (iconid == ApBar_SYSTEM);
         return visible;
     }

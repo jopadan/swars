@@ -910,7 +910,7 @@ void process_things(void)
     {
         if (ingame.fld_unkCB7 > 150)
             process_things_mines_explode((rand() & 0x1F) + 2);
-        if ((unkn_flags_08 & 0x10) != 0 && (gameturn & 0xF) == 0)
+        if ((net_game_play_flags & NGPF_Unkn10) != 0 && (gameturn & 0xF) == 0)
             process_things_unkn_sub2(login_control__TechLevel, ingame.fld_unkCB7 > 100);
         if (things_used > 900)
             process_things_bang(16);

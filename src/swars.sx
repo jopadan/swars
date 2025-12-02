@@ -175,7 +175,7 @@ GLOBAL_FUNC(ASM_place_default_player)	/* 0x0101F0 */
 		mov    %edx,0xc(%esp)
 		test   %cl,%cl
 		je     jump_102fc
-		testb  $0x20,unkn_flags_08
+		testb  $0x20,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_102fa
 		call   ac_LbRandomAnyShort
 		xor    %ah,%ah
@@ -864,7 +864,7 @@ GLOBAL_FUNC(ASM_unkn1_handle_agent_groups)	/* 0x010F94 */
 		jne    jump_11066
 		jmp    jump_1102a
 	jump_110b6:
-		testb  $0x10,unkn_flags_08
+		testb  $0x10,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_110e0
 		xor    %esi,%esi
 		mov    %esi,(%esp)
@@ -27374,7 +27374,7 @@ person_drops_weapons:	/* 0x0479C0 */
 	jump_47a54:
 		cmpb   $0x0,in_network_game
 		je     jump_47aa9
-		testb  $0x8,unkn_flags_08
+		testb  $0x8,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_47aa9
 		testb  $0x20,0xd(%esi)
 		je     jump_47aa9
@@ -37191,7 +37191,7 @@ GLOBAL_FUNC(ASM_person_dead)	/* 0x04EA2C */
 	jump_4ea8e:
 		cmpb   $0x0,in_network_game
 		je     jump_4e690
-		testb  $0x4,unkn_flags_08
+		testb  $0x4,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_4e690
 		testb  $0x10,0xd(%edi)
 		je     jump_4e690
@@ -48797,7 +48797,7 @@ GLOBAL_FUNC (ASM_process_things)	/* 0x572F8 */
 		add    $0x2,%eax
 		call   ac_process_things_mines_explode
 	jump_573ac:
-		testb  $0x10,unkn_flags_08
+		testb  $0x10,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_573e2
 		testb  $0xf,gameturn
 		jne    jump_573e2
@@ -110111,7 +110111,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    $0xa5,%edi
 		call   ac_draw_text_purple_list2
 		orw    $0x8040,EXPORT_SYMBOL(lbDisplay)+96 # lbDisplay__DrawFlags
-		testb  $0x4,unkn_flags_08
+		testb  $0x4,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_8f5bc
 		mov    EXPORT_SYMBOL(gui_strings)+0x77C,%eax
 		call   ac_my_string_width
@@ -110211,17 +110211,17 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		je     jump_8f70f
 		xor    %bl,%bl
 		mov    %bl,EXPORT_SYMBOL(lbDisplay)+103 # lbDisplay.LeftButton
-		mov    unkn_flags_08,%bh
+		mov    EXPORT_SYMBOL(net_game_play_flags),%bh
 		test   $0x4,%bh
 		je     jump_8f6eb
 		mov    %bh,%ch
 		and    $0xfb,%ch
-		mov    %ch,unkn_flags_08
+		mov    %ch,EXPORT_SYMBOL(net_game_play_flags)
 		jmp    jump_8f6f6
 	jump_8f6eb:
 		mov    %bh,%cl
 		or     $0x4,%cl
-		mov    %cl,unkn_flags_08
+		mov    %cl,EXPORT_SYMBOL(net_game_play_flags)
 	jump_8f6f6:
 		call   ac_LbNetworkPlayerNumber
 		mov    %eax,%ebp
@@ -110237,7 +110237,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    EXPORT_SYMBOL(lbDisplay)+96,%cx # lbDisplay__DrawFlags
 		or     $0x80,%ch
 		mov    %cx,EXPORT_SYMBOL(lbDisplay)+96 # lbDisplay__DrawFlags
-		testb  $0x8,unkn_flags_08
+		testb  $0x8,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_8f74e
 		mov    EXPORT_SYMBOL(gui_strings)+0x77C,%eax
 		call   ac_my_string_width
@@ -110337,17 +110337,17 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		je     jump_8f89d
 		xor    %bh,%bh
 		mov    %bh,EXPORT_SYMBOL(lbDisplay)+103 # lbDisplay.LeftButton
-		mov    unkn_flags_08,%cl
+		mov    EXPORT_SYMBOL(net_game_play_flags),%cl
 		test   $0x8,%cl
 		je     jump_8f879
 		mov    %cl,%al
 		and    $0xf7,%al
-		mov    %al,unkn_flags_08
+		mov    %al,EXPORT_SYMBOL(net_game_play_flags)
 		jmp    jump_8f884
 	jump_8f879:
 		mov    %cl,%ch
 		or     $0x8,%ch
-		mov    %ch,unkn_flags_08
+		mov    %ch,EXPORT_SYMBOL(net_game_play_flags)
 	jump_8f884:
 		call   ac_LbNetworkPlayerNumber
 		mov    %eax,%ebp
@@ -110363,7 +110363,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    EXPORT_SYMBOL(lbDisplay)+96,%dx # lbDisplay__DrawFlags
 		or     $0x80,%dh
 		mov    %dx,EXPORT_SYMBOL(lbDisplay)+96 # lbDisplay__DrawFlags
-		testb  $0x10,unkn_flags_08
+		testb  $0x10,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_8f8dc
 		mov    EXPORT_SYMBOL(gui_strings)+0x77C,%eax
 		call   ac_my_string_width
@@ -110463,17 +110463,17 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		je     jump_8fa2d
 		xor    %bh,%bh
 		mov    %bh,EXPORT_SYMBOL(lbDisplay)+103 # lbDisplay.LeftButton
-		mov    unkn_flags_08,%cl
+		mov    EXPORT_SYMBOL(net_game_play_flags),%cl
 		test   $0x10,%cl
 		je     jump_8fa09
 		mov    %cl,%al
 		and    $0xef,%al
-		mov    %al,unkn_flags_08
+		mov    %al,EXPORT_SYMBOL(net_game_play_flags)
 		jmp    jump_8fa14
 	jump_8fa09:
 		mov    %cl,%ch
 		or     $0x10,%ch
-		mov    %ch,unkn_flags_08
+		mov    %ch,EXPORT_SYMBOL(net_game_play_flags)
 	jump_8fa14:
 		call   ac_LbNetworkPlayerNumber
 		mov    %eax,%ebp
@@ -110489,7 +110489,7 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		mov    EXPORT_SYMBOL(lbDisplay)+96,%cx # lbDisplay__DrawFlags
 		or     $0x80,%ch
 		mov    %cx,EXPORT_SYMBOL(lbDisplay)+96 # lbDisplay__DrawFlags
-		testb  $0x20,unkn_flags_08
+		testb  $0x20,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_8fa6c
 		mov    EXPORT_SYMBOL(gui_strings)+0x77C,%eax
 		call   ac_my_string_width
@@ -110589,17 +110589,17 @@ GLOBAL_FUNC(ASM_show_net_protocol_box)	/* 0x08EDE0 */
 		je     jump_8fbbb
 		xor    %bh,%bh
 		mov    %bh,EXPORT_SYMBOL(lbDisplay)+103 # lbDisplay.LeftButton
-		mov    unkn_flags_08,%cl
+		mov    EXPORT_SYMBOL(net_game_play_flags),%cl
 		test   $0x20,%cl
 		je     jump_8fb97
 		mov    %cl,%al
 		and    $0xdf,%al
-		mov    %al,unkn_flags_08
+		mov    %al,EXPORT_SYMBOL(net_game_play_flags)
 		jmp    jump_8fba2
 	jump_8fb97:
 		mov    %cl,%ch
 		or     $0x20,%ch
-		mov    %ch,unkn_flags_08
+		mov    %ch,EXPORT_SYMBOL(net_game_play_flags)
 	jump_8fba2:
 		call   ac_LbNetworkPlayerNumber
 		mov    %eax,%esi
@@ -118378,7 +118378,7 @@ GLOBAL_FUNC(ASM_show_purple_apps_selection_bar)	/* 0x9FE28 */
 	jump_9fe88:
 		xor    %al,%al
 	jump_9fe8a:
-		mov    unkn_flags_08,%ah
+		mov    EXPORT_SYMBOL(net_game_play_flags),%ah
 		test   $0x2,%ah
 		je     jump_9fe9a
 		test   $0x1,%ah
@@ -133419,7 +133419,7 @@ GLOBAL_FUNC(ASM_SCANNER_unkn_func_205)	/* 0x0B0908 */
 		mov    %esp,%eax
 		test   %ebx,%ebx
 		jne    jump_b0ae7
-		testb  $0x4,unkn_flags_08
+		testb  $0x4,EXPORT_SYMBOL(net_game_play_flags)
 		jne    jump_b0ae7
 		test   %ebp,gameturn
 		je     jump_b0ae7
@@ -167318,7 +167318,7 @@ GLOBAL_FUNC(ASM_init_variables)	/* 0x0D0B9C */
 		mov    %bl,EXPORT_SYMBOL(byte_181189)
 		mov    $0x3c,%ah
 		mov    $0x4,%dh
-		mov    %ah,unkn_flags_08
+		mov    %ah,EXPORT_SYMBOL(net_game_play_flags)
 		mov    %dh,login_control__TechLevel
 		pop    %edi
 		pop    %esi
@@ -168280,7 +168280,7 @@ GLOBAL_FUNC(ASM_do_net_SET2)	/* 0x0D30CC */
 		mov    login_control__State,%al
 		cmp    $0x5,%eax
 		jne    jump_d3123
-		orb    $0x2,unkn_flags_08
+		orb    $0x2,EXPORT_SYMBOL(net_game_play_flags)
 		call   ac_LbNetworkPlayerNumber
 		mov    %eax,%edx
 		shl    $0x2,%eax
@@ -168320,7 +168320,7 @@ GLOBAL_FUNC(ASM_do_net_SET)	/* 0x0D3128 */
 		mov    login_control__State,%al
 		cmp    $0x5,%eax
 		jne    jump_d317f
-		orb    $0x1,unkn_flags_08
+		orb    $0x1,EXPORT_SYMBOL(net_game_play_flags)
 		call   ac_LbNetworkPlayerNumber
 		mov    %eax,%edx
 		shl    $0x2,%eax
@@ -168953,7 +168953,7 @@ GLOBAL_FUNC (ASM_do_equip_offer_buy)	/* 0x0D4090 */
 		mov    login_control__State,%al
 		cmp    $0x5,%eax
 		jne    jump_d40eb
-		testb  $0x8,unkn_flags_08
+		testb  $0x8,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_d40eb
 		cmp    $0x6,%eax
 		jne    jump_d40d1
@@ -169096,7 +169096,7 @@ func_d417d:
 		mov    login_control__State,%al
 		cmp    $0x5,%eax
 		jne    jump_d48f5
-		testb  $0x8,unkn_flags_08
+		testb  $0x8,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_d48f5
 		xor    %edx,%edx
 		mov    EXPORT_SYMBOL(local_player_no),%dl
@@ -169625,7 +169625,7 @@ func_d4799:
 		mov    login_control__State,%al
 		cmp    $0x5,%eax
 		jne    jump_d48c9
-		testb  $0x8,unkn_flags_08
+		testb  $0x8,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_d48c9
 		xor    %edx,%edx
 		mov    EXPORT_SYMBOL(local_player_no),%dl
@@ -170195,7 +170195,7 @@ GLOBAL_FUNC(ASM_sell_equipment)	/* 0x0D4FDC */
 		xor    %esi,%esi
 		cmp    $0x5,%eax
 		jne    jump_d501c
-		testb  $0x8,unkn_flags_08
+		testb  $0x8,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_d501c
 		cmp    $0x6,%eax
 		jne    jump_d5002
@@ -170281,7 +170281,7 @@ func_d5090:
 		mov    login_control__State,%al
 		cmp    $0x5,%eax
 		jne    jump_d5175
-		testb  $0x8,unkn_flags_08
+		testb  $0x8,EXPORT_SYMBOL(net_game_play_flags)
 		je     jump_d5175
 		xor    %edx,%edx
 		mov    EXPORT_SYMBOL(local_player_no),%dl
@@ -183736,7 +183736,7 @@ data_1811c4:
 		.fill   0x1e
 GLOBAL (byte_1811E2)	/* 0x1811E2 */
 		.fill   0x10
-GLOBAL (unkn_flags_08)	/* 0x1811F2 */
+GLOBAL (net_game_play_flags)	/* 0x1811F2 */
 		.byte	0x0
 		.fill   0x4b1
 

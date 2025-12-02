@@ -356,7 +356,7 @@ ubyte do_equip_offer_buy_cybmod(ubyte click)
 
     if (nbought > 0)
     {
-        if ((login_control__State == LognCt_Unkn5) && ((unkn_flags_08 & 0x08) != 0)) {
+        if ((login_control__State == LognCt_Unkn5) && ((net_game_play_flags & NGPF_Unkn08) != 0)) {
             net_schedule_player_cryo_equip_sync();
         }
         selected_mod = -1;

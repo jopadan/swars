@@ -3826,7 +3826,7 @@ void init_variables(void)
     login_control__City = 19;
     login_control__State = LognCt_Unkn6;
     byte_181189 = 0;
-    unkn_flags_08 = 0x3C;
+    net_game_play_flags = NGPF_Unkn20 | NGPF_Unkn10 | NGPF_Unkn08 | NGPF_Unkn04;
     login_control__TechLevel = 4;
 }
 
@@ -5800,7 +5800,7 @@ void net_new_game_prepare(void)
     reset_world_screen_player_state();
     login_control__City = -1;
     ingame.Expenditure = 0;
-    unkn_flags_08 = 0x3C;
+    net_game_play_flags = NGPF_Unkn20 | NGPF_Unkn10 | NGPF_Unkn08 | NGPF_Unkn04;
     login_control__Money = starting_cash_amounts[4];
     init_agents();
     load_missions(background_type);

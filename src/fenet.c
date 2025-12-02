@@ -383,7 +383,7 @@ ubyte do_net_SET2(ubyte click)
     if (!net_local_player_hosts_the_game() || login_control__State != LognCt_Unkn5)
         return 0;
 
-    unkn_flags_08 |= 0x02;
+    net_game_play_flags |= NGPF_Unkn02;
     net_schedule_game_options_sync();
     return 1;
 }
@@ -399,7 +399,7 @@ ubyte do_net_SET(ubyte click)
     if (!net_local_player_hosts_the_game() || login_control__State != LognCt_Unkn5)
         return 0;
 
-    unkn_flags_08 |= 0x01;
+    net_game_play_flags |= NGPF_Unkn01;
     net_schedule_game_options_sync();
     return 1;
 }
@@ -764,7 +764,7 @@ void show_net_benefits_sub2(short x0, short y0, TbPixel *colours)
             if (lbDisplay.LeftButton)
             {
                 lbDisplay.LeftButton = 0;
-                if (net_local_player_hosts_the_game() && ((unkn_flags_08 & 0x02) == 0)
+                if (net_local_player_hosts_the_game() && ((net_game_play_flags & NGPF_Unkn02) == 0)
                   && (login_control__State == LognCt_Unkn5))
                     login_control__TechLevel = i + 1;
             }
@@ -799,7 +799,7 @@ void show_net_benefits_sub3(struct ScreenBox *box)
             if (mouse_down_over_box(&box1))
             {
                 lbDisplay.LeftButton = 0;
-                if (net_local_player_hosts_the_game() && ((unkn_flags_08 & 0x02) == 0)
+                if (net_local_player_hosts_the_game() && ((net_game_play_flags & NGPF_Unkn02) == 0)
                   && (login_control__State == LognCt_Unkn5))
                 {
                     login_control__TechLevel--;
@@ -825,7 +825,7 @@ void show_net_benefits_sub4(struct ScreenBox *box)
             if (mouse_down_over_box(&box2))
             {
                 lbDisplay.LeftButton = 0;
-                if (net_local_player_hosts_the_game() && ((unkn_flags_08 & 0x02) == 0)
+                if (net_local_player_hosts_the_game() && ((net_game_play_flags & NGPF_Unkn02) == 0)
                     && (login_control__State == LognCt_Unkn5))
                 {
                     login_control__TechLevel++;
@@ -907,7 +907,7 @@ void show_net_benefits_sub5(short x0, short y0, TbPixel *colours)
             if (lbDisplay.LeftButton)
             {
                 lbDisplay.LeftButton = 0;
-                if (net_local_player_hosts_the_game() && ((unkn_flags_08 & 0x01) == 0)
+                if (net_local_player_hosts_the_game() && ((net_game_play_flags & NGPF_Unkn01) == 0)
                   && (login_control__State == LognCt_Unkn5))
                 {
                     login_control__Money = starting_cash_amounts[i];
@@ -945,7 +945,7 @@ void show_net_benefits_sub6(struct ScreenBox *box)
             if (mouse_down_over_box(&box1))
             {
                 lbDisplay.LeftButton = 0;
-                if (net_local_player_hosts_the_game() && ((unkn_flags_08 & 0x01) == 0)
+                if (net_local_player_hosts_the_game() && ((net_game_play_flags & NGPF_Unkn01) == 0)
                     && (login_control__State == LognCt_Unkn5))
                 {
                     reinit_starting_credits(-1);
@@ -971,7 +971,7 @@ void show_net_benefits_sub7(struct ScreenBox *box)
             if (mouse_down_over_box(&box2))
             {
                 lbDisplay.LeftButton = 0;
-                if (net_local_player_hosts_the_game() && ((unkn_flags_08 & 0x01) == 0)
+                if (net_local_player_hosts_the_game() && ((net_game_play_flags & NGPF_Unkn01) == 0)
                     && (login_control__State == LognCt_Unkn5))
                 {
                     reinit_starting_credits(1);
@@ -1360,7 +1360,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
         lbDisplay.DrawFlags |= (0x8000 | 0x0040);
 
         scr_y = 2;
-        if ((unkn_flags_08 & 0x04) != 0)
+        if ((net_game_play_flags & NGPF_Unkn04) != 0)
             text = gui_strings[479];
         else
             text = gui_strings[478];
@@ -1375,10 +1375,10 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                 if (lbDisplay.LeftButton)
                 {
                     lbDisplay.LeftButton = 0;
-                    if ((unkn_flags_08 & 0x0004) != 0)
-                        unkn_flags_08 &= ~0x0004;
+                    if ((net_game_play_flags & NGPF_Unkn04) != 0)
+                        net_game_play_flags &= ~NGPF_Unkn04;
                     else
-                        unkn_flags_08 |= 0x0004;
+                        net_game_play_flags |= NGPF_Unkn04;
                     net_schedule_game_options_sync();
                 }
             }
@@ -1386,7 +1386,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
 
         scr_y += tx_height + 4;
         lbDisplay.DrawFlags |= 0x8000u;
-        if ((unkn_flags_08 & 0x08) != 0)
+        if ((net_game_play_flags & NGPF_Unkn08) != 0)
             text = gui_strings[479];
         else
             text = gui_strings[478];
@@ -1401,10 +1401,10 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                 if (lbDisplay.LeftButton)
                 {
                     lbDisplay.LeftButton = 0;
-                    if ((unkn_flags_08 & 0x0008) != 0)
-                        unkn_flags_08 &= ~0x0008;
+                    if ((net_game_play_flags & NGPF_Unkn08) != 0)
+                        net_game_play_flags &= ~NGPF_Unkn08;
                     else
-                        unkn_flags_08 |= 0x0008;
+                        net_game_play_flags |= NGPF_Unkn08;
                     net_schedule_game_options_sync();
                 }
             }
@@ -1412,7 +1412,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
 
         scr_y += tx_height + 4;
         lbDisplay.DrawFlags |= 0x8000;
-        if ((unkn_flags_08 & 0x10) != 0)
+        if ((net_game_play_flags & NGPF_Unkn10) != 0)
             text = gui_strings[479];
         else
             text = gui_strings[478];
@@ -1427,10 +1427,10 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                 if (lbDisplay.LeftButton)
                 {
                     lbDisplay.LeftButton = 0;
-                    if ((unkn_flags_08 & 0x0010) != 0)
-                        unkn_flags_08 &= ~0x0010;
+                    if ((net_game_play_flags & NGPF_Unkn10) != 0)
+                        net_game_play_flags &= ~NGPF_Unkn10;
                     else
-                        unkn_flags_08 |= 0x0010;
+                        net_game_play_flags |= NGPF_Unkn10;
                     net_schedule_game_options_sync();
                 }
             }
@@ -1438,7 +1438,7 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
 
         scr_y += tx_height + 4;
         lbDisplay.DrawFlags |= 0x8000;
-        if ((unkn_flags_08 & 0x20) != 0)
+        if ((net_game_play_flags & NGPF_Unkn20) != 0)
             text = gui_strings[479];
         else
             text = gui_strings[478];
@@ -1453,10 +1453,10 @@ ubyte show_net_protocol_box(struct ScreenBox *p_box)
                 if (lbDisplay.LeftButton)
                 {
                     lbDisplay.LeftButton = 0;
-                    if ((unkn_flags_08 & 0x0020) != 0)
-                        unkn_flags_08 &= ~0x0020;
+                    if ((net_game_play_flags & NGPF_Unkn20) != 0)
+                        net_game_play_flags &= ~NGPF_Unkn20;
                     else
-                        unkn_flags_08 |= 0x0020;
+                        net_game_play_flags |= NGPF_Unkn20;
                     net_schedule_game_options_sync();
                 }
             }

@@ -348,13 +348,13 @@ void net_player_copy_to_progress_packet(struct NetworkPlayer *p_netplyr)
 
     plyr = net_host_player_no;
     p_netplyr->U.Progress.SelectedCity = login_control__City;
-    if (((gameturn & 1) == 0) && ((unkn_flags_08 & 0x08) != 0))
+    if (((gameturn & 1) == 0) && ((net_game_play_flags & NGPF_Unkn08) != 0))
         p_netplyr->U.Progress.Credits = -ingame.Credits;
     else
         p_netplyr->U.Progress.Credits = login_control__Money;
 
     p_netplyr->U.Progress.TechLevel = login_control__TechLevel;
-    p_netplyr->U.Progress.val_flags_08 = unkn_flags_08;
+    p_netplyr->U.Progress.val_flags_08 = net_game_play_flags;
     p_netplyr->U.Progress.val_181189 = byte_181189;
     p_netplyr->U.Progress.val_181183 = byte_181183;
     p_netplyr->U.Progress.val_15516D = byte_15516D;
@@ -378,14 +378,14 @@ void net_player_update_from_progress_packet(int plyr)
     byte_1C5C28[plyr] = p_netplyr->U.Progress.val_181189;
     if (net_host_player_no == plyr)
     {
-        if ((unkn_flags_08 & 0x02) == 0)
+        if ((net_game_play_flags & NGPF_Unkn02) == 0)
             login_control__TechLevel = p_netplyr->U.Progress.TechLevel;
-        if ((unkn_flags_08 & 0x01) == 0) {
+        if ((net_game_play_flags & NGPF_Unkn01) == 0) {
             login_control__Money = abs(p_netplyr->U.Progress.Credits);
             ingame.Credits = login_control__Money;
             ingame.CashAtStart = login_control__Money;
         }
-        if ((unkn_flags_08 & 0x08) != 0)
+        if ((net_game_play_flags & NGPF_Unkn08) != 0)
         {
             long credits;
 
@@ -413,7 +413,7 @@ void net_player_update_from_progress_packet_hostonly(void)
 
     p_netplyr = &network_players[net_host_player_no];
     login_control__TechLevel = p_netplyr->U.Progress.TechLevel;
-    unkn_flags_08 = p_netplyr->U.Progress.val_flags_08;
+    net_game_play_flags = p_netplyr->U.Progress.val_flags_08;
     login_control__City = p_netplyr->U.Progress.SelectedCity;
     ingame.Expenditure = p_netplyr->U.Progress.Expenditure;
     login_control__Money = abs(p_netplyr->U.Progress.Credits);
@@ -508,7 +508,7 @@ void net_player_action_execute(int plyr, int netplyr)
         break;
     case NPAct_SetGameOptions:
         refresh_equip_list = 1;
-        unkn_flags_08 = p_netplyr->U.Progress.val_flags_08;
+        net_game_play_flags = p_netplyr->U.Progress.val_flags_08;
         break;
     case NPAct_SetCity:
         login_control__City = p_netplyr->U.Progress.SelectedCity;
@@ -601,7 +601,7 @@ void net_player_action_execute(int plyr, int netplyr)
         }
         break;
     case NPAct_PlyrWeapModsSync:
-        if ((net_host_player_no == plyr) && ((unkn_flags_08 & 0x08) != 0))
+        if ((net_host_player_no == plyr) && ((net_game_play_flags & NGPF_Unkn08) != 0))
         {
             for (i = 0; i < PLAYERS_LIMIT; i++)
             {
@@ -616,7 +616,7 @@ void net_player_action_execute(int plyr, int netplyr)
                 set_mod_draw_states_flag08();
             }
         }
-        else if ((unkn_flags_08 & 0x08) == 0)
+        else if ((net_game_play_flags & NGPF_Unkn08) == 0)
         {
             for (i = 0; i != 4; i++) {
                 players[plyr].Weapons[i] = p_netplyr->U.WepMod.Weapons[i];
@@ -625,7 +625,7 @@ void net_player_action_execute(int plyr, int netplyr)
         }
         break;
     case NPAct_PlyrFourPackSync:
-        if ((net_host_player_no == plyr) && ((unkn_flags_08 & 0x08) != 0))
+        if ((net_host_player_no == plyr) && ((net_game_play_flags & NGPF_Unkn08) != 0))
         {
             for (i = 0; i < PLAYERS_LIMIT; i++)
             {
@@ -635,7 +635,7 @@ void net_player_action_execute(int plyr, int netplyr)
             }
             agents_copy_fourpacks_netplayer_to_cryo(p_netplyr);
         }
-        else if ((unkn_flags_08 & 0x08) == 0)
+        else if ((net_game_play_flags & NGPF_Unkn08) == 0)
         {
             agents_copy_fourpacks_netplayer_to_player(plyr, p_netplyr);
         }
