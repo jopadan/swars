@@ -312,7 +312,7 @@ void agents_copy_wepmod_cryo_to_netplayer(struct NetworkPlayer *p_netplyr)
 {
     short plagent;
 
-    for (plagent = 0; plagent < 4; plagent++)
+    for (plagent = 0; plagent < AGENTS_SQUAD_MAX_COUNT; plagent++)
     {
         p_netplyr->U.WepMod.Weapons[plagent] = cryo_agents.Weapons[plagent];
         p_netplyr->U.WepMod.Mods[plagent] = cryo_agents.Mods[plagent];
@@ -323,7 +323,7 @@ void agents_copy_wepmod_netplayer_to_player(int plyr, struct NetworkPlayer *p_ne
 {
     short plagent;
 
-    for (plagent = 0; plagent < 4; plagent++)
+    for (plagent = 0; plagent < AGENTS_SQUAD_MAX_COUNT; plagent++)
     {
         players[plyr].Weapons[plagent] = p_netplyr->U.WepMod.Weapons[plagent];
         players[plyr].Mods[plagent] = p_netplyr->U.WepMod.Mods[plagent];
@@ -334,7 +334,7 @@ void agents_copy_wepmod_netplayer_to_cryo(struct NetworkPlayer *p_netplyr)
 {
     short plagent;
 
-    for (plagent = 0; plagent < 4; plagent++)
+    for (plagent = 0; plagent < AGENTS_SQUAD_MAX_COUNT; plagent++)
     {
         cryo_agents.Weapons[plagent] = p_netplyr->U.WepMod.Weapons[plagent];
         cryo_agents.Mods[plagent] = p_netplyr->U.WepMod.Mods[plagent];
@@ -601,7 +601,12 @@ void net_player_action_execute(int plyr, int netplyr)
         }
         break;
     case NPAct_PlyrWeapModsSync:
-        if ((net_host_player_no == plyr) && ((net_game_play_flags & NGPF_Unkn08) != 0))
+        if (!in_network_game)
+        {
+            agents_copy_wepmod_netplayer_to_player(plyr, p_netplyr);
+            agents_copy_wepmod_netplayer_to_cryo(p_netplyr);
+        }
+        else if ((net_host_player_no == plyr) && ((net_game_play_flags & NGPF_Unkn08) != 0))
         {
             for (i = 0; i < PLAYERS_LIMIT; i++)
             {
@@ -618,14 +623,16 @@ void net_player_action_execute(int plyr, int netplyr)
         }
         else if ((net_game_play_flags & NGPF_Unkn08) == 0)
         {
-            for (i = 0; i != 4; i++) {
-                players[plyr].Weapons[i] = p_netplyr->U.WepMod.Weapons[i];
-                players[plyr].Mods[i] = p_netplyr->U.WepMod.Mods[i];
-            }
+            agents_copy_wepmod_netplayer_to_player(plyr, p_netplyr);
         }
         break;
     case NPAct_PlyrFourPackSync:
-        if ((net_host_player_no == plyr) && ((net_game_play_flags & NGPF_Unkn08) != 0))
+        if (!in_network_game)
+        {
+            agents_copy_fourpacks_netplayer_to_player(plyr, p_netplyr);
+            agents_copy_fourpacks_netplayer_to_cryo(p_netplyr);
+        }
+        else if ((net_host_player_no == plyr) && ((net_game_play_flags & NGPF_Unkn08) != 0))
         {
             for (i = 0; i < PLAYERS_LIMIT; i++)
             {
