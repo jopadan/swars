@@ -2589,7 +2589,7 @@ ubyte check_panel_input(short panel)
         case PanT_AgentMedi:
             // Use medikit
             p_agent = p_locplayer->MyAgent[p_panel->ID];
-            if ((p_agent->Type != TT_PERSON) || !person_carries_any_medikit(p_agent->ThingOffset)) {
+            if ((p_agent->Type != TT_PERSON) || !person_can_use_medikit(p_agent->ThingOffset)) {
                 break;
             }
             my_build_packet(p_pckt, PAct_AGENT_USE_MEDIKIT, p_agent->ThingOffset, 0, 0, 0);
@@ -2600,18 +2600,11 @@ ubyte check_panel_input(short panel)
             if (p_locplayer->DoubleMode && byte_153198 - 1 != mouser) {
                 break;
             }
-            if (p_locplayer->DoubleMode) {
-                break;
-            }
             dcthing = p_locplayer->DirectControl[mouser];
-            if ((things[dcthing].Flag & TngF_Destroyed) != 0) {
+            if (!person_can_toggle_supershield(dcthing)) {
                 break;
             }
-            p_agent = p_locplayer->MyAgent[p_panel->ID];
-            if (p_agent->Type != TT_PERSON) {
-                break;
-            }
-            build_packet(p_pckt, PAct_SHIELD_TOGGLE, dcthing, p_agent->ThingOffset, 0, 0);
+            build_packet(p_pckt, PAct_SHIELD_TOGGLE, dcthing, 0, 0, 0);
             p_locplayer->UserInput[mouser].ControlMode |= UInpCtrF_Unkn8000;
             did_inp |= GINPUT_PACKET;
             return did_inp;

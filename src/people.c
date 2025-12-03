@@ -595,6 +595,13 @@ TbBool person_can_accept_control(ThingIdx person)
       && !thing_is_destroyed(person);
 }
 
+TbBool person_can_use_medikit(ThingIdx person)
+{
+    if (!person_carries_any_medikit(person))
+        return false;
+    return true;
+}
+
 void person_give_best_mods(struct Thing *p_person)
 {
     set_person_mod_brain_level(p_person, 3);
@@ -787,7 +794,7 @@ void person_start_executing_commands(struct Thing *p_person)
     ingame.Flags |= GamF_Unkn0100;
 }
 
-short person_slot_as_player_agent(struct Thing *p_person, ushort plyr)
+short person_slot_as_player_agent(struct Thing *p_person, PlayerIdx plyr)
 {
     PlayerInfo *p_player;
     struct Thing *p_agent;
@@ -806,7 +813,7 @@ short person_slot_as_player_agent(struct Thing *p_person, ushort plyr)
     return -1;
 }
 
-TbBool person_is_player_agent_in_slot(struct Thing *p_person, ushort plyr, short plagent)
+TbBool person_is_player_agent_in_slot(struct Thing *p_person, PlayerIdx plyr, short plagent)
 {
     PlayerInfo *p_player;
     struct Thing *p_agent;
@@ -815,6 +822,52 @@ TbBool person_is_player_agent_in_slot(struct Thing *p_person, ushort plyr, short
     p_agent = p_player->MyAgent[0];
 
     return (p_person->ThingOffset == p_agent->ThingOffset);
+}
+
+TbBool person_has_slot_in_any_player_dcontrol(ThingIdx person)
+{
+    struct Thing *p_person;
+
+    if (person <= 0)
+        return false;
+
+    if (person_is_executing_commands(person))
+        return false;
+
+    p_person = &things[person];
+
+    return ((p_person->Flag & TngF_PlayerAgent) != 0);
+}
+
+short person_get_dcontrol_player(ThingIdx person)
+{
+    struct Thing *p_person;
+
+    if (!person_has_slot_in_any_player_dcontrol(person))
+        return -1;
+
+    p_person = &things[person];
+
+    return (p_person->U.UPerson.ComCur >> 2);
+}
+
+short person_slot_in_player_dcontrol(ThingIdx person, PlayerIdx plyr)
+{
+    struct Thing *p_person;
+    PlayerIdx pers_plyr;
+
+    if (!person_has_slot_in_any_player_dcontrol(person)) {
+        return -1;
+    }
+
+    p_person = &things[person];
+
+    pers_plyr = p_person->U.UPerson.ComCur >> 2;
+    if (pers_plyr != plyr) {
+        return -1;
+    }
+
+    return (p_person->U.UPerson.ComCur & 3);
 }
 
 ubyte person_sex(struct Thing *p_person)
@@ -3057,7 +3110,7 @@ void person_update_kill_stats(struct Thing *p_attacker, struct Thing *p_victim)
               attack_plyr = p_realowner->U.UPerson.ComCur >> 2;
               killed_mp_agent_add_to_stats(p_victim, attack_plyr);
           }
-      }
+        }
     }
     else
     {
@@ -4222,21 +4275,58 @@ void person_go_enter_vehicle(struct Thing *p_person, struct Thing *p_vehicle)
         : : "a" (p_person), "d" (p_vehicle));
 }
 
-void person_shield_toggle(struct Thing *p_person, PlayerIdx plyr)
+TbBool person_has_supershield_active(ThingIdx person)
 {
-#if 0
-    asm volatile (
-      "call ASM_person_shield_toggle\n"
-        : : "a" (p_person), "d" (plyr));
-#endif
+    struct Thing *p_person;
+
+    if (person <= 0)
+        return false;
+
+    p_person = &things[person];
+
+    if (p_person->Type != TT_PERSON)
+        return false;
+
+    return ((p_person->Flag & TngF_PersSupShld) != 0);
+}
+
+TbBool person_can_toggle_supershield(ThingIdx person)
+{
+    if (person_is_executing_commands(person))
+        return false;
+    // Restrict only enabling supershield; for disabling, it can be done almost always
+    if (!person_has_supershield_active(person))
+    {
+        short plyr; // stores PlayerIdx or -1
+
+        if (thing_is_destroyed(person))
+            return false;
+        plyr = person_get_dcontrol_player(person);
+        if (plyr >= 0)
+        {
+            PlayerInfo *p_player;
+
+            p_player = &players[plyr];
+            //TODO not sure why cannot enable supershield in DoubleMode; verify, maybe remove.
+            if (p_player->DoubleMode != 0)
+                return false;
+        }
+    }
+    return true;
+}
+
+void person_supershield_toggle(struct Thing *p_person)
+{
     if ((p_person->Flag & TngF_PersSupShld) != 0)
     {
         p_person->Flag &= ~(TngF_Unkn00200000|TngF_PersSupShld);
     }
     else
     {
+        short plagent;
         p_person->Flag |= (TngF_Unkn00200000|TngF_PersSupShld);
-        if (plyr == local_player_no)
+        plagent = person_slot_in_player_dcontrol(p_person->ThingOffset, local_player_no);
+        if (plagent >= 0)
             play_sample_using_heap(0, 96, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 3);
     }
 }

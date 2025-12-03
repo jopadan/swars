@@ -262,9 +262,27 @@ TbBool person_carries_any_medikit(ThingIdx person);
 
 TbBool person_can_accept_control(ThingIdx person);
 
+TbBool person_can_use_medikit(ThingIdx person);
+
+TbBool person_has_supershield_active(ThingIdx person);
+TbBool person_can_toggle_supershield(ThingIdx person);
+void person_supershield_toggle(struct Thing *p_person);
+
 /** Returns slot at which given person is in given players agents, or -1.
  */
-short person_slot_as_player_agent(struct Thing *p_person, ushort plyr);
+short person_slot_as_player_agent(struct Thing *p_person, PlayerIdx plyr);
+
+/** Returns if the person contains a link to players direct control slot in ComCur field.
+ */
+TbBool person_has_slot_in_any_player_dcontrol(ThingIdx person);
+
+/** Returns player for which given person is in direct control list, or -1.
+ */
+short person_get_dcontrol_player(ThingIdx person);
+
+/** Returns slot at which given person is in given players direct control list, or -1.
+ */
+short person_slot_in_player_dcontrol(ThingIdx person, PlayerIdx plyr);
 
 /** Returns sex of a person, either PERSON_MALE or PERSON_FEMALE.
  */
@@ -372,7 +390,6 @@ ubyte thing_deselect_weapon(struct Thing *p_person);
 void person_go_enter_vehicle_fast(struct Thing *p_person, struct Thing *p_vehicle, ushort plyr);
 void person_go_enter_vehicle(struct Thing *p_person, struct Thing *p_vehicle);
 void person_init_follow_person(struct Thing *p_person, struct Thing *p_other);
-void person_shield_toggle(struct Thing *p_person, PlayerIdx plyr);
 void person_self_destruct(struct Thing *p_person);
 
 struct Thing *new_sim_person(int x, int y, int z, ubyte subtype);

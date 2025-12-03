@@ -4937,12 +4937,34 @@ ubyte weapon_select_input(void)
     if (is_gamekey_pressed(GKey_USE_MEDIKIT))
     {
         clear_gamekey_pressed(GKey_USE_MEDIKIT);
-        if (person_carries_any_medikit(dcthing))
+        if (person_can_use_medikit(dcthing))
         {
             my_build_packet(p_pckt, PAct_AGENT_USE_MEDIKIT, dcthing, 0, 0, 0);
             return GINPUT_PACKET;
         }
     }
+
+#ifdef MORE_GAME_KEYS
+    if (is_gamekey_pressed(GKey_SUPERSHIELD))
+    {
+        clear_gamekey_pressed(GKey_SUPERSHIELD);
+        if (person_can_toggle_supershield(dcthing))
+        {
+            my_build_packet(p_pckt, PAct_SHIELD_TOGGLE, dcthing, 0, 0, 0);
+            return GINPUT_PACKET;
+        }
+    }
+
+    if (is_gamekey_pressed(GKey_VIEW_THERMAL))
+    {
+        clear_gamekey_pressed(GKey_VIEW_THERMAL);
+        if (person_can_toggle_thermal(dcthing))
+        {
+            my_build_packet(p_pckt, PAct_THERMAL_TOGGLE, dcthing, 0, 0, 0);
+            return GINPUT_PACKET;
+        }
+    }
+#endif
 
     assert(sizeof(sel_weapon_gkeys)/sizeof(sel_weapon_gkeys[0]) <= WEAPONS_CARRIED_MAX_COUNT);
 
@@ -5608,7 +5630,7 @@ ubyte do_user_interface(void)
         }
     }
 
-    if (ingame.Flags & GamF_Unkn0100)
+    if ((ingame.Flags & GamF_Unkn0100) != 0)
     {
         short dcthing;
         dcthing = p_locplayer->DirectControl[0];

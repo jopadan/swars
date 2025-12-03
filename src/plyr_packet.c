@@ -1144,11 +1144,11 @@ void process_packet(PlayerIdx plyr, struct Packet *p_pckt, ushort i)
             result = PARes_EBADSLT;
             break;
         }
-        if ((p_thing->Flag2 & TgF2_Unkn0800) != 0) {
+        if (!person_can_toggle_supershield(p_thing->ThingOffset)) {
             result = PARes_TNGBADST;
             break;
         }
-        person_shield_toggle(p_thing, plyr);
+        person_supershield_toggle(p_thing);
         result = PARes_DONE;
         break;
     case PAct_PLANT_MINE_AT_GND_PT_FF:
@@ -1237,7 +1237,7 @@ void process_packet(PlayerIdx plyr, struct Packet *p_pckt, ushort i)
             result = PARes_EBADSLT;
             break;
         }
-        if (!person_carries_any_medikit(p_thing->ThingOffset)) {
+        if (!person_can_use_medikit(p_thing->ThingOffset)) {
             result = PARes_TNGBADST;
             break;
         }
@@ -1412,11 +1412,6 @@ void process_packet(PlayerIdx plyr, struct Packet *p_pckt, ushort i)
 
 void process_packets(void)
 {
-#if 0
-    asm volatile ("call ASM_process_packets\n"
-        :  :  : "eax" );
-    return;
-#endif
     ushort v53;
     PlayerIdx plyr;
 
