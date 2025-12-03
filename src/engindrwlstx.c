@@ -55,6 +55,7 @@
 #include "vehicle.h"
 /******************************************************************************/
 #define MAX_LIGHTS_AFFECTING_FACE 100
+#define SINGLE_TEXTURE_DIM 32
 
 extern ushort tnext_screen_point;
 extern ushort tnext_draw_item;
@@ -476,7 +477,8 @@ ushort floor_texture_index(struct SingleFloorTexture *p_sftex)
     return (p_sftex - game_textures);
 }
 
-void set_floor_texture_uv(ushort sftex, struct PolyPoint *p_pt1, struct PolyPoint *p_pt2, struct PolyPoint *p_pt3, struct PolyPoint *p_pt4, ubyte gflags)
+void set_floor_texture_uv(ushort sftex, struct PolyPoint *p_pt1, struct PolyPoint *p_pt2,
+  struct PolyPoint *p_pt3, struct PolyPoint *p_pt4, ubyte gflags)
 {
     struct SingleFloorTexture *p_sftex;
 
@@ -501,7 +503,8 @@ void set_floor_texture_uv(ushort sftex, struct PolyPoint *p_pt1, struct PolyPoin
 
 /** Set texture as active and put its UV coordinates into given points.
  */
-void set_face_texture_uv(ushort stex, struct PolyPoint *p_pt1, struct PolyPoint *p_pt2, struct PolyPoint *p_pt3, ubyte gflags)
+void set_face_texture_uv(ushort stex, struct PolyPoint *p_pt1,
+  struct PolyPoint *p_pt2, struct PolyPoint *p_pt3, ubyte gflags)
 {
     struct SingleTexture *p_stex;
 
@@ -529,124 +532,124 @@ void set_floor_tile_point_uv_map_a(struct PolyPoint *p_pt1, struct PolyPoint *p_
     switch (neighbrs)
     {
     case 1:
-        p_pt1->U = 0xA0 << 16;
-        p_pt1->V = 0x40 << 16;
-        p_pt2->U = 0xA0 << 16;
-        p_pt2->V = 0x5F << 16;
-        p_pt3->U = 0xBF << 16;
-        p_pt3->V = 0x40 << 16;
-        p_pt4->U = 0xBF << 16;
-        p_pt4->V = 0x5F << 16;
+        p_pt1->U = (SINGLE_TEXTURE_DIM * 5) << 16;
+        p_pt1->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt2->U = (SINGLE_TEXTURE_DIM * 5) << 16;
+        p_pt2->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt3->U = (SINGLE_TEXTURE_DIM * 6 - 1) << 16;
+        p_pt3->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt4->U = (SINGLE_TEXTURE_DIM * 6 - 1) << 16;
+        p_pt4->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
         break;
     case 2:
-        p_pt1->U = 0x9F << 16;
-        p_pt1->V = 0x40 << 16;
-        p_pt2->U = 0x9F << 16;
-        p_pt2->V = 0x5F << 16;
-        p_pt3->U = 0x80 << 16;
-        p_pt3->V = 0x40 << 16;
-        p_pt4->U = 0x80 << 16;
-        p_pt4->V = 0x5F << 16;
+        p_pt1->U = (SINGLE_TEXTURE_DIM * 5 - 1) << 16;
+        p_pt1->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt2->U = (SINGLE_TEXTURE_DIM * 5 - 1) << 16;
+        p_pt2->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt3->U = (SINGLE_TEXTURE_DIM * 4) << 16;
+        p_pt3->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt4->U = (SINGLE_TEXTURE_DIM * 4) << 16;
+        p_pt4->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
         break;
     case 3:
-        p_pt1->U = 0xDF << 16;
-        p_pt1->V = 0x40 << 16;
-        p_pt2->U = 0xDF << 16;
-        p_pt2->V = 0x5F << 16;
-        p_pt3->U = 0xC0 << 16;
-        p_pt3->V = 0x40 << 16;
-        p_pt4->U = 0xC0 << 16;
-        p_pt4->V = 0x5F << 16;
+        p_pt1->U = (SINGLE_TEXTURE_DIM * 7 - 1) << 16;
+        p_pt1->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt2->U = (SINGLE_TEXTURE_DIM * 7 - 1) << 16;
+        p_pt2->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt3->U = (SINGLE_TEXTURE_DIM * 6) << 16;
+        p_pt3->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt4->U = (SINGLE_TEXTURE_DIM * 6) << 16;
+        p_pt4->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
         break;
     case 4:
-        p_pt1->U = 0xA0 << 16;
-        p_pt1->V = 0x5F << 16;
-        p_pt2->U = 0xBF << 16;
-        p_pt2->V = 0x5F << 16;
-        p_pt3->U = 0xA0 << 16;
-        p_pt3->V = 0x40 << 16;
-        p_pt4->U = 0xBF << 16;
-        p_pt4->V = 0x40 << 16;
+        p_pt1->U = (SINGLE_TEXTURE_DIM * 5) << 16;
+        p_pt1->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt2->U = (SINGLE_TEXTURE_DIM * 6 - 1) << 16;
+        p_pt2->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt3->U = (SINGLE_TEXTURE_DIM * 5) << 16;
+        p_pt3->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt4->U = (SINGLE_TEXTURE_DIM * 6 - 1) << 16;
+        p_pt4->V = (SINGLE_TEXTURE_DIM * 2) << 16;
         break;
     case 5:
-        p_pt1->U = 0x9F << 16;
-        p_pt1->V = 0x5F << 16;
-        p_pt2->U = 0x9F << 16;
-        p_pt2->V = 0x40 << 16;
-        p_pt3->U = 0x80 << 16;
-        p_pt3->V = 0x5F << 16;
-        p_pt4->U = 0x80 << 16;
-        p_pt4->V = 0x40 << 16;
+        p_pt1->U = (SINGLE_TEXTURE_DIM * 5 - 1) << 16;
+        p_pt1->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt2->U = (SINGLE_TEXTURE_DIM * 5 - 1) << 16;
+        p_pt2->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt3->U = (SINGLE_TEXTURE_DIM * 4) << 16;
+        p_pt3->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt4->U = (SINGLE_TEXTURE_DIM * 4) << 16;
+        p_pt4->V = (SINGLE_TEXTURE_DIM * 2) << 16;
         break;
     case 6:
-        p_pt1->U = 0xDF << 16;
-        p_pt1->V = 0x5F << 16;
-        p_pt2->U = 0xDF << 16;
-        p_pt2->V = 0x40 << 16;
-        p_pt3->U = 0xC0 << 16;
-        p_pt3->V = 0x5F << 16;
-        p_pt4->U = 0xC0 << 16;
-        p_pt4->V = 0x40 << 16;
+        p_pt1->U = (SINGLE_TEXTURE_DIM * 7 - 1) << 16;
+        p_pt1->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt2->U = (SINGLE_TEXTURE_DIM * 7 - 1) << 16;
+        p_pt2->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt3->U = (SINGLE_TEXTURE_DIM * 6) << 16;
+        p_pt3->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt4->U = (SINGLE_TEXTURE_DIM * 6) << 16;
+        p_pt4->V = (SINGLE_TEXTURE_DIM * 2) << 16;
         break;
     case 7:
-        p_pt1->U = 0xBF << 16;
-        p_pt1->V = 0x5F << 16;
-        p_pt2->U = 0xBF << 16;
-        p_pt2->V = 0x40 << 16;
-        p_pt3->U = 0xA0 << 16;
-        p_pt3->V = 0x5F << 16;
-        p_pt4->U = 0xA0 << 16;
-        p_pt4->V = 0x40 << 16;
+        p_pt1->U = (SINGLE_TEXTURE_DIM * 6 - 1) << 16;
+        p_pt1->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt2->U = (SINGLE_TEXTURE_DIM * 6 - 1) << 16;
+        p_pt2->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt3->U = (SINGLE_TEXTURE_DIM * 5) << 16;
+        p_pt3->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt4->U = (SINGLE_TEXTURE_DIM * 5) << 16;
+        p_pt4->V = (SINGLE_TEXTURE_DIM * 2) << 16;
         break;
     case 8:
-        p_pt1->U = 0x80 << 16;
-        p_pt1->V = 0x5F << 16;
-        p_pt2->U = 0x80 << 16;
-        p_pt2->V = 0x40 << 16;
-        p_pt3->U = 0x9F << 16;
-        p_pt3->V = 0x5F << 16;
-        p_pt4->U = 0x9F << 16;
-        p_pt4->V = 0x40 << 16;
+        p_pt1->U = (SINGLE_TEXTURE_DIM * 4) << 16;
+        p_pt1->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt2->U = (SINGLE_TEXTURE_DIM * 4) << 16;
+        p_pt2->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt3->U = (SINGLE_TEXTURE_DIM * 5 - 1) << 16;
+        p_pt3->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt4->U = (SINGLE_TEXTURE_DIM * 5 - 1) << 16;
+        p_pt4->V = (SINGLE_TEXTURE_DIM * 2) << 16;
         break;
     case 9:
-        p_pt1->U = 0xC0 << 16;
-        p_pt1->V = 0x5F << 16;
-        p_pt2->U = 0xC0 << 16;
-        p_pt2->V = 0x40 << 16;
-        p_pt3->U = 0xDF << 16;
-        p_pt3->V = 0x5F << 16;
-        p_pt4->U = 0xDF << 16;
-        p_pt4->V = 0x40 << 16;
+        p_pt1->U = (SINGLE_TEXTURE_DIM * 6) << 16;
+        p_pt1->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt2->U = (SINGLE_TEXTURE_DIM * 6) << 16;
+        p_pt2->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt3->U = (SINGLE_TEXTURE_DIM * 7 - 1) << 16;
+        p_pt3->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt4->U = (SINGLE_TEXTURE_DIM * 7 - 1) << 16;
+        p_pt4->V = (SINGLE_TEXTURE_DIM * 2) << 16;
         break;
     case 10:
-        p_pt1->U = 0xBF << 16;
-        p_pt1->V = 0x40 << 16;
-        p_pt2->U = 0xA0 << 16;
-        p_pt2->V = 0x40 << 16;
-        p_pt3->U = 0xBF << 16;
-        p_pt3->V = 0x5F << 16;
-        p_pt4->U = 0xA0 << 16;
-        p_pt4->V = 0x5F << 16;
+        p_pt1->U = (SINGLE_TEXTURE_DIM * 6 - 1) << 16;
+        p_pt1->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt2->U = (SINGLE_TEXTURE_DIM * 5) << 16;
+        p_pt2->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt3->U = (SINGLE_TEXTURE_DIM * 6 - 1) << 16;
+        p_pt3->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt4->U = (SINGLE_TEXTURE_DIM * 5) << 16;
+        p_pt4->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
         break;
     case 11:
-        p_pt1->U = 0x80 << 16;
-        p_pt1->V = 0x40 << 16;
-        p_pt2->U = 0x80 << 16;
-        p_pt2->V = 0x5F << 16;
-        p_pt3->U = 0x9F << 16;
-        p_pt3->V = 0x40 << 16;
-        p_pt4->U = 0x9F << 16;
-        p_pt4->V = 0x5F << 16;
+        p_pt1->U = (SINGLE_TEXTURE_DIM * 4) << 16;
+        p_pt1->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt2->U = (SINGLE_TEXTURE_DIM * 4) << 16;
+        p_pt2->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt3->U = (SINGLE_TEXTURE_DIM * 5 - 1) << 16;
+        p_pt3->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt4->U = (SINGLE_TEXTURE_DIM * 5 - 1) << 16;
+        p_pt4->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
         break;
     case 12:
-        p_pt1->U = 0xC0 << 16;
-        p_pt1->V = 0x40 << 16;
-        p_pt2->U = 0xC0 << 16;
-        p_pt2->V = 0x5F << 16;
-        p_pt3->U = 0xDF << 16;
-        p_pt3->V = 0x40 << 16;
-        p_pt4->U = 0xDF << 16;
-        p_pt4->V = 0x5F << 16;
+        p_pt1->U = (SINGLE_TEXTURE_DIM * 6) << 16;
+        p_pt1->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt2->U = (SINGLE_TEXTURE_DIM * 6) << 16;
+        p_pt2->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
+        p_pt3->U = (SINGLE_TEXTURE_DIM * 7 - 1) << 16;
+        p_pt3->V = (SINGLE_TEXTURE_DIM * 2) << 16;
+        p_pt4->U = (SINGLE_TEXTURE_DIM * 7 - 1) << 16;
+        p_pt4->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
         break;
     }
 }
