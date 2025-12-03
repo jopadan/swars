@@ -1270,7 +1270,7 @@ void show_weapon_slot(short scr_x, short scr_y, WeaponType wtype)
 
     lbDisplay.DrawColour = 174;
     lbDisplay.DrawFlags = 0x8000 | Lb_TEXT_ONE_COLOR;
-    draw_sprite_purple_list(scr_x, scr_y, &unk1_sprites[wtype - 1 + 1]);
+    draw_sprite_purple_list(scr_x, scr_y, &wepicons_sprites[wtype - 1 + 1]);
     lbDisplay.DrawFlags &= ~0x8000;
 
     fp = weapon_fourpack_index(wtype);
@@ -1312,12 +1312,6 @@ void show_weapon_slot(short scr_x, short scr_y, WeaponType wtype)
 
 ubyte show_weapon_slots(struct ScreenBox *p_box)
 {
-#if 0
-    ubyte ret;
-    asm volatile ("call ASM_show_weapon_slots\n"
-        : "=r" (ret) : "a" (p_box));
-    return ret;
-#endif
     short scr_x, scr_y;
     short slot;
     WeaponType wtype;

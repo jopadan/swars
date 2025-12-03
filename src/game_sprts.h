@@ -63,9 +63,9 @@ extern struct TbSprite *fe_icons_sprites;
 extern struct TbSprite *fe_icons_sprites_end;
 extern ubyte *fe_icons_sprites_data;
 
-extern struct TbSprite *unk1_sprites;
-extern struct TbSprite *unk1_sprites_end;
-extern ubyte *unk1_sprites_data;
+extern struct TbSprite *wepicons_sprites;
+extern struct TbSprite *wepicons_sprites_end;
+extern ubyte *wepicons_sprites_data;
 
 extern struct TbSprite *fe_mouseptr_sprites;
 extern struct TbSprite *fe_mouseptr_sprites_end;
@@ -111,12 +111,12 @@ void reset_mouse_pointers(void);
 
 TbResult load_sprites_fe_icons(ubyte **pp_buf,
   const char *dir, short styleno, short max_detail);
-void setup_sprites_icons(void);
-void reset_sprites_icons(void);
+void setup_sprites_fe_icons(void);
+void reset_sprites_fe_icons(void);
 
-TbResult load_sprites_wicons(ubyte **pp_buf, const char *dir);
-void setup_sprites_wicons(void);
-void reset_sprites_wicons(void);
+TbResult load_sprites_wepicons(ubyte **pp_buf, const char *dir);
+void setup_sprites_wepicons(void);
+void reset_sprites_wepicons(void);
 
 /** Loads panel sprites for frontend menu use.
  *

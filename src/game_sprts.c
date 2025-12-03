@@ -196,17 +196,17 @@ TbResult load_sprites_fe_icons(ubyte **pp_buf,
     return ret;
 }
 
-void setup_sprites_icons(void)
+void setup_sprites_fe_icons(void)
 {
     LbSpriteSetup(fe_icons_sprites, fe_icons_sprites_end, fe_icons_sprites_data);
 }
 
-void reset_sprites_icons(void)
+void reset_sprites_fe_icons(void)
 {
     LbSpriteReset(fe_icons_sprites, fe_icons_sprites_end, fe_icons_sprites_data);
 }
 
-TbResult load_sprites_wicons(ubyte **pp_buf, const char *dir)
+TbResult load_sprites_wepicons(ubyte **pp_buf, const char *dir)
 {
     char locstr[DISKPATH_SIZE];
     ubyte *p_buf;
@@ -216,7 +216,8 @@ TbResult load_sprites_wicons(ubyte **pp_buf, const char *dir)
     p_buf = *pp_buf;
     ret = Lb_OK;
 
-    unk1_sprites_data = p_buf;
+    wepicons_sprites_data = p_buf;
+    //TODO replace with "wepicon0-3.dat"
     sprintf(locstr, "%s/w-icons.dat", dir);
     len = LbFileLoadAt(locstr, p_buf);
     if (len == -1) {
@@ -224,7 +225,7 @@ TbResult load_sprites_wicons(ubyte **pp_buf, const char *dir)
         len = 0;
     }
     p_buf += len;
-    unk1_sprites = (struct TbSprite *)p_buf;
+    wepicons_sprites = (struct TbSprite *)p_buf;
     sprintf(locstr, "%s/w-icons.tab", dir);
     len = LbFileLoadAt(locstr, p_buf);
     if (len == -1) {
@@ -233,20 +234,20 @@ TbResult load_sprites_wicons(ubyte **pp_buf, const char *dir)
         LbMemorySet(p_buf, '\0', len);
     }
     p_buf += len;
-    unk1_sprites_end = (struct TbSprite *)p_buf;
+    wepicons_sprites_end = (struct TbSprite *)p_buf;
 
     *pp_buf = p_buf;
     return ret;
 }
 
-void setup_sprites_wicons(void)
+void setup_sprites_wepicons(void)
 {
-    LbSpriteSetup(unk1_sprites, unk1_sprites_end, unk1_sprites_data);
+    LbSpriteSetup(wepicons_sprites, wepicons_sprites_end, wepicons_sprites_data);
 }
 
-void reset_sprites_wicons(void)
+void reset_sprites_wepicons(void)
 {
-    LbSpriteReset(unk1_sprites, unk1_sprites_end, unk1_sprites_data);
+    LbSpriteReset(wepicons_sprites, wepicons_sprites_end, wepicons_sprites_data);
 }
 
 TbResult load_sprites_fe_mouse_pointers(ubyte **pp_buf,

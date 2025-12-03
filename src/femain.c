@@ -1180,7 +1180,7 @@ TbResult load_all_sprites_purple_mode(void)
 
     pinfo = &game_dirs[DirPlace_Data];
 
-    ret = load_sprites_wicons(&p_buf, pinfo->directory);
+    ret = load_sprites_wepicons(&p_buf, pinfo->directory);
     if (tret == Lb_OK)
         tret = ret;
 
@@ -1229,8 +1229,8 @@ TbResult load_all_sprites_purple_mode(void)
     p_buf += cryo_cyborg_part_buf_max_size();
     back_buffer = p_buf;
 
-    setup_sprites_icons();
-    setup_sprites_wicons();
+    setup_sprites_fe_icons();
+    setup_sprites_wepicons();
     setup_sprites_fepanel();
     setup_sprites_fe_mouse_pointers();
     setup_sprites_small_font();
