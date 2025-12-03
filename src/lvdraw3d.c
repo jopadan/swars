@@ -746,6 +746,7 @@ void func_2e440(void)
 
     lvdraw_do_floor_flyby(cor_z_beg, ranges_x_len, smrang_x, ranges_x);
 
+    assert(vec_tmap[1] != NULL);
     vec_map = vec_tmap[1];
 
     draw_screen();

@@ -18,6 +18,7 @@
 /******************************************************************************/
 #include "enginshadws.h"
 
+#include <assert.h>
 #include <string.h>
 #include "bfmath.h"
 
@@ -131,6 +132,7 @@ void draw_person_shadow(ushort face)
 
     p_thing = game_sort_sprites[face].PThing;
     vec_mode = 10;
+    assert(vec_tmap[ingame.LastTmap] != NULL);
     vec_map = vec_tmap[ingame.LastTmap];
 
     fr = p_thing->Frame - nstart_ani[p_thing->StartFrame + 1 + p_thing->U.UObject.Angle];
