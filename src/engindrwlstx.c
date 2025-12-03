@@ -372,7 +372,8 @@ void reset_drawlist(void)
     dword_176CC4 = 0;
 }
 
-int calculate_enginepoint_shade_1(struct PolyPoint *p_pt1, struct SingleObjectFace3 *p_face, ushort pt2)
+int calculate_enginepoint_shade_1(struct PolyPoint *p_pt1,
+  struct SingleObjectFace3 *p_face, ushort pt2)
 {
 #if 0
     int ret;
@@ -405,7 +406,8 @@ int calculate_enginepoint_shade_1(struct PolyPoint *p_pt1, struct SingleObjectFa
     return p_pt1->S;
 }
 
-int calculate_enginepoint_shade_2(struct PolyPoint *p_pt1, struct SingleObjectFace4 *p_face4, ushort pt2)
+int calculate_enginepoint_shade_2(struct PolyPoint *p_pt1,
+  struct SingleObjectFace4 *p_face4, ushort pt2)
 {
 #if 0
     int ret;
@@ -527,8 +529,11 @@ void set_face_texture_uv(ushort stex, struct PolyPoint *p_pt1,
 
 /** Sets UV coordinates for damaged ground, given index with neighbors definitions.
  */
-void set_floor_tile_point_uv_map_a(struct PolyPoint *p_pt1, struct PolyPoint *p_pt2, struct PolyPoint *p_pt3, struct PolyPoint *p_pt4, ubyte neighbrs)
+void set_floor_texture_uv_damaged_ground(struct PolyPoint *p_pt1,
+  struct PolyPoint *p_pt2, struct PolyPoint *p_pt3, struct PolyPoint *p_pt4, ubyte neighbrs)
 {
+    vec_map = vec_tmap[4];
+
     switch (neighbrs)
     {
     case 1:
@@ -651,6 +656,96 @@ void set_floor_tile_point_uv_map_a(struct PolyPoint *p_pt1, struct PolyPoint *p_
         p_pt4->U = (SINGLE_TEXTURE_DIM * 7 - 1) << 16;
         p_pt4->V = (SINGLE_TEXTURE_DIM * 3 - 1) << 16;
         break;
+    }
+}
+
+void set_floor_texture_uv_shade3(ushort face, struct PolyPoint *p_pt1,
+  struct PolyPoint *p_pt2, struct PolyPoint *p_pt3)
+{
+    struct SingleObjectFace3 *p_face;
+
+    p_face = &game_object_faces[face];
+    assert(vec_tmap[4] != NULL);
+    vec_map = vec_tmap[4];
+    {
+        struct Normal *p_nrml;
+        sbyte texU, texV;
+
+        p_nrml = &game_normals[p_face->Shade0];
+        texU = p_nrml->LightRatio;
+        texV = p_nrml->LightRatio >> 8;
+        p_pt1->U = (texU + SINGLE_TEXTURE_DIM * 1) << 16;
+        p_pt1->V = (texV + SINGLE_TEXTURE_DIM * 4) << 16;
+    }
+    {
+        struct Normal *p_nrml;
+        sbyte texU, texV;
+
+        p_nrml = &game_normals[p_face->Shade1];
+        texU = p_nrml->LightRatio;
+        texV = p_nrml->LightRatio >> 8;
+        p_pt2->U = (texU + SINGLE_TEXTURE_DIM * 1) << 16;
+        p_pt2->V = (texV + SINGLE_TEXTURE_DIM * 4) << 16;
+    }
+    {
+        struct Normal *p_nrml;
+        sbyte texU, texV;
+
+        p_nrml = &game_normals[p_face->Shade2];
+        texU = p_nrml->LightRatio;
+        texV = p_nrml->LightRatio >> 8;
+        p_pt3->U = (texU + SINGLE_TEXTURE_DIM * 1) << 16;
+        p_pt3->V = (texV + SINGLE_TEXTURE_DIM * 4) << 16;
+    }
+}
+
+void set_floor_texture_uv_shade4(ushort face4, struct PolyPoint *p_pt1,
+  struct PolyPoint *p_pt2, struct PolyPoint *p_pt3, struct PolyPoint *p_pt4)
+{
+    struct SingleObjectFace4 *p_face4;
+
+    p_face4 = &game_object_faces4[face4];
+    assert(vec_tmap[4] != NULL);
+    vec_map = vec_tmap[4];
+    {
+        struct Normal *p_nrml;
+        sbyte texU, texV;
+
+        p_nrml = &game_normals[p_face4->Shade0];
+        texU = p_nrml->LightRatio;
+        texV = p_nrml->LightRatio >> 8;
+        p_pt1->U = (texU + SINGLE_TEXTURE_DIM * 1) << 16;
+        p_pt1->V = (texV + SINGLE_TEXTURE_DIM * 4) << 16;
+    }
+    {
+        struct Normal *p_nrml;
+        sbyte texU, texV;
+
+        p_nrml = &game_normals[p_face4->Shade1];
+        texU = p_nrml->LightRatio;
+        texV = p_nrml->LightRatio >> 8;
+        p_pt2->U = (texU + SINGLE_TEXTURE_DIM * 1) << 16;
+        p_pt2->V = (texV + SINGLE_TEXTURE_DIM * 4) << 16;
+    }
+    {
+        struct Normal *p_nrml;
+        sbyte texU, texV;
+
+        p_nrml = &game_normals[p_face4->Shade2];
+        texU = p_nrml->LightRatio;
+        texV = p_nrml->LightRatio >> 8;
+        p_pt3->U = (texU + SINGLE_TEXTURE_DIM * 1) << 16;
+        p_pt3->V = (texV + SINGLE_TEXTURE_DIM * 4) << 16;
+    }
+    {
+        struct Normal *p_nrml;
+        sbyte texU, texV;
+
+        p_nrml = &game_normals[p_face4->Shade3];
+        texU = p_nrml->LightRatio;
+        texV = p_nrml->LightRatio >> 8;
+        p_pt4->U = (texU + SINGLE_TEXTURE_DIM * 1) << 16;
+        p_pt4->V = (texV + SINGLE_TEXTURE_DIM * 4) << 16;
     }
 }
 
@@ -1199,9 +1294,8 @@ void draw_floor_tile1a(ushort tl)
     // damage overlays
     if ((p_floortl->Page > 0) && (p_floortl->Page <= 12))
     {
-        vec_map = vec_tmap[4];
         vec_mode = 6;
-        set_floor_tile_point_uv_map_a(&point1, &point2, &point3, &point4, p_floortl->Page);
+        set_floor_texture_uv_damaged_ground(&point1, &point2, &point3, &point4, p_floortl->Page);
         draw_trigpoly(&point1, &point2, &point3);
         if (vec_mode == 2)
             vec_mode = 27;
@@ -1281,9 +1375,8 @@ void draw_floor_tile1b(ushort tl)
     // damage overlays
     if ((p_floortl->Page > 0) && (p_floortl->Page <= 12))
     {
-        vec_map = vec_tmap[4];
         vec_mode = 6;
-        set_floor_tile_point_uv_map_a(&point1, &point2, &point3, &point4, p_floortl->Page);
+        set_floor_texture_uv_damaged_ground(&point1, &point2, &point3, &point4, p_floortl->Page);
         draw_trigpoly(&point1, &point2, &point4);
         if (vec_mode == 2)
             vec_mode = 27;
@@ -1293,9 +1386,8 @@ void draw_floor_tile1b(ushort tl)
     //TODO why the second time using the same page?
     if ((p_floortl->Page > 0) && (p_floortl->Page <= 12))
     {
-        vec_map = vec_tmap[4];
         vec_mode = 6;
-        set_floor_tile_point_uv_map_a(&point1, &point2, &point3, &point4, p_floortl->Page);
+        set_floor_texture_uv_damaged_ground(&point1, &point2, &point3, &point4, p_floortl->Page);
         draw_trigpoly(&point1, &point2, &point4);
         if (vec_mode == 2)
             vec_mode = 27;
@@ -2624,38 +2716,7 @@ void draw_object_face3_reflect(ushort face)
     p_face = &game_object_faces[face];
     vec_colour = p_face->ExCol;
     vec_mode = 27;
-    assert(vec_tmap[4] != NULL);
-    vec_map = vec_tmap[4];
-    {
-        struct Normal *p_nrml;
-        sbyte texU, texV;
-
-        p_nrml = &game_normals[p_face->Shade0];
-        texU = p_nrml->LightRatio;
-        texV = p_nrml->LightRatio >> 8;
-        point1.U = (texU + 32) << 16;
-        point1.V = (texV + 128) << 16;
-    }
-    {
-        struct Normal *p_nrml;
-        sbyte texU, texV;
-
-        p_nrml = &game_normals[p_face->Shade2];
-        texU = p_nrml->LightRatio;
-        texV = p_nrml->LightRatio >> 8;
-        point2.U = (texU + 32) << 16;
-        point2.V = (texV + 128) << 16;
-    }
-    {
-        struct Normal *p_nrml;
-        sbyte texU, texV;
-
-        p_nrml = &game_normals[p_face->Shade1];
-        texU = p_nrml->LightRatio;
-        texV = p_nrml->LightRatio >> 8;
-        point3.U = (texU + 32) << 16;
-        point3.V = (texV + 128) << 16;
-    }
+    set_floor_texture_uv_shade3(face, &point1, &point3, &point2);
 
     {
         struct SinglePoint *p_point;
@@ -2722,48 +2783,7 @@ void draw_object_face4_reflect(ushort face4)
     p_face4 = &game_object_faces4[face4];
     vec_colour = p_face4->ExCol;
     vec_mode = 27;
-    assert(vec_tmap[4] != NULL);
-    vec_map = vec_tmap[4];
-    {
-        struct Normal *p_nrml;
-        sbyte texU, texV;
-
-        p_nrml = &game_normals[p_face4->Shade0];
-        texU = p_nrml->LightRatio;
-        texV = p_nrml->LightRatio >> 8;
-        point1.U = (texU + 32) << 16;
-        point1.V = (texV + 128) << 16;
-    }
-    {
-        struct Normal *p_nrml;
-        sbyte texU, texV;
-
-        p_nrml = &game_normals[p_face4->Shade2];
-        texU = p_nrml->LightRatio;
-        texV = p_nrml->LightRatio >> 8;
-        point2.U = (texU + 32) << 16;
-        point2.V = (texV + 128) << 16;
-    }
-    {
-        struct Normal *p_nrml;
-        sbyte texU, texV;
-
-        p_nrml = &game_normals[p_face4->Shade1];
-        texU = p_nrml->LightRatio;
-        texV = p_nrml->LightRatio >> 8;
-        point3.U = (texU + 32) << 16;
-        point3.V = (texV + 128) << 16;
-    }
-    {
-        struct Normal *p_nrml;
-        sbyte texU, texV;
-
-        p_nrml = &game_normals[p_face4->Shade3];
-        texU = p_nrml->LightRatio;
-        texV = p_nrml->LightRatio >> 8;
-        point4.U = (texU + 32) << 16;
-        point4.V = (texV + 128) << 16;
-    }
+    set_floor_texture_uv_shade4(face4, &point1, &point3, &point2, &point4);
 
     {
         struct SinglePoint *p_point;

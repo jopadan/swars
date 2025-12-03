@@ -1842,12 +1842,12 @@ void build_polygon_circle_2d(int x1, int y1, int r1, int r2, int flag,
         ushort face;
 
         half_angl = angle - angle_detail;
-        cos_angl = lbSinTable[(half_angl & 0x7FF) + LbFPMath_PI/2];
-        sin_angl = lbSinTable[(half_angl & 0x7FF)];
+        cos_angl = lbSinTable[(half_angl & LbFPMath_AngleMask) + LbFPMath_PI/2];
+        sin_angl = lbSinTable[(half_angl & LbFPMath_AngleMask)];
         hlf_x = x1 + ((scrad1 * cos_angl) >> 16);
         hlf_y = y1 + ((scrad1 * sin_angl) >> 16);
-        cos_angl = lbSinTable[(angle & 0x7FF) + LbFPMath_PI/2];
-        sin_angl = lbSinTable[angle & 0x7FF];
+        cos_angl = lbSinTable[(angle & LbFPMath_AngleMask) + LbFPMath_PI/2];
+        sin_angl = lbSinTable[angle & LbFPMath_AngleMask];
         nxt_x = x1 + ((scrad1 * cos_angl) >> 16);
         nxt_y = y1 + ((scrad1 * sin_angl) >> 16);
 

@@ -284,7 +284,7 @@ void draw_vehicle_shadow(ushort veh, ushort sort)
 
     p_face4 = &game_special_object_faces4[face];
     p_face4->Flags = 10;
-    p_face4->GFlags = 1;
+    p_face4->GFlags = 0x01;
     p_face4->ExCol = 16;
     p_face4->PointNo[1] = pt + 1;
     p_face4->PointNo[2] = pt + 3;
