@@ -522,6 +522,135 @@ void set_face_texture_uv(ushort stex, struct PolyPoint *p_pt1, struct PolyPoint 
     p_pt3->V = p_stex->TMapY3 << 16;
 }
 
+/** Sets UV coordinates for damaged ground, given index with neighbors definitions.
+ */
+void set_floor_tile_point_uv_map_a(struct PolyPoint *p_pt1, struct PolyPoint *p_pt2, struct PolyPoint *p_pt3, struct PolyPoint *p_pt4, ubyte neighbrs)
+{
+    switch (neighbrs)
+    {
+    case 1:
+        p_pt1->U = 0xA0 << 16;
+        p_pt1->V = 0x40 << 16;
+        p_pt2->U = 0xA0 << 16;
+        p_pt2->V = 0x5F << 16;
+        p_pt3->U = 0xBF << 16;
+        p_pt3->V = 0x40 << 16;
+        p_pt4->U = 0xBF << 16;
+        p_pt4->V = 0x5F << 16;
+        break;
+    case 2:
+        p_pt1->U = 0x9F << 16;
+        p_pt1->V = 0x40 << 16;
+        p_pt2->U = 0x9F << 16;
+        p_pt2->V = 0x5F << 16;
+        p_pt3->U = 0x80 << 16;
+        p_pt3->V = 0x40 << 16;
+        p_pt4->U = 0x80 << 16;
+        p_pt4->V = 0x5F << 16;
+        break;
+    case 3:
+        p_pt1->U = 0xDF << 16;
+        p_pt1->V = 0x40 << 16;
+        p_pt2->U = 0xDF << 16;
+        p_pt2->V = 0x5F << 16;
+        p_pt3->U = 0xC0 << 16;
+        p_pt3->V = 0x40 << 16;
+        p_pt4->U = 0xC0 << 16;
+        p_pt4->V = 0x5F << 16;
+        break;
+    case 4:
+        p_pt1->U = 0xA0 << 16;
+        p_pt1->V = 0x5F << 16;
+        p_pt2->U = 0xBF << 16;
+        p_pt2->V = 0x5F << 16;
+        p_pt3->U = 0xA0 << 16;
+        p_pt3->V = 0x40 << 16;
+        p_pt4->U = 0xBF << 16;
+        p_pt4->V = 0x40 << 16;
+        break;
+    case 5:
+        p_pt1->U = 0x9F << 16;
+        p_pt1->V = 0x5F << 16;
+        p_pt2->U = 0x9F << 16;
+        p_pt2->V = 0x40 << 16;
+        p_pt3->U = 0x80 << 16;
+        p_pt3->V = 0x5F << 16;
+        p_pt4->U = 0x80 << 16;
+        p_pt4->V = 0x40 << 16;
+        break;
+    case 6:
+        p_pt1->U = 0xDF << 16;
+        p_pt1->V = 0x5F << 16;
+        p_pt2->U = 0xDF << 16;
+        p_pt2->V = 0x40 << 16;
+        p_pt3->U = 0xC0 << 16;
+        p_pt3->V = 0x5F << 16;
+        p_pt4->U = 0xC0 << 16;
+        p_pt4->V = 0x40 << 16;
+        break;
+    case 7:
+        p_pt1->U = 0xBF << 16;
+        p_pt1->V = 0x5F << 16;
+        p_pt2->U = 0xBF << 16;
+        p_pt2->V = 0x40 << 16;
+        p_pt3->U = 0xA0 << 16;
+        p_pt3->V = 0x5F << 16;
+        p_pt4->U = 0xA0 << 16;
+        p_pt4->V = 0x40 << 16;
+        break;
+    case 8:
+        p_pt1->U = 0x80 << 16;
+        p_pt1->V = 0x5F << 16;
+        p_pt2->U = 0x80 << 16;
+        p_pt2->V = 0x40 << 16;
+        p_pt3->U = 0x9F << 16;
+        p_pt3->V = 0x5F << 16;
+        p_pt4->U = 0x9F << 16;
+        p_pt4->V = 0x40 << 16;
+        break;
+    case 9:
+        p_pt1->U = 0xC0 << 16;
+        p_pt1->V = 0x5F << 16;
+        p_pt2->U = 0xC0 << 16;
+        p_pt2->V = 0x40 << 16;
+        p_pt3->U = 0xDF << 16;
+        p_pt3->V = 0x5F << 16;
+        p_pt4->U = 0xDF << 16;
+        p_pt4->V = 0x40 << 16;
+        break;
+    case 10:
+        p_pt1->U = 0xBF << 16;
+        p_pt1->V = 0x40 << 16;
+        p_pt2->U = 0xA0 << 16;
+        p_pt2->V = 0x40 << 16;
+        p_pt3->U = 0xBF << 16;
+        p_pt3->V = 0x5F << 16;
+        p_pt4->U = 0xA0 << 16;
+        p_pt4->V = 0x5F << 16;
+        break;
+    case 11:
+        p_pt1->U = 0x80 << 16;
+        p_pt1->V = 0x40 << 16;
+        p_pt2->U = 0x80 << 16;
+        p_pt2->V = 0x5F << 16;
+        p_pt3->U = 0x9F << 16;
+        p_pt3->V = 0x40 << 16;
+        p_pt4->U = 0x9F << 16;
+        p_pt4->V = 0x5F << 16;
+        break;
+    case 12:
+        p_pt1->U = 0xC0 << 16;
+        p_pt1->V = 0x40 << 16;
+        p_pt2->U = 0xC0 << 16;
+        p_pt2->V = 0x5F << 16;
+        p_pt3->U = 0xDF << 16;
+        p_pt3->V = 0x40 << 16;
+        p_pt4->U = 0xDF << 16;
+        p_pt4->V = 0x5F << 16;
+        break;
+    }
+}
+
 /**
  * Draw triangular face with normally textured surface, but dark.
  *
@@ -996,262 +1125,6 @@ void draw_ex_face(ushort exface)
     }
 }
 
-void set_floor_tile_point_uv_map_a(struct PolyPoint *p_pt1, struct PolyPoint *p_pt2, struct PolyPoint *p_pt3, struct PolyPoint *p_pt4, ubyte page)
-{
-    switch (page)
-    {
-    case 1:
-        p_pt1->U = 0xA00000;
-        p_pt1->V = 0x400000;
-        p_pt2->U = 0xA00000;
-        p_pt3->U = 0xBF0000;
-        p_pt4->U = 0xBF0000;
-        p_pt2->V = 0x5F0000;
-        p_pt4->V = 0x5F0000;
-        p_pt3->V = 0x400000;
-        break;
-    case 2:
-        p_pt1->V = 0x400000;
-        p_pt2->V = 0x5F0000;
-        p_pt3->U = 0x800000;
-        p_pt3->V = 0x400000;
-        p_pt4->U = 0x800000;
-        p_pt1->U = 0x9F0000;
-        p_pt2->U = 0x9F0000;
-        p_pt4->V = 0x5F0000;
-        break;
-    case 3:
-        p_pt1->U = 0xDF0000;
-        p_pt1->V = 0x400000;
-        p_pt2->U = 0xDF0000;
-        p_pt2->V = 0x5F0000;
-        p_pt3->U = 0xC00000;
-        p_pt4->U = 0xC00000;
-        p_pt4->V = 0x5F0000;
-        p_pt3->V = 0x400000;
-        break;
-    case 4:
-        p_pt3->V = 0x400000;
-        p_pt1->V = 0x5F0000;
-        p_pt4->U = 0xBF0000;
-        p_pt4->V = 0x400000;
-        p_pt2->U = 0xBF0000;
-        p_pt3->U = 0xA00000;
-        p_pt1->U = 0xA00000;
-        p_pt2->V = 0x5F0000;
-        break;
-    case 5:
-        p_pt1->U = 0x9F0000;
-        p_pt1->V = 0x5F0000;
-        p_pt2->U = 0x9F0000;
-        p_pt3->U = 0x800000;
-        p_pt4->U = 0x800000;
-        p_pt2->V = 0x400000;
-        p_pt4->V = 0x400000;
-        p_pt3->V = 0x5F0000;
-        break;
-    case 6:
-        p_pt2->V = 0x400000;
-        p_pt3->U = 0xC00000;
-        p_pt4->U = 0xC00000;
-        p_pt1->U = 0xDF0000;
-        p_pt1->V = 0x5F0000;
-        p_pt2->U = 0xDF0000;
-        p_pt3->V = 0x5F0000;
-        p_pt4->V = 0x400000;
-        break;
-    case 7:
-        p_pt4->U = 0xA00000;
-        p_pt4->V = 0x400000;
-        p_pt3->U = 0xA00000;
-        p_pt2->U = 0xBF0000;
-        p_pt1->U = 0xBF0000;
-        p_pt3->V = 0x5F0000;
-        p_pt1->V = 0x5F0000;
-        p_pt2->V = 0x400000;
-        break;
-    case 8:
-        p_pt1->V = 0x5F0000;
-        p_pt2->V = 0x400000;
-        p_pt3->U = 0x9F0000;
-        p_pt3->V = 0x5F0000;
-        p_pt4->U = 0x9F0000;
-        p_pt1->U = 0x800000;
-        p_pt2->U = 0x800000;
-        p_pt4->V = 0x400000;
-        break;
-    case 9:
-        p_pt1->U = 0xC00000;
-        p_pt1->V = 0x5F0000;
-        p_pt2->U = 0xC00000;
-        p_pt2->V = 0x400000;
-        p_pt3->U = 0xDF0000;
-        p_pt4->U = 0xDF0000;
-        p_pt4->V = 0x400000;
-        p_pt3->V = 0x5F0000;
-        break;
-    case 10:
-        p_pt2->V = 0x400000;
-        p_pt4->V = 0x5F0000;
-        p_pt1->U = 0xBF0000;
-        p_pt1->V = 0x400000;
-        p_pt3->U = 0xBF0000;
-        p_pt2->U = 0xA00000;
-        p_pt4->U = 0xA00000;
-        p_pt3->V = 0x5F0000;
-        break;
-    case 11:
-        p_pt1->U = 0x800000;
-        p_pt1->V = 0x400000;
-        p_pt2->U = 0x800000;
-        p_pt3->U = 0x9F0000;
-        p_pt4->U = 0x9F0000;
-        p_pt2->V = 0x5F0000;
-        p_pt4->V = 0x5F0000;
-        p_pt3->V = 0x400000;
-        break;
-    case 12:
-        p_pt2->V = 0x5F0000;
-        p_pt3->U = 0xDF0000;
-        p_pt4->U = 0xDF0000;
-        p_pt1->U = 0xC00000;
-        p_pt1->V = 0x400000;
-        p_pt2->U = 0xC00000;
-        p_pt3->V = 0x400000;
-        p_pt4->V = 0x5F0000;
-        break;
-    }
-}
-
-void set_floor_tile_point_uv_map_b(struct PolyPoint *p_pt1, struct PolyPoint *p_pt2, struct PolyPoint *p_pt3, struct PolyPoint *p_pt4, ubyte page)
-{
-    //TODO check if it's the same as this:
-    //set_floor_tile_point_uv_map_a(p_pt3, p_pt1, p_pt4, p_pt2, ((page+8) % 12) + 1);
-    switch (page)
-    {
-    case 1:
-        p_pt1->V = 0x400000;
-        p_pt2->V = 0x5F0000;
-        p_pt3->U = 0xBF0000;
-        p_pt3->V = 0x400000;
-        p_pt4->U = 0xBF0000;
-        p_pt1->U = 0xA00000;
-        p_pt2->U = 0xA00000;
-        p_pt4->V = 0x5F0000;
-        break;
-    case 2:
-        p_pt1->U = 0x9F0000;
-        p_pt2->U = 0x9F0000;
-        p_pt2->V = 0x5F0000;
-        p_pt3->U = 0x800000;
-        p_pt4->V = 0x5F0000;
-        p_pt1->V = 0x400000;
-        p_pt3->V = 0x400000;
-        p_pt4->U = 0x800000;
-        break;
-    case 3:
-        p_pt1->U = 0xDF0000;
-        p_pt1->V = 0x400000;
-        p_pt2->U = 0xDF0000;
-        p_pt3->U = 0xC00000;
-        p_pt4->U = 0xC00000;
-        p_pt2->V = 0x5F0000;
-        p_pt4->V = 0x5F0000;
-        p_pt3->V = 0x400000;
-        break;
-    case 4:
-        p_pt3->V = 0x400000;
-        p_pt1->V = 0x5F0000;
-        p_pt4->U = 0xBF0000;
-        p_pt4->V = 0x400000;
-        p_pt2->U = 0xBF0000;
-        p_pt3->U = 0xA00000;
-        p_pt1->U = 0xA00000;
-        p_pt2->V = 0x5F0000;
-        break;
-    case 5:
-        p_pt2->V = 0x400000;
-        p_pt3->U = 0x800000;
-        p_pt4->U = 0x800000;
-        p_pt1->U = 0x9F0000;
-        p_pt1->V = 0x5F0000;
-        p_pt2->U = 0x9F0000;
-        p_pt3->V = 0x5F0000;
-        p_pt4->V = 0x400000;
-        break;
-    case 6:
-        p_pt1->U = 0xDF0000;
-        p_pt1->V = 0x5F0000;
-        p_pt2->U = 0xDF0000;
-        p_pt2->V = 0x400000;
-        p_pt3->U = 0xC00000;
-        p_pt4->U = 0xC00000;
-        p_pt4->V = 0x400000;
-        p_pt3->V = 0x5F0000;
-        break;
-    case 7:
-        p_pt4->V = 0x400000;
-        p_pt3->V = 0x5F0000;
-        p_pt2->V = 0x400000;
-        p_pt1->V = 0x5F0000;
-        p_pt4->U = 0xA00000;
-        p_pt2->U = 0xBF0000;
-        p_pt1->U = 0xBF0000;
-        p_pt3->U = 0xA00000;
-        break;
-    case 8:
-        p_pt1->U = 0x800000;
-        p_pt2->U = 0x800000;
-        p_pt2->V = 0x400000;
-        p_pt3->U = 0x9F0000;
-        p_pt4->U = 0x9F0000;
-        p_pt1->V = 0x5F0000;
-        p_pt3->V = 0x5F0000;
-        p_pt4->V = 0x400000;
-        break;
-    case 9:
-        p_pt1->U = 0xC00000;
-        p_pt2->U = 0xC00000;
-        p_pt2->V = 0x400000;
-        p_pt3->U = 0xDF0000;
-        p_pt4->V = 0x400000;
-        p_pt1->V = 0x5F0000;
-        p_pt3->V = 0x5F0000;
-        p_pt4->U = 0xDF0000;
-        break;
-    case 10:
-        p_pt2->U = 0xA00000;
-        p_pt2->V = 0x400000;
-        p_pt4->U = 0xA00000;
-        p_pt1->U = 0xBF0000;
-        p_pt3->U = 0xBF0000;
-        p_pt4->V = 0x5F0000;
-        p_pt3->V = 0x5F0000;
-        p_pt1->V = 0x400000;
-        break;
-    case 11:
-        p_pt1->U = 0x800000;
-        p_pt2->U = 0x800000;
-        p_pt2->V = 0x5F0000;
-        p_pt3->U = 0x9F0000;
-        p_pt4->U = 0x9F0000;
-        p_pt4->V = 0x5F0000;
-        p_pt1->V = 0x400000;
-        p_pt3->V = 0x400000;
-        break;
-    case 12:
-        p_pt1->V = 0x400000;
-        p_pt2->V = 0x5F0000;
-        p_pt3->U = 0xDF0000;
-        p_pt3->V = 0x400000;
-        p_pt4->U = 0xDF0000;
-        p_pt1->U = 0xC00000;
-        p_pt2->U = 0xC00000;
-        p_pt4->V = 0x5F0000;
-        break;
-    }
-}
-
 void draw_floor_tile1a(ushort tl)
 {
 #if 0
@@ -1325,7 +1198,7 @@ void draw_floor_tile1a(ushort tl)
     {
         vec_map = vec_tmap[4];
         vec_mode = 6;
-        set_floor_tile_point_uv_map_b(&point1, &point2, &point3, &point4, p_floortl->Page);
+        set_floor_tile_point_uv_map_a(&point1, &point2, &point3, &point4, p_floortl->Page);
         draw_trigpoly(&point1, &point2, &point3);
         if (vec_mode == 2)
             vec_mode = 27;
@@ -1419,7 +1292,7 @@ void draw_floor_tile1b(ushort tl)
     {
         vec_map = vec_tmap[4];
         vec_mode = 6;
-        set_floor_tile_point_uv_map_b(&point1, &point2, &point3, &point4, p_floortl->Page);
+        set_floor_tile_point_uv_map_a(&point1, &point2, &point3, &point4, p_floortl->Page);
         draw_trigpoly(&point1, &point2, &point4);
         if (vec_mode == 2)
             vec_mode = 27;
