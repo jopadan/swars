@@ -48,7 +48,7 @@ extern "C" {
 
 /** Initial age of explosion; higher value makes the explosion shorter.
  */
-#define WEP_AIRSTRIKE_IMPACT_GTURNS 17
+#define WEP_AIRSTRIKE_IMPACT_GTURNS 14
 
 /** Game turns between the weapon triggered and the bombs start.
  */
