@@ -57,7 +57,7 @@ const char *game_option_desc(int option_no)
     case GOpt_TrenchcoatPreference:
         return gui_strings[523];
     case GOpt_PaletteBrightness:
-        return gui_strings[0];//TODO Brightness correction
+        return gui_strings[524];
     case GOpt_SampleVolume:
         return gui_strings[419];
     case GOpt_DangerVolume:
