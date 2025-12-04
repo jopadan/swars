@@ -195,7 +195,7 @@ void net_service_gui_switch(void)
     case NetSvc_IPX:
         net_protocol_option_button.Text = net_proto_param_text;
         net_protocol_option_button.CallBackFn = ac_do_net_protocol_option;
-        text = gui_strings[497 + nsvc.I.Type];
+        text = gui_strings[GSTR_NET_PROTO_NAMES + nsvc.I.Type];
         net_protocol_select_button.Text = text;
         break;
     case NetSvc_COM1:
@@ -205,9 +205,9 @@ void net_service_gui_switch(void)
         net_protocol_option_button.Text = net_baudrate_text;
         net_protocol_option_button.CallBackFn = ac_do_serial_speed_switch;
         if (byte_1C4A6F)
-            text = gui_strings[522 + nsvc.I.Type];
+            text = gui_strings[GSTR_NET_PROTO_MODEM_NAMES - NetSvc_COM1 + nsvc.I.Type];
         else
-            text = gui_strings[497 + nsvc.I.Type];
+            text = gui_strings[GSTR_NET_PROTO_NAMES + nsvc.I.Type];
         net_protocol_select_button.Text = text;
         break;
     }

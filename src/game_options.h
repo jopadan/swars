@@ -38,6 +38,9 @@ extern "C" {
 #define OPT_TRENCHCOAT_PREF_MIN 0
 #define OPT_TRENCHCOAT_PREF_MAX 5
 
+#define OPT_PAL_BRIGHTNESS_MIN -63
+#define OPT_PAL_BRIGHTNESS_MAX 63
+
 #define OPT_CD_TRACK_MIN 2
 #define OPT_CD_TRACK_MAX 5
 
@@ -58,6 +61,7 @@ enum GameOptions {
     GOpt_DeepRadar,
     GOpt_PanelPermutation,
     GOpt_TrenchcoatPreference,
+    GOpt_PaletteBrightness,
     // Audio options
     GOpt_SampleVolume,
     GOpt_DangerVolume,

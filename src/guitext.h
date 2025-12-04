@@ -30,6 +30,11 @@ extern "C" {
 #pragma pack(1)
 
 enum GuiStrings {
+    // Names for network protocols
+    GSTR_NET_PROTO_NAMES = 497,
+    // Extra names for network protocols if modem is in use
+    GSTR_NET_PROTO_MODEM_NAMES = 524,
+    // Name for mission metric
     GSTR_MTR_SCIENTISTS_DEAD = 537,
     // Names for mission status values
     GSTR_ENM_MISSION_STATUS = 634,

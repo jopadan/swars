@@ -56,6 +56,8 @@ const char *game_option_desc(int option_no)
         return gui_strings[522];
     case GOpt_TrenchcoatPreference:
         return gui_strings[523];
+    case GOpt_PaletteBrightness:
+        return gui_strings[0];//TODO Brightness correction
     case GOpt_SampleVolume:
         return gui_strings[419];
     case GOpt_DangerVolume:
@@ -105,6 +107,8 @@ short game_option_get(int option_no)
         return ingame.PanelPermutation;
     case GOpt_TrenchcoatPreference:
         return ingame.TrenchcoatPreference;
+    case GOpt_PaletteBrightness:
+        return user_sel_brightness;
     case GOpt_SampleVolume:
         return startscr_samplevol;
     case GOpt_DangerVolume:
@@ -175,6 +179,9 @@ void game_option_set(int option_no, int sval)
     case GOpt_TrenchcoatPreference:
         ingame.TrenchcoatPreference = sval;
         break;
+    case GOpt_PaletteBrightness:
+        user_sel_brightness = sval;
+        break;
     case GOpt_SampleVolume:
         startscr_samplevol = sval;
         break;
@@ -225,6 +232,8 @@ int game_option_min(int option_no)
             return OPT_PANEL_PERMUT_ALPHA_MIN;
     case GOpt_TrenchcoatPreference:
         return OPT_TRENCHCOAT_PREF_MIN;
+    case GOpt_PaletteBrightness:
+        return OPT_PAL_BRIGHTNESS_MIN;
     case GOpt_SampleVolume:
     case GOpt_DangerVolume:
     case GOpt_CDAVolume:
@@ -265,6 +274,8 @@ int game_option_max(int option_no)
             return OPT_PANEL_PERMUT_ALPHA_MAX;
     case GOpt_TrenchcoatPreference:
         return OPT_TRENCHCOAT_PREF_MAX;
+    case GOpt_PaletteBrightness:
+        return OPT_PAL_BRIGHTNESS_MAX;
     case GOpt_SampleVolume:
     case GOpt_DangerVolume:
     case GOpt_CDAVolume:
@@ -367,6 +378,7 @@ void game_option_dec(int option_no)
     // Linear options (with any value between some min and max)
     case GOpt_PanelPermutation:
     case GOpt_TrenchcoatPreference:
+    case GOpt_PaletteBrightness:
     case GOpt_SampleVolume:
     case GOpt_DangerVolume:
     case GOpt_CDAVolume:
@@ -404,6 +416,7 @@ void game_option_inc(int option_no)
         break;
     case GOpt_PanelPermutation:
     case GOpt_TrenchcoatPreference:
+    case GOpt_PaletteBrightness:
     case GOpt_SampleVolume:
     case GOpt_DangerVolume:
     case GOpt_CDAVolume:
@@ -443,6 +456,7 @@ void game_option_shift(int option_no, int amount)
         break;
     case GOpt_PanelPermutation:
     case GOpt_TrenchcoatPreference:
+    case GOpt_PaletteBrightness:
     case GOpt_SampleVolume:
     case GOpt_DangerVolume:
     case GOpt_CDAVolume:
