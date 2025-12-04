@@ -3184,7 +3184,7 @@ msgstr ""
 #. Unassigned setting.
 #: guitext:526 guitext:527 guitext:528
 msgctxt "Unused"
-msgid "N"
+msgid "N528"
 msgstr ""
 
 #. Music track to be played during the next mission.
