@@ -448,16 +448,27 @@ void ingame_palette_reload(void)
 
 void palette_apply_brightness(ubyte *pal)
 {
-    int colr,cmpn;
+    int colr, cmpn;
 
     for (colr = 0; colr < 0x300; colr += 3)
     {
+        int sum, bri;
+        sum = 0;
+        for (cmpn = 0; cmpn < 3; cmpn++)
+            sum += pal[colr + cmpn];
+        if ((sum < 56) && (momentary_brightness < -1)) {
+            bri = momentary_brightness * (sum + 8) >> 6;
+        } else if ((sum > 3*63 - 56) && (momentary_brightness > 1)) {
+            bri = momentary_brightness * (sum - (3*63 - 56) + 8) >> 6;
+        } else {
+            bri = momentary_brightness;
+        }
         for (cmpn = 0; cmpn < 3; cmpn++)
         {
             ubyte *p_intens;
             int i;
             p_intens = &pal[colr + cmpn];
-            i = (*p_intens) + momentary_brightness;
+            i = (*p_intens) + bri;
             if (i < 0)
               i = 0;
             if (i > 63)
