@@ -211,7 +211,7 @@ was starting. There is also a troubleshooting page on the
 
 ## Building
 
-Note that you can oly build the port for x86 architecture, and you either need
+Note that you can only build the port for x86 architecture, and you either need
 32-bit OS, or 64-bit OS with 32-bit user space libraries available.
 
 ### General building instructions
