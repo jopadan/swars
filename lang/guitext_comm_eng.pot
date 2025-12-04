@@ -3175,28 +3175,16 @@ msgctxt "Visual settings option"
 msgid "Trenchcoat Preference"
 msgstr ""
 
-#. One of network protocols.
+#. Decrease or increase screen software palette brightness.
 #: guitext:525
-msgctxt "MP protocol"
-msgid "Modem COM1"
+msgctxt "Visual settings option"
+msgid "Brighness Correction"
 msgstr ""
 
-#. One of network protocols.
-#: guitext:526
-msgctxt "MP protocol"
-msgid "Modem COM2"
-msgstr ""
-
-#. One of network protocols.
-#: guitext:527
-msgctxt "MP protocol"
-msgid "Modem COM3"
-msgstr ""
-
-#. One of network protocols.
-#: guitext:528
-msgctxt "MP protocol"
-msgid "Modem COM4"
+#. Unassigned setting.
+#: guitext:526 guitext:527 guitext:528
+msgctxt "Unused"
+msgid "N"
 msgstr ""
 
 #. Music track to be played during the next mission.
@@ -3590,6 +3578,30 @@ msgctxt "Trenchcoat flavor"
 msgid "Gothic"
 msgstr ""
 
+#. One of network protocols.
+#: guitext:620
+msgctxt "MP protocol"
+msgid "Modem COM1"
+msgstr ""
+
+#. One of network protocols.
+#: guitext:621
+msgctxt "MP protocol"
+msgid "Modem COM2"
+msgstr ""
+
+#. One of network protocols.
+#: guitext:622
+msgctxt "MP protocol"
+msgid "Modem COM3"
+msgstr ""
+
+#. One of network protocols.
+#: guitext:623
+msgctxt "MP protocol"
+msgid "Modem COM4"
+msgstr ""
+
 #. Merging text when formatting dates and time periods.
 #: guitext:626
 msgctxt "Date formatting"
@@ -3974,8 +3986,20 @@ msgctxt "Controls"
 msgid "Use Medikit"
 msgstr ""
 
-#. Key for future use; does nothing currently.
+#. Key for switching supershield (shield using weapon power) on and off.
 #: guitext:849
+msgctxt "Controls"
+msgid "Toggle Supershield"
+msgstr ""
+
+#. Key for switching thermal view (allowing to see people inside buildings) on and off.
+#: guitext:850
+msgctxt "Controls"
+msgid "Toggle Thermal View"
+msgstr ""
+
+#. Key for future use; does nothing currently.
+#: guitext:851 guitext:852 guitext:853 guitext:854 guitext:855
 msgctxt "Controls"
 msgid "Future key"
 msgstr ""
@@ -4175,7 +4199,6 @@ msgstr ""
 #: guitext:782 guitext:783 guitext:784 guitext:785 guitext:786 guitext:787
 #: guitext:788 guitext:789 guitext:790 guitext:791 guitext:792 guitext:793
 #: guitext:794 guitext:795 guitext:796 guitext:797 guitext:798 guitext:799
-#: guitext:850 guitext:851 guitext:852 guitext:853 guitext:854 guitext:855
 #: guitext:856 guitext:857 guitext:858 guitext:859 guitext:860 guitext:861
 #: guitext:862 guitext:863 guitext:864 guitext:865 guitext:866 guitext:867
 #: guitext:868 guitext:869 guitext:870 guitext:871 guitext:872 guitext:873
