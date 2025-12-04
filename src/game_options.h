@@ -213,6 +213,18 @@ void game_option_dec(int option_no);
  */
 void game_option_inc(int option_no);
 
+/** Shifts value of the option by given amount, without wrapping.
+ */
+void game_option_shift(int option_no, int amount);
+
+/** Get value of game option; related variables can be accessed directly instead.
+ */
+short game_option_get(int option_no);
+
+/** Set value of game option; skip any verification, set the raw value.
+ */
+void game_option_set(int option_no, int sval);
+
 void set_default_gfx_settings(void);
 void set_default_visual_prefernces(void);
 void set_default_audio_tracks(void);

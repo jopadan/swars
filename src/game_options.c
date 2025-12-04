@@ -79,6 +79,209 @@ const char *game_option_desc(int option_no)
     }
 }
 
+short game_option_get(int option_no)
+{
+    switch (option_no)
+    {
+    case GOpt_ProjectorSpeed:
+        return game_projector_speed;
+    case GOpt_HighResolution:
+        return game_high_resolution;
+    case GOpt_DetailLevel:
+        return ingame.DetailLevel;
+    case GOpt_CameraPerspective:
+        return game_perspective;
+    case GOpt_AdvancedLights:
+        return ((ingame.Flags & GamF_AdvLights) != 0);
+    case GOpt_BillboardMovies:
+        return ((ingame.Flags & GamF_BillboardMovies) != 0);
+    case GOpt_DeepRadar:
+        return ((ingame.Flags & GamF_DeepRadar) != 0);
+    case GOpt_UseMultiMedia:
+        return (ingame.UseMultiMedia);
+    case GOpt_ScannerPulse:
+        return ((ingame.Flags & GamF_NoScannerBeep) != 0);
+    case GOpt_PanelPermutation:
+        return ingame.PanelPermutation;
+    case GOpt_TrenchcoatPreference:
+        return ingame.TrenchcoatPreference;
+    case GOpt_SampleVolume:
+        return startscr_samplevol;
+    case GOpt_DangerVolume:
+        return startscr_midivol;
+    case GOpt_CDAVolume:
+        return startscr_cdvolume;
+    case GOpt_CDATrack:
+        return ingame.CDTrack;
+    case GOpt_DangerTrack:
+        return ingame.DangerTrack;
+    case GOpt_TranspObjSurfaceColr:
+        return deep_radar_surface_col;
+    case GOpt_TranspObjLineColr:
+        return deep_radar_line_col;
+    default:
+        LOGERR("Option %d get not supported", option_no);
+        break;
+    }
+    return 0;
+}
+
+void game_option_set(int option_no, int sval)
+{
+    switch (option_no)
+    {
+    case GOpt_ProjectorSpeed:
+        game_projector_speed = sval;
+        break;
+    case GOpt_HighResolution:
+        game_high_resolution = sval;
+        break;
+    case GOpt_DetailLevel:
+        ingame.DetailLevel = sval;
+        break;
+    case GOpt_CameraPerspective:
+        game_perspective = sval;
+        break;
+    case GOpt_AdvancedLights:
+        if (sval)
+            ingame.Flags |= GamF_AdvLights;
+        else
+            ingame.Flags &= ~GamF_AdvLights;
+        break;
+    case GOpt_BillboardMovies:
+        if (sval)
+            ingame.Flags |= GamF_BillboardMovies;
+        else
+            ingame.Flags &= ~GamF_BillboardMovies;
+        break;
+    case GOpt_DeepRadar:
+        if (sval)
+            ingame.Flags |= GamF_DeepRadar;
+        else
+            ingame.Flags &= ~GamF_DeepRadar;
+        break;
+    case GOpt_UseMultiMedia:
+        ingame.UseMultiMedia = sval;
+        break;
+    case GOpt_ScannerPulse:
+        if (sval)
+            ingame.Flags |= GamF_NoScannerBeep;
+        else
+            ingame.Flags &= ~GamF_NoScannerBeep;
+        break;
+    case GOpt_PanelPermutation:
+        ingame.PanelPermutation = sval;
+        break;
+    case GOpt_TrenchcoatPreference:
+        ingame.TrenchcoatPreference = sval;
+        break;
+    case GOpt_SampleVolume:
+        startscr_samplevol = sval;
+        break;
+    case GOpt_DangerVolume:
+        startscr_midivol = sval;
+        break;
+    case GOpt_CDAVolume:
+        startscr_cdvolume = sval;
+        break;
+    case GOpt_CDATrack:
+        ingame.CDTrack = sval;
+        break;
+    case GOpt_DangerTrack:
+        ingame.DangerTrack = sval;
+        break;
+    case GOpt_TranspObjSurfaceColr:
+        deep_radar_surface_col = sval;
+        break;
+    case GOpt_TranspObjLineColr:
+        deep_radar_line_col = sval;
+        break;
+    default:
+        LOGERR("Option %d set not supported", option_no);
+        break;
+    }
+}
+
+int game_option_min(int option_no)
+{
+    switch (option_no)
+    {
+    case GOpt_ProjectorSpeed:
+    case GOpt_HighResolution:
+    case GOpt_DetailLevel:
+        return 0;
+    case GOpt_CameraPerspective:
+        return 0;
+    case GOpt_AdvancedLights:
+    case GOpt_BillboardMovies:
+    case GOpt_DeepRadar:
+    case GOpt_UseMultiMedia:
+    case GOpt_ScannerPulse:
+        return 0;
+    case GOpt_PanelPermutation:
+        if (ingame.PanelPermutation < 0)
+            return OPT_PANEL_PERMUT_MIN;
+        else
+            return OPT_PANEL_PERMUT_ALPHA_MIN;
+    case GOpt_TrenchcoatPreference:
+        return OPT_TRENCHCOAT_PREF_MIN;
+    case GOpt_SampleVolume:
+    case GOpt_DangerVolume:
+    case GOpt_CDAVolume:
+        return 0;
+    case GOpt_CDATrack:
+        return OPT_CD_TRACK_MIN;
+    case GOpt_DangerTrack:
+        return OPT_DANGER_TRACK_MIN;
+    case GOpt_TranspObjSurfaceColr:
+    case GOpt_TranspObjLineColr:
+        return 0;
+    default:
+        break;
+    }
+    return 0;
+}
+
+int game_option_max(int option_no)
+{
+    switch (option_no)
+    {
+    case GOpt_ProjectorSpeed:
+    case GOpt_HighResolution:
+    case GOpt_DetailLevel:
+        return 1;
+    case GOpt_CameraPerspective:
+        return 5;
+    case GOpt_AdvancedLights:
+    case GOpt_BillboardMovies:
+    case GOpt_DeepRadar:
+    case GOpt_UseMultiMedia:
+    case GOpt_ScannerPulse:
+        return 1;
+    case GOpt_PanelPermutation:
+        if (ingame.PanelPermutation < 0)
+            return OPT_PANEL_PERMUT_MAX;
+        else
+            return OPT_PANEL_PERMUT_ALPHA_MAX;
+    case GOpt_TrenchcoatPreference:
+        return OPT_TRENCHCOAT_PREF_MAX;
+    case GOpt_SampleVolume:
+    case GOpt_DangerVolume:
+    case GOpt_CDAVolume:
+        return STARTSCR_VOLUME_MAX;
+    case GOpt_CDATrack:
+        return OPT_CD_TRACK_MAX;
+    case GOpt_DangerTrack:
+        return OPT_DANGER_TRACK_MAX;
+    case GOpt_TranspObjSurfaceColr:
+    case GOpt_TranspObjLineColr:
+        return 255;
+    default:
+        break;
+    }
+    return 0;
+}
+
 void game_option_toggle(int option_no)
 {
     switch (option_no)
@@ -143,11 +346,13 @@ void game_option_toggle(int option_no)
     }
 }
 
-
 void game_option_dec(int option_no)
 {
+    int sval;
+
     switch (option_no)
     {
+    // Toggle options (two values only)
     case GOpt_ProjectorSpeed:
     case GOpt_HighResolution:
     case GOpt_DetailLevel:
@@ -159,63 +364,21 @@ void game_option_dec(int option_no)
     case GOpt_ScannerPulse:
         game_option_toggle(option_no);
         break;
+    // Linear options (with any value between some min and max)
     case GOpt_PanelPermutation:
-        if (ingame.PanelPermutation < 0)
-        {
-            if (ingame.PanelPermutation < OPT_PANEL_PERMUT_MAX)
-                ingame.PanelPermutation++;
-            else
-                ingame.PanelPermutation = OPT_PANEL_PERMUT_MIN;
-        }
-        else
-        {
-            if (ingame.PanelPermutation > OPT_PANEL_PERMUT_ALPHA_MIN)
-                ingame.PanelPermutation--;
-            else
-                ingame.PanelPermutation = OPT_PANEL_PERMUT_ALPHA_MAX;
-        }
-        break;
     case GOpt_TrenchcoatPreference:
-        if (ingame.TrenchcoatPreference > OPT_TRENCHCOAT_PREF_MIN)
-            ingame.TrenchcoatPreference--;
-        else
-            ingame.TrenchcoatPreference = OPT_TRENCHCOAT_PREF_MAX;
-        break;
     case GOpt_SampleVolume:
-        if (startscr_samplevol > 0)
-            startscr_samplevol--;
-        else
-            startscr_samplevol = STARTSCR_VOLUME_MAX;
-        break;
     case GOpt_DangerVolume:
-        if (startscr_midivol > 0)
-            startscr_midivol--;
-        else
-            startscr_midivol = STARTSCR_VOLUME_MAX;
-        break;
     case GOpt_CDAVolume:
-        if (startscr_cdvolume > 0)
-            startscr_cdvolume--;
-        else
-            startscr_cdvolume = STARTSCR_VOLUME_MAX;
-        break;
     case GOpt_CDATrack:
-        if (ingame.CDTrack > OPT_CD_TRACK_MIN)
-            ingame.CDTrack--;
-        else
-            ingame.CDTrack = OPT_CD_TRACK_MAX;
-        break;
     case GOpt_DangerTrack:
-        if (ingame.DangerTrack > OPT_DANGER_TRACK_MIN)
-            ingame.DangerTrack--;
-        else
-            ingame.DangerTrack = OPT_DANGER_TRACK_MAX;
-        break;
     case GOpt_TranspObjSurfaceColr:
-        deep_radar_surface_col--;
-        break;
     case GOpt_TranspObjLineColr:
-        deep_radar_line_col--;
+        sval = game_option_get(option_no);
+        sval--;
+        if (sval < game_option_min(option_no))
+            sval = game_option_max(option_no);
+        game_option_set(option_no, sval);
         break;
     default:
         break;
@@ -224,6 +387,8 @@ void game_option_dec(int option_no)
 
 void game_option_inc(int option_no)
 {
+    int sval;
+
     switch (option_no)
     {
     case GOpt_ProjectorSpeed:
@@ -238,62 +403,62 @@ void game_option_inc(int option_no)
         game_option_toggle(option_no);
         break;
     case GOpt_PanelPermutation:
-        if (ingame.PanelPermutation < 0)
-        {
-            if (ingame.PanelPermutation > OPT_PANEL_PERMUT_MIN)
-                ingame.PanelPermutation--;
-            else
-                ingame.PanelPermutation = OPT_PANEL_PERMUT_MAX;
-        }
-        else
-        {
-            if (ingame.PanelPermutation < OPT_PANEL_PERMUT_ALPHA_MAX)
-                ingame.PanelPermutation++;
-            else
-                ingame.PanelPermutation = OPT_PANEL_PERMUT_ALPHA_MIN;
-        }
-        break;
     case GOpt_TrenchcoatPreference:
-        if (ingame.TrenchcoatPreference < OPT_TRENCHCOAT_PREF_MAX)
-            ingame.TrenchcoatPreference++;
-        else
-            ingame.TrenchcoatPreference = OPT_TRENCHCOAT_PREF_MIN;
-        break;
     case GOpt_SampleVolume:
-        if (startscr_samplevol < STARTSCR_VOLUME_MAX)
-            startscr_samplevol++;
-        else
-            startscr_samplevol = 0;
-        break;
     case GOpt_DangerVolume:
-        if (startscr_midivol < STARTSCR_VOLUME_MAX)
-            startscr_midivol++;
-        else
-            startscr_midivol = 0;
-        break;
     case GOpt_CDAVolume:
-        if (startscr_cdvolume < STARTSCR_VOLUME_MAX)
-            startscr_cdvolume++;
-        else
-            startscr_cdvolume = 0;
-        break;
     case GOpt_CDATrack:
-        if (ingame.CDTrack < OPT_CD_TRACK_MAX)
-            ingame.CDTrack++;
-        else
-            ingame.CDTrack = OPT_CD_TRACK_MIN;
-        break;
     case GOpt_DangerTrack:
-        if (ingame.DangerTrack < OPT_DANGER_TRACK_MAX)
-            ingame.DangerTrack++;
-        else
-            ingame.DangerTrack = OPT_DANGER_TRACK_MIN;
-        break;
     case GOpt_TranspObjSurfaceColr:
-        deep_radar_surface_col++;
-        break;
     case GOpt_TranspObjLineColr:
-        deep_radar_line_col++;
+        sval = game_option_get(option_no);
+        sval++;
+        if (sval > game_option_max(option_no))
+            sval = game_option_min(option_no);
+        game_option_set(option_no, sval);
+        break;
+    default:
+        break;
+    }
+}
+
+void game_option_shift(int option_no, int amount)
+{
+    int limit, sval;
+
+    switch (option_no)
+    {
+    case GOpt_ProjectorSpeed:
+    case GOpt_HighResolution:
+    case GOpt_DetailLevel:
+    case GOpt_CameraPerspective:
+    case GOpt_AdvancedLights:
+    case GOpt_BillboardMovies:
+    case GOpt_DeepRadar:
+    case GOpt_UseMultiMedia:
+    case GOpt_ScannerPulse:
+        sval = game_option_get(option_no);
+        if (((sval != 0) && (amount < 0)) || ((sval == 0) && (amount > 0)))
+            game_option_toggle(option_no);
+        break;
+    case GOpt_PanelPermutation:
+    case GOpt_TrenchcoatPreference:
+    case GOpt_SampleVolume:
+    case GOpt_DangerVolume:
+    case GOpt_CDAVolume:
+    case GOpt_CDATrack:
+    case GOpt_DangerTrack:
+    case GOpt_TranspObjSurfaceColr:
+    case GOpt_TranspObjLineColr:
+        sval = game_option_get(option_no);
+        sval += amount;
+        limit = game_option_max(option_no);
+        if (sval > limit)
+            sval = limit;
+        limit = game_option_min(option_no);
+        if (sval < limit)
+            sval = limit;
+        game_option_set(option_no, sval);
         break;
     default:
         break;
