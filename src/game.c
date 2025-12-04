@@ -243,8 +243,6 @@ extern long mech_unkn_tile_y2;
 extern long mech_unkn_tile_x3;
 extern long mech_unkn_tile_y3;
 
-extern short brightness;
-
 //TODO this is not an extern only because I was unable to locate it in asm
 ushort next_bezier_pt = 1;
 
@@ -705,23 +703,6 @@ void update_danger_music(ubyte a1)
         }
     }
     ingame.fld_unkC8B = 0;
-}
-
-void ingame_palette_load(int pal_id)
-{
-    char locstr[DISKPATH_SIZE];
-
-    sprintf(locstr, "qdata/pal%d.dat", pal_id);
-    LbFileLoadAt(locstr, display_palette);
-}
-
-void ingame_palette_reload(void)
-{
-    if ((ingame.Flags & GamF_ThermalView) != 0) {
-        ingame_palette_load(3);
-    } else {
-        ingame_palette_load(ingame.PalType);
-    }
 }
 
 void sprint_fmv_filename(ushort vid_type, char *fnbuf, ulong buflen)
@@ -1919,8 +1900,7 @@ void init_outro(void)
     data_1dd91c = 0;
     unkn_flags_01 = 1;
     overall_scale = 40;
-    palette_brightness = 0;
-    change_brightness(-64);
+    set_brightness_fadedout();
 
     while (1)
     {
@@ -2327,17 +2307,6 @@ void func_74934(void)
         :  :  : "eax" );
 }
 
-void set_default_brightness(void)
-{
-#if 0
-    asm volatile ("call ASM_set_default_brightness\n"
-        :  :  : "eax" );
-    return;
-#endif
-    palette_brightness = brightness;
-    change_brightness(0);
-}
-
 void init_crater_textures(void)
 {
     asm volatile ("call ASM_init_crater_textures\n"
@@ -2630,7 +2599,7 @@ void init_level(void)
         player_target_clear(plyr_no);
     }
 
-    set_default_brightness();
+    set_user_selected_brightness();
     ingame.Flags &= ~TngF_Unkn8000;
     if (!in_network_game)
         ingame.InNetGame_UNSURE = 1;
@@ -4958,7 +4927,7 @@ ubyte weapon_select_input(void)
     if (is_gamekey_pressed(GKey_VIEW_THERMAL))
     {
         clear_gamekey_pressed(GKey_VIEW_THERMAL);
-        if (person_can_toggle_thermal(dcthing))
+        if (player_can_toggle_thermal(local_player_no))
         {
             my_build_packet(p_pckt, PAct_THERMAL_TOGGLE, dcthing, 0, 0, 0);
             return GINPUT_PACKET;
@@ -5006,19 +4975,6 @@ void do_rotate_map(void)
 {
     asm volatile ("call ASM_do_rotate_map\n"
         :  :  : "eax" );
-}
-
-void reset_brightness(void)
-{
-#if 0
-    TbResult ret;
-    asm volatile ("call ASM_reset_brightness\n"
-        : "=r" (ret) : );
-    return ret;
-#endif
-    ingame_palette_reload();
-    brightness = 0;
-    set_default_brightness();
 }
 
 ubyte process_mouse_inputs(void)
@@ -5434,21 +5390,21 @@ ubyte do_user_interface(void)
     if (is_key_pressed(KC_F11, KMod_CONTROL))
     {
         clear_key_pressed(KC_F11);
-        reset_brightness();
+        reset_user_selected_brightness();
         did_inp |= GINPUT_DIRECT;
     }
     if (is_key_pressed(KC_F11, KMod_SHIFT))
     {
         clear_key_pressed(KC_F11);
         change_brightness(-1);
-        brightness--;
+        user_sel_brightness--;
         did_inp |= GINPUT_DIRECT;
     }
     if (is_key_pressed(KC_F11, KMod_NONE))
     {
         clear_key_pressed(KC_F11);
         change_brightness(1);
-        brightness++;
+        user_sel_brightness++;
         did_inp |= GINPUT_DIRECT;
     }
 

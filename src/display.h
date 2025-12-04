@@ -126,7 +126,12 @@ u32 my_string_width(const char *text);
 u32 my_str_len(const char *t);
 ubyte font_height(uchar c);
 
+void set_user_selected_brightness(void);
+void reset_user_selected_brightness(void);
+
 void change_brightness(short val);
+void set_brightness_fadedout(void);
+void ingame_palette_load(int pal_id);
 
 /******************************************************************************/
 #endif

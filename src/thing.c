@@ -927,23 +927,8 @@ void process_things(void)
 
     shield_frames_cycle();
 
-    if ((ingame.Flags & GamF_ThermalView) != 0)
-    {
-        PlayerInfo *p_locplayer;
-        struct Thing *p_dcthing;
-        ThingIdx dcthing;
+    player_update_thermal(local_player_no);
 
-        p_locplayer = &players[local_player_no];
-        dcthing = p_locplayer->DirectControl[mouser];
-        p_dcthing = &things[dcthing];
-
-        p_dcthing->U.UPerson.Energy -= 3;
-        if (p_dcthing->U.UPerson.Energy <= 0)
-        {
-            ingame.Flags &= ~GamF_ThermalView;
-            ingame_palette_reload();
-        }
-    }
 #if 0
     merged_noop_unkn1(gameturn);
 #endif

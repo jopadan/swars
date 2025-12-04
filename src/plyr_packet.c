@@ -178,24 +178,6 @@ void unkn_player_group_prot(sbyte a1, ubyte a2)
         :  : "a" (a1), "d" (a2));
 }
 
-void player_thermal_toggle(PlayerIdx plyr, struct Thing *p_person)
-{
-    if ((ingame.Flags & GamF_ThermalView) == 0)
-    {
-        if (p_person->U.UPerson.Energy > 100)
-        {
-            ingame.Flags |= GamF_ThermalView;
-            play_sample_using_heap(0, 35, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
-            ingame_palette_reload();
-        }
-    }
-    else
-    {
-        ingame.Flags &= ~GamF_ThermalView;
-        change_brightness(0);
-    }
-}
-
 void peep_change_weapon(struct Thing *p_person)
 {
     asm volatile (
@@ -1275,7 +1257,11 @@ void process_packet(PlayerIdx plyr, struct Packet *p_pckt, ushort i)
             result = PARes_EBADSLT;
             break;
         }
-        player_thermal_toggle(plyr, p_thing);
+        if (!player_can_toggle_thermal(plyr)) {
+            result = PARes_TNGBADST;
+            break;
+        }
+        player_toggle_thermal(plyr);
         result = PARes_DONE;
         break;
     case PAct_CHAT_MESSAGE_KEY:

@@ -144,6 +144,10 @@ short player_agent_weapon_delay(PlayerIdx plyr, ushort plagent, WeaponType wtype
 void player_agent_set_weapon_delay(PlayerIdx plyr, ushort plagent, WeaponType wtype, short delay_turns);
 void player_agents_clear_weapon_delays(PlayerIdx plyr);
 
+TbBool player_can_toggle_thermal(PlayerIdx plyr);
+void player_toggle_thermal(PlayerIdx plyr);
+void player_update_thermal(PlayerIdx plyr);
+
 TbBool player_agent_is_alive(PlayerIdx plyr, ushort plagent);
 TbBool player_agent_is_executing_commands(PlayerIdx plyr, ushort plagent);
 ThingIdx direct_control_thing_for_player(PlayerIdx plyr);

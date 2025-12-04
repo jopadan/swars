@@ -16714,19 +16714,19 @@ GLOBAL_FUNC (ASM_change_brightness)	/* 0x03D5F0 */
 		mov    %esp,%eax
 		mov    display_palette,%edx
 		call   ac_LbFileLoadAt
-		add    %bx,palette_brightness
+		add    %bx,EXPORT_SYMBOL(momentary_brightness)
 		mov    data_1a730e,%eax
 		sar    $0x10,%eax
 		mov    display_palette,%esi
 		cmp    $0xffff8ad0,%eax
 		jge    jump_3d64f
-		movw   $0x8ad0,palette_brightness
+		movw   $0x8ad0,EXPORT_SYMBOL(momentary_brightness)
 	jump_3d64f:
 		mov    data_1a730e,%eax
 		sar    $0x10,%eax
 		cmp    $0x7530,%eax
 		jle    jump_3d667
-		movw   $0x7530,palette_brightness
+		movw   $0x7530,EXPORT_SYMBOL(momentary_brightness)
 	jump_3d667:
 		mov    $0x3f,%ebp
 		xor    %ebx,%ebx
@@ -16752,7 +16752,7 @@ GLOBAL_FUNC (ASM_change_brightness)	/* 0x03D5F0 */
 		mov    %bx,%cx
 		add    %ecx,%eax
 		add    %esi,%eax
-		mov    palette_brightness,%cl
+		mov    EXPORT_SYMBOL(momentary_brightness),%cl
 		mov    (%eax),%ch
 		add    %cl,%ch
 		mov    %ch,(%eax)
@@ -16791,16 +16791,16 @@ GLOBAL_FUNC (ASM_change_brightness)	/* 0x03D5F0 */
 
 
 /*----------------------------------------------------------------*/
-GLOBAL_FUNC(ASM_set_default_brightness)	/* 0x03D6EC */
+GLOBAL_FUNC(ASM_set_user_selected_brightness)	/* 0x03D6EC */
 /*----------------------------------------------------------------*/
-		mov    brightness,%ax
-		mov    %ax,palette_brightness
+		mov    EXPORT_SYMBOL(user_sel_brightness),%ax
+		mov    %ax,EXPORT_SYMBOL(momentary_brightness)
 		xor    %eax,%eax
 		jmp    ac_change_brightness
 
 
 /*----------------------------------------------------------------*/
-GLOBAL_FUNC (ASM_reset_brightness)	/* 0x03D700 */
+GLOBAL_FUNC (ASM_reset_user_selected_brightness)	/* 0x03D700 */
 /*----------------------------------------------------------------*/
 		push   %edx
 		sub    $0x64,%esp
@@ -76502,7 +76502,7 @@ GLOBAL_FUNC(ASM_init_level)	/* 0x074CDC */
 		xor    %ebx,%ebx
 		jmp    jump_74d65
 	jump_74da9:
-		call   ac_set_default_brightness
+		call   ac_set_user_selected_brightness
 		mov    EXPORT_SYMBOL(ingame)+0x930,%dh # ingame.Flags+1
 		and    $0x7f,%dh
 		mov    in_network_game,%bl
@@ -181554,7 +181554,7 @@ GLOBAL (dword_1810D1)	/* 0x1810D1 */
 		.long	0x0
 GLOBAL (dword_1810D5)	/* 0x1810D5 */
 		.fill   0x5
-GLOBAL (brightness)	/* 0x1810DA */
+GLOBAL (user_sel_brightness)	/* 0x1810DA */
 		.short  0x0
 		.fill   0x8
 GLOBAL (game_level_unique_id)	/* 0x1810E4 */
@@ -182320,7 +182320,7 @@ bangdetailmask:	/* 0x1A730C */
 		.short  0x0
 data_1a730e:
 		.short  0x0
-GLOBAL (palette_brightness)	/* 0x1A7310 */
+GLOBAL (momentary_brightness)	/* 0x1A7310 */
 		.long	0x0
 data_1a7314:
 		.long	0x0

@@ -4331,6 +4331,33 @@ void person_supershield_toggle(struct Thing *p_person)
     }
 }
 
+TbBool person_can_sustain_thermal(ThingIdx person)
+{
+    struct Thing *p_person;
+
+    p_person = &things[person];
+
+    if (p_person->U.UPerson.Energy <= 100)
+        return false;
+
+    return true;
+}
+
+TbBool person_update_thermal(ThingIdx person)
+{
+    struct Thing *p_person;
+
+    p_person = &things[person];
+
+    p_person->U.UPerson.Energy -= 3;
+
+    if (p_person->U.UPerson.Energy <= 0) {
+        return false;
+    }
+
+    return true;
+}
+
 void make_peeps_scatter(struct Thing *p_person, int x, int z)
 {
     asm volatile (

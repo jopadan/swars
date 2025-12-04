@@ -20,11 +20,15 @@
 
 #include <assert.h>
 #include "bfutility.h"
+#include "ssampply.h"
 
+#include "display.h"
 #include "game.h"
+#include "game_options.h"
 #include "guitext.h"
 #include "hud_panel.h"
 #include "people.h"
+#include "sound.h"
 #include "thing.h"
 #include "weapon.h"
 #include "swlog.h"
@@ -445,6 +449,63 @@ void kill_my_players(PlayerIdx plyr)
 {
     asm volatile ("call ASM_kill_my_players\n"
         : : "a" (plyr));
+}
+
+TbBool player_can_toggle_thermal(PlayerIdx plyr)
+{
+    PlayerInfo *p_player;
+    ThingIdx dcthing;
+
+    // Cannot enable in network mode - this would lead to desync
+    if (in_network_game)
+        return false;
+    // Only local player can enable thermal - state is stored outside of players array
+    if (plyr != local_player_no)
+        return false;
+
+    p_player = &players[plyr];
+    dcthing = p_player->DirectControl[mouser];
+    if (!person_can_sustain_thermal(dcthing))
+        return false;
+
+    return true;
+}
+
+void player_toggle_thermal(PlayerIdx plyr)
+{
+    //TODO thermal view state should be stored in player - now it cannot be used in net games
+    if ((ingame.Flags & GamF_ThermalView) == 0) {
+        ingame.Flags |= GamF_ThermalView;
+    } else {
+        ingame.Flags &= ~GamF_ThermalView;
+    }
+    if ((ingame.Flags & GamF_ThermalView) != 0) {
+        play_sample_using_heap(0, 35, FULL_VOL, EQUL_PAN, NORM_PTCH, LOOP_NO, 1);
+    }
+    // Make zero change to brightness - will reload palette and apply momentary brightness
+    change_brightness(0);
+}
+
+void player_update_thermal(PlayerIdx plyr)
+{
+    PlayerInfo *p_player;
+    ThingIdx dcthing;
+
+    if (plyr != local_player_no) {
+        return;
+    }
+    if ((ingame.Flags & GamF_ThermalView) == 0) {
+        return;
+    }
+
+    p_player = &players[plyr];
+    dcthing = p_player->DirectControl[mouser];
+
+    if (!person_update_thermal(dcthing))
+    {
+        ingame.Flags &= ~GamF_ThermalView;
+        change_brightness(0);
+    }
 }
 
 /******************************************************************************/

@@ -268,6 +268,14 @@ TbBool person_has_supershield_active(ThingIdx person);
 TbBool person_can_toggle_supershield(ThingIdx person);
 void person_supershield_toggle(struct Thing *p_person);
 
+/** Returns if a person can be used as energy source to enable thermal view.
+ */
+TbBool person_can_sustain_thermal(ThingIdx person);
+
+/** Updates person state due to thermal enabled; returns true if thermal is sustained.
+ */
+TbBool person_update_thermal(ThingIdx person);
+
 /** Returns slot at which given person is in given players agents, or -1.
  */
 short person_slot_as_player_agent(struct Thing *p_person, PlayerIdx plyr);

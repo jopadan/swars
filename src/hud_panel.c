@@ -2593,8 +2593,8 @@ ubyte check_panel_input(short panel)
                 break;
             }
             my_build_packet(p_pckt, PAct_AGENT_USE_MEDIKIT, p_agent->ThingOffset, 0, 0, 0);
-            did_inp |= GINPUT_DIRECT;
-            break;
+            did_inp |= GINPUT_PACKET;
+            return did_inp;
         case PanT_WeaponEnergy:
             // Enable supershield
             if (p_locplayer->DoubleMode && byte_153198 - 1 != mouser) {
@@ -2613,9 +2613,11 @@ ubyte check_panel_input(short panel)
             {
                 // Toggle thermal view
                 dcthing = p_locplayer->DirectControl[mouser];
-                build_packet(p_pckt, PAct_THERMAL_TOGGLE, dcthing, 0, 0, 0);
-                did_inp |= GINPUT_PACKET;
-                return did_inp;
+                if (player_can_toggle_thermal(local_player_no)) {
+                    build_packet(p_pckt, PAct_THERMAL_TOGGLE, dcthing, 0, 0, 0);
+                    did_inp |= GINPUT_PACKET;
+                    return did_inp;
+                }
             }
             else
             {

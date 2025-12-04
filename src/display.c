@@ -35,6 +35,7 @@
 #include "bfutility.h"
 #include "poly.h"
 
+#include "game_options.h"
 #include "game_sprts.h"
 #include "util.h"
 #include "swlog.h"
@@ -49,6 +50,9 @@ TbScreenMode screen_mode_fmvid_hi = Lb_SCREEN_MODE_640_480_8;
 
 extern ushort data_1aa330;
 extern ushort data_1aa332;
+
+/** Momentary in-game brightess; base from user settings, but with automatic adjustments. */
+extern short momentary_brightness;
 
 TbPixel fade_unaffected_colours[] = {
   1,2,3,
@@ -425,10 +429,90 @@ u32 my_str_len(const char *t)
     return strlen(t);
 }
 
-void change_brightness(short val)
+void ingame_palette_load(int pal_id)
 {
+    char locstr[DISKPATH_SIZE];
+
+    sprintf(locstr, "qdata/pal%d.dat", pal_id);
+    LbFileLoadAt(locstr, display_palette);
+}
+
+void ingame_palette_reload(void)
+{
+    if ((ingame.Flags & GamF_ThermalView) != 0) {
+        ingame_palette_load(3);
+    } else {
+        ingame_palette_load(ingame.PalType);
+    }
+}
+
+void palette_apply_brightness(ubyte *pal)
+{
+    int colr,cmpn;
+
+    for (colr = 0; colr < 0x300; colr += 3)
+    {
+        for (cmpn = 0; cmpn < 3; cmpn++)
+        {
+            ubyte *p_intens;
+            int i;
+            p_intens = &pal[colr + cmpn];
+            i = (*p_intens) + momentary_brightness;
+            if (i < 0)
+              i = 0;
+            if (i > 63)
+              i = 63;
+            *p_intens = i;
+        }
+    }
+}
+
+void change_brightness(short amount)
+{
+#if 0
     asm volatile ("call ASM_change_brightness\n"
         : : "a" (val));
+#endif
+    ingame_palette_reload();
+
+    momentary_brightness += amount;
+    if (momentary_brightness < -63)
+        momentary_brightness = -63;
+    if (momentary_brightness > 63)
+        momentary_brightness = 63;
+
+    palette_apply_brightness(display_palette);
+    LbPaletteSet(display_palette);
+}
+
+void set_user_selected_brightness(void)
+{
+#if 0
+    asm volatile ("call ASM_set_user_selected_brightness\n"
+        :  :  : "eax" );
+    return;
+#endif
+    momentary_brightness = user_sel_brightness;
+    change_brightness(0);
+}
+
+void reset_user_selected_brightness(void)
+{
+#if 0
+    TbResult ret;
+    asm volatile ("call ASM_reset_user_selected_brightness\n"
+        : "=r" (ret) : );
+    return ret;
+#endif
+    ingame_palette_reload();
+    user_sel_brightness = 0;
+    set_user_selected_brightness();
+}
+
+void set_brightness_fadedout(void)
+{
+    momentary_brightness = 0;
+    change_brightness(-64);
 }
 
 /******************************************************************************/
