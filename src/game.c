@@ -3200,6 +3200,7 @@ void restart_back_into_mission(ushort missi)
     reload = (missi == ingame.CurrentMission);
     mapno = mission_list[missi].MapNo;
     mission_result = 0;
+    ingame.MissionEndFade = 0;
     ingame.CurrentMission = missi;
     mission_list[missi].Complete = 0;
     change_current_map(mapno);
