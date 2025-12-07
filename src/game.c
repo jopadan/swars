@@ -6703,9 +6703,21 @@ void load_packet(void)
             if (ingame.MissionEndFade == 0)
             {
                 struct Mission *p_missi;
+                int fade_turns;
+
+                fade_turns = 0;
                 p_missi = &mission_list[ingame.CurrentMission];
-                if (p_missi->WaitToFade != 0)
-                    ingame.MissionEndFade = p_missi->WaitToFade;
+                if ((ingame.MissionStatus == ObvStatu_COMPLETED) &&
+                  ((p_missi->WaitToFade & WTFade_ON_SUCCESS) != 0))
+                    fade_turns = (p_missi->WaitToFade & 0x1FFF);
+                if ((ingame.MissionStatus == ObvStatu_FAILED) &&
+                  ((p_missi->WaitToFade & WTFade_ON_FAIL) != 0))
+                    fade_turns = (p_missi->WaitToFade & 0x1FFF);
+                if (fade_turns != 0) {
+                    LOGSYNC("Mission end fade initiated, status=%d, turns=%d",
+                      (int)ingame.MissionStatus, fade_turns);
+                    ingame.MissionEndFade = fade_turns;
+                }
             }
         }
     }

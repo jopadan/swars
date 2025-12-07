@@ -92,6 +92,11 @@ enum MissionResolutionStatus {
     MResol_COMPLETED = 1,
 };
 
+enum WaitToFadeFlags {
+    WTFade_ON_SUCCESS = 0x8000,
+    WTFade_ON_FAIL = 0x4000,
+};
+
 struct Campaign {
     /** Default campaign title. */
     const char *TextName;
