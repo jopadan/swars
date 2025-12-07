@@ -39,6 +39,9 @@ enum ObjectiveStatuses {
     ObvStatu_FAILED,
 };
 
+/* Temporary value for MissionStatus, as it does not use ObvStatu_FAILED as it should */
+#define ObvStatu_MissTmp_FAILED -1
+
 /* deprecated - when callbacks are defined within objectv_defs[],
  * there will be no need to reference specific objective.
  */

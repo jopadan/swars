@@ -5819,6 +5819,7 @@ void show_menu_screen_st2(void)
       update_mission_time(0);
       selected_city_id = -1;
       byte_1C4AA3 = brief_store[open_brief - 1].RefNum;
+      // Original code compared MissionStatus to 0 and 2, is 2 a valid value?
       if ((ingame.MissionStatus != ObvStatu_UNDECIDED) && (ingame.MissionStatus != ObvStatu_FAILED))
       {
             memcpy(&mission_status[0], &mission_status[open_brief],
@@ -6652,7 +6653,7 @@ void input_mission_concluded(void)
       is_key_pressed(KC_SPACE, KMod_DONTCARE) ||
       is_key_pressed(KC_ESCAPE, KMod_NONE))
     {
-        if (ingame.MissionStatus != -1 || is_key_pressed(KC_ESCAPE, KMod_NONE))
+        if (ingame.MissionStatus != ObvStatu_MissTmp_FAILED || is_key_pressed(KC_ESCAPE, KMod_NONE))
         {
           clear_key_pressed(KC_ESCAPE);
           clear_key_pressed(KC_SPACE);
@@ -6710,7 +6711,7 @@ void load_packet(void)
                 if ((ingame.MissionStatus == ObvStatu_COMPLETED) &&
                   ((p_missi->WaitToFade & WTFade_ON_SUCCESS) != 0))
                     fade_turns = (p_missi->WaitToFade & 0x1FFF);
-                if ((ingame.MissionStatus == ObvStatu_FAILED) &&
+                if ((ingame.MissionStatus == ObvStatu_MissTmp_FAILED) &&
                   ((p_missi->WaitToFade & WTFade_ON_FAIL) != 0))
                     fade_turns = (p_missi->WaitToFade & 0x1FFF);
                 if (fade_turns != 0) {
@@ -6742,7 +6743,7 @@ void load_packet(void)
         } else {
             init_level_3d(1);
             if (ingame.MissionStatus != ObvStatu_COMPLETED)
-                ingame.MissionStatus = -1;
+                ingame.MissionStatus = ObvStatu_MissTmp_FAILED;
             mission_over();
         }
     }
