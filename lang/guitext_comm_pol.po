@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: GUI text for SyndWarsFX\n"
 "Report-Msgid-Bugs-To: https://github.com/swfans/syndwarsfx/issues\n"
 "POT-Creation-Date: 2025-09-20 22:19+0200\n"
-"PO-Revision-Date: 2025-12-09 19:22+0100\n"
+"PO-Revision-Date: 2025-12-09 21:09+0100\n"
 "Last-Translator: Mefistotelis <mefistotelis@gmail.com>\n"
 "Language-Team: Syndicate Wars Fans <github.com/swfans>\n"
 "Language: pl_PL\n"
@@ -2531,7 +2531,7 @@ msgstr "Brak badań nad bronią"
 #: guitext:417
 msgctxt "Research status text"
 msgid "No Mod Research"
-msgstr "Brak badań nad modyfikacjami"
+msgstr "Brak badań nad wszczepem"
 
 #. Text on button to start research of selected item.
 #: guitext:418
@@ -2621,7 +2621,7 @@ msgstr "Krio"
 #: guitext:432
 msgctxt "Cryo screen area"
 msgid "Modifications"
-msgstr "Modyfikacje"
+msgstr "Wszczepy"
 
 #. Properties shown in cryo screen when specific mod is selected.
 #: guitext:433
@@ -2741,7 +2741,7 @@ msgstr "Bronie"
 #: guitext:452
 msgctxt "Research screen button"
 msgid "Mods"
-msgstr "Mody"
+msgstr "Wszczepy"
 
 #. Axis on research progress bar.
 #: guitext:453
@@ -2771,7 +2771,7 @@ msgstr "Kontynuuj"
 #: guitext:457
 msgctxt "Menu interface text"
 msgid "FYI"
-msgstr ""
+msgstr "Do wiadomości"
 
 #. Unidentified text
 #: guitext:458
@@ -2843,7 +2843,7 @@ msgstr "Zakończ"
 #: guitext:469
 msgctxt "Menu interface text"
 msgid "Mail HQ"
-msgstr "Kontakt HQ"
+msgstr "Kontakt z HQ"
 
 #. Name for option which allows switching screen resolution during missions.
 #: guitext:470
@@ -3077,7 +3077,7 @@ msgstr "Reinkarnacja"
 #: guitext:508
 msgctxt "MP screen protocol"
 msgid "Socket No."
-msgstr "Numer gniazda"
+msgstr "Nr. gniazda"
 
 #. Audio output channels setting.
 #: guitext:509
@@ -3119,7 +3119,7 @@ msgstr "MIDI Stereo"
 #: guitext:515
 msgctxt "Visual settings option"
 msgid "Deep Radar"
-msgstr "Głęboki radar"
+msgstr "Głęboki Radar"
 
 #. Random weapons apearing on the map within multiplayer missions.
 #: guitext:516
@@ -3185,7 +3185,7 @@ msgstr "Korekcja jasności"
 #: guitext:526 guitext:527 guitext:528
 msgctxt "Unused"
 msgid "N528"
-msgstr "N528"
+msgstr ""
 
 #. Music track to be played during the next mission.
 #: guitext:529
@@ -3209,19 +3209,19 @@ msgstr "Rozszerzenia dźwięku"
 #: guitext:532
 msgctxt "Audio Track button"
 msgid "Trk 1"
-msgstr "Ścieżka 1"
+msgstr "Ściż. 1"
 
 #. Text on a button for selection of audio track, either CD or tension.
 #: guitext:533
 msgctxt "Audio Track button"
 msgid "Trk 2"
-msgstr "Ścieżka 2"
+msgstr "Ściż. 2"
 
 #. Text on a button for selection of audio track, either CD or tension.
 #: guitext:534
 msgctxt "Audio Track button"
 msgid "Trk 3"
-msgstr "Ścieżka 3"
+msgstr "Ściż. 3"
 
 #. Allows performin Equip/Cryo screen operation (putchease/sell) on all 4 agents.
 #: guitext:535
@@ -3781,19 +3781,19 @@ msgstr "Zgrupuj Agentów"
 #: guitext:807
 msgctxt "Controls"
 msgid "Up"
-msgstr ""
+msgstr "Góra"
 
 #. Key for moving the view or moving the cyborg directly (if in key control mode).
 #: guitext:808
 msgctxt "Controls"
 msgid "Down"
-msgstr ""
+msgstr "Dół"
 
 #. Key for moving the view or moving the cyborg directly (if in key control mode).
 #: guitext:809
 msgctxt "Controls"
 msgid "Left"
-msgstr ""
+msgstr "Lewo"
 
 #. Key for moving the view or moving the cyborg directly (if in key control mode).
 #: guitext:810
@@ -3805,205 +3805,205 @@ msgstr "Prawo"
 #: guitext:811
 msgctxt "Controls"
 msgid "Zoom In"
-msgstr ""
+msgstr "Przybliż"
 
 #. Key for zooming the camera out, showing wider view.
 #: guitext:812
 msgctxt "Controls"
 msgid "Zoom Out"
-msgstr ""
+msgstr "Oddal"
 
 #. Key for self-destructing a cyborg with chest mod.
 #: guitext:813
 msgctxt "Controls"
 msgid "Self-Destruct"
-msgstr ""
+msgstr "Autodestrukcja"
 
 #. Key for leaving a weapon unarmed on the ground.
 #: guitext:814
 msgctxt "Controls"
 msgid "Drop Weapon"
-msgstr ""
+msgstr "Upuść Broń"
 
 #. Key for rotating the camera up (in very limited bounds).
 #: guitext:815
 msgctxt "Controls"
 msgid "Tilt View Up"
-msgstr ""
+msgstr "Pochyl Widok w Górę"
 
 #. Key for rotating the camera down (in very limited bounds).
 #: guitext:816
 msgctxt "Controls"
 msgid "Tilt View Down"
-msgstr ""
+msgstr "Pochyl Widok w Dół"
 
 #. Key for pausing the mission.
 #: guitext:817
 msgctxt "Controls"
 msgid "Pause"
-msgstr ""
+msgstr "Pauza"
 
 #. Key for entering cyborgs direct control.
 #: guitext:818
 msgctxt "Controls"
 msgid "Key Control"
-msgstr ""
+msgstr "Sterowanie Klawiszami"
 
 #. Keys for cyborg # selection; filler slot - text unused, as the game generates it from other translations.
 #: guitext:819 guitext:820 guitext:821 guitext:822
 msgctxt "Controls"
 msgid "Cyborg N"
-msgstr ""
+msgstr "Cyborg N"
 
 #. Key for switching mode of camera lens.
 #: guitext:823
 msgctxt "Controls"
 msgid "Camera Perspective"
-msgstr ""
+msgstr "Perspektywa Kamery"
 
 #. Key for disabling or enabling scanner pulses.
 #: guitext:824
 msgctxt "Controls"
 msgid "Scanner Pulse toggle"
-msgstr ""
+msgstr "Przełącz Puls Skanera"
 
 #. Key for changing colour of half-transparent buildings under deep radar.
 #: guitext:825
 msgctxt "Controls"
 msgid "Deep Radar sur. colour"
-msgstr ""
+msgstr "Kolor Pow. Głęb. Radaru"
 
 #. Key for changing colour of half-transparent buildings under deep radar.
 #: guitext:826
 msgctxt "Controls"
 msgid "Deep Radar line colour"
-msgstr ""
+msgstr "Kolor Linii Głęb. Radaru"
 
 #. Key for making all buildings either transparent or completely invisible.
 #: guitext:827
 msgctxt "Controls"
 msgid "Deep Radar expand"
-msgstr ""
+msgstr "Rozszerzony Głęb. Radar"
 
 #. Key for increasing brightness of the scanner area, or whole panel if set to transfluent.
 #: guitext:828
 msgctxt "Controls"
 msgid "Scanner brighter"
-msgstr ""
+msgstr "Jaśniejszy Skaner"
 
 #. Key for decreasing brightness of the scanner area, or whole panel if set to transfluent.
 #: guitext:829
 msgctxt "Controls"
 msgid "Scanner darker"
-msgstr ""
+msgstr "Ciemniejszy Skaner"
 
 #. Key for switching between tracks used for danger / tension sound.
 #: guitext:830
 msgctxt "Controls"
 msgid "Change tension track"
-msgstr ""
+msgstr "Zmień Ścieżkę Napięcia"
 
 #. Key for switching between music tracks.
 #: guitext:831
 msgctxt "Controls"
 msgid "Change music track"
-msgstr ""
+msgstr "Zmień Utwór Muzyczny"
 
 #. Key for increasing volume of sound effects / digital sound samples.
 #: guitext:832
 msgctxt "Controls"
 msgid "Sounds volume up"
-msgstr ""
+msgstr "Głośniejsze Efekty"
 
 #. Key for decreasing volume of sound effects / digital sound samples.
 #: guitext:833
 msgctxt "Controls"
 msgid "Sounds volume down"
-msgstr ""
+msgstr "Cichsze Efekty"
 
 #. Key for increasing volume of danger / tension sound.
 #: guitext:834
 msgctxt "Controls"
 msgid "Tension volume up"
-msgstr ""
+msgstr "Głośniejsze Napięcie"
 
 #. Key for decreasing volume of danger / tension sound.
 #: guitext:835
 msgctxt "Controls"
 msgid "Tension volume down"
-msgstr ""
+msgstr "Cichsze Napięcie"
 
 #. Key for increasing volume of background music.
 #: guitext:836
 msgctxt "Controls"
 msgid "Music volume up"
-msgstr ""
+msgstr "Głośniejsza Muzyka"
 
 #. Key for decreasing volume of background music.
 #: guitext:837
 msgctxt "Controls"
 msgid "Music volume down"
-msgstr ""
+msgstr "Cichsza Muzyka"
 
 #. Key for immediately restarting the current mission.
 #: guitext:838
 msgctxt "Controls"
 msgid "Restart mission"
-msgstr ""
+msgstr "Restart Misji"
 
 #. Key for increasing speed at which the game world progresses.
 #: guitext:839
 msgctxt "Controls"
 msgid "Speed up action"
-msgstr ""
+msgstr "Przyspiesz Akcję"
 
 #. Key for decreasing speed at which the game world progresses.
 #: guitext:840
 msgctxt "Controls"
 msgid "Slow down action"
-msgstr ""
+msgstr "Zwolnij Akcję"
 
 #. Key for capturing the momentary screen content and saving on disk as image file.
 #: guitext:841
 msgctxt "Controls"
 msgid "Save screenshot"
-msgstr ""
+msgstr "Zapisz Zrzut Ekranu"
 
 #. Key for changing wielded weapon into the one is slot 1. Allows to also hide the waepon, or select weapon for the whole group.
 #: guitext:842
 msgctxt "Controls"
 msgid "Select weapon 1"
-msgstr ""
+msgstr "Wybierz Broń 1"
 
 #. Key for changing wielded weapon into the one is slot 2.
 #: guitext:843
 msgctxt "Controls"
 msgid "Select weapon 2"
-msgstr ""
+msgstr "Wybierz Broń 2"
 
 #. Key for changing wielded weapon into the one is slot 3.
 #: guitext:844
 msgctxt "Controls"
 msgid "Select weapon 3"
-msgstr ""
+msgstr "Wybierz Broń 3"
 
 #. Key for changing wielded weapon into the one is slot 4.
 #: guitext:845
 msgctxt "Controls"
 msgid "Select weapon 4"
-msgstr ""
+msgstr "Wybierz Broń 4"
 
 #. Key for changing wielded weapon into the one is slot 5.
 #: guitext:846
 msgctxt "Controls"
 msgid "Select weapon 5"
-msgstr ""
+msgstr "Wybierz Broń 5"
 
 #. Key for changing wielded weapon into the one is slot 6.
 #: guitext:847
 msgctxt "Controls"
 msgid "Select weapon 6"
-msgstr ""
+msgstr "Wybierz Broń 6"
 
 #. Key for immediately using medikit of any kind which the cyborg has in his slots.
 #: guitext:848
@@ -4015,13 +4015,13 @@ msgstr "Użyj Apteczki"
 #: guitext:849
 msgctxt "Controls"
 msgid "Toggle Supershield"
-msgstr ""
+msgstr "Przełącz Superosłonę"
 
 #. Key for switching thermal view (allowing to see people inside buildings) on and off.
 #: guitext:850
 msgctxt "Controls"
 msgid "Toggle Thermal View"
-msgstr ""
+msgstr "Przełącz Widok Termiczny"
 
 #. Key for future use; does nothing currently.
 #: guitext:851 guitext:852 guitext:853 guitext:854 guitext:855
@@ -4033,163 +4033,163 @@ msgstr ""
 #: guitext:902
 msgctxt "Debrief screen metric"
 msgid "Mission Reference"
-msgstr ""
+msgstr "Identyfikator Misji"
 
 #. Name of a field storing mission end status.
 #: guitext:903
 msgctxt "Debrief screen metric"
 msgid "Mission Status"
-msgstr ""
+msgstr "Status Misji"
 
 #. Name of a field storing completed objectives.
 #: guitext:904
 msgctxt "Debrief screen metric"
 msgid "Objectives Completed"
-msgstr ""
+msgstr "Zrealizowane Cele"
 
 #. Name of a field storing time spent within the mission (as counted within the game world).
 #: guitext:905
 msgctxt "Debrief screen metric"
 msgid "City Drop Time"
-msgstr ""
+msgstr "Czas Zrzutu do Miasta"
 
 #. Name of a field storing time elapsed since mission start (as counted within the game world).
 #: guitext:906
 msgctxt "Debrief screen metric"
 msgid "Mission Time Elapsed"
-msgstr ""
+msgstr "Czas Misji"
 
 #. Name of a field storing credits received during the mission and at its completion.
 #: guitext:907
 msgctxt "Debrief screen metric"
 msgid "Net Fiscal Gain"
-msgstr ""
+msgstr "Zysk Netto"
 
 #. Name of a field storing computed mission efficiency.
 #: guitext:908
 msgctxt "Debrief screen metric"
 msgid "Efficiency"
-msgstr ""
+msgstr "Wydajność"
 
 #. Name of a field storing persuaded survivors count.
 #: guitext:909
 msgctxt "Debrief screen metric"
 msgid "Civilians Persuaded"
-msgstr ""
+msgstr "Perswadowani Cywile"
 
 #. Name of a field storing persuaded survivors count.
 #: guitext:910
 msgctxt "Debrief screen metric"
 msgid "Militia Persuaded"
-msgstr ""
+msgstr "Perswadowana Milicja"
 
 #. Name of a field storing persuaded survivors count.
 #: guitext:911
 msgctxt "Debrief screen metric"
 msgid "Adversaries Persuaded"
-msgstr ""
+msgstr "Perswadowani Wrogowie"
 
 #. Name of a field storing kill count.
 #: guitext:912
 msgctxt "Debrief screen metric"
 msgid "Civilians killed"
-msgstr ""
+msgstr "Zabici Cywile"
 
 #. Name of a field storing kill count.
 #: guitext:913
 msgctxt "Debrief screen metric"
 msgid "Militia killed"
-msgstr ""
+msgstr "Zabita Milicja"
 
 #. Name of a field storing kill count.
 #: guitext:914
 msgctxt "Debrief screen metric"
 msgid "Adversaries killed"
-msgstr ""
+msgstr "Zabici Wrogowie"
 
 #. Name of a field storing number of owned cyborgs killed.
 #: guitext:915
 msgctxt "Debrief screen metric"
 msgid "Agents lost"
-msgstr ""
+msgstr "Utraceni Agenci"
 
 #. Name of a field storing last visited city during a multi-city missison.
 #: guitext:920
 msgctxt "Debrief screen metric"
 msgid "Last City Visited"
-msgstr ""
+msgstr "Ostatnio Odwiedzone Miasto"
 
 #. Name of a field storing amount of persuaded agents which were stored in Cryovats.
 #: guitext:921
 msgctxt "Debrief screen metric"
 msgid "Agents Gained"
-msgstr ""
+msgstr "Pozyskani Agenci"
 
 #. Name of a field storing a comma separated list of items researched during mission time.
 #: guitext:922
 msgctxt "Debrief screen metric"
 msgid "Research Completed:"
-msgstr ""
+msgstr "Ukończone Badania:"
 
 #. Name of a field storing amount of credits spent during mission time.
 #: guitext:923
 msgctxt "Debrief screen metric"
 msgid "Expenditure"
-msgstr ""
+msgstr "Wydatki"
 
 #. Name of a field storing amount of credits received during the mission and at its completion.
 #: guitext:924
 msgctxt "Debrief screen metric"
 msgid "Income"
-msgstr ""
+msgstr "Przychody"
 
 #. Generic text
 #: guitext:961
 msgctxt "MP game status"
 msgid "Has Left The Game"
-msgstr ""
+msgstr "Opuścił Grę"
 
 #. Generic text
 #: guitext:962
 msgctxt "MP game status"
 msgid "Host Has Quit"
-msgstr ""
+msgstr "Host Opuścił Grę"
 
 #. Name of a campaign selectable at start of new game.
 #: guitext:1000
 msgctxt "Campaign name"
 msgid "Eurocorp Syndicate"
-msgstr ""
+msgstr "Syndykat Eurocorp"
 
 #. How cyborgs from a specific faction are named.
 #: guitext:1001
 msgctxt "Noun for cyborgs, full"
 msgid "Agent"
-msgstr ""
+msgstr "Agent"
 
 #. Name of a campaign selectable at start of new game.
 #: guitext:1100
 msgctxt "Campaign name"
 msgid "Church Of The New Epoch"
-msgstr ""
+msgstr "Kościół Nowej Epoki"
 
 #. How cyborgs from a specific faction are named.
 #: guitext:1101
 msgctxt "Noun for cyborgs, full"
 msgid "Zealot"
-msgstr ""
+msgstr "Zelot"
 
 #. Name of a campaign selectable at start of new game.
 #: guitext:1200
 msgctxt "Campaign name"
 msgid "The Unguided"
-msgstr ""
+msgstr "Niewiedzeni"
 
 #. How cyborgs from a specific faction are named.
 #: guitext:1201
 msgctxt "Noun for cyborgs, full"
 msgid "Outcast"
-msgstr ""
+msgstr "Wyrzutek"
 
 #. Pool of unused entries, for future texts
 #: guitext:590 guitext:591 guitext:592 guitext:593 guitext:594 guitext:595
@@ -4439,7 +4439,3 @@ msgstr ""
 msgctxt "Unused"
 msgid "N"
 msgstr ""
-
-#~ msgctxt "Menu interface text"
-#~ msgid "Fyi"
-#~ msgstr "Do wiadomości"
