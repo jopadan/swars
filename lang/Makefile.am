@@ -201,6 +201,56 @@ $(langallita_WADFILES_P): $(langallita_POFILES_P)
 	$(MKDIR_P) "$(@D)"
 	$(TEXTWAD) -t "$(word 1,$(langall_eu_ETBLS))" -m "$(word 2,$(langall_eu_ETBLS))" -w $@ -c $+
 
+langallpol_DATFILES_C = \
+    pol/guitext.dat
+
+langallpol_WADFILES_S = \
+    pol/alltext-s.wad \
+    pol/alltext-s.idx
+
+langallpol_WADFILES_Z = \
+    pol/alltext-z.wad \
+    pol/alltext-z.idx
+
+langallpol_WADFILES_P = \
+    pol/alltext-p.wad \
+    pol/alltext-p.idx
+
+langallpol_POFILES_C = \
+    guitext_comm_pol.po
+
+langallpol_POFILES_S = \
+	alltext_syndct_pol.po \
+	alltext_comm_pol.po
+
+langallpol_POFILES_Z = \
+	alltext_church_pol.po \
+	alltext_comm_pol.po
+
+langallpol_POFILES_P = \
+	alltext_punks_pol.po \
+	alltext_comm_pol.po
+
+langallpoldir = $(prefix)/$(PACKAGE)/language/pol
+langallpol_DATA = $(langallpol_DATFILES_C)
+# files not created yet for polish: $(langallpol_WADFILES_S) $(langallpol_WADFILES_Z) $(langallpol_WADFILES_P)
+
+$(langallpol_DATFILES_C): $(langallpol_POFILES_C)
+	$(MKDIR_P) "$(@D)"
+	$(TEXTDAT) -t "$(word 1,$(langall_eu_ETBLS))" -d $@ -c $+
+
+$(langallpol_WADFILES_S): $(langallpol_POFILES_S)
+	$(MKDIR_P) "$(@D)"
+	$(TEXTWAD) -t "$(word 1,$(langall_eu_ETBLS))" -m "$(word 2,$(langall_eu_ETBLS))" -w $@ -c $+
+
+$(langallpol_WADFILES_Z): $(langallpol_POFILES_Z)
+	$(MKDIR_P) "$(@D)"
+	$(TEXTWAD) -t "$(word 1,$(langall_eu_ETBLS))" -m "$(word 2,$(langall_eu_ETBLS))" -w $@ -c $+
+
+$(langallpol_WADFILES_P): $(langallpol_POFILES_P)
+	$(MKDIR_P) "$(@D)"
+	$(TEXTWAD) -t "$(word 1,$(langall_eu_ETBLS))" -m "$(word 2,$(langall_eu_ETBLS))" -w $@ -c $+
+
 langallspa_DATFILES_C = \
     spa/guitext.dat
 
@@ -303,6 +353,7 @@ EXTRA_DIST = \
 	langallfre \
 	langallger \
 	langallita \
+	langallpol \
 	langallspa \
 	langallswe \
 	langalleng
