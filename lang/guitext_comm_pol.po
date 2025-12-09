@@ -89,7 +89,7 @@ msgstr "Zakłócacz"
 #: guitext:10
 msgctxt "Weapon name - Eurocorp"
 msgid "Psycho Gas"
-msgstr "Gaz Psychoaktywny"
+msgstr "Gaz Psychoaktyw."
 
 #. Weapon name visible in Equip and Research menus, Debriafings, and within Missions.
 #: guitext:11
@@ -107,7 +107,7 @@ msgstr "Mina Jonowa"
 #: guitext:13
 msgctxt "Weapon name - Eurocorp"
 msgid "High Explosive"
-msgstr "Materiał Wybuchowy"
+msgstr "Mater. Wybuchowy"
 
 #. Weapon name visible in Equip and Research menus, Debriafings, and within Missions.
 #: guitext:14
@@ -119,7 +119,7 @@ msgstr "Mina Napalmowa"
 #: guitext:15
 msgctxt "Weapon name - Eurocorp"
 msgid "Long Range Rifle"
-msgstr "Karabin Dalekostrzelny"
+msgstr "Karab. Dalekostrz."
 
 #. Weapon name visible in Equip and Research menus, Debriafings, and within Missions.
 #: guitext:16
@@ -2369,13 +2369,13 @@ msgstr "Przerwij"
 #: guitext:390
 msgctxt "MP Screen area"
 msgid "Logged Users"
-msgstr "Zalogowani użytkownicy"
+msgstr "Zalogowani Gracze"
 
 #. Title of an area within multiplayer screeen.
 #: guitext:391
 msgctxt "MP Screen area"
 msgid "Uplink Groups"
-msgstr "Grupy uplinku"
+msgstr "Grupy Uplinku"
 
 #. Title of an area within multiplayer screeen.
 #: guitext:392
@@ -2687,7 +2687,7 @@ msgstr "Netskan"
 #: guitext:443
 msgctxt "Generic property"
 msgid "Cost:"
-msgstr "Koszt:"
+msgstr "Koszt"
 
 #. Button text on the first screen after launching the game.
 #: guitext:444
